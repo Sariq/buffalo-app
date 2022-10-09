@@ -4,6 +4,9 @@ import { SvgXml } from "react-native-svg";
 import { CONSTS_ICONS } from "../../consts/consts-icons";
 import themeStyle from "../../styles/theme.style";
 
+/* components */
+import CategoryItemsList from './components/categoryItemsList';
+
 const categoryList = [
   {
     id: 1,
@@ -40,28 +43,40 @@ export default function MenuScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      {categoryList.map((category) => (
-        <TouchableOpacity
-          style={[styles.categoryItem]}
-          onPress={() => {
-            onCategorySelect(category);
-          }}
-        >
-          <View
-            style={[
-              styles.iconContainer,
-
-              {
-                backgroundColor:
-                  category.id === selectedCategory.id
-                    ? themeStyle.PRIMARY_COLOR
-                    : themeStyle.WHITE_COLOR,
-              },
-            ]}
+    <View>
+      <View style={styles.container}>
+        {categoryList.map((category) => (
+          <TouchableOpacity
+            style={[styles.categoryItem]}
+            onPress={() => {
+              onCategorySelect(category);
+            }}
           >
-            <SvgXml
-              xml={category.icon}
+            <View
+              style={[
+                styles.iconContainer,
+
+                {
+                  backgroundColor:
+                    category.id === selectedCategory.id
+                      ? themeStyle.PRIMARY_COLOR
+                      : themeStyle.WHITE_COLOR,
+                },
+              ]}
+            >
+              <SvgXml
+                xml={category.icon}
+                style={[
+                  {
+                    color:
+                      category.id === selectedCategory.id
+                        ? themeStyle.GRAY_700
+                        : themeStyle.GRAY_300,
+                  },
+                ]}
+              />
+            </View>
+            <Text
               style={[
                 {
                   color:
@@ -70,22 +85,13 @@ export default function MenuScreen() {
                       : themeStyle.GRAY_300,
                 },
               ]}
-            />
-          </View>
-          <Text
-            style={[
-              {
-                color:
-                  category.id === selectedCategory.id
-                    ? themeStyle.GRAY_700
-                    : themeStyle.GRAY_300,
-              },
-            ]}
-          >
-            {category.title}
-          </Text>
-        </TouchableOpacity>
-      ))}
+            >
+              {category.title}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+      <CategoryItemsList/>
     </View>
   );
 }

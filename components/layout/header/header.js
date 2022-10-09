@@ -1,9 +1,16 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, TouchableOpacity, View, Image } from "react-native";
 import themeStyle from "../../../styles/theme.style";
 import { CONSTS_ICONS } from "../../../consts/consts-icons";
 import { SvgXml } from "react-native-svg";
+import { useNavigation } from '@react-navigation/native';
 
 export default function Header() {
+  const navigation = useNavigation();
+
+  const handleCartClick = ()=>{
+
+    navigation.navigate('cart')
+  }
   return (
     <View style={styles.container}>
       <View style={styles.headerItem}>
@@ -13,7 +20,9 @@ export default function Header() {
         <Image source={require("../../../assets/buffalo_logo.png")} />
       </View>
       <View style={styles.headerItem}>
+      <TouchableOpacity onPress={handleCartClick}>
         <Image source={require("../../../assets/cart_icon.png")} />
+        </TouchableOpacity>
       </View>
     </View>
   );

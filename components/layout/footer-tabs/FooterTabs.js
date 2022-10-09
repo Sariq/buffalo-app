@@ -13,6 +13,7 @@ import theme from '../../../styles/theme.style';
 import HomeScreen from "../../../screens/home/home";
 import ContactUs from "../../../screens/contact-us/contactUs";
 import MenuScreen from "../../../screens/menu/menu";
+
 import { useState } from "react";
 
 const routes = [
@@ -49,7 +50,7 @@ const routes = [
     name: 'contactUsScreen',
     title: 'اتصل بنا',
     icon: CONSTS_ICONS.phoneIcon,
-    component: HomeScreen
+    component: ContactUs
   },
 ]
 

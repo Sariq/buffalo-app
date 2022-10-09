@@ -1,7 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-
+import RootNavigator from "./navigation"
 /*components*/
 import FooterTabs from "./components/layout/footer-tabs/FooterTabs";
 import Header from "./components/layout/header/header"
@@ -9,11 +9,13 @@ export default function App() {
   return (
     <>
       <View>
-       <Header/>
+       {/* <Header/> */}
       </View>
-      <NavigationContainer>
+      {/* <NavigationContainer>
         <FooterTabs />
-      </NavigationContainer>
+      </NavigationContainer> */}
+            <RootNavigator />
+
     </>
   );
 }
