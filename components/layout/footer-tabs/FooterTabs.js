@@ -6,8 +6,10 @@ import { SvgXml } from "react-native-svg";
 import { CONSTS_ICONS } from "../../../consts/consts-icons";
 import themeStyle from "../../../styles/theme.style";
 
+import Icon from "../../../components/icon";
+
 /* styles */
-import theme from '../../../styles/theme.style';
+import theme from "../../../styles/theme.style";
 
 /* screens */
 import HomeScreen from "../../../screens/home/home";
@@ -19,50 +21,48 @@ import { useState } from "react";
 const routes = [
   {
     id: 1,
-    name: 'homeScreen',
-    title: 'الرئيسية',
-    icon: CONSTS_ICONS.homeIcon,
-    component: HomeScreen
+    name: "homeScreen",
+    title: "الرئيسية",
+    icon: "home_icon",
+    component: HomeScreen,
   },
   {
     id: 2,
-    name: 'menuScreen',
-    title: 'قائمة الطعام',
-    icon: CONSTS_ICONS.burgersIcon,
-    component: MenuScreen
+    name: "menuScreen",
+    title: "قائمة الطعام",
+    icon: "burger_icon",
+    component: MenuScreen,
   },
   {
     id: 3,
-    name: 'BCOINSScreen',
-    title: 'B COINS',
-    icon: CONSTS_ICONS.bCoinIcon,
-    component: HomeScreen
+    name: "BCOINSScreen",
+    title: "B COINS",
+    icon: "bcoin_icon",
+    component: HomeScreen,
   },
   {
     id: 4,
-    name: 'dealsScreen',
-    title: 'العروض الحاليه',
-    icon: CONSTS_ICONS.dealsIcon,
-    component: ContactUs
+    name: "dealsScreen",
+    title: "العروض",
+    icon: "deals_icon",
+    component: ContactUs,
   },
   {
     id: 5,
-    name: 'contactUsScreen',
-    title: 'اتصل بنا',
-    icon: CONSTS_ICONS.phoneIcon,
-    component: ContactUs
+    name: "contactUsScreen",
+    title: "اتصل بنا",
+    icon: "phone_icon",
+    component: ContactUs,
   },
-]
+];
 
 function MyTabBar({ state, descriptors, navigation }) {
-
-  const [selectedRoute, setSelectedRoute] = useState(routes[0])
+  const [selectedRoute, setSelectedRoute] = useState(routes[0]);
 
   const onTabSelect = (name) => {
-    const currentRout = routes.find((route)=> route.name === name)
-    setSelectedRoute(currentRout)
-
-  }
+    const currentRout = routes.find((route) => route.name === name);
+    setSelectedRoute(currentRout);
+  };
   return (
     <View
       style={{
@@ -83,9 +83,9 @@ function MyTabBar({ state, descriptors, navigation }) {
             : route.name;
 
         const isFocused = state.index === index;
-        const currentRout = routes.find((route)=> route.name === label)
-
-
+        const currentRout = routes.find((route) => route.name === label);
+        const isBcoin = currentRout.name === "BCOINSScreen";
+        console.log(currentRout.name);
 
         const onPress = () => {
           onTabSelect(route.name);
@@ -114,20 +114,18 @@ function MyTabBar({ state, descriptors, navigation }) {
             testID={options.tabBarTestID}
             onPress={onPress}
             onLongPress={onLongPress}
-            style={[styles.container, { flex: 1, alignItems: "center", marginTop: currentRout.name === 'B COINS' ? -40 : 0 }]}
+            style={[
+              styles.container,
+              { flex: 1, alignItems: "center", marginTop: isBcoin ? -40 : 0 },
+            ]}
           >
             <View style={styles.container}>
-            <SvgXml
-              xml={currentRout.icon}
-              style={[
-                {
-                  color: true
-                    ? themeStyle.GRAY_700
-                    : themeStyle.GRAY_300,
-                },
-              ]}
-            />
-              <Text style={{ marginTop: currentRout.name === 'B COINS' ? 0 : 5 }}>
+              <Icon
+                icon={currentRout.icon}
+                size={isBcoin ? 75 : 30}
+                style={{ color: theme.GRAY_700 }}
+              />
+              <Text style={{ marginTop: isBcoin ? 0 : 5 }}>
                 {route.params.title}
               </Text>
             </View>
@@ -148,14 +146,17 @@ export default function FooterTabs() {
       }}
       tabBar={(props) => <MyTabBar {...props} />}
     >
-      {routes.map((route)=>(
-      <Tab.Screen props={route} name={route.name} component={route.component} initialParams={{"title": route.title}}
-      />
+      {routes.map((route) => (
+        <Tab.Screen
+          props={route}
+          name={route.name}
+          component={route.component}
+          initialParams={{ title: route.title }}
+        />
       ))}
     </Tab.Navigator>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {

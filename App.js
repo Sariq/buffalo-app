@@ -1,22 +1,41 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, I18nManager } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import RootNavigator from "./navigation"
+import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+I18nManager.forceRTL(true);
+I18nManager.allowRTL(true);
 /*components*/
 import FooterTabs from "./components/layout/footer-tabs/FooterTabs";
-import Header from "./components/layout/header/header"
+import Header from "./components/layout/header/header";
+
+const theme = {
+  ...DefaultTheme,
+  roundness: 2,
+  fontSize:30,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: '#3498db',
+    accent: '#f1c40f',
+  },
+};
+
 export default function App() {
   return (
+    // <PaperProvider theme={theme}>
+
     <>
-      <View>
+      {/* <View> */}
        {/* <Header/> */}
-      </View>
+      {/* </View> */}
       {/* <NavigationContainer>
         <FooterTabs />
       </NavigationContainer> */}
-            <RootNavigator />
+            <RootNavigator style={{flexDirection: 'row-reverse'}}/>
 
     </>
+    // </PaperProvider>
+
   );
 }
 

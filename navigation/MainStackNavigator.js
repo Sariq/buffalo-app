@@ -11,6 +11,7 @@ export const MainStackNavigator = ({}) => {
           header={null}
           headerMode='none'
           mode={'card'}
+          
       >
           <Stack.Screen
               name='Tab'

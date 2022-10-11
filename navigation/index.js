@@ -1,11 +1,21 @@
 import React from 'react';
-import { NavigationContainer} from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import { MainStackNavigator } from './MainStackNavigator';
-import Header from "../components/layout/header/header"
+import Header from "../components/layout/header/header";
+
+const MyTheme = {
+    ...DefaultTheme,
+    fontSize: 40,
+    colors: {
+      ...DefaultTheme.colors,
+      primary: 'rgb(255, 45, 85)',
+    },
+  };
+
 const RootNavigator = ({}) =>{
 
     return (
-        <NavigationContainer >
+        <NavigationContainer style={{fontSize:35}}>
             <Header/>
             <MainStackNavigator />
         </NavigationContainer>
