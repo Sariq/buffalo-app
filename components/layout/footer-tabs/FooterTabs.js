@@ -17,6 +17,7 @@ import ContactUs from "../../../screens/contact-us/contactUs";
 import MenuScreen from "../../../screens/menu/menu";
 
 import { useState } from "react";
+import TermsAndConditionsScreen from "../../../screens/terms-and-conditions";
 
 const routes = [
   {
@@ -42,10 +43,10 @@ const routes = [
   },
   {
     id: 4,
-    name: "dealsScreen",
+    name: "termsAndConditions",
     title: "العروض",
     icon: "deals_icon",
-    component: ContactUs,
+    component: TermsAndConditionsScreen,
   },
   {
     id: 5,

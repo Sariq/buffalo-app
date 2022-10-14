@@ -1,58 +1,35 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
-import { SvgXml } from "react-native-svg";
-import { CONSTS_ICONS } from "../../../consts/consts-icons";
+import i18n from "../../../translations";
+
 import themeStyle from "../../../styles/theme.style";
+import { CONSTS_PRODUCTS } from "../../../consts/products";
 
-const categoryItemsList = {
-  1: [
-    {
-      id: 1,
-      title: "كلاسيك برجر",
-      img: require("../../../assets/menu/burgers/classic_burger.png"),
-      price: "34",
-    },
-    {
-      id: 2,
-      title: "2كلاسيك برجر",
-      img: require("../../../assets/menu/burgers/classic_burger.png"),
-      price: "34",
-    },
-    {
-      id: 3,
-      title: "3كلاسيك برجر",
-      img: require("../../../assets/menu/burgers/classic_burger.png"),
-      price: "34",
-    },
-    {
-      id: 4,
-      title: "4كلاسيك برجر",
-      img: require("../../../assets/menu/burgers/classic_burger.png"),
-      price: "34",
-    },
-  ],
-};
+const productsList = CONSTS_PRODUCTS;
 
-export default function CategoryItemsList() {
-  const [selectedCategory, setSelectedCategory] = useState(
-    categoryItemsList[0]
-  );
 
-  const onCategorySelect = (category) => {
-    setSelectedCategory(category);
+export default function CategoryItemsList({category}) {
+  const navigation = useNavigation();
+  
+  const [selectedItem, setSelectedItem] = useState();
+
+  const onItemSelect = (item) => {
+    setSelectedItem(item);
+    navigation.navigate('meal',{itemId:item.id, categoryId: category})
   };
 
   return (
     <View style={styles.container}>
-      {categoryItemsList["1"].map((item) => (
+      {productsList[category].map((item) => (
         <TouchableOpacity
           style={[styles.categoryItem]}
           onPress={() => {
-            onCategorySelect(item);
+            onItemSelect(item);
           }}
         >
           <View style={[styles.iconContainer]}>
-            <Image source={item.img} />
+            <Image style={{width:131,height:140, padding:10}} source={item.icon} />
           </View>
           <Text
             style={[
@@ -61,7 +38,7 @@ export default function CategoryItemsList() {
               },
             ]}
           >
-            {item.title}
+            {i18n.t(`products.${item.name}.name`)}
           </Text>
           <Text
             style={[
@@ -81,17 +58,20 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     flexWrap: "wrap",
+    justifyContent: "center",
+    alignItems: "center",
     flex: 1,
     padding: 10,
   },
   categoryItem: {
     margin: 5,
-    width: 170,
-    height: 150,
+    width: 165,
+    height: 180,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 15,
     backgroundColor: themeStyle.WHITE_COLOR,
+    paddingVertical:10
   },
   iconContainer: {
     alignItems: "center",

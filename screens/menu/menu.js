@@ -5,33 +5,34 @@ import { CONSTS_ICONS } from "../../consts/consts-icons";
 import themeStyle from "../../styles/theme.style";
 
 /* components */
-import CategoryItemsList from './components/categoryItemsList';
+import CategoryItemsList from "./components/categoryItemsList";
+import Icon from "../../components/icon";
 
 const categoryList = [
   {
-    id: 1,
-    icon: CONSTS_ICONS.burgersIcon,
+    id: "meat",
+    icon: "burger_icon",
     title: "برجر لحم",
   },
   {
-    id: 2,
-    icon: CONSTS_ICONS.crispyIcon,
+    id: "crispy",
+    icon: "crispy_icon",
     title: "كرسبي",
   },
   {
-    id: 3,
-    icon: CONSTS_ICONS.boxIcon,
+    id: "sides",
+    icon: "box-icon",
     title: "سايدس",
   },
   {
-    id: 4,
-    icon: CONSTS_ICONS.drinksIcon,
+    id: "drinks",
+    icon: "drinks_icon",
     title: "سايدس",
   },
   {
-    id: 5,
-    icon: CONSTS_ICONS.dealsIcon,
-    title: "حملات بافلو",
+    id: "deals",
+    icon: "deals_icon",
+    title: "حملات",
   },
 ];
 
@@ -64,21 +65,21 @@ export default function MenuScreen() {
                 },
               ]}
             >
-              <SvgXml
-                xml={category.icon}
-                style={[
-                  {
-                    color:
-                      category.id === selectedCategory.id
-                        ? themeStyle.GRAY_700
-                        : themeStyle.GRAY_300,
-                  },
-                ]}
+              <Icon
+                icon={category.icon}
+                size={30}
+                style={{
+                  color:
+                    category.id === selectedCategory.id
+                      ? themeStyle.GRAY_700
+                      : themeStyle.GRAY_300,
+                }}
               />
             </View>
             <Text
               style={[
                 {
+                  marginTop: 10,
                   color:
                     category.id === selectedCategory.id
                       ? themeStyle.GRAY_700
@@ -91,7 +92,7 @@ export default function MenuScreen() {
           </TouchableOpacity>
         ))}
       </View>
-      <CategoryItemsList/>
+      <CategoryItemsList category={selectedCategory.id} />
     </View>
   );
 }
