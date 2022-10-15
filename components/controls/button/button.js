@@ -3,7 +3,7 @@ import { useState } from "react";
 import theme from "../../../styles/theme.style";
 import Icon from "../../icon";
 
-export default function Button({ onClickFn, text, icon, fontSize }) {
+export default function Button({ onClickFn, text, icon, fontSize, bgColor, textColor }) {
   const onBtnClick = () => {
     onClickFn();
   };
@@ -11,7 +11,7 @@ export default function Button({ onClickFn, text, icon, fontSize }) {
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        style={styles.button}
+        style={{...styles.button, backgroundColor: bgColor}}
         onPress={() => {
           onBtnClick();
         }}
@@ -19,9 +19,9 @@ export default function Button({ onClickFn, text, icon, fontSize }) {
         <Icon
           icon={icon}
           size={20}
-          style={{ color: theme.GRAY_700 }}
+          style={{ color: textColor || theme.GRAY_700 }}
         />
-        <Text style={{...styles.buttonText, fontSize: fontSize}}>{text}</Text>
+        <Text style={{...styles.buttonText, fontSize: fontSize, color:textColor}}>{text}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     },
   button: {
     backgroundColor: theme.PRIMARY_COLOR,
-    borderRadius: 5,
+    borderRadius: 20,
     display: "flex",
     flexDirection: "row",
     alignItems: "center",

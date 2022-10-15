@@ -3,7 +3,7 @@ import { useState } from "react";
 import themeStyle from "../../../styles/theme.style";
 
 export default function Counter({ onCounterChange, value }) {
-  const [couter, setCounter] = useState(value);
+  const [couter, setCounter] = useState(value || 0);
   const onBtnClick = (value) => {
     if (couter === 0 && value === -1) {
       return;
@@ -63,5 +63,6 @@ const styles = StyleSheet.create({
   },
   btnText: {
     fontSize: 20,
+    color: "white",
   },
 });

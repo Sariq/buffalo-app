@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
+
 import { useContext } from "react";
 import { observer } from "mobx-react";
 import { Image, Text, View, StyleSheet } from "react-native";
@@ -15,11 +17,13 @@ import CheckBox from "../../components/controls/checkbox";
 import { StoreContext } from "../../stores";
 import Counter from "../../components/controls/counter";
 import Icon from "../../components/icon";
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import CartStore from "../../stores/cart";
 
-export default function CartScreen() {
+const CartScreen = () => {
   let cartStore = useContext(StoreContext);
-  console.log(cartStore.cartItems.length);
+  const navigation = useNavigation();
+
   const [isShipping, setIsShipping] = React.useState(true);
   const [isCreditCard, setIsCreditCard] = React.useState(true);
 
@@ -41,6 +45,12 @@ export default function CartScreen() {
     }
   }, [isShipping]);
 
+  useEffect(() => {
+    if (cartStore.cartItems.length === 0) {
+      navigation.navigate("homeScreen");
+    }
+  }, [cartStore.cartItems]);
+
   const onCheckBoxChange = (isSelected) => {
     console.log(isSelected);
   };
@@ -48,19 +58,21 @@ export default function CartScreen() {
     console.log(value);
   };
 
-  let text = "Waiting..";
-  if (errorMsg) {
-    text = errorMsg;
-  } else if (location) {
-    text = JSON.stringify(location);
-  }
+  const onRemoveProduct = (product, index) => {
+    cartStore.removeProduct(product.id + index);
+  };
 
+  //   let text = "Waiting..";
+  //   if (errorMsg) {
+  //     text = errorMsg;
+  //   } else if (location) {
+  //     text = JSON.stringify(location);
+  //   }
   return (
     <ScrollView>
       <View style={{ ...styles.container }}>
-        {/* <Text>{JSON.stringify(isCreditCard)}</Text> */}
         <View>
-          {cartStore.cartItems.map((product) => (
+          {cartStore.cartItems.map((product, index) => (
             <View
               style={{
                 marginTop: 20,
@@ -79,7 +91,10 @@ export default function CartScreen() {
                   <Text>{product.name}</Text>
                 </View>
                 <View style={{ width: "35%" }}>
-                  <Counter value={1} onCounterChange={onCounterChange} />
+                  <Counter
+                    value={product.others.count}
+                    onCounterChange={onCounterChange}
+                  />
                 </View>
               </View>
               <View
@@ -102,27 +117,34 @@ export default function CartScreen() {
                     />
                   </View>
                   <View style={{ marginLeft: 20 }}>
-                    <View>
-                      <Text>+ فقع</Text>
-                    </View>
-                    <View>
-                      <Text>+a</Text>
-                    </View>
-                    <View>
-                      <Text>+a</Text>
-                    </View>
+                    {Object.keys(product.extras).map(
+                      (key) =>
+                        product.extras[key] > 0 && (
+                          <View>
+                            <Text>+ {key}</Text>
+                          </View>
+                        )
+                    )}
                   </View>
                 </View>
 
-                <View style={{ alignItems: "center" }}>
-                  <View>
-                    <Icon
-                      icon="trash_icon"
-                      size={25}
-                      style={{ color: "black" }}
-                    />
-                  </View>
-                  <View style={{ marginTop: 10 }}>
+                <View style={{ alignItems: "center"}}>
+                  <TouchableOpacity
+                  style={{padding: 5}}
+                    onPress={() => {
+                      onRemoveProduct(product, index);
+                    }}
+                  >
+                    <View>
+                      <Icon
+                        icon="trash_icon"
+                        size={25}
+                        style={{ color: "black" }}
+                      />
+                    </View>
+                  </TouchableOpacity>
+
+                  <View style={{ marginTop: 0 }}>
                     <Text>₪{product.price}</Text>
                   </View>
                 </View>
@@ -282,7 +304,9 @@ export default function CartScreen() {
       </View>
     </ScrollView>
   );
-}
+};
+
+export default observer(CartScreen);
 // MapScreen.navigationOptions = {
 //     header: null
 // }
@@ -291,6 +315,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
     paddingHorizontal: 20,
+    marginBottom: 40,
   },
   togglleContainer: {
     borderRadius: 50,

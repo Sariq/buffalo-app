@@ -8,6 +8,7 @@ export default {
     SUCCESS_COLOR: 'green',
     GRAY_300: '#c1c1c1',
     GRAY_700: '#442213',
+    BROWN_700: '#341910',
     FONT_WEIGHT_LIGHT: 200,
     FONT_WEIGHT_MEDIUM: 600,
     FONT_WEIGHT_HEAVY: 800

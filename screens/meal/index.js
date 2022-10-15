@@ -19,6 +19,7 @@ import {
 } from "../../consts/product-extras";
 import { CONSTS_PRODUCTS } from "../../consts/products";
 import { ScrollView } from "react-native-gesture-handler";
+import themeStyle from "../../styles/theme.style";
 
 export default function MealScreen({ route }) {
   const { itemId, categoryId } = route.params;
@@ -30,27 +31,34 @@ export default function MealScreen({ route }) {
   useEffect(() => {
     const categoryProducts = CONSTS_PRODUCTS[categoryId];
     const product = categoryProducts.find((product) => product.id === itemId);
-    product.extras = CONSTS_PRODUCT_EXTRAS;
-    product.vegetables = CONSTS_PRODUCT_VEGETABLES;
+    // product.extras = CONSTS_PRODUCT_EXTRAS;
+    // product.vegetables = CONSTS_PRODUCT_VEGETABLES;
+    product.extras = {};
+    product.vegetables = {};
+    product.others = { count: 1 };
     setMeal(product);
   }, []);
 
   const onAddToCart = () => {
     cartStore.addProductToCart(meal);
-  };
-
-  const onClose = () => {
-    console.log("xx");
     navigation.goBack();
   };
 
-  const onExtraChange = (value) => {};
+  const onClose = () => {
+    navigation.goBack();
+  };
+
+  const onExtraChange = (value, key, type) => {
+    setMeal({ ...meal, [type]: { ...meal[type], [key]: value } });
+  };
+
   if (!meal) {
     return null;
   }
+
   return (
-    <ScrollView>
-      <View style={{ height: "100%", marginBottom: 40 }}>
+    <View style={{ height: "100%", marginBottom: 40 }}>
+      <ScrollView>
         <View
           style={{
             alignItems: "center",
@@ -101,36 +109,42 @@ export default function MealScreen({ route }) {
         <View style={styles.sectionContainer}>
           <View style={styles.gradiantRowContainer}>
             <GradiantRow
-              onChangeFn={onExtraChange}
+              onChangeFn={(value) => {
+                onExtraChange(value, "count", "others");
+              }}
               type={"counter"}
               title={"moreFromSame"}
-              value={1}
+              value={meal["others"]["count"]}
             />
           </View>
         </View>
 
         <View style={styles.sectionContainer}>
-          {Object.keys(meal.extras).map((key) => (
+          {Object.keys(CONSTS_PRODUCT_EXTRAS).map((key) => (
             <View style={styles.gradiantRowContainer}>
               <GradiantRow
-                onChangeFn={onExtraChange}
-                icon={meal.extras[key].icon}
-                type={meal.extras[key].inputType}
-                title={meal.extras[key].title}
-                value={meal.extras[key].value}
+                onChangeFn={(value) => {
+                  onExtraChange(value, key, "extras");
+                }}
+                icon={CONSTS_PRODUCT_EXTRAS[key].icon}
+                type={CONSTS_PRODUCT_EXTRAS[key].inputType}
+                title={CONSTS_PRODUCT_EXTRAS[key].title}
+                value={meal["extras"][key]}
               />
             </View>
           ))}
         </View>
         <View style={styles.sectionContainer}>
-          {Object.keys(meal.vegetables).map((key) => (
+          {Object.keys(CONSTS_PRODUCT_VEGETABLES).map((key) => (
             <View style={styles.gradiantRowContainer}>
               <GradiantRow
-                onChangeFn={onExtraChange}
-                icon={meal.vegetables[key].icon}
-                type={meal.vegetables[key].inputType}
-                title={meal.vegetables[key].title}
-                value={meal.vegetables[key].value}
+                onChangeFn={(value) => {
+                  onExtraChange(value, key, "vegetables");
+                }}
+                icon={CONSTS_PRODUCT_VEGETABLES[key].icon}
+                type={CONSTS_PRODUCT_VEGETABLES[key].inputType}
+                title={CONSTS_PRODUCT_VEGETABLES[key].title}
+                value={meal["vegetables"][key]}
               />
             </View>
           ))}
@@ -139,10 +153,12 @@ export default function MealScreen({ route }) {
         <View style={styles.sectionContainer}>
           <View style={styles.gradiantRowContainer}>
             <GradiantRow
-              onChangeFn={onExtraChange}
+              onChangeFn={(value) => {
+                onExtraChange(value, "splice", "others");
+              }}
               type={"checkbox"}
               title={"slice"}
-              value={1}
+              value={meal["others"]["splice"]}
             />
           </View>
         </View>
@@ -172,19 +188,24 @@ export default function MealScreen({ route }) {
             </View>
           </View>
         </View>
-
-        <View style={styles.sectionContainer}>
-          <View style={styles.buttonContainer}>
-            <Button
-              text="اضف للكيس"
-              icon="cart_icon"
-              fontSize={17}
-              onClickFn={onAddToCart}
-            />
+      </ScrollView>
+      <View style={styles.buttonContainer}>
+      
+        <View style={{ width: "50%", alignSelf: "center", flexDirection:"row", alignItems: "center" }}>
+        <View style={{paddingRight:10}}>
+              <Text style={{fontSize:20, fontWeight: "bold"}}>₪{meal.price}</Text>
           </View>
+          <Button
+            text="اضف للكيس"
+            icon="cart_icon"
+            fontSize={17}
+            onClickFn={onAddToCart}
+            bgColor={themeStyle.BROWN_700}
+            textColor={themeStyle.PRIMARY_COLOR}
+          />
         </View>
       </View>
-    </ScrollView>
+    </View>
   );
 }
 const styles = StyleSheet.create({
@@ -193,9 +214,9 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   buttonContainer: {
-    alignSelf: "center",
-    width: "50%",
+    width: "100%",
     paddingVertical: 20,
+    backgroundColor: themeStyle.PRIMARY_COLOR,
   },
   titleContainer: {
     alignSelf: "center",

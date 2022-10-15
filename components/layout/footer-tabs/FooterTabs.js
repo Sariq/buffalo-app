@@ -86,7 +86,6 @@ function MyTabBar({ state, descriptors, navigation }) {
         const isFocused = state.index === index;
         const currentRout = routes.find((route) => route.name === label);
         const isBcoin = currentRout.name === "BCOINSScreen";
-        console.log(currentRout.name);
 
         const onPress = () => {
           onTabSelect(route.name);
