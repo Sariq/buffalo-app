@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { makeAutoObservable, observable, action, computed } from "mobx";
+import { makeAutoObservable } from "mobx";
 
 class CartStore {
   cartItems = [];
@@ -42,36 +42,36 @@ class CartStore {
     this.updateLocalStorage();
   };
 
-  get selectedItem() {
-    return this.cartItems
-      .filter((item) => item.isChecked)
-      .map((item) => item.id);
-  }
+  // get selectedItem() {
+  //   return this.cartItems
+  //     .filter((item) => item.isChecked)
+  //     .map((item) => item.id);
+  // }
 
-  toggleMode = () => {
-    for (let i = 0; i < this.cartItems.length; i++) {
-      this.cartItems[i].isModeEnabled = !this.cartItems[i].isModeEnabled;
-    }
-  };
+  // toggleMode = () => {
+  //   for (let i = 0; i < this.cartItems.length; i++) {
+  //     this.cartItems[i].isModeEnabled = !this.cartItems[i].isModeEnabled;
+  //   }
+  // };
 
-  toggleEmployee = ({ id }) => {
-    const index = this.cartItems.findIndex((item) => item.id == id);
-    const { isChecked } = this.cartItems[index];
+  // toggleEmployee = ({ id }) => {
+  //   const index = this.cartItems.findIndex((item) => item.id == id);
+  //   const { isChecked } = this.cartItems[index];
 
-    this.cartItems[index].isChecked = !isChecked;
-  };
+  //   this.cartItems[index].isChecked = !isChecked;
+  // };
 
-  logSelected = () => {
-    alert(this.cartItems.filter((i) => i.isChecked).map((i) => i.id).length);
-  };
+  // logSelected = () => {
+  //   alert(this.cartItems.filter((i) => i.isChecked).map((i) => i.id).length);
+  // };
 
-  toggleAll = () => {
-    const isChecked = !this.selectedItem.length > 0;
+  // toggleAll = () => {
+  //   const isChecked = !this.selectedItem.length > 0;
 
-    for (let i = 0; i < this.cartItems.length; i++) {
-      this.cartItems[i].isChecked = isChecked;
-    }
-  };
+  //   for (let i = 0; i < this.cartItems.length; i++) {
+  //     this.cartItems[i].isChecked = isChecked;
+  //   }
+  // };
 }
 
 export default CartStore;

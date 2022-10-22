@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
+import { StyleSheet, TouchableOpacity, View, Text, Image } from "react-native";
 import { useContext } from "react";
 import { observer } from "mobx-react";
 
@@ -10,13 +10,23 @@ import { StoreContext } from "../../../stores";
 
 const Header = ({ store }) => {
   const navigation = useNavigation();
-  let cartStore = useContext(StoreContext);
+  let cartStore = useContext(StoreContext).cartStore;
 
   const handleCartClick = () => {
     navigation.navigate("cart");
   };
+
+  const handleProfileClick = () => {
+    navigation.navigate("profile");
+    //navigation.navigate("login");
+  };
+
   const onLogoClick = () => {
     navigation.navigate("homeScreen");
+  };
+
+  const handleLanguageClick = () => {
+    navigation.navigate("language");
   };
 
   return (
@@ -28,7 +38,7 @@ const Header = ({ store }) => {
         }}
       >
         <View style={{ paddingHorizontal: 0 }}>
-          <TouchableOpacity style={styles.buttonContainer}>
+          <TouchableOpacity onPress={handleLanguageClick} style={styles.buttonContainer}>
             <Icon
               icon="language_icon"
               size={30}
@@ -37,7 +47,7 @@ const Header = ({ store }) => {
           </TouchableOpacity>
         </View>
         <View>
-          <TouchableOpacity style={styles.buttonContainer}>
+          <TouchableOpacity onPress={handleProfileClick} style={styles.buttonContainer}>
             <Icon
               icon="profile_icon"
               size={30}
@@ -47,13 +57,14 @@ const Header = ({ store }) => {
         </View>
       </View>
 
-      <View style={{ ...styles.headerItem, left: -25 }}>
+      <View style={{ ...styles.headerItem, left: -25}}>
         <TouchableOpacity style={styles.buttonContainer} onPress={onLogoClick}>
-          <Icon
+          {/* <Icon
             icon="buffalo_icon"
-            size={120}
-            style={{ color: theme.GRAY_700 }}
-          />
+            size={30}
+            style={{ color: theme.GRAY_700,  width:100 }}
+          /> */}
+           <Image style={{width:120, height: "100%"}} source={require('../../../assets/buffalo_logo.png')} />
         </TouchableOpacity>
       </View>
       <View style={styles.headerItem}>

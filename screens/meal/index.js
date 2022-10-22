@@ -26,7 +26,7 @@ export default function MealScreen({ route }) {
   const navigation = useNavigation();
 
   const [meal, setMeal] = useState();
-  let cartStore = useContext(StoreContext);
+  let cartStore = useContext(StoreContext).cartStore;
 
   useEffect(() => {
     const categoryProducts = CONSTS_PRODUCTS[categoryId];

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
+import * as Font from 'expo-font';
 
 import { useContext } from "react";
 import { observer } from "mobx-react";
@@ -9,7 +10,6 @@ import { Dimensions } from "react-native";
 import { ToggleButton, Divider, Button } from "react-native-paper";
 /* styles */
 import theme from "../../styles/theme.style";
-import sharedStyles from "../../styles/shared-styles";
 import * as Location from "expo-location";
 import { CONSTS_ICONS } from "../../consts/consts-icons";
 import { SvgXml } from "react-native-svg";
@@ -21,11 +21,13 @@ import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import CartStore from "../../stores/cart";
 
 const CartScreen = () => {
-  let cartStore = useContext(StoreContext);
+  let cartStore = useContext(StoreContext).cartStore;
   const navigation = useNavigation();
 
   const [isShipping, setIsShipping] = React.useState(true);
   const [isCreditCard, setIsCreditCard] = React.useState(true);
+  const [itemsPrice, setItemsPrice] = React.useState(0);
+  const [totalPrice, setTotalPrice] = React.useState(0);
 
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
@@ -44,11 +46,24 @@ const CartScreen = () => {
       })();
     }
   }, [isShipping]);
+  
+  useEffect(() => {
+      const shippingPrice = isShipping ? 15 : 0;
+      setTotalPrice(shippingPrice + itemsPrice);
+  }, [isShipping, itemsPrice]);
 
   useEffect(() => {
     if (cartStore.cartItems.length === 0) {
       navigation.navigate("homeScreen");
+      return;
     }
+    let tmpOrderPrice = 0;
+    cartStore.cartItems.forEach((item)=>{
+      tmpOrderPrice+= item.price
+    })
+    console.log(tmpOrderPrice)
+
+    setItemsPrice(tmpOrderPrice)
   }, [cartStore.cartItems]);
 
   const onCheckBoxChange = (isSelected) => {
@@ -72,86 +87,106 @@ const CartScreen = () => {
     <ScrollView>
       <View style={{ ...styles.container }}>
         <View>
-          {cartStore.cartItems.map((product, index) => (
+          <View style={styles.backContainer}>
             <View
               style={{
-                marginTop: 20,
-                paddingHorizontal: 20,
-                borderBottomWidth: 1,
+                borderWidth: 1,
+                borderColor: "rgba(112,112,112,0.1)",
+                borderRadius: 30,
+                width: 35,
+                height: 35,
+                alignItems: "center",
+                justifyContent: "center",
+                marginVertical: 10,
+                marginLeft: 10,
               }}
             >
+              <Icon icon="arrow-right" size={15} style={{ color: "#292d32" }} />
+            </View>
+            <View>
+              <Text style={{ fontWeight: "bold", fontSize: 20 }}>3 وجبات</Text>
+            </View>
+          </View>
+          <View style={{ marginTop: -20 }}>
+            {cartStore.cartItems.map((product, index) => (
               <View
                 style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  paddingHorizontal: 20,
-                }}
-              >
-                <View style={{ marginRight: 20 }}>
-                  <Text>{product.name}</Text>
-                </View>
-                <View style={{ width: "35%" }}>
-                  <Counter
-                    value={product.others.count}
-                    onCounterChange={onCounterChange}
-                  />
-                </View>
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "space-between",
+                  marginTop: 25,
+                  borderBottomWidth: 0.5,
                 }}
               >
                 <View
                   style={{
                     flexDirection: "row",
                     alignItems: "center",
+                    paddingHorizontal: 20,
                   }}
                 >
-                  <View>
-                    <Image
-                      style={{ width: 140, height: 140 }}
-                      source={product.icon}
+                  <View style={{ marginRight: 50 }}>
+                    <Text>{product.name}</Text>
+                  </View>
+                  <View style={{ width: "35%" }}>
+                    <Counter
+                      value={product.others.count}
+                      onCounterChange={onCounterChange}
                     />
                   </View>
-                  <View style={{ marginLeft: 20 }}>
-                    {Object.keys(product.extras).map(
-                      (key) =>
-                        product.extras[key] > 0 && (
-                          <View>
-                            <Text>+ {key}</Text>
-                          </View>
-                        )
-                    )}
-                  </View>
                 </View>
-
-                <View style={{ alignItems: "center"}}>
-                  <TouchableOpacity
-                  style={{padding: 5}}
-                    onPress={() => {
-                      onRemoveProduct(product, index);
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
                     }}
                   >
                     <View>
-                      <Icon
-                        icon="trash_icon"
-                        size={25}
-                        style={{ color: "black" }}
+                      <Image
+                        style={{ width: 140, height: 140 }}
+                        source={product.icon}
                       />
                     </View>
-                  </TouchableOpacity>
+                    <View style={{ marginLeft: 20 }}>
+                      {Object.keys(product.extras).map(
+                        (key) =>
+                          product.extras[key] > 0 && (
+                            <View>
+                              <Text>+ {key}</Text>
+                            </View>
+                          )
+                      )}
+                    </View>
+                  </View>
 
-                  <View style={{ marginTop: 0 }}>
-                    <Text>₪{product.price}</Text>
+                  <View style={{ alignItems: "center", marginRight: 20 }}>
+                    <TouchableOpacity
+                      style={{ padding: 5 }}
+                      onPress={() => {
+                        onRemoveProduct(product, index);
+                      }}
+                    >
+                      <View>
+                        <Icon
+                          icon="trash_icon"
+                          size={25}
+                          style={{ color: theme.GRAY_700 }}
+                        />
+                      </View>
+                    </TouchableOpacity>
+
+                    <View style={{ marginTop: 0 }}>
+                      <Text>₪{product.price}</Text>
+                    </View>
                   </View>
                 </View>
               </View>
-            </View>
-          ))}
-
+            ))}
+          </View>
           <ToggleButton.Row
             onValueChange={(value) => value != null && setIsShipping(value)}
             value={isShipping}
@@ -164,11 +199,15 @@ const CartScreen = () => {
               }}
               icon={() => (
                 <View style={styles.togglleItemContentContainer}>
-                  <SvgXml
-                    color={theme.GRAY_700}
-                    xml={CONSTS_ICONS.shippingIcon}
+            <Icon
+                    icon="shipping_icon"
+                    size={25}
+                    style={{ color: theme.GRAY_700 }}
                   />
-                  <Text> משלוח</Text>
+                  <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+                    {" "}
+                    משלוח
+                  </Text>
                 </View>
               )}
               value={true}
@@ -180,10 +219,14 @@ const CartScreen = () => {
               }}
               icon={() => (
                 <View style={styles.togglleItemContentContainer}>
-                  <Text>איסוף עצמי</Text>
-                  <SvgXml
-                    color={theme.GRAY_700}
-                    xml={CONSTS_ICONS.shippingIcon}
+                  <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+                    איסוף עצמי
+                  </Text>
+
+                  <Icon
+                    icon="cart_burger_icon"
+                    size={25}
+                    style={{ color: theme.GRAY_700 }}
                   />
                 </View>
               )}
@@ -227,11 +270,12 @@ const CartScreen = () => {
               }}
               icon={() => (
                 <View style={styles.togglleItemContentContainer}>
-                  <SvgXml
-                    color={theme.GRAY_700}
-                    xml={CONSTS_ICONS.shippingIcon}
-                  />
-                  <Text>מזומן</Text>
+                <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+                ₪
+                </Text>
+                  <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+                    מזומן
+                  </Text>
                 </View>
               )}
               value={false}
@@ -243,10 +287,13 @@ const CartScreen = () => {
               }}
               icon={() => (
                 <View style={styles.togglleItemContentContainer}>
-                  <Text>אשראי</Text>
-                  <SvgXml
-                    color={theme.GRAY_700}
-                    xml={CONSTS_ICONS.shippingIcon}
+                  <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+                    אשראי
+                  </Text>
+                  <Icon
+                    icon="credit_card_icom"
+                    size={25}
+                    style={{ color: theme.GRAY_700 }}
                   />
                 </View>
               )}
@@ -265,27 +312,27 @@ const CartScreen = () => {
                 <Text>מחיר לתשלום</Text>
               </View>
               <View>
-                <Text>מחיר לתשלום</Text>
+                <Text>₪{itemsPrice}</Text>
               </View>
             </View>
+
+            {isShipping && <View style={styles.priceRowContainer}>
+              <View>
+                <Text>מחיר לתשלום</Text>
+              </View>
+              <View>
+                <Text>₪15</Text>
+              </View>
+            </View>}
+
+            <Divider style={{...styles.priceRowContainer, borderWidth:0.1, color:'rgba(112,112,112,0.4666666666666667 )'}} />
 
             <View style={styles.priceRowContainer}>
               <View>
                 <Text>מחיר לתשלום</Text>
               </View>
               <View>
-                <Text>מחיר לתשלום</Text>
-              </View>
-            </View>
-
-            <Divider style={styles.priceRowContainer} />
-
-            <View style={styles.priceRowContainer}>
-              <View>
-                <Text>מחיר לתשלום</Text>
-              </View>
-              <View>
-                <Text>מחיר לתשלום</Text>
+                <Text>₪{totalPrice}</Text>
               </View>
             </View>
           </View>
@@ -316,6 +363,11 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     paddingHorizontal: 20,
     marginBottom: 40,
+  },
+  backContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   togglleContainer: {
     borderRadius: 50,

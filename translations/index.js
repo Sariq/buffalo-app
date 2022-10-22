@@ -1,11 +1,12 @@
 import * as Localization from "expo-localization";
 import arLang from "./languages/ar.json";
+import heLang from "./languages/he.json";
 import { I18n } from "i18n-js";
 
 // Set the key-value pairs for the different languages you want to support.
 const translations = {
     ar: arLang,
-    ja: { welcome: "こんにちは" },
+    he: heLang,
   };
   const i18n = new I18n(translations);
   // Set the locale once at the beginning of your app.

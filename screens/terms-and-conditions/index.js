@@ -5,18 +5,17 @@ import {
   StyleSheet,
   ImageBackground,
 } from "react-native";
-import {
-  Button,
-  Paragraph,
-  Dialog,
-  Portal,
-  Provider,
-} from "react-native-paper";
+import { Paragraph, Dialog, Portal, Provider } from "react-native-paper";
 
 /* styles */
 import theme from "../../styles/theme.style";
 import Icon from "../../components/icon";
 import { useState } from "react";
+import Button from "../../components/controls/button/button";
+import themeStyle from "../../styles/theme.style";
+
+const bodyText =
+  "בניגוד לטענה הרווחת, Lorem Ipsum אינו סתם טקסט רנדומלי. יש לו שורשים וחלקים מתוך הספרות הלטינית הקלאסית מאז 45 לפני הספירה. מה שהופך אותו לעתיק מעל 2000 שנה. ריצ’רד מקלינטוק, פרופסור לטיני בקולג’ של המפדן-סידני בורג’יניה, חיפש את אחת המילים המעורפלות ביותר";
 
 export default function TermsAndConditionsScreen({ navigation }) {
   const [visible, setVisible] = useState(false);
@@ -32,20 +31,47 @@ export default function TermsAndConditionsScreen({ navigation }) {
           alignItems: "center",
           justifyContent: "center",
           paddingTop: 20,
+          paddingHorizontal: 20,
+          backgroundColor: themeStyle.WHITE_COLOR,
+          height: "100%"
+
         }}
       >
         <View>
-          <Text style={{ fontSize: 25 }}>Ttitle</Text>
+          <Text style={{ fontSize: 25, fontWeight: "bold" }}>
+            תנאי שימוש ומדיניות פרטיות בשירותי אפליקציית בופלו
+          </Text>
         </View>
         <View style={{ marginTop: 40 }}>
-          <Text style={{ fontSize: 15 }}>Body</Text>
+          <Text style={{ fontSize: 15, textAlign: "center" }}>
+            {bodyText}
+            {bodyText}
+            {bodyText}
+            {bodyText}
+          </Text>
         </View>
-        <View style={{ width:"100%", paddingHorizontal: 20, marginTop: 40, flexDirection:"row", justifyContent:"space-between" }}>
-          <View>
-            <Button onPress={showDialog}>Show Dialog</Button>
+        <View
+          style={{
+            width: "100%",
+            paddingHorizontal: 20,
+            marginTop: 40,
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <View style={{ width: 120 }}>
+            <Button
+              onClickFn={showDialog}
+              text="غير موافق"
+              bgColor={themeStyle.PRIMARY_COLOR}
+            />
           </View>
-          <View>
-            <Button onPress={showDialog}>Show Dialog</Button>
+          <View style={{ width: 120 }}>
+            <Button
+              onClickFn={showDialog}
+              text="موافق"
+              bgColor={themeStyle.PRIMARY_COLOR}
+            />
           </View>
         </View>
         <Portal>
@@ -58,7 +84,7 @@ export default function TermsAndConditionsScreen({ navigation }) {
             style={{
               alignItems: "center",
               justifyContent: "center",
-              backgroundColor: theme.PRIMARY_COLOR,
+              backgroundColor: "rgba(254, 203, 5, 0.9)",
               opacity: 0.9,
             }}
             visible={visible}
@@ -66,10 +92,26 @@ export default function TermsAndConditionsScreen({ navigation }) {
           >
             <Dialog.Title>Alert</Dialog.Title>
             <Dialog.Content>
-              <Paragraph>This is simple dialog</Paragraph>
+              <Paragraph
+                style={{
+                  fontSize: 20,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                }}
+              >
+                زبوننا العزيز، اخترت عدم قبول شروط الاستخدام. لتتمكن من استخدام
+                التطبيق يرجا الموافقه على الشروط{" "}
+              </Paragraph>
             </Dialog.Content>
             <Dialog.Actions>
-              <Button onPress={hideDialog}>Done</Button>
+              <View style={{ width: "50%" }}>
+                <Button
+                  onClickFn={hideDialog}
+                  text="موافق"
+                  bgColor={themeStyle.WHITE_COLOR}
+                  fontSize={20}
+                />
+              </View>
             </Dialog.Actions>
           </Dialog>
         </Portal>

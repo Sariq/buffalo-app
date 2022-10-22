@@ -12,22 +12,39 @@
       "backgroundColor": "#ffffff"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/635e3b9c-c23e-4347-a1d4-a97b516fb5d9"
     },
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.sariq.buffalo"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
+      },
+      "splash": {
+        "image": "./assets/splash-screen.png"
+      },
+      "package": "com.sariq.buffalo",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyD0CSVYW-UxSDEnderEtAB9YDmYYZLu8q8"
+        }
       }
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "635e3b9c-c23e-4347-a1d4-a97b516fb5d9"
+      }
+    },
+    "runtimeVersion": "2.0.0"
   }
 }
