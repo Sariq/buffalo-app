@@ -1,8 +1,8 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import themeStyle from "../../../styles/theme.style";
 
-export default function Counter({ onCounterChange, value }) {
+export default function Counter({ onCounterChange, value, stepValue = 1 }) {
   const [couter, setCounter] = useState(value || 0);
   const onBtnClick = (value) => {
     if (couter === 0 && value === -1) {
@@ -12,6 +12,9 @@ export default function Counter({ onCounterChange, value }) {
     setCounter(updatedValue);
     onCounterChange(updatedValue);
   };
+  useEffect(()=>{
+    setCounter(value || 0)
+  },[value]);
 
   return (
     <View style={styles.container}>
@@ -19,7 +22,7 @@ export default function Counter({ onCounterChange, value }) {
         <TouchableOpacity
           style={styles.btn}
           onPress={() => {
-            onBtnClick(1);
+            onBtnClick(stepValue);
           }}
         >
           <Text style={styles.btnText}>+</Text>
@@ -32,7 +35,7 @@ export default function Counter({ onCounterChange, value }) {
         <TouchableOpacity
           style={styles.btn}
           onPress={() => {
-            onBtnClick(-1);
+            onBtnClick(-stepValue);
           }}
         >
           <Text style={styles.btnText}>-</Text>

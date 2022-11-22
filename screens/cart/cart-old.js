@@ -62,7 +62,7 @@ const CartScreen = () => {
     cartStore.cartItems.forEach((item)=>{
       tmpOrderPrice+= item.price
     })
-    // console.log(cartStore.cartItems[0])
+
     setItemsPrice(tmpOrderPrice)
   }, [cartStore.cartItems]);
 
@@ -71,11 +71,10 @@ const CartScreen = () => {
   };
   const onCounterChange = (value) => {
     // console.log(value);
-    // console.log(product);
   };
 
-  const onRemoveProduct = (product) => {
-    cartStore.removeProduct(product.item.id);
+  const onRemoveProduct = (product, index) => {
+    cartStore.removeProduct(product.id + index);
   };
 
   //   let text = "Waiting..";
@@ -124,7 +123,7 @@ const CartScreen = () => {
                   }}
                 >
                   <View style={{ marginRight: 50 }}>
-                    <Text>{product.item.name}</Text>
+                    <Text>{product.name}</Text>
                   </View>
                   <View style={{ width: "35%" }}>
                     <Counter
@@ -155,9 +154,11 @@ const CartScreen = () => {
                     <View style={{ marginLeft: 20 }}>
                       {Object.keys(product.extras).map(
                         (key) =>
+                          product.extras[key] > 0 && (
                             <View>
                               <Text>+ {key}</Text>
                             </View>
+                          )
                       )}
                     </View>
                   </View>
@@ -166,7 +167,7 @@ const CartScreen = () => {
                     <TouchableOpacity
                       style={{ padding: 5 }}
                       onPress={() => {
-                        onRemoveProduct(product);
+                        onRemoveProduct(product, index);
                       }}
                     >
                       <View>
@@ -179,7 +180,7 @@ const CartScreen = () => {
                     </TouchableOpacity>
 
                     <View style={{ marginTop: 0 }}>
-                      <Text>₪{product.item.price}</Text>
+                      <Text>₪{product.price}</Text>
                     </View>
                   </View>
                 </View>

@@ -1,4 +1,7 @@
 {
+    "home": {
+        "newOrder": "طلبية جديدة"
+    },
     "products":{
         "cheesyCartel":{
             "name": "شيزي كلاسيك",

@@ -38,7 +38,6 @@ export default function HomeScreen({ navigation }) {
             />
             <Text style={{ ...styles.buttonText, fontFamily: globalStyles.fontFamily }}>
             {i18n.t('home.newOrder')}
-            شش
             </Text>
           </TouchableOpacity>
         </View>

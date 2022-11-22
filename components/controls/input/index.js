@@ -5,16 +5,15 @@ import { useState } from "react";
 import themeStyle from "../../../styles/theme.style";
 import Icon from "../../icon";
 
-export default function InputText({ onChange, value }) {
-  const [isSelected, setIsSelected] = useState(value || false);
-  const onBtnClick = () => {
-    setIsSelected(!isSelected);
-    onChange && onChange(!isSelected);
+export default function InputText({ onChange, value, label }) {
+  const handleOnChange = (e) => {
+
+    onChange && onChange(e.nativeEvent.text)
   };
 
   return (
     <View style={styles.container}>
-      <TextInput mode="outlined" label="هاتف" outlineColor={themeStyle.PRIMARY_COLOR} activeOutlineColor={themeStyle.PRIMARY_COLOR} style={{fontSize: 20, backgroundColor:"white", borderRadius:50}} />
+      <TextInput onChange={handleOnChange} mode="outlined" label={label} outlineColor={themeStyle.PRIMARY_COLOR} activeOutlineColor={themeStyle.PRIMARY_COLOR} style={{fontSize: 20, backgroundColor:"white", borderRadius:50}} />
     </View>
   );
 }

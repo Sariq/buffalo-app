@@ -1,15 +1,18 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import themeStyle from "../../../styles/theme.style";
 import Icon from "../../icon";
 
 export default function CheckBox({ onChange, value }) {
-  const [isSelected, setIsSelected] = useState(value || false);
+  const [isSelected, setIsSelected] = useState(value);
   const onBtnClick = () => {
     setIsSelected(!isSelected);
     onChange && onChange(!isSelected);
   };
-
+  useEffect(()=>{
+    setIsSelected(value)
+  },[value]);
+  
   return (
     <View style={styles.container}>
       <TouchableOpacity

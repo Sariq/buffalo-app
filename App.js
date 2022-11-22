@@ -11,13 +11,13 @@ I18nManager.allowRTL(true);
 import i18n from "./translations"
 /* stores*/
 import CartStore from "./stores/cart";
+import MenuStore from "./stores/menu";
 import * as SplashScreen from "expo-splash-screen";
 import { StoreContext } from "./stores";
 import LanguageStore from "./stores/language";
+import AuthStore from "./stores/auth";
 // Keep the splash screen visible while we fetch resources
 //SplashScreen.preventAutoHideAsync();
-console.log(i18n._locale)
-const currentLang = i18n._locale;
 let customARFonts = {
   'ar-Black': require(`./assets/fonts/ar/Black.ttf`),
   'ar-Bold': require(`./assets/fonts/ar/Bold.ttf`),
@@ -62,8 +62,8 @@ export default function App() {
     prepare();
     i18n.onChange((value) => {
       console.log("I18n has changed!");
-      console.log(value._locale);
-      setGlobalStyles({fontFamily: `${value._locale}-Bold`})
+      // console.log(value._locale);
+      setGlobalStyles({fontFamily: `${value._locale}-`})
     });
   }, []);
 
@@ -83,7 +83,7 @@ export default function App() {
   }
 
   return (
-    <StoreContext.Provider value={{cartStore: new CartStore(), languageStore: new LanguageStore(), globalStyles: globalStyles}}>
+    <StoreContext.Provider value={{cartStore: new CartStore(),authStore: new AuthStore(), menuStore: new MenuStore(), languageStore: new LanguageStore(), globalStyles: globalStyles}}>
       <View style={{ height: "100%" }} onLayout={onLayoutRootView}>
       <StatusBar />
 

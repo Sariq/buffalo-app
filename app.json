@@ -28,7 +28,7 @@
         "backgroundColor": "#FFFFFF"
       },
       "splash": {
-        "image": "./assets/splash-screen.png"
+        "image": "./assets/splash.png"
       },
       "package": "com.sariq.buffalo",
       "config": {

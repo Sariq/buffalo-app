@@ -1,31 +1,26 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
-import { observer } from "mobx-react";
-import { useContext } from "react";
-import { StoreContext } from "../../../stores";
 import i18n from "../../../translations";
 
 import themeStyle from "../../../styles/theme.style";
 import { CONSTS_PRODUCTS } from "../../../consts/products";
 
-// const productsList = CONSTS_PRODUCTS;
+const productsList = CONSTS_PRODUCTS;
 
-const CategoryItemsList = ({ productsList }) => {
+export default function CategoryItemsList({ category }) {
   const navigation = useNavigation();
 
   const [selectedItem, setSelectedItem] = useState();
 
   const onItemSelect = (item) => {
     setSelectedItem(item);
-    navigation.navigate("meal", { item: item });
+    navigation.navigate("meal", { itemId: item.id, categoryId: category });
   };
-
-  // console.log("productsList", productsList)
 
   return (
     <View style={styles.container}>
-      {productsList.map((item) => (
+      {productsList[category].map((item) => (
         <TouchableOpacity
           style={styles.categoryItem}
           onPress={() => {
@@ -45,8 +40,7 @@ const CategoryItemsList = ({ productsList }) => {
               },
             ]}
           >
-            {item.name}
-            {/* {i18n.t(`products.${item.name}.name`)} */}
+            {i18n.t(`products.${item.name}.name`)}
           </Text>
           <Text
             style={[
@@ -62,8 +56,6 @@ const CategoryItemsList = ({ productsList }) => {
     </View>
   );
 }
-export default observer(CategoryItemsList);
-
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",

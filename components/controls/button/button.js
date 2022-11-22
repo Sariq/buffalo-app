@@ -2,8 +2,9 @@ import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { useState } from "react";
 import theme from "../../../styles/theme.style";
 import Icon from "../../icon";
+import themeStyle from "../../../styles/theme.style";
 
-export default function Button({ onClickFn, text, icon, fontSize, bgColor, textColor }) {
+export default function Button({ onClickFn, text, icon, fontSize, bgColor, textColor, fontFamily }) {
   const onBtnClick = () => {
     onClickFn();
   };
@@ -11,7 +12,7 @@ export default function Button({ onClickFn, text, icon, fontSize, bgColor, textC
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        style={{...styles.button, backgroundColor: bgColor}}
+        style={{...styles.button, backgroundColor: bgColor, borderColor: bgColor == "white" && themeStyle.PRIMARY_COLOR, borderWidth: bgColor == "white" ? 1 : 0}}
         onPress={() => {
           onBtnClick();
         }}
@@ -21,7 +22,7 @@ export default function Button({ onClickFn, text, icon, fontSize, bgColor, textC
           size={20}
           style={{ color: textColor || theme.GRAY_700 }}
         />
-        <Text style={{...styles.buttonText, fontSize: fontSize, color:textColor}}>{text}</Text>
+        <Text style={{...styles.buttonText, fontSize: fontSize, color:textColor, fontFamily:fontFamily}}>{text}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -32,7 +33,7 @@ const styles = StyleSheet.create({
     },
   button: {
     backgroundColor: theme.PRIMARY_COLOR,
-    borderRadius: 20,
+    borderRadius: 30,
     display: "flex",
     flexDirection: "row",
     alignItems: "center",

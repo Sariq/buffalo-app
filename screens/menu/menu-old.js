@@ -1,90 +1,72 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { useState, useEffect } from "react";
-import { groupBy } from "lodash";
-import { observer } from "mobx-react";
-import { useContext } from "react";
-import { StoreContext } from "../../stores";
-
 import { SvgXml } from "react-native-svg";
 import { CONSTS_ICONS } from "../../consts/consts-icons";
 import themeStyle from "../../styles/theme.style";
 import axios from "axios";
 
-import { CONSTS_MENU_API } from "../../consts/menu-api-mock";
-
 /* components */
 import CategoryItemsList from "./components/categoryItemsList";
 import Icon from "../../components/icon";
 
-// const categoryList = [
-//   {
-//     id: "meat",
-//     icon: "burger_icon",
-//     title: "برجر لحم",
-//   },
-//   {
-//     id: "crispy",
-//     icon: "crispy_icon",
-//     title: "كرسبي",
-//   },
-//   {
-//     id: "sides",
-//     icon: "box-icon",
-//     title: "سايدس",
-//   },
-//   {
-//     id: "drinks",
-//     icon: "drinks_icon",
-//     title: "سايدس",
-//   },
-//   {
-//     id: "deals",
-//     icon: "deals_icon",
-//     title: "حملات",
-//   },
-// ];
+const categoryList = [
+  {
+    id: "meat",
+    icon: "burger_icon",
+    title: "برجر لحم",
+  },
+  {
+    id: "crispy",
+    icon: "crispy_icon",
+    title: "كرسبي",
+  },
+  {
+    id: "sides",
+    icon: "box-icon",
+    title: "سايدس",
+  },
+  {
+    id: "drinks",
+    icon: "drinks_icon",
+    title: "سايدس",
+  },
+  {
+    id: "deals",
+    icon: "deals_icon",
+    title: "حملات",
+  },
+];
 
-const MenuScreen = () => {
-  const { menuStore } = useContext(StoreContext);
-
-  const [categoryList, setCategoryList] = useState();
-  const [selectedCategory, setSelectedCategory] = useState();
+export default function MenuScreen() {
+  const [selectedCategory, setSelectedCategory] = useState(categoryList[0]);
 
   const onCategorySelect = (category) => {
     setSelectedCategory(category);
   };
 
-  const getMenu = () => {
-    const categories = menuStore.categories;
-    console.log("categories",categories)
-    setCategoryList(categories)
-    setSelectedCategory(categories["BURGERS"])
-  //   axios
-  //     .get("https://jsonplaceholder.typicode.com/users")
-  //     .then((response) => {
-  //       console.log("getting data from axios", response.data);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
- };
+  goForAxios = () => {
+    axios
+      .get("https://jsonplaceholder.typicode.com/users")
+      .then((response) => {
+        console.log("getting data from axios", response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   useEffect(()=>{
-    getMenu();
-  },[])
-
-  if(!categoryList || !selectedCategory){
-    return null;
-  }
+    goForAxios()
+  })
 
   return (
     <View style={{ height: "100%", backgroundColor: "white" }}>
       <View style={styles.container}>
-        {Object.keys(categoryList).map((key, index) => (
+        {categoryList.map((category) => (
           <TouchableOpacity
             style={[styles.categoryItem]}
             onPress={() => {
-              onCategorySelect(categoryList[key]);
+              onCategorySelect(category);
             }}
           >
             <View
@@ -93,18 +75,18 @@ const MenuScreen = () => {
 
                 {
                   backgroundColor:
-                    categoryList[key].id === selectedCategory?.id
+                    category.id === selectedCategory.id
                       ? themeStyle.PRIMARY_COLOR
                       : themeStyle.WHITE_COLOR,
                 },
               ]}
             >
               <Icon
-                icon={categoryList[key].icon}
+                icon={category.icon}
                 size={30}
                 style={{
                   color:
-                    categoryList[key].id === selectedCategory?.id
+                    category.id === selectedCategory.id
                       ? themeStyle.GRAY_700
                       : themeStyle.GRAY_300,
                 }}
@@ -115,24 +97,21 @@ const MenuScreen = () => {
                 {
                   marginTop: 10,
                   color:
-                    categoryList[key].id === selectedCategory?.id
+                    category.id === selectedCategory.id
                       ? themeStyle.GRAY_700
                       : themeStyle.GRAY_300,
                 },
               ]}
             >
-              {key}
+              {category.title}
             </Text>
           </TouchableOpacity>
         ))}
       </View>
-      <CategoryItemsList productsList={selectedCategory} />
+      <CategoryItemsList category={selectedCategory.id} />
     </View>
   );
 }
-
-export default observer(MenuScreen);
-
 const styles = StyleSheet.create({
   container: {
     display: "flex",
