@@ -3,18 +3,18 @@ import Counter from "../controls/counter";
 import { gradiantVariants } from "./consts.js";
 import CheckBox from "../controls/checkbox";
 
-export default function GradiantRow({ onChangeFn, icon, type, price, title, value, stepValue }) {
+export default function GradiantRow({ onChangeFn, icon, type, price, title, value, stepValue, minValue }) {
   const onChange = (value) => {
     onChangeFn(value);
   };
 
 
-  const getInputByType = (type, valuex) => {
+  const getInputByType = (type, valuex, minValue) => {
     switch (type) {
       case "counter":
         return <Counter onCounterChange={onChange} value={valuex}/>;
       case "COUNTER":
-        return <Counter onCounterChange={onChange} value={valuex} stepValue={stepValue} />;
+        return <Counter onCounterChange={onChange} value={valuex} stepValue={stepValue} minValue={minValue} />;
       case "checkbox":
         return <CheckBox onChange={onChange} value={valuex}/>;
       case "CHOICE":
@@ -35,7 +35,7 @@ export default function GradiantRow({ onChangeFn, icon, type, price, title, valu
           {price ? <Text>₪{price}</Text> : null}
         </View>
       </View>
-      <View style={styles.inputConatainer}>{getInputByType(type, value)}</View>
+      <View style={styles.inputConatainer}>{getInputByType(type, value, minValue)}</View>
     </View>
   );
 }

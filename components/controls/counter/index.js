@@ -2,10 +2,10 @@ import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { useState, useEffect } from "react";
 import themeStyle from "../../../styles/theme.style";
 
-export default function Counter({ onCounterChange, value, stepValue = 1 }) {
+export default function Counter({ onCounterChange, value, stepValue = 1, minValue = 0 }) {
   const [couter, setCounter] = useState(value || 0);
   const onBtnClick = (value) => {
-    if (couter === 0 && value === -1) {
+    if ((couter === 0 && value === -1) || (couter + value < minValue )) {
       return;
     }
     const updatedValue = couter + value;

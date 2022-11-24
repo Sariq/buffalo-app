@@ -62,20 +62,19 @@ const CartScreen = () => {
     cartStore.cartItems.forEach((item)=>{
       tmpOrderPrice+= item.price
     })
-    // console.log(cartStore.cartItems[0])
+    // console.log(cartStore.cartItems[0].extras["מידת עשיה"])
     setItemsPrice(tmpOrderPrice)
   }, [cartStore.cartItems]);
 
   const onCheckBoxChange = (isSelected) => {
     console.log(isSelected);
   };
-  const onCounterChange = (value) => {
-    // console.log(value);
-    // console.log(product);
+  const onCounterChange = (product, value) => {
+    cartStore.updateProductCount(product.data.id, value);
   };
 
   const onRemoveProduct = (product) => {
-    cartStore.removeProduct(product.item.id);
+    cartStore.removeProduct(product.data.id);
   };
 
   //   let text = "Waiting..";
@@ -124,12 +123,12 @@ const CartScreen = () => {
                   }}
                 >
                   <View style={{ marginRight: 50 }}>
-                    <Text>{product.item.name}</Text>
+                    <Text>{product.data.name}</Text>
                   </View>
                   <View style={{ width: "35%" }}>
                     <Counter
                       value={product.others.count}
-                      onCounterChange={onCounterChange}
+                      onCounterChange={(value)=>{onCounterChange(product, value)}}
                     />
                   </View>
                 </View>
@@ -155,7 +154,7 @@ const CartScreen = () => {
                     <View style={{ marginLeft: 20 }}>
                       {Object.keys(product.extras).map(
                         (key) =>
-                            <View>
+                           <View>
                               <Text>+ {key}</Text>
                             </View>
                       )}
@@ -179,7 +178,7 @@ const CartScreen = () => {
                     </TouchableOpacity>
 
                     <View style={{ marginTop: 0 }}>
-                      <Text>₪{product.item.price}</Text>
+                      {/* <Text>₪{product.item.price}</Text> */}
                     </View>
                   </View>
                 </View>

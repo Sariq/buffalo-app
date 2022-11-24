@@ -18,10 +18,10 @@ const CategoryItemsList = ({ productsList }) => {
 
   const onItemSelect = (item) => {
     setSelectedItem(item);
-    navigation.navigate("meal", { item: item });
+    navigation.navigate("meal", { item: item.id });
   };
 
-  // console.log("productsList", productsList)
+  console.log("productsList", productsList)
 
   return (
     <View style={styles.container}>

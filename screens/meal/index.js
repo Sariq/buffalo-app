@@ -14,41 +14,25 @@ import GradiantRow from "../../components/gradiant-row";
 import Button from "../../components/controls/button/button";
 import { useContext, useState, useEffect } from "react";
 import { StoreContext } from "../../stores";
-import {
-  CONSTS_PRODUCT_EXTRAS,
-  CONSTS_PRODUCT_VEGETABLES,
-} from "../../consts/product-extras";
-import { CONSTS_PRODUCTS } from "../../consts/products";
 import { ScrollView } from "react-native-gesture-handler";
 import themeStyle from "../../styles/theme.style";
 
 const MealScreen = ({ route }) => {
   const { item } = route.params;
   const navigation = useNavigation();
-
-  const [meal, setMeal] = useState();
-  const [mealTags, setMealTags] = useState();
-  const [isReady, setIsReady] = useState(false);
   let { cartStore, menuStore } = useContext(StoreContext);
 
+  const [meal, setMeal] = useState();
   useEffect(() => {
-    // const categoryProducts = CONSTS_PRODUCTS[categoryId];
-    // const product = categoryProducts.find((product) => product.id === itemId);
-    const product = item;
-    const mealTags = menuStore.getMealTags(item.id);
-    setMealTags(mealTags);
-    // product.extras = CONSTS_PRODUCT_EXTRAS;
-    // product.vegetables = CONSTS_PRODUCT_VEGETABLES;
-    // product.tags = {};
-    // product.extras = {};
-    // product.vegetables = {};
-    product.others = { count: 1, note:'' };
-    tempMeal.extras = { };
+    //const product = menuStore.meals[item];
+    console.log(menuStore.getMealByKey(item))
+    const product = menuStore.getMealByKey(item);
+    product.others = { count: 1, note: "" };
     setMeal(product);
+    console.log("XXX")
   }, []);
 
   const onAddToCart = () => {
-    console.log(meal)
     cartStore.addProductToCart(meal);
     navigation.goBack();
   };
@@ -57,65 +41,45 @@ const MealScreen = ({ route }) => {
     navigation.goBack();
   };
 
-  let tempMeal = {item};
-  tempMeal.others = { count: 1, note:'' };
-  tempMeal.extras = {};
-
-  const initMealsTags = (value, tag, type) => {
-    // tag.value = value;
-    // if (tag.type === "CHOICE" && !tag.multiple_choice) {
-    //   tempMeal=({ ...tempMeal, [type]: { [tag.id]: tag } });
-    // }else{
-    //   tempMeal={ ...tempMeal, [type]: { ...meal[type], [tag.id]: tag } };
-    // }
-    tag.value = value;
-    if (tag.type === "CHOICE" && !tag.multiple_choice) {
-      tempMeal=({ ...tempMeal, extras:{ ...tempMeal.extras, [type]: { [tag.id]: tag } }});
-    }else{
-      tempMeal={ ...tempMeal, extras:{...tempMeal.extras, [type]: { ...meal[type], [tag.id]: tag } }};
-    }
-  };
-
   const updateMeal = (value, tag, type) => {
-    tag.value = value;
+    let extraPrice = 0;
     if (tag.type === "CHOICE" && !tag.multiple_choice) {
-      setMeal({ ...meal, [type]: { [tag.id]: tag } });
-    }else{
-      setMeal({ ...meal, [type]: { ...meal[type], [tag.id]: tag } });
+      const extrasType = meal.extras[type].map((tagItem) => {
+        if (tagItem.id === tag.id) {
+          tagItem = {...tagItem, value:value};
+        } else {
+          tagItem = {...tagItem, value:!value};
+        }
+        return tagItem;
+      });
+      meal.extras[type] = extrasType;
+      setMeal({ ...meal, data: {...meal.data, price: 10}, extras: meal.extras });
+    } else {
+      const extrasType = meal.extras[type].map((tagItem) => {
+        if (tagItem.id === tag.id) {
+          if(tag.type === "COUNTER"){
+            console.log(value)
+            console.log(tagItem)
+
+            extraPrice =  value > tagItem.value ? extraPrice + tagItem.price : extraPrice - tagItem.price;
+          }else{
+            extraPrice =  value ? extraPrice + tagItem.price : extraPrice - tagItem.price;
+          }
+          tagItem.value = value;
+        }
+        return tagItem;
+      });
+
+      meal.extras[type] = extrasType;
+      setMeal({ ...meal, data: {...meal.data, price: meal.data.price + extraPrice}, extras: meal.extras });
     }
   };
 
   const updateOthers = (value, key, type) => {
-      setMeal({ ...meal, [type]: { ...meal[type], [key]: value } });
+    setMeal({ ...meal, [type]: { ...meal[type], [key]: value } });
   };
 
-  useEffect(() => {
-    if (mealTags) {
-      Object.keys(mealTags).map((key) => {
-
-        if (mealTags[key][0].type === "CHOICE") {
-          if (!mealTags[key][0].multiple_choice) {
-            mealTags[key].map((tag) => {
-              if (tag.isdefault) {
-                initMealsTags(tag.isdefault, tag, key);
-              }
-            });
-          }
-        }
-
-        if (mealTags[key][0].type === "COUNTER") {
-          mealTags[key].map((tag) => {
-            initMealsTags(tag.counter_init_value, tag, key);
-          });
-        }
-
-      });
-    }
-    setMeal(tempMeal);
-    setIsReady(true);
-  }, [mealTags]);
-
-  if (!meal || !isReady) {
+  if (!meal) {
     return null;
   }
 
@@ -157,19 +121,15 @@ const MealScreen = ({ route }) => {
             }}
           >
             <View>
-              <Text style={{ fontSize: 25 }}>
-                {i18n.t(`products.${meal.name}.name`)}
-              </Text>
+              <Text style={{ fontSize: 25 }}>{meal.data.name}</Text>
             </View>
             <View>
-              <Text style={{ fontSize: 15 }}>
-                {i18n.t(`products.${meal.name}.description`)}
-              </Text>
+              <Text style={{ fontSize: 15 }}>{meal.data.name}</Text>
             </View>
           </View>
         </View>
 
-         <View style={styles.sectionContainer}>
+        <View style={styles.sectionContainer}>
           <View style={styles.gradiantRowContainer}>
             <GradiantRow
               onChangeFn={(value) => {
@@ -180,75 +140,34 @@ const MealScreen = ({ route }) => {
               value={meal["others"]["count"]}
             />
           </View>
-        </View> 
-          {Object.keys(mealTags).map((key) => (
-
-        <View style={styles.sectionContainer}>
-            <View style={styles.gradiantRowContainer}>
-              <Text>{key}</Text>
-              {mealTags[key].map((tag) => (
-                <>
-                  {/* <Text>{(meal["מידת עשיה"]["33"].name)}</Text> */}
-                  <GradiantRow
-                    onChangeFn={(value) => {
-                      updateMeal(value, tag, key);
-                    }}
-                    //  icon={CONSTS_PRODUCT_EXTRAS[key].icon}
-                    type={tag.type}
-                    title={tag.name}
-                    price={tag.price}
-                    stepValue={(meal.extras[key] && meal.extras[key][tag.id])?.counter_step_value}
-                    value={(meal.extras[key] && meal.extras[key][tag.id])?.value}
-                  />
-                </>
-              ))}
-            </View>
-       
         </View>
-           ))}
-        {/* <View style={styles.sectionContainer}>
-          {Object.keys(CONSTS_PRODUCT_EXTRAS).map((key) => (
-            <View style={styles.gradiantRowContainer}>
-              <GradiantRow
-                onChangeFn={(value) => {
-                  updateMeal(value, key, "extras");
-                }}
-                icon={CONSTS_PRODUCT_EXTRAS[key].icon}
-                type={CONSTS_PRODUCT_EXTRAS[key].inputType}
-                title={CONSTS_PRODUCT_EXTRAS[key].title}
-                value={meal["extras"][key]}
-              />
+        {true &&
+          Object.keys(meal.extras).map((key) => (
+            <View style={styles.sectionContainer}>
+              <View style={styles.gradiantRowContainer}>
+                <Text>{key}</Text>
+                {Object.keys(meal.extras[key]).map((tagId) => {
+                  const tag = meal.extras[key][tagId];
+                  return (
+                    <><Text>{tag.value}</Text>
+                      <GradiantRow
+                        onChangeFn={(value) => {
+                          updateMeal(value, tag, key);
+                        }}
+                        //  icon={CONSTS_PRODUCT_EXTRAS[key].icon}
+                        type={tag.type}
+                        title={tag.name}
+                        price={tag.price}
+                        minValue={tag.counter_min_value}
+                        stepValue={tag.counter_step_value}
+                        value={tag.value}
+                      />
+                    </>
+                  );
+                })}
+              </View>
             </View>
           ))}
-        </View> */}
-        {/* <View style={styles.sectionContainer}>
-          {Object.keys(CONSTS_PRODUCT_VEGETABLES).map((key) => (
-            <View style={styles.gradiantRowContainer}>
-              <GradiantRow
-                onChangeFn={(value) => {
-                  updateMeal(value, key, "vegetables");
-                }}
-                icon={CONSTS_PRODUCT_VEGETABLES[key].icon}
-                type={CONSTS_PRODUCT_VEGETABLES[key].inputType}
-                title={CONSTS_PRODUCT_VEGETABLES[key].title}
-                value={meal["vegetables"][key]}
-              />
-            </View>
-          ))}
-        </View> */}
-{/* 
-        <View style={styles.sectionContainer}>
-          <View style={styles.gradiantRowContainer}>
-            <GradiantRow
-              onChangeFn={(value) => {
-                updateMeal(value, "splice", "others");
-              }}
-              type={"checkbox"}
-              title={"slice"}
-              value={meal["others"]["splice"]}
-            />
-          </View>
-        </View> */}
 
         <View style={styles.sectionContainer}>
           <View style={styles.gradiantRowContainer}>
@@ -258,7 +177,7 @@ const MealScreen = ({ route }) => {
               </View>
               <View>
                 <TextInput
-                  onChange={(e)=>{
+                  onChange={(e) => {
                     updateOthers(e.nativeEvent.text, "note", "others");
                   }}
                   multiline={true}
@@ -290,7 +209,7 @@ const MealScreen = ({ route }) => {
         >
           <View style={{ paddingRight: 10 }}>
             <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-              ₪{meal.price}
+              ₪{meal.data.price}
             </Text>
           </View>
           <Button
