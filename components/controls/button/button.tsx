@@ -1,10 +1,18 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import { useState } from "react";
 import theme from "../../../styles/theme.style";
 import Icon from "../../icon";
 import themeStyle from "../../../styles/theme.style";
 
-export default function Button({ onClickFn, text, icon, fontSize, bgColor, textColor, fontFamily }) {
+type TProps = {
+  onClickFn: any;
+  text: any;
+  icon: any;
+  fontSize: any;
+  bgColor: any;
+  textColor: any;
+  fontFamily?:any;
+}
+export default function Button({ onClickFn, text, icon, fontSize, bgColor, textColor, fontFamily }: TProps) {
   const onBtnClick = () => {
     onClickFn();
   };
