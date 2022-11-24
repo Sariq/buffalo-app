@@ -32,51 +32,27 @@ class MenuStore {
     return temp;
   }
 
-  initMealsTags = (value, tag, type, key) => {
-    tag.value = value;
-    if (tag.type === "CHOICE" && !tag.multiple_choice) {
+  initMealsTags = (tag, type, key) => {
       const extrasType = this.meals[key].extras[type].map((tagItem)=>{
         if(tagItem.id === tag.id){
-          tagItem.value = value
-        }else{
-          tagItem.value = !value
+          if (tag.type === "CHOICE") {
+            tagItem.value = tag.isdefault
+          }else{
+            tagItem.value = tag.counter_init_value
+          }
         }
         return tagItem;
       })
       this.meals[key].extras[type] = extrasType;
       this.meals[key] = {...this.meals[key], extras:this.meals[key].extras };
-    }else{
-      const extrasType = this.meals[key].extras[type].map((tagItem)=>{
-        if(tagItem.id === tag.id){
-          tagItem.value = value
-        }
-        return tagItem;
-      })
-      this.meals[key].extras[type] = extrasType;
-      this.meals[key] = {...this.meals[key], extras:this.meals[key].extras };
-      
-    }
   };
 
   mainMealTags = (mealKey, mealTags) =>{
     Object.keys(mealTags).map((key) => {
 
-      if (mealTags[key][0].type === "CHOICE") {
-        if (!mealTags[key][0].multiple_choice) {
-          mealTags[key].map((tag) => {
-            if (tag.isdefault) {
-              this.initMealsTags(tag.isdefault, tag, key, mealKey);
-            }
-          });
-        }
-      }
-
-      if (mealTags[key][0].type === "COUNTER") {
         mealTags[key].map((tag) => {
-          this.initMealsTags(tag.counter_init_value, tag, key, mealKey);
+          this.initMealsTags(tag, key, mealKey);
         });
-      }
-
     });
   }
 }
