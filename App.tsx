@@ -87,7 +87,7 @@ export default function App() {
       <View style={{ height: "100%" }} onLayout={onLayoutRootView}>
       <StatusBar />
 
-        <RootNavigator style={{ flexDirection: "row-reverse" }} />
+        <RootNavigator />
       </View>
     </StoreContext.Provider>
   );

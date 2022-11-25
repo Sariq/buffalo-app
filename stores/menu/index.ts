@@ -23,7 +23,7 @@ class MenuStore {
       const extras = this.getMealTags(key);
       this.meals[key].extras = extras;
       this.mainMealTags(key, extras);
-      this.meals[key].data = CONSTS_MENU_API.menu.find((product)=> product.id == key)
+      this.meals[key].data = CONSTS_MENU_API.menu.find((product)=> product.id.toString() === key)
      });
   };
 

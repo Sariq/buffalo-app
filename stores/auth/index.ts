@@ -28,7 +28,7 @@ class AuthStore {
     try {
       console.log("xx",token)
       await AsyncStorage.setItem("@storage_userToken", token);
-      setUserToken(token)
+      this.setUserToken(token)
     } catch (e) {
       // saving error
     }
