@@ -6,10 +6,10 @@ import themeStyle from "../../../styles/theme.style";
 type TProps = {
   onClickFn: any;
   text: any;
-  icon: any;
-  fontSize: any;
-  bgColor: any;
-  textColor: any;
+  icon?: any;
+  fontSize?: any;
+  bgColor?: any;
+  textColor?: any;
   fontFamily?:any;
 }
 export default function Button({ onClickFn, text, icon, fontSize, bgColor, textColor, fontFamily }: TProps) {

@@ -16,34 +16,6 @@ import { CONSTS_MENU_API } from "../../consts/menu-api-mock";
 import CategoryItemsList from "./components/categoryItemsList";
 import Icon from "../../components/icon";
 
-// const categoryList = [
-//   {
-//     id: "meat",
-//     icon: "burger_icon",
-//     title: "برجر لحم",
-//   },
-//   {
-//     id: "crispy",
-//     icon: "crispy_icon",
-//     title: "كرسبي",
-//   },
-//   {
-//     id: "sides",
-//     icon: "box-icon",
-//     title: "سايدس",
-//   },
-//   {
-//     id: "drinks",
-//     icon: "drinks_icon",
-//     title: "سايدس",
-//   },
-//   {
-//     id: "deals",
-//     icon: "deals_icon",
-//     title: "حملات",
-//   },
-// ];
-
 const MenuScreen = () => {
   const { menuStore } = useContext(StoreContext);
 
@@ -56,24 +28,24 @@ const MenuScreen = () => {
 
   const getMenu = () => {
     const categories = menuStore.categories;
-    console.log("categories",categories)
-    setCategoryList(categories)
-    setSelectedCategory(categories["BURGERS"])
-  //   axios
-  //     .get("https://jsonplaceholder.typicode.com/users")
-  //     .then((response) => {
-  //       console.log("getting data from axios", response.data);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
- };
+    console.log("categories", categories);
+    setCategoryList(categories);
+    setSelectedCategory(categories["BURGERS"]);
+    //   axios
+    //     .get("https://jsonplaceholder.typicode.com/users")
+    //     .then((response) => {
+    //       console.log("getting data from axios", response.data);
+    //     })
+    //     .catch((error) => {
+    //       console.log(error);
+    //     });
+  };
 
-  useEffect(()=>{
+  useEffect(() => {
     getMenu();
-  },[])
+  }, []);
 
-  if(!categoryList || !selectedCategory){
+  if (!categoryList || !selectedCategory) {
     return null;
   }
 
@@ -129,7 +101,7 @@ const MenuScreen = () => {
       <CategoryItemsList productsList={selectedCategory} />
     </View>
   );
-}
+};
 
 export default observer(MenuScreen);
 

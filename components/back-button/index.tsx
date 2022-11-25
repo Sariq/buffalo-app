@@ -20,29 +20,29 @@ export default function BackButton() {
           onBtnClick();
         }}
       >
-      <View
-        style={{
-          borderWidth: 1,
-          borderColor: "rgba(112,112,112,0.1)",
-          borderRadius: 30,
-          width: 35,
-          height: 35,
-          alignItems: "center",
-          justifyContent: "center",
-          marginVertical: 10,
-          transform: [{ rotate: '180deg' }]
-        }}
-      >
-        <Icon icon="arrow-right" size={15} style={{ color: "#292d32" }} />
-      </View>
+        <View
+          style={{
+            borderWidth: 1,
+            borderColor: "rgba(112,112,112,0.1)",
+            borderRadius: 30,
+            width: 35,
+            height: 35,
+            alignItems: "center",
+            justifyContent: "center",
+            marginVertical: 10,
+            transform: [{ rotate: "180deg" }],
+          }}
+        >
+          <Icon icon="arrow-right" size={15} style={{ color: "#292d32" }} />
+        </View>
       </TouchableOpacity>
     </View>
   );
 }
 const styles = StyleSheet.create({
-    container:{
-        width: "100%",
-    },
+  container: {
+    width: "100%",
+  },
   button: {
     backgroundColor: theme.PRIMARY_COLOR,
     borderRadius: 30,
@@ -50,10 +50,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    padding:10,
-
+    padding: 10,
   },
   buttonText: {
-    marginHorizontal: 20
+    marginHorizontal: 20,
   },
 });

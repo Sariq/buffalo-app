@@ -12,8 +12,8 @@ class LanguageStore {
 
 
   changeLang = (lng) => {
-    this.selectedLang = lng;
     i18n.locale = lng;
+    this.selectedLang = lng;
   };
 }
 

@@ -7,26 +7,21 @@ class AuthStore {
 
   constructor() {
     makeAutoObservable(this);
-
     this.getUserToken();
   }
+  
   getUserToken = async () => {
     const token = await AsyncStorage.getItem("@storage_userToken");
-    console.log("getD",token)
     this.setUserToken(token);
   };
-
   setUserToken = (value) => {
     this.userToken = value;
   };
   setVerifyCodeToken = (value) => {
-    console.log("setVerifyCodeToken", value)
     this.verifyCodeToken = value;
   };
-
   updateUserToken = async (token) => {
     try {
-      console.log("xx",token)
       await AsyncStorage.setItem("@storage_userToken", token);
       this.setUserToken(token)
     } catch (e) {

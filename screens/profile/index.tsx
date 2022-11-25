@@ -1,6 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
 import Icon from "../../components/icon";
-import themeStyle from "../../styles/theme.style";
 import BackButton from "../../components/back-button";
 
 export default function ProfileScreen() {

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
-import * as Font from 'expo-font';
+import * as Font from "expo-font";
 
 import { useContext } from "react";
 import { observer } from "mobx-react";
 import { Image, Text, View, StyleSheet } from "react-native";
-import MapView from "react-native-maps";
+import MapView, { Marker } from "react-native-maps";
 import { Dimensions } from "react-native";
 import { ToggleButton, Divider, Button } from "react-native-paper";
 /* styles */
@@ -21,12 +21,28 @@ import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import CartStore from "../../stores/cart";
 import BackButton from "../../components/back-button";
 
+const SHIPPING_METHODS = {
+  shipping: "shipping",
+  takAway: "take away",
+};
+const PAYMENT_METHODS = {
+  creditCard: "credit card",
+  cash: "cash",
+};
+type TShippingMethod = {
+  shipping: string;
+  takAway: string;
+};
 const CartScreen = () => {
   let cartStore = useContext(StoreContext).cartStore;
   const navigation = useNavigation();
 
-  const [isShipping, setIsShipping] = React.useState(true);
-  const [isCreditCard, setIsCreditCard] = React.useState(true);
+  const [shippingMethod, setShippingMethod] = React.useState(
+    SHIPPING_METHODS.shipping
+  );
+  const [paymentMthod, setPaymentMthod] = React.useState(
+    PAYMENT_METHODS.creditCard
+  );
   const [itemsPrice, setItemsPrice] = React.useState(0);
   const [totalPrice, setTotalPrice] = React.useState(0);
 
@@ -34,7 +50,7 @@ const CartScreen = () => {
   const [errorMsg, setErrorMsg] = useState(null);
 
   useEffect(() => {
-    if (isShipping) {
+    if (shippingMethod === SHIPPING_METHODS.shipping) {
       (async () => {
         let { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== "granted") {
@@ -46,12 +62,12 @@ const CartScreen = () => {
         setLocation(location);
       })();
     }
-  }, [isShipping]);
-  
+  }, [shippingMethod === SHIPPING_METHODS.shipping]);
+
   useEffect(() => {
-      const shippingPrice = isShipping ? 15 : 0;
-      setTotalPrice(shippingPrice + itemsPrice);
-  }, [isShipping, itemsPrice]);
+    const shippingPrice = shippingMethod === SHIPPING_METHODS.shipping ? 15 : 0;
+    setTotalPrice(shippingPrice + itemsPrice);
+  }, [shippingMethod === SHIPPING_METHODS.shipping, itemsPrice]);
 
   useEffect(() => {
     if (cartStore.cartItems.length === 0) {
@@ -59,26 +75,26 @@ const CartScreen = () => {
       return;
     }
     let tmpOrderPrice = 0;
-    cartStore.cartItems.forEach((item)=>{
-      tmpOrderPrice+= item.data.price * item.others.count;
-    })
+    cartStore.cartItems.forEach((item) => {
+      tmpOrderPrice += item.data.price * item.others.count;
+    });
     // console.log(cartStore.cartItems[0].extras["מידת עשיה"])
-    setItemsPrice(tmpOrderPrice)
+    setItemsPrice(tmpOrderPrice);
   }, [cartStore.cartItems]);
 
   const onCheckBoxChange = (isSelected) => {
     console.log(isSelected);
   };
-  const onCounterChange = (product,index, value) => {
+  const onCounterChange = (product, index, value) => {
     cartStore.updateProductCount(product.data.id + index, value);
   };
 
-  const onRemoveProduct = (product,index) => {
+  const onRemoveProduct = (product, index) => {
     cartStore.removeProduct(product.data.id + index);
   };
 
   const onSendCart = () => {
-    console.log(cartStore.cartItems[0].extra)
+    console.log(cartStore.cartItems[0].extra);
   };
 
   //   let text = "Waiting..";
@@ -105,10 +121,12 @@ const CartScreen = () => {
                 marginLeft: 10,
               }}
             >
-             <BackButton/>
+              <BackButton />
             </View>
             <View>
-              <Text style={{ fontWeight: "bold", fontSize: 20 }}>{cartStore.getProductsCount()} وجبات</Text>
+              <Text style={{ fontWeight: "bold", fontSize: 20 }}>
+                {cartStore.getProductsCount()} وجبات
+              </Text>
             </View>
           </View>
           <View style={{ marginTop: -20 }}>
@@ -133,7 +151,9 @@ const CartScreen = () => {
                     <Counter
                       value={product.others.count}
                       minValue={1}
-                      onCounterChange={(value)=>{onCounterChange(product, index, value)}}
+                      onCounterChange={(value) => {
+                        onCounterChange(product, index, value);
+                      }}
                     />
                   </View>
                 </View>
@@ -157,12 +177,11 @@ const CartScreen = () => {
                       />
                     </View>
                     <View style={{ marginLeft: 20 }}>
-                      {Object.keys(product.extras).map(
-                        (key) =>
-                           <View>
-                              <Text>+ {key}</Text>
-                            </View>
-                      )}
+                      {Object.keys(product.extras).map((key) => (
+                        <View>
+                          <Text>+ {key}</Text>
+                        </View>
+                      ))}
                     </View>
                   </View>
 
@@ -191,18 +210,21 @@ const CartScreen = () => {
             ))}
           </View>
           <ToggleButton.Row
-            onValueChange={(value) => value != null && setIsShipping(value)}
-            value={isShipping}
+            onValueChange={(value) => setShippingMethod(value)}
+            value={shippingMethod}
             style={styles.togglleContainer}
           >
             <ToggleButton
               style={{
                 ...styles.togglleCItem,
-                backgroundColor: isShipping ? theme.PRIMARY_COLOR : "white",
+                backgroundColor:
+                  shippingMethod === SHIPPING_METHODS.shipping
+                    ? theme.PRIMARY_COLOR
+                    : "white",
               }}
               icon={() => (
                 <View style={styles.togglleItemContentContainer}>
-            <Icon
+                  <Icon
                     icon="shipping_icon"
                     size={25}
                     style={{ color: theme.GRAY_700 }}
@@ -213,12 +235,15 @@ const CartScreen = () => {
                   </Text>
                 </View>
               )}
-              value={true}
+              value={SHIPPING_METHODS.shipping}
             />
             <ToggleButton
               style={{
                 ...styles.togglleCItem,
-                backgroundColor: !isShipping ? theme.PRIMARY_COLOR : "white",
+                backgroundColor:
+                  shippingMethod === SHIPPING_METHODS.takAway
+                    ? theme.PRIMARY_COLOR
+                    : "white",
               }}
               icon={() => (
                 <View style={styles.togglleItemContentContainer}>
@@ -233,13 +258,13 @@ const CartScreen = () => {
                   />
                 </View>
               )}
-              value={false}
+              value={SHIPPING_METHODS.takAway}
             />
           </ToggleButton.Row>
         </View>
 
         <View style={{ alignItems: "center" }}>
-          {isShipping && location && (
+          {shippingMethod === SHIPPING_METHODS.shipping && location && (
             <MapView
               style={styles.mapContainer}
               initialRegion={{
@@ -249,9 +274,7 @@ const CartScreen = () => {
                 longitudeDelta: 0.01,
               }}
             >
-              <MapView.Marker
-                title="YIKES, Inc."
-                description="Web Design and Development"
+              <Marker
                 coordinate={{
                   latitude: location.coords.latitude,
                   longitude: location.coords.longitude,
@@ -262,31 +285,35 @@ const CartScreen = () => {
         </View>
         <View>
           <ToggleButton.Row
-            onValueChange={(value) => value != null && setIsCreditCard(value)}
-            value={isCreditCard}
+            onValueChange={(value) => setPaymentMthod(value)}
+            value={paymentMthod}
             style={styles.togglleContainer}
           >
             <ToggleButton
               style={{
                 ...styles.togglleCItem,
-                backgroundColor: !isCreditCard ? theme.PRIMARY_COLOR : "white",
+                backgroundColor:
+                  paymentMthod === PAYMENT_METHODS.cash
+                    ? theme.PRIMARY_COLOR
+                    : "white",
               }}
               icon={() => (
                 <View style={styles.togglleItemContentContainer}>
-                <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                ₪
-                </Text>
+                  <Text style={{ fontSize: 20, fontWeight: "bold" }}>₪</Text>
                   <Text style={{ fontSize: 20, fontWeight: "bold" }}>
                     מזומן
                   </Text>
                 </View>
               )}
-              value={false}
+              value={PAYMENT_METHODS.cash}
             />
             <ToggleButton
               style={{
                 ...styles.togglleCItem,
-                backgroundColor: isCreditCard ? theme.PRIMARY_COLOR : "white",
+                backgroundColor:
+                  paymentMthod === PAYMENT_METHODS.creditCard
+                    ? theme.PRIMARY_COLOR
+                    : "white",
               }}
               icon={() => (
                 <View style={styles.togglleItemContentContainer}>
@@ -300,13 +327,13 @@ const CartScreen = () => {
                   />
                 </View>
               )}
-              value={true}
+              value={PAYMENT_METHODS.creditCard}
             />
           </ToggleButton.Row>
         </View>
 
         <View style={styles.totalPrictContainer}>
-          <View style={{ alignItems: "center", fontWeight: "bold" }}>
+          <View style={{ alignItems: "center" }}>
             <Text style={{ fontWeight: "bold" }}>المجموع</Text>
           </View>
           <View style={{ marginTop: 30 }}>
@@ -319,16 +346,18 @@ const CartScreen = () => {
               </View>
             </View>
 
-            {isShipping && <View style={styles.priceRowContainer}>
-              <View>
-                <Text>التوصيل</Text>
+            {shippingMethod === SHIPPING_METHODS.shipping && (
+              <View style={styles.priceRowContainer}>
+                <View>
+                  <Text>التوصيل</Text>
+                </View>
+                <View>
+                  <Text>₪15</Text>
+                </View>
               </View>
-              <View>
-                <Text>₪15</Text>
-              </View>
-            </View>}
+            )}
 
-            <Divider style={{...styles.priceRowContainer, borderWidth:0.1, color:'rgba(112,112,112,0.4666666666666667 )'}} />
+
 
             <View style={styles.priceRowContainer}>
               <View>

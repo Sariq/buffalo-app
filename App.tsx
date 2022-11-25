@@ -1,14 +1,12 @@
 import { StatusBar } from "expo-status-bar";
 import { useState, useEffect, useCallback } from "react";
-import * as Font from 'expo-font';
+import * as Font from "expo-font";
 
-import { StyleSheet, Text, View, I18nManager } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
+import { View, I18nManager } from "react-native";
 import RootNavigator from "./navigation";
-import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
 I18nManager.forceRTL(true);
 I18nManager.allowRTL(true);
-import i18n from "./translations"
+import i18n from "./translations";
 /* stores*/
 import CartStore from "./stores/cart";
 import MenuStore from "./stores/menu";
@@ -19,28 +17,27 @@ import AuthStore from "./stores/auth";
 // Keep the splash screen visible while we fetch resources
 //SplashScreen.preventAutoHideAsync();
 let customARFonts = {
-  'ar-Black': require(`./assets/fonts/ar/Black.ttf`),
-  'ar-Bold': require(`./assets/fonts/ar/Bold.ttf`),
-  'ar-ExtraBold': require(`./assets/fonts/ar/ExtraBold.ttf`),
-  'ar-Light': require(`./assets/fonts/ar/Light.ttf`),
-  'ar-Medium': require(`./assets/fonts/ar/Medium.ttf`),
-  'ar-Regular': require(`./assets/fonts/ar/Regular.ttf`),
-  'ar-SemiBold': require(`./assets/fonts/ar/SemiBold.ttf`),
+  "ar-Black": require(`./assets/fonts/ar/Black.ttf`),
+  "ar-Bold": require(`./assets/fonts/ar/Bold.ttf`),
+  "ar-ExtraBold": require(`./assets/fonts/ar/ExtraBold.ttf`),
+  "ar-Light": require(`./assets/fonts/ar/Light.ttf`),
+  "ar-Medium": require(`./assets/fonts/ar/Medium.ttf`),
+  "ar-Regular": require(`./assets/fonts/ar/Regular.ttf`),
+  "ar-SemiBold": require(`./assets/fonts/ar/SemiBold.ttf`),
 
-  'he-Black': require(`./assets/fonts/he/Black.ttf`),
-  'he-Bold': require(`./assets/fonts/he/Bold.ttf`),
-  'he-ExtraBold': require(`./assets/fonts/he/ExtraBold.ttf`),
-  'he-Light': require(`./assets/fonts/he/Light.ttf`),
-  'he-Medium': require(`./assets/fonts/he/Medium.ttf`),
-  'he-Regular': require(`./assets/fonts/he/Regular.ttf`),
-  'he-SemiBold': require(`./assets/fonts/he/SemiBold.ttf`),
-
+  "he-Black": require(`./assets/fonts/he/Black.ttf`),
+  "he-Bold": require(`./assets/fonts/he/Bold.ttf`),
+  "he-ExtraBold": require(`./assets/fonts/he/ExtraBold.ttf`),
+  "he-Light": require(`./assets/fonts/he/Light.ttf`),
+  "he-Medium": require(`./assets/fonts/he/Medium.ttf`),
+  "he-Regular": require(`./assets/fonts/he/Regular.ttf`),
+  "he-SemiBold": require(`./assets/fonts/he/SemiBold.ttf`),
 };
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
   const [isFontReady, setIsFontReady] = useState(false);
-  const [globalStyles, setGlobalStyles] = useState({});
+  const [globalStyles, setGlobalStyles] = useState({fontFamily: `${i18n.locale}-`});
   useEffect(() => {
     async function prepare() {
       try {
@@ -60,10 +57,8 @@ export default function App() {
     }
 
     prepare();
-    i18n.onChange((value) => {
-      console.log("I18n has changed!");
-      // console.log(value._locale);
-      setGlobalStyles({fontFamily: `${value._locale}-`})
+    i18n.onChange(() => {
+      setGlobalStyles({ fontFamily: `${i18n.locale}-` });
     });
   }, []);
 
@@ -83,27 +78,20 @@ export default function App() {
   }
 
   return (
-    <StoreContext.Provider value={{cartStore: new CartStore(),authStore: new AuthStore(), menuStore: new MenuStore(), languageStore: new LanguageStore(), globalStyles: globalStyles}}>
+    <StoreContext.Provider
+      value={{
+        cartStore: new CartStore(),
+        authStore: new AuthStore(),
+        menuStore: new MenuStore(),
+        languageStore: new LanguageStore(),
+        globalStyles: globalStyles,
+      }}
+    >
       <View style={{ height: "100%" }} onLayout={onLayoutRootView}>
-      <StatusBar />
-
+        <StatusBar />
         <RootNavigator />
       </View>
     </StoreContext.Provider>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  footerTabs: {
-    backgroundColor: "blue",
-    width: "100%",
-    position: "absolute",
-    bottom: 0,
-  },
-});

@@ -5,11 +5,11 @@ import { observer } from "mobx-react";
 import themeStyle from "../../../styles/theme.style";
 import { useNavigation, useNavigationState } from "@react-navigation/native";
 import theme from "../../../styles/theme.style";
-import Icon from "../../../components/icon";
+import Icon from "../../icon";
 import { StoreContext } from "../../../stores";
 
 const yellowBgScreens = ['homeScreen'];
-const Header = ({ store }) => {
+const Header = () => {
   const navigation = useNavigation();
   const routeState = useNavigationState((state) => state);
   let cartStore = useContext(StoreContext).cartStore;

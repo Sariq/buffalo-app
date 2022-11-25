@@ -33,8 +33,7 @@ export default function TermsAndConditionsScreen({ navigation }) {
           paddingTop: 20,
           paddingHorizontal: 20,
           backgroundColor: themeStyle.WHITE_COLOR,
-          height: "100%"
-
+          height: "100%",
         }}
       >
         <View>

@@ -6,7 +6,7 @@ import { SvgXml } from "react-native-svg";
 import { CONSTS_ICONS } from "../../../consts/consts-icons";
 import themeStyle from "../../../styles/theme.style";
 
-import Icon from "../../../components/icon";
+import Icon from "../../icon";
 
 /* styles */
 import theme from "../../../styles/theme.style";
@@ -109,7 +109,6 @@ function MyTabBar({ state, descriptors, navigation }) {
         return (
           <TouchableOpacity
             accessibilityRole="button"
-            accessibilityStates={isFocused ? ["selected"] : []}
             accessibilityLabel={options.tabBarAccessibilityLabel}
             testID={options.tabBarTestID}
             onPress={onPress}
@@ -148,7 +147,6 @@ export default function FooterTabs() {
     >
       {routes.map((route) => (
         <Tab.Screen
-          props={route}
           name={route.name}
           component={route.component}
           initialParams={{ title: route.title }}

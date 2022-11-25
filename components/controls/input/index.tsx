@@ -5,7 +5,12 @@ import { useState } from "react";
 import themeStyle from "../../../styles/theme.style";
 import Icon from "../../icon";
 
-export default function InputText({ onChange, value, label }) {
+type TProps = {
+  onChange: any;
+  label: string;
+  value?: string;
+}
+export default function InputText({ onChange, value, label }: TProps) {
   const handleOnChange = (e) => {
 
     onChange && onChange(e.nativeEvent.text)

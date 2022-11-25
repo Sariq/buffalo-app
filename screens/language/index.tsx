@@ -4,8 +4,9 @@ import themeStyle from "../../styles/theme.style";
 import { useContext } from "react";
 import { StoreContext } from "../../stores";
 import { observer } from "mobx-react";
+import i18n from "../../translations";
 
-const LanguageScreen = ({ store }) => {
+const LanguageScreen = () => {
   const { languageStore, globalStyles } = useContext(StoreContext);
   const onChangeLanguage = (lng) => {
     languageStore.changeLang(lng);
@@ -13,7 +14,7 @@ const LanguageScreen = ({ store }) => {
 
   return (
     <View style={styles(globalStyles).container}>
-      <View style={{  alignItems: "center" }}>
+      <View style={{ alignItems: "center" }}>
         <View>
           <Text
             style={{
@@ -29,7 +30,7 @@ const LanguageScreen = ({ store }) => {
               fontFamily: "he-SemiBold",
             }}
           >
-            בחר שפה
+            בחר שפה{i18n.locale}
           </Text>
         </View>
         <View style={{ width: "60%", marginTop: 80 }}>
@@ -38,19 +39,26 @@ const LanguageScreen = ({ store }) => {
               onClickFn={() => {
                 onChangeLanguage("ar");
               }}
-              bgColor={themeStyle.PRIMARY_COLOR}
+              bgColor={
+                i18n.locale === "ar"
+                  ? themeStyle.PRIMARY_COLOR
+                  : "white"
+              }
               fontSize={29}
               fontFamily="ar-SemiBold"
               text="العربية"
-              width="100%"
             />
           </View>
-          <View style={{marginTop: 20}}>
+          <View style={{ marginTop: 20 }}>
             <Button
               onClickFn={() => {
                 onChangeLanguage("he");
               }}
-              bgColor={'white'}
+              bgColor={
+                i18n.locale === "he"
+                  ? themeStyle.PRIMARY_COLOR
+                  : "white"
+              }
               fontSize={29}
               fontFamily="he-SemiBold"
               text="עברית"
@@ -59,9 +67,9 @@ const LanguageScreen = ({ store }) => {
         </View>
       </View>
       <Image
-                        style={{ width: "100%", height: "15%", marginTop:80 }}
-                        source={require("../../assets/logo-banner.png")}
-                      />
+        style={{ width: "100%", height: "15%", marginTop: 80 }}
+        source={require("../../assets/logo-banner.png")}
+      />
     </View>
   );
 };
@@ -76,7 +84,7 @@ const styles = (props) =>
       height: "100%",
     },
     textLang: {
-    //   fontFamily: props.fontFamily + "Bold",
+      //   fontFamily: props.fontFamily + "Bold",
       fontSize: 29,
     },
   });
