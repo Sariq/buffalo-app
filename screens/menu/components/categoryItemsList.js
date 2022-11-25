@@ -5,6 +5,7 @@ import { observer } from "mobx-react";
 import { useContext } from "react";
 import { StoreContext } from "../../../stores";
 import i18n from "../../../translations";
+import { ScrollView } from "react-native-gesture-handler";
 
 import themeStyle from "../../../styles/theme.style";
 import { CONSTS_PRODUCTS } from "../../../consts/products";
@@ -21,61 +22,63 @@ const CategoryItemsList = ({ productsList }) => {
     navigation.navigate("meal", { item: item.id });
   };
 
-  console.log("productsList", productsList)
+  console.log("productsList", productsList);
 
   return (
-    <View style={styles.container}>
-      {productsList.map((item) => (
-        <TouchableOpacity
-          style={styles.categoryItem}
-          onPress={() => {
-            onItemSelect(item);
-          }}
-        >
-          <View style={[styles.iconContainer]}>
-            <Image
-              style={{ width: 131, height: 140, padding: 10 }}
-              source={item.icon}
-            />
+    <ScrollView>
+      <View style={styles.container}>
+        {productsList.map((item) => (
+          <View
+            style={styles.categoryItem}
+            onTouchEnd={() => {
+              onItemSelect(item);
+            }}
+          >
+            <View style={[styles.iconContainer]}>
+              <Image
+                style={{ width: 131, height: 140, padding: 10 }}
+                source={item.icon}
+              />
+            </View>
+            <Text
+              style={[
+                {
+                  color: themeStyle.GRAY_700,
+                },
+              ]}
+            >
+              {item.name}
+              {/* {i18n.t(`products.${item.name}.name`)} */}
+            </Text>
+            <Text
+              style={[
+                {
+                  color: themeStyle.GRAY_700,
+                },
+              ]}
+            >
+              ₪{item.price}
+            </Text>
           </View>
-          <Text
-            style={[
-              {
-                color: themeStyle.GRAY_700,
-              },
-            ]}
-          >
-            {item.name}
-            {/* {i18n.t(`products.${item.name}.name`)} */}
-          </Text>
-          <Text
-            style={[
-              {
-                color: themeStyle.GRAY_700,
-              },
-            ]}
-          >
-            ₪{item.price}
-          </Text>
-        </TouchableOpacity>
-      ))}
-    </View>
+        ))}
+      </View>
+    </ScrollView>
   );
-}
+};
 export default observer(CategoryItemsList);
 
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "center",
     alignItems: "center",
     flex: 1,
-    padding: 10,
-    // backgroundColor: "#FFFFFF",
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
   },
   categoryItem: {
-    margin: 5,
+    flexBasis: '47%',
+    marginBottom:15,
     width: 165,
     height: 180,
     justifyContent: "center",

@@ -45,10 +45,11 @@ const MealScreen = ({ route }) => {
     let extraPrice = 0;
     if (tag.type === "CHOICE" && !tag.multiple_choice) {
       const extrasType = meal.extras[type].map((tagItem) => {
+        console.log(tag.id)
         if (tagItem.id === tag.id) {
-          tagItem = {...tagItem, value:value};
+          tagItem = {...tagItem, value:true};
         } else {
-          tagItem = {...tagItem, value:!value};
+          tagItem = {...tagItem, value:false};
         }
         return tagItem;
       });
@@ -58,8 +59,6 @@ const MealScreen = ({ route }) => {
       const extrasType = meal.extras[type].map((tagItem) => {
         if (tagItem.id === tag.id) {
           if(tag.type === "COUNTER"){
-            console.log(value)
-            console.log(tagItem)
 
             extraPrice =  value > tagItem.value ? extraPrice + tagItem.price : extraPrice - tagItem.price;
           }else{
@@ -141,7 +140,7 @@ const MealScreen = ({ route }) => {
             />
           </View>
         </View>
-        {true &&
+        {
           Object.keys(meal.extras).map((key) => (
             <View style={styles.sectionContainer}>
               <View style={styles.gradiantRowContainer}>
@@ -149,7 +148,7 @@ const MealScreen = ({ route }) => {
                 {Object.keys(meal.extras[key]).map((tagId) => {
                   const tag = meal.extras[key][tagId];
                   return (
-                    <><Text>{tag.value}</Text>
+                    <>
                       <GradiantRow
                         onChangeFn={(value) => {
                           updateMeal(value, tag, key);
@@ -173,7 +172,7 @@ const MealScreen = ({ route }) => {
           <View style={styles.gradiantRowContainer}>
             <View style={{ padding: 10 }}>
               <View>
-                <Text style={{ textAlign: "left" }}>aa</Text>
+                <Text style={{ textAlign: "left" }}>ملاحظات للمطعم</Text>
               </View>
               <View>
                 <TextInput

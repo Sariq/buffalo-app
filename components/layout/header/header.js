@@ -102,7 +102,7 @@ const Header = ({ store }) => {
               size={30}
               style={{ color: theme.GRAY_700 }}
             />
-            <Text style={styles.cartCount}>{cartStore.getProductsCount()}</Text>
+            <Text  style={styles.cartCount}>{cartStore.getProductsCount()}</Text>
           </TouchableOpacity>
 
       </View>
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     left: "65%",
     right: "65%",
     zIndex: 1,
-  },
+    },
   buttonContainer: {
     padding: 9,
   },

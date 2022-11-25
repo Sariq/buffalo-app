@@ -9,23 +9,23 @@ export default function CheckBox({ onChange, value }) {
     setIsSelected(!isSelected);
     onChange && onChange(!isSelected);
   };
-  useEffect(()=>{
-    setIsSelected(value)
-  },[value]);
-  
+  useEffect(() => {
+    setIsSelected(value);
+  }, [value]);
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        onPress={() => {
+      <View
+        onTouchEnd={() => {
           onBtnClick();
         }}
       >
         {isSelected ? (
           <Icon icon="checked_icon" size={30} />
         ) : (
-          <Icon icon="unchecked_icon" size={30} style={{ color: "black" }} />
+          <View style={styles.unchecked}></View>
         )}
-      </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    padding: 5,
   },
   btn: {
     backgroundColor: themeStyle.PRIMARY_COLOR,
@@ -47,5 +48,11 @@ const styles = StyleSheet.create({
   },
   btnText: {
     fontSize: 20,
+  },
+  unchecked: {
+    borderWidth: 1,
+    borderRadius: 20,
+    width: 30,
+    height: 30,
   },
 });

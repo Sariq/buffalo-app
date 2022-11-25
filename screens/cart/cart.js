@@ -60,7 +60,7 @@ const CartScreen = () => {
     }
     let tmpOrderPrice = 0;
     cartStore.cartItems.forEach((item)=>{
-      tmpOrderPrice+= item.price
+      tmpOrderPrice+= item.data.price * item.others.count;
     })
     // console.log(cartStore.cartItems[0].extras["מידת עשיה"])
     setItemsPrice(tmpOrderPrice)
@@ -69,12 +69,16 @@ const CartScreen = () => {
   const onCheckBoxChange = (isSelected) => {
     console.log(isSelected);
   };
-  const onCounterChange = (product, value) => {
-    cartStore.updateProductCount(product.data.id, value);
+  const onCounterChange = (product,index, value) => {
+    cartStore.updateProductCount(product.data.id + index, value);
   };
 
-  const onRemoveProduct = (product) => {
-    cartStore.removeProduct(product.data.id);
+  const onRemoveProduct = (product,index) => {
+    cartStore.removeProduct(product.data.id + index);
+  };
+
+  const onSendCart = () => {
+    console.log(cartStore.cartItems[0].extra)
   };
 
   //   let text = "Waiting..";
@@ -128,7 +132,8 @@ const CartScreen = () => {
                   <View style={{ width: "35%" }}>
                     <Counter
                       value={product.others.count}
-                      onCounterChange={(value)=>{onCounterChange(product, value)}}
+                      minValue={1}
+                      onCounterChange={(value)=>{onCounterChange(product, index, value)}}
                     />
                   </View>
                 </View>
@@ -165,7 +170,7 @@ const CartScreen = () => {
                     <TouchableOpacity
                       style={{ padding: 5 }}
                       onPress={() => {
-                        onRemoveProduct(product);
+                        onRemoveProduct(product, index);
                       }}
                     >
                       <View>
@@ -178,7 +183,7 @@ const CartScreen = () => {
                     </TouchableOpacity>
 
                     <View style={{ marginTop: 0 }}>
-                      {/* <Text>₪{product.item.price}</Text> */}
+                      <Text>₪{product.data.price}</Text>
                     </View>
                   </View>
                 </View>
@@ -302,12 +307,12 @@ const CartScreen = () => {
 
         <View style={styles.totalPrictContainer}>
           <View style={{ alignItems: "center", fontWeight: "bold" }}>
-            <Text style={{ fontWeight: "bold" }}>מחיר לתשלום</Text>
+            <Text style={{ fontWeight: "bold" }}>المجموع</Text>
           </View>
           <View style={{ marginTop: 30 }}>
             <View style={styles.priceRowContainer}>
               <View>
-                <Text>מחיר לתשלום</Text>
+                <Text>مبلغ الطلبية</Text>
               </View>
               <View>
                 <Text>₪{itemsPrice}</Text>
@@ -316,7 +321,7 @@ const CartScreen = () => {
 
             {isShipping && <View style={styles.priceRowContainer}>
               <View>
-                <Text>מחיר לתשלום</Text>
+                <Text>التوصيل</Text>
               </View>
               <View>
                 <Text>₪15</Text>
@@ -327,7 +332,7 @@ const CartScreen = () => {
 
             <View style={styles.priceRowContainer}>
               <View>
-                <Text>מחיר לתשלום</Text>
+                <Text>المبلغ النهائي</Text>
               </View>
               <View>
                 <Text>₪{totalPrice}</Text>
@@ -340,7 +345,7 @@ const CartScreen = () => {
               style={styles.submitButton}
               contentStyle={styles.submitContentButton}
               mode="contained"
-              onPress={() => console.log("Pressed")}
+              onPress={onSendCart}
             >
               ارسل الظلبية
             </Button>
@@ -412,26 +417,3 @@ const styles = StyleSheet.create({
     height: 50,
   },
 });
-// import { StyleSheet, Text, View } from "react-native";
-
-// export default function CartScreen() {
-//   return (
-//     <View >
-//       <Text>CartScreen</Text>
-//     </View>
-//   );
-// }
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: "#fff",
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-//   footerTabs: {
-//     backgroundColor: "blue",
-//     width: "100%",
-//     position: "absolute",
-//     bottom: 0,
-//   },
-// });

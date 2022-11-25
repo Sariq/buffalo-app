@@ -37,15 +37,14 @@ class CartStore {
 
   removeProduct = (productId) => {
     this.cartItems = this.cartItems.filter(
-      (item) => item.data.id !== productId
+      (item, index) => item.data.id + index !== productId
     );
     this.updateLocalStorage();
   };
 
   updateProductCount = (productId, count) => {
-    console.log(count)
-    this.cartItems = this.cartItems.map((item) => {
-      if(item.data.id === productId){
+    this.cartItems = this.cartItems.map((item, index) => {
+      if(item.data.id + index === productId){
         item.others.count =count
       }
       return item;
