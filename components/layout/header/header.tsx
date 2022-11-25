@@ -17,7 +17,7 @@ const Header = () => {
   const [bgColor, setBgColor] = useState(themeStyle.PRIMARY_COLOR)
 
   useEffect(() => {
-    if(yellowBgScreens.indexOf(navigation?.getCurrentRoute()?.name) > -1){
+    if(navigation?.getCurrentRoute()?.name === undefined || yellowBgScreens.indexOf(navigation?.getCurrentRoute()?.name) > -1){
       setBgColor(themeStyle.PRIMARY_COLOR)
     }else{
       setBgColor('white')

@@ -22,8 +22,6 @@ const CategoryItemsList = ({ productsList }) => {
     navigation.navigate("meal", { item: item.id });
   };
 
-  console.log("productsList", productsList);
-
   return (
     <ScrollView>
       <View style={styles.container}>

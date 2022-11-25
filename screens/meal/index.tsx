@@ -25,11 +25,9 @@ const MealScreen = ({ route }) => {
   const [meal, setMeal] = useState();
   useEffect(() => {
     //const product = menuStore.meals[item];
-    console.log(menuStore.getMealByKey(item))
     const product = menuStore.getMealByKey(item);
     product.others = { count: 1, note: "" };
     setMeal(product);
-    console.log("XXX")
   }, []);
 
   const onAddToCart = () => {
@@ -45,7 +43,6 @@ const MealScreen = ({ route }) => {
     let extraPrice = 0;
     if (tag.type === "CHOICE" && !tag.multiple_choice) {
       const extrasType = meal.extras[type].map((tagItem) => {
-        console.log(tag.id)
         if (tagItem.id === tag.id) {
           tagItem = {...tagItem, value:true};
         } else {

@@ -28,7 +28,6 @@ const MenuScreen = () => {
 
   const getMenu = () => {
     const categories = menuStore.categories;
-    console.log("categories", categories);
     setCategoryList(categories);
     setSelectedCategory(categories["BURGERS"]);
     //   axios
