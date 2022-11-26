@@ -23,19 +23,19 @@ const MealScreen = ({ route }) => {
   let { cartStore, menuStore } = useContext(StoreContext);
   const [meal, setMeal] = useState();
   const [isEdit, setIsEdit] = useState(false);
-  
 
   useEffect(() => {
-    let product:any = {};
-    if(itemId !== null){
+    let product: any = {};
+    if (itemId !== null) {
       setIsEdit(false);
       product = menuStore.getMealByKey(itemId);
       product.others = { count: 1, note: "" };
     }
-    if(index !== null && index !== undefined){
+    if (index !== null && index !== undefined) {
       setIsEdit(true);
       product = cartStore.getProductByIndex(index);
     }
+    console.log(product.data.price);
     setMeal(product);
   }, []);
 
@@ -55,53 +55,60 @@ const MealScreen = ({ route }) => {
 
   const updateMeal = (value, tag, type) => {
     let extraPrice = 0;
-    if (tag.type === "CHOICE" && !tag.multiple_choice) {
-      const extrasType = meal.extras[type].map((tagItem) => {
-        if (tagItem.id === tag.id) {
-          tagItem = { ...tagItem, value: true };
-        } else {
-          tagItem = { ...tagItem, value: false };
-        }
-        return tagItem;
-      });
-      meal.extras[type] = extrasType;
-      setMeal({
-        ...meal,
-        data: { ...meal.data },
-        extras: meal.extras,
-      });
-    } else {
-      const extrasType = meal.extras[type].map((tagItem) => {
-        if (tagItem.id === tag.id) {
-          if (tag.type === "COUNTER") {
+    const currentExtraType = JSON.parse(JSON.stringify(meal.extras[type]));
+    const extrasType = meal.extras[type].map((tagItem) => {
+      if (tagItem.id === tag.id) {
+        switch (tag.type) {
+          case "COUNTER":
             extraPrice =
               value > tagItem.value
-                ? extraPrice + (tagItem.price * meal.others.count)
-                : extraPrice - (tagItem.price * meal.others.count);
-          } else {
-            extraPrice = value
-              ? extraPrice + (tagItem.price * meal.others.count)
-              : extraPrice - (tagItem.price * meal.others.count);
-          }
-          tagItem.value = value;
+                ? extraPrice + tagItem.price * meal.others.count
+                : extraPrice - tagItem.price * meal.others.count;
+            break;
+          case "CHOICE":
+            if (!tag.multiple_choice) {
+              const currentTag = currentExtraType.find(
+                (tagItem) => tagItem.value === true
+              );
+              const tagDeltaPrice = tagItem.price - currentTag.price;
+              extraPrice = extraPrice + tagDeltaPrice;
+            } else {
+              extraPrice = value
+                ? extraPrice + tagItem.price * meal.others.count
+                : extraPrice - tagItem.price * meal.others.count;
+            }
+            break;
+          default:
+            break;
         }
-        return tagItem;
-      });
+        tagItem.value = value;
+      } else {
+        if (tag.type === "CHOICE" && !tag.multiple_choice) {
+          tagItem.value = false;
+        }
+      }
+      return tagItem;
+    });
 
-      meal.extras[type] = extrasType;
-      setMeal({
-        ...meal,
-        data: { ...meal.data, price: meal.data.price + extraPrice },
-        extras: meal.extras,
-      });
-    }
+    meal.extras[type] = extrasType;
+    setMeal({
+      ...meal,
+      data: { ...meal.data, price: meal.data.price + extraPrice },
+      extras: meal.extras,
+    });
   };
 
   const updateOthers = (value, key, type) => {
-    if(key === "count"){
-      const updatedPrice = meal.data.price + ((value - meal.others.count) * (meal.data.price/meal.others.count));
-      setMeal({ ...meal, [type]: { ...meal[type], [key]: value }, data:{...meal.data, price: updatedPrice } });
-    }else{
+    if (key === "count") {
+      const updatedPrice =
+        meal.data.price +
+        (value - meal.others.count) * (meal.data.price / meal.others.count);
+      setMeal({
+        ...meal,
+        [type]: { ...meal[type], [key]: value },
+        data: { ...meal.data, price: updatedPrice },
+      });
+    } else {
       setMeal({ ...meal, [type]: { ...meal[type], [key]: value } });
     }
   };
