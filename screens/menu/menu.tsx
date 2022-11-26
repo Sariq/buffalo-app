@@ -97,7 +97,9 @@ const MenuScreen = () => {
           </TouchableOpacity>
         ))}
       </View>
-      <CategoryItemsList productsList={selectedCategory} />
+      <View style={styles.itemsListConainer}>
+        <CategoryItemsList productsList={selectedCategory} />
+      </View>
     </View>
   );
 };
@@ -131,4 +133,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
+  itemsListConainer:{
+    paddingBottom:130
+  }
 });
