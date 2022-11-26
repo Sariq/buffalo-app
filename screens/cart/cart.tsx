@@ -76,7 +76,7 @@ const CartScreen = () => {
     }
     let tmpOrderPrice = 0;
     cartStore.cartItems.forEach((item) => {
-      tmpOrderPrice += item.data.price * item.others.count;
+      tmpOrderPrice += item.data.price;
     });
     // console.log(cartStore.cartItems[0].extras["מידת עשיה"])
     setItemsPrice(tmpOrderPrice);
@@ -207,11 +207,11 @@ const CartScreen = () => {
                     <TouchableOpacity
                       style={{ padding: 5 }}
                       onPress={() => {
-                        onEditProduct(index)
+                        onEditProduct(index);
                       }}
                     >
                       <View>
-                       <Text>edit</Text>
+                        <Text>edit</Text>
                       </View>
                     </TouchableOpacity>
 
@@ -351,14 +351,16 @@ const CartScreen = () => {
             <Text style={{ fontWeight: "bold" }}>المجموع</Text>
           </View>
           <View style={{ marginTop: 30 }}>
-            <View style={styles.priceRowContainer}>
-              <View>
-                <Text>مبلغ الطلبية</Text>
+            {shippingMethod === SHIPPING_METHODS.shipping && (
+              <View style={styles.priceRowContainer}>
+                <View>
+                  <Text>مبلغ الطلبية</Text>
+                </View>
+                <View>
+                  <Text>₪{itemsPrice}</Text>
+                </View>
               </View>
-              <View>
-                <Text>₪{itemsPrice}</Text>
-              </View>
-            </View>
+            )}
 
             {shippingMethod === SHIPPING_METHODS.shipping && (
               <View style={styles.priceRowContainer}>
