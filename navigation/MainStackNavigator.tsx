@@ -27,7 +27,12 @@ export const MainStackNavigator = ({}) => {
       <Stack.Screen
         name="meal"
         component={MealScreen}
-        initialParams={{ item: null }}
+        initialParams={{ itemId: null }}
+      />
+      <Stack.Screen
+        name="meal/edit"
+        component={MealScreen}
+        initialParams={{ index: null }}
       />
       {/* <Stack.Screen
                 name='meal'

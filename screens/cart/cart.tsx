@@ -97,6 +97,10 @@ const CartScreen = () => {
     console.log(cartStore.cartItems[0].extra);
   };
 
+  const onEditProduct = (index) => {
+    navigation.navigate("meal", { index });
+  };
+
   //   let text = "Waiting..";
   //   if (errorMsg) {
   //     text = errorMsg;
@@ -198,6 +202,16 @@ const CartScreen = () => {
                           size={25}
                           style={{ color: theme.GRAY_700 }}
                         />
+                      </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={{ padding: 5 }}
+                      onPress={() => {
+                        onEditProduct(index)
+                      }}
+                    >
+                      <View>
+                       <Text>edit</Text>
                       </View>
                     </TouchableOpacity>
 
@@ -356,8 +370,6 @@ const CartScreen = () => {
                 </View>
               </View>
             )}
-
-
 
             <View style={styles.priceRowContainer}>
               <View>

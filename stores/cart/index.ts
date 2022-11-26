@@ -42,10 +42,19 @@ class CartStore {
     this.updateLocalStorage();
   };
 
+  updateCartProduct = (index, product) => {
+    this.cartItems[index] = { ...product };
+  };
+
+  getProductByIndex = (index) => {
+    return JSON.parse(JSON.stringify(this.cartItems[index]));
+  };
+
   updateProductCount = (productId, count) => {
     this.cartItems = this.cartItems.map((item, index) => {
-      if(item.data.id + index === productId){
-        item.others.count =count
+      if (item.data.id + index === productId) {
+        item.data.price = item.data.price + ((count - item.others.count) * (item.data.price/item.others.count));
+        item.others.count = count;
       }
       return item;
     });
@@ -53,8 +62,8 @@ class CartStore {
   }
 
   getProductsCount = () => {
-    let count = 0; 
-    this.cartItems.forEach((product)=>{
+    let count = 0;
+    this.cartItems.forEach((product) => {
       count += product.others.count;
     })
     return count;

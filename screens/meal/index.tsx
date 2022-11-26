@@ -18,20 +18,34 @@ import { ScrollView } from "react-native-gesture-handler";
 import themeStyle from "../../styles/theme.style";
 
 const MealScreen = ({ route }) => {
-  const { item } = route.params;
+  const { itemId, index } = route.params;
   const navigation = useNavigation();
   let { cartStore, menuStore } = useContext(StoreContext);
-
   const [meal, setMeal] = useState();
+  const [isEdit, setIsEdit] = useState(false);
+  
+
   useEffect(() => {
-    //const product = menuStore.meals[item];
-    const product = menuStore.getMealByKey(item);
-    product.others = { count: 1, note: "" };
+    let product:any = {};
+    if(itemId !== null){
+      setIsEdit(false);
+      product = menuStore.getMealByKey(itemId);
+      product.others = { count: 1, note: "" };
+    }
+    if(index !== null && index !== undefined){
+      setIsEdit(true);
+      product = cartStore.getProductByIndex(index);
+    }
     setMeal(product);
   }, []);
 
   const onAddToCart = () => {
     cartStore.addProductToCart(meal);
+    navigation.goBack();
+  };
+
+  const onUpdateCartProduct = () => {
+    cartStore.updateCartProduct(index, meal);
     navigation.goBack();
   };
 
@@ -44,22 +58,30 @@ const MealScreen = ({ route }) => {
     if (tag.type === "CHOICE" && !tag.multiple_choice) {
       const extrasType = meal.extras[type].map((tagItem) => {
         if (tagItem.id === tag.id) {
-          tagItem = {...tagItem, value:true};
+          tagItem = { ...tagItem, value: true };
         } else {
-          tagItem = {...tagItem, value:false};
+          tagItem = { ...tagItem, value: false };
         }
         return tagItem;
       });
       meal.extras[type] = extrasType;
-      setMeal({ ...meal, data: {...meal.data, price: 10}, extras: meal.extras });
+      setMeal({
+        ...meal,
+        data: { ...meal.data },
+        extras: meal.extras,
+      });
     } else {
       const extrasType = meal.extras[type].map((tagItem) => {
         if (tagItem.id === tag.id) {
-          if(tag.type === "COUNTER"){
-
-            extraPrice =  value > tagItem.value ? extraPrice + tagItem.price : extraPrice - tagItem.price;
-          }else{
-            extraPrice =  value ? extraPrice + tagItem.price : extraPrice - tagItem.price;
+          if (tag.type === "COUNTER") {
+            extraPrice =
+              value > tagItem.value
+                ? extraPrice + (tagItem.price * meal.others.count)
+                : extraPrice - (tagItem.price * meal.others.count);
+          } else {
+            extraPrice = value
+              ? extraPrice + (tagItem.price * meal.others.count)
+              : extraPrice - (tagItem.price * meal.others.count);
           }
           tagItem.value = value;
         }
@@ -67,12 +89,21 @@ const MealScreen = ({ route }) => {
       });
 
       meal.extras[type] = extrasType;
-      setMeal({ ...meal, data: {...meal.data, price: meal.data.price + extraPrice}, extras: meal.extras });
+      setMeal({
+        ...meal,
+        data: { ...meal.data, price: meal.data.price + extraPrice },
+        extras: meal.extras,
+      });
     }
   };
 
   const updateOthers = (value, key, type) => {
-    setMeal({ ...meal, [type]: { ...meal[type], [key]: value } });
+    if(key === "count"){
+      const updatedPrice = meal.data.price + ((value - meal.others.count) * (meal.data.price/meal.others.count));
+      setMeal({ ...meal, [type]: { ...meal[type], [key]: value }, data:{...meal.data, price: updatedPrice } });
+    }else{
+      setMeal({ ...meal, [type]: { ...meal[type], [key]: value } });
+    }
   };
 
   if (!meal) {
@@ -137,33 +168,32 @@ const MealScreen = ({ route }) => {
             />
           </View>
         </View>
-        {
-          Object.keys(meal.extras).map((key) => (
-            <View style={styles.sectionContainer}>
-              <View style={styles.gradiantRowContainer}>
-                <Text>{key}</Text>
-                {Object.keys(meal.extras[key]).map((tagId) => {
-                  const tag = meal.extras[key][tagId];
-                  return (
-                    <>
-                      <GradiantRow
-                        onChangeFn={(value) => {
-                          updateMeal(value, tag, key);
-                        }}
-                        //  icon={CONSTS_PRODUCT_EXTRAS[key].icon}
-                        type={tag.type}
-                        title={tag.name}
-                        price={tag.price}
-                        minValue={tag.counter_min_value}
-                        stepValue={tag.counter_step_value}
-                        value={tag.value}
-                      />
-                    </>
-                  );
-                })}
-              </View>
+        {Object.keys(meal.extras).map((key) => (
+          <View key={key} style={styles.sectionContainer}>
+            <View style={styles.gradiantRowContainer}>
+              <Text>{key}</Text>
+              {Object.keys(meal.extras[key]).map((tagId) => {
+                const tag = meal.extras[key][tagId];
+                return (
+                  <View key={tagId}>
+                    <GradiantRow
+                      onChangeFn={(value) => {
+                        updateMeal(value, tag, key);
+                      }}
+                      //  icon={CONSTS_PRODUCT_EXTRAS[key].icon}
+                      type={tag.type}
+                      title={tag.name}
+                      price={tag.price}
+                      minValue={tag.counter_min_value}
+                      stepValue={tag.counter_step_value}
+                      value={tag.value}
+                    />
+                  </View>
+                );
+              })}
             </View>
-          ))}
+          </View>
+        ))}
 
         <View style={styles.sectionContainer}>
           <View style={styles.gradiantRowContainer}>
@@ -209,10 +239,10 @@ const MealScreen = ({ route }) => {
             </Text>
           </View>
           <Button
-            text="اضف للكيس"
+            text={isEdit ? "update" : "اضف للكيس"}
             icon="cart_icon"
             fontSize={17}
-            onClickFn={onAddToCart}
+            onClickFn={isEdit ? onUpdateCartProduct : onAddToCart}
             bgColor={themeStyle.BROWN_700}
             textColor={themeStyle.PRIMARY_COLOR}
           />
