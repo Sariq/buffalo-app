@@ -8,19 +8,22 @@ import theme from "../../../styles/theme.style";
 import Icon from "../../icon";
 import { StoreContext } from "../../../stores";
 
-const yellowBgScreens = ['homeScreen'];
+const yellowBgScreens = ["homeScreen"];
 const Header = () => {
   const navigation = useNavigation();
   const routeState = useNavigationState((state) => state);
   let cartStore = useContext(StoreContext).cartStore;
 
-  const [bgColor, setBgColor] = useState(themeStyle.PRIMARY_COLOR)
+  const [bgColor, setBgColor] = useState(themeStyle.PRIMARY_COLOR);
 
   useEffect(() => {
-    if(navigation?.getCurrentRoute()?.name === undefined || yellowBgScreens.indexOf(navigation?.getCurrentRoute()?.name) > -1){
-      setBgColor(themeStyle.PRIMARY_COLOR)
-    }else{
-      setBgColor('white')
+    if (
+      navigation?.getCurrentRoute()?.name === undefined ||
+      yellowBgScreens.indexOf(navigation?.getCurrentRoute()?.name) > -1
+    ) {
+      setBgColor(themeStyle.PRIMARY_COLOR);
+    } else {
+      setBgColor("white");
     }
   }, [routeState]);
 
@@ -43,9 +46,7 @@ const Header = () => {
   };
 
   return (
-    <View
-      style={{ ...styles.container, backgroundColor: bgColor }}
-    >
+    <View style={{ ...styles.container, backgroundColor: bgColor }}>
       <View
         style={{
           ...styles.headerItem,
@@ -92,19 +93,13 @@ const Header = () => {
         </TouchableOpacity>
       </View>
       <View style={styles.headerItem}>
-
-          <TouchableOpacity
-            style={styles.buttonContainer}
-            onPress={handleCartClick}
-          >
-            <Icon
-              icon="cart_icon"
-              size={30}
-              style={{ color: theme.GRAY_700 }}
-            />
-            <Text  style={styles.cartCount}>{cartStore.getProductsCount()}</Text>
-          </TouchableOpacity>
-
+        <TouchableOpacity
+          style={styles.buttonContainer}
+          onPress={handleCartClick}
+        >
+          <Icon icon="cart_icon" size={30} style={{ color: theme.GRAY_700 }} />
+          <Text style={styles.cartCount}>{cartStore.getProductsCount()}</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -129,11 +124,10 @@ const styles = StyleSheet.create({
   cartCount: {
     position: "absolute",
     top: 19,
-    left: "65%",
-    right: "65%",
-    zIndex: 1,
-    },
+  },
   buttonContainer: {
     padding: 9,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
