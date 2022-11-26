@@ -27,18 +27,13 @@ export const MainStackNavigator = ({}) => {
       <Stack.Screen
         name="meal"
         component={MealScreen}
-        initialParams={{ itemId: null }}
+        initialParams={{ product: null }}
       />
       <Stack.Screen
         name="meal/edit"
         component={MealScreen}
         initialParams={{ index: null }}
       />
-      {/* <Stack.Screen
-                name='meal'
-                component={MealScreen}
-                initialParams={{ itemId: null, categoryId: null }}
-            /> */}
     </Stack.Navigator>
   );
 };

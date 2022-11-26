@@ -18,7 +18,7 @@ class MenuStore {
   getMenu = () => {
     this.categories = groupBy(CONSTS_MENU_API.menu, (x) => x.category);
     this.meals = groupBy(CONSTS_MENU_API.menu_constants, (x) => x.menu_id);
-
+    //console.log(this.meals["1001"])
     Object.keys(this.meals).map((key) => {
       const extras = this.getMealTags(key);
       this.meals[key].extras = extras;
@@ -28,7 +28,10 @@ class MenuStore {
   };
 
   getMealByKey = (key) => {
-    const temp = JSON.parse(JSON.stringify(this.meals[key]))//{...this.meals[key]}
+    let temp = {};
+    if(this.meals[key]){
+       temp = JSON.parse(JSON.stringify(this.meals[key]));
+    }
     return temp;
   }
 

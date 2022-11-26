@@ -19,7 +19,7 @@ const CategoryItemsList = ({ productsList }) => {
 
   const onItemSelect = (item) => {
     setSelectedItem(item);
-    navigation.navigate("meal", { itemId: item.id });
+    navigation.navigate("meal", { product: item });
   };
 
   return (

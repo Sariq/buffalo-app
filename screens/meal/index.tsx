@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { observer } from "mobx-react";
+import { isEmpty } from "lodash";
 
 import i18n from "../../translations";
 import GradiantRow from "../../components/gradiant-row";
@@ -18,25 +19,28 @@ import { ScrollView } from "react-native-gesture-handler";
 import themeStyle from "../../styles/theme.style";
 
 const MealScreen = ({ route }) => {
-  const { itemId, index } = route.params;
+  const { product, index } = route.params;
   const navigation = useNavigation();
   let { cartStore, menuStore } = useContext(StoreContext);
   const [meal, setMeal] = useState();
   const [isEdit, setIsEdit] = useState(false);
 
   useEffect(() => {
-    let product: any = {};
-    if (itemId !== null) {
+    let tmpProduct: any = {};
+    if (product) {
       setIsEdit(false);
-      product = menuStore.getMealByKey(itemId);
-      product.others = { count: 1, note: "" };
+
+      tmpProduct = menuStore.getMealByKey(product.id);
+      if(isEmpty(tmpProduct)){
+        tmpProduct.data = product;
+      }
+      tmpProduct.others = { count: 1, note: "" };
     }
     if (index !== null && index !== undefined) {
       setIsEdit(true);
-      product = cartStore.getProductByIndex(index);
+      tmpProduct = cartStore.getProductByIndex(index);
     }
-    console.log(product.data.price);
-    setMeal(product);
+    setMeal(tmpProduct);
   }, []);
 
   const onAddToCart = () => {
@@ -175,7 +179,7 @@ const MealScreen = ({ route }) => {
             />
           </View>
         </View>
-        {Object.keys(meal.extras).map((key) => (
+        {meal.extras && Object.keys(meal.extras).map((key) => (
           <View key={key} style={styles.sectionContainer}>
             <View style={styles.gradiantRowContainer}>
               <Text>{key}</Text>

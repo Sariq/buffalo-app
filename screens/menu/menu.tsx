@@ -1,16 +1,9 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { useState, useEffect } from "react";
-import { groupBy } from "lodash";
 import { observer } from "mobx-react";
 import { useContext } from "react";
 import { StoreContext } from "../../stores";
-
-import { SvgXml } from "react-native-svg";
-import { CONSTS_ICONS } from "../../consts/consts-icons";
 import themeStyle from "../../styles/theme.style";
-import axios from "axios";
-
-import { CONSTS_MENU_API } from "../../consts/menu-api-mock";
 
 /* components */
 import CategoryItemsList from "./components/categoryItemsList";

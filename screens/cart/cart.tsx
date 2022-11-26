@@ -181,7 +181,7 @@ const CartScreen = () => {
                       />
                     </View>
                     <View style={{ marginLeft: 20 }}>
-                      {Object.keys(product.extras).map((key) => (
+                      {product.extras && Object.keys(product.extras).map((key) => (
                         <View>
                           <Text>+ {key}</Text>
                         </View>
