@@ -1,8 +1,9 @@
 import { StatusBar } from "expo-status-bar";
 import { useState, useEffect, useCallback } from "react";
 import * as Font from "expo-font";
+import Constants from "expo-constants";
 
-import { View, I18nManager } from "react-native";
+import { View, I18nManager, ImageBackground, Text } from "react-native";
 import RootNavigator from "./navigation";
 I18nManager.forceRTL(true);
 I18nManager.allowRTL(true);
@@ -14,6 +15,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { StoreContext } from "./stores";
 import LanguageStore from "./stores/language";
 import AuthStore from "./stores/auth";
+import { SafeAreaView } from "react-native-safe-area-context";
 // Keep the splash screen visible while we fetch resources
 //SplashScreen.preventAutoHideAsync();
 let customARFonts = {
@@ -35,9 +37,12 @@ let customARFonts = {
 };
 
 export default function App() {
+  const [assetsIsReady, setAssetsIsReady] = useState(false);
   const [appIsReady, setAppIsReady] = useState(false);
   const [isFontReady, setIsFontReady] = useState(false);
-  const [globalStyles, setGlobalStyles] = useState({fontFamily: `${i18n.locale}-`});
+  const [globalStyles, setGlobalStyles] = useState({
+    fontFamily: `${i18n.locale}-SemiBold`,
+  });
   useEffect(() => {
     async function prepare() {
       try {
@@ -52,13 +57,13 @@ export default function App() {
         console.warn(e);
       } finally {
         // Tell the application to render
-        setAppIsReady(true);
+        setAssetsIsReady(true);
       }
     }
 
     prepare();
     i18n.onChange(() => {
-      setGlobalStyles({ fontFamily: `${i18n.locale}-` });
+      setGlobalStyles({ fontFamily: `${i18n.locale}-SemiBold` });
     });
   }, []);
 
@@ -74,7 +79,31 @@ export default function App() {
   }, [appIsReady]);
 
   if (!appIsReady) {
-    return null;
+    const version = Constants.nativeAppVersion;
+    setTimeout(() => {
+      setAppIsReady(true);
+    }, 1000);
+    return (
+      <ImageBackground
+        source={require("./assets/splash-screen-1.png")}
+        resizeMode="stretch"
+        style={{ height: "100%", backgroundColor: "#FFCB05" }}
+      >
+        <View
+          style={{
+            bottom: 0,
+            flexDirection: "row",
+            borderWidth: 1,
+            height: "100%",
+            justifyContent: "center",
+          }}
+        >
+          <Text style={{ position: "absolute", bottom: 0, marginBottom: 20 }}>
+            {version}
+          </Text>
+        </View>
+      </ImageBackground>
+    );
   }
 
   return (
@@ -87,11 +116,12 @@ export default function App() {
         globalStyles: globalStyles,
       }}
     >
-      <View style={{ height: "100%" }} onLayout={onLayoutRootView}>
-        <StatusBar />
-        <RootNavigator />
-      </View>
+      <SafeAreaView onLayout={onLayoutRootView}>
+        <View style={{ height: "100%" }}>
+          <StatusBar />
+          <RootNavigator />
+        </View>
+      </SafeAreaView>
     </StoreContext.Provider>
   );
-};
-
+}
