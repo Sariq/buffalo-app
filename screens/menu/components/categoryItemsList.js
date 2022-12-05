@@ -14,6 +14,7 @@ import { CONSTS_PRODUCTS } from "../../../consts/products";
 
 const CategoryItemsList = ({ productsList }) => {
   const navigation = useNavigation();
+  const { languageStore } = useContext(StoreContext);
 
   const [selectedItem, setSelectedItem] = useState();
 
@@ -21,7 +22,6 @@ const CategoryItemsList = ({ productsList }) => {
     setSelectedItem(item);
     navigation.navigate("meal", { product: item });
   };
-
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -34,8 +34,8 @@ const CategoryItemsList = ({ productsList }) => {
           >
             <View style={[styles.iconContainer]}>
               <Image
-                style={{ width: 131, height: 140, padding: 10 }}
-                source={item.icon}
+                style={{ width:"100%",height:"100%" }}
+                source={{uri:item.image_url}}
               />
             </View>
             <Text
@@ -45,7 +45,7 @@ const CategoryItemsList = ({ productsList }) => {
                 },
               ]}
             >
-              {item.name}
+              {item[`name_${languageStore.selectedLang}`]}
               {/* {i18n.t(`products.${item.name}.name`)} */}
             </Text>
             <Text
@@ -73,6 +73,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     paddingHorizontal: 10,
+    backgroundColor:"#F1F1F1"
   },
   categoryItem: {
     flexBasis: '47%',
@@ -83,7 +84,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 15,
     backgroundColor: themeStyle.WHITE_COLOR,
-    paddingVertical: 10,
+    paddingVertical: 20,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,

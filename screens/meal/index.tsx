@@ -21,7 +21,7 @@ import themeStyle from "../../styles/theme.style";
 const MealScreen = ({ route }) => {
   const { product, index } = route.params;
   const navigation = useNavigation();
-  let { cartStore, menuStore } = useContext(StoreContext);
+  let { cartStore, menuStore, languageStore } = useContext(StoreContext);
   const [meal, setMeal] = useState();
   const [isEdit, setIsEdit] = useState(false);
 
@@ -147,7 +147,14 @@ const MealScreen = ({ route }) => {
                 X
               </Text>
             </TouchableOpacity>
-            <Image style={{ width: 300, height: 255 }} source={meal.icon} />
+            <View style={{    width: 300,
+    height: 220,padding:30}}>
+            <Image                 
+            style={{ width:"100%",height:"100%" }}
+            source={{uri:meal.data.image_url}} />
+
+            </View>
+
           </View>
           <View
             style={{
@@ -159,10 +166,10 @@ const MealScreen = ({ route }) => {
             }}
           >
             <View>
-              <Text style={{ fontSize: 25 }}>{meal.data.name}</Text>
+              <Text style={{ fontSize: 25 }}>{meal.data[`name_${languageStore.selectedLang}`]}</Text>
             </View>
             <View>
-              <Text style={{ fontSize: 15 }}>{meal.data.name}</Text>
+              <Text style={{ fontSize: 15 }}>{meal.data[`description_${languageStore.selectedLang}`]}</Text>
             </View>
           </View>
         </View>

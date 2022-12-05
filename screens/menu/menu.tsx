@@ -1,14 +1,24 @@
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import { useState, useEffect } from "react";
 import { observer } from "mobx-react";
 import { useContext } from "react";
 import { StoreContext } from "../../stores";
 import themeStyle from "../../styles/theme.style";
-
+//import base64 from "react-native-base64";
+import base64 from 'base-64';
+import utf8 from 'base-64';
 /* components */
 import CategoryItemsList from "./components/categoryItemsList";
 import Icon from "../../components/icon";
+import { Buffer } from 'buffer'
+    
+export function toBase64(input) {
+  return Buffer.from(input, 'utf-8').toString('base64')
+}
 
+export function fromBase64(encoded) {
+  return Buffer.from(encoded, 'base64').toString('utf8')
+}
 const MenuScreen = () => {
   const { menuStore } = useContext(StoreContext);
 
@@ -18,11 +28,16 @@ const MenuScreen = () => {
   const onCategorySelect = (category) => {
     setSelectedCategory(category);
   };
-
+  // const Buffer = require("buffer").Buffer;
+  // let encodedAuth = new Buffer("سشسيشسي").toString("base64");
+  const text =("سابييبب");
+  var bytes = toBase64(text);
+var encoded = fromBase64(bytes);
+console.log(encoded);
   const getMenu = () => {
     const categories = menuStore.categories;
     setCategoryList(categories);
-    setSelectedCategory(categories["BURGERS"]);
+      setSelectedCategory(categories["BURGERS"]);
     //   axios
     //     .get("https://jsonplaceholder.typicode.com/users")
     //     .then((response) => {
@@ -63,7 +78,7 @@ const MenuScreen = () => {
                 },
               ]}
             >
-              <Icon
+              {/* <Icon
                 icon={categoryList[key].icon}
                 size={30}
                 style={{
@@ -72,6 +87,10 @@ const MenuScreen = () => {
                       ? themeStyle.GRAY_700
                       : themeStyle.GRAY_300,
                 }}
+              /> */}
+                <Image
+                style={{ width:"100%",height:"100%" }}
+                source={{uri:categoryList[key].image_url}}
               />
             </View>
             <Text
@@ -110,6 +129,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     paddingTop: 20,
     width: "100%",
+    backgroundColor:"#F1F1F1"
   },
   categoryItem: {
     alignItems: "center",

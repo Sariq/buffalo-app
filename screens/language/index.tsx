@@ -5,11 +5,15 @@ import { useContext } from "react";
 import { StoreContext } from "../../stores";
 import { observer } from "mobx-react";
 import i18n from "../../translations";
+import { useNavigation } from "@react-navigation/native";
 
 const LanguageScreen = () => {
   const { languageStore, globalStyles } = useContext(StoreContext);
+  const navigation = useNavigation();
+
   const onChangeLanguage = (lng) => {
     languageStore.changeLang(lng);
+    navigation.goBack();
   };
 
   return (
