@@ -125,7 +125,7 @@
 				788FBBD5EA96304396586D77 /* Pods-buffalo.debug.xcconfig */,
 				B0D93428B4EC2576A7FC55C6 /* Pods-buffalo.release.xcconfig */,
 			);
-			path = Pods;
+			name = Pods;
 			sourceTree = "<group>";
 		};
 		D7E4C46ADA2E9064B798F356 /* ExpoModulesProviders */ = {
