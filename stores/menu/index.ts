@@ -34,7 +34,6 @@ class MenuStore {
   }
   getMenu = () => {
     this.getMenuFromServer().then((res) => {
-      console.log('res', res)
       runInAction(() => {
         this.categories = groupBy(res.menu, (x) => x.category);
         this.meals = groupBy(res.menu_constants, (x) => x.menu_id);
