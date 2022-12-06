@@ -4,16 +4,8 @@ import { groupBy } from "lodash";
 import axios from "axios";
 import { BASE_URL, MENU_API } from "../../consts/api";
 //import base64 from "react-native-base64";
-import base64 from 'base-64';
-import { Buffer } from 'buffer'
+import { fromBase64 } from '../../helpers/convert-base64'
     
-export function toBase64(input) {
-  return Buffer.from(input, 'utf-8').toString('base64')
-}
-
-export function fromBase64(encoded) {
-  return Buffer.from(encoded, 'base64').toString('utf8')
-}
 class MenuStore {
   menu = null;
   categories = null;

@@ -22,19 +22,20 @@ import CartStore from "../../stores/cart";
 import BackButton from "../../components/back-button";
 
 const SHIPPING_METHODS = {
-  shipping: "shipping",
-  takAway: "take away",
+  shipping: "DELIVERY",
+  takAway: "TAKEAWAY",
 };
 const PAYMENT_METHODS = {
-  creditCard: "credit card",
-  cash: "cash",
+  creditCard: "CREDITCARD",
+  cash: "CASH",
 };
 type TShippingMethod = {
   shipping: string;
   takAway: string;
 };
 const CartScreen = () => {
-  let cartStore = useContext(StoreContext).cartStore;
+  const { cartStore, authStore } = useContext(StoreContext);
+
   const navigation = useNavigation();
 
   const [shippingMethod, setShippingMethod] = React.useState(
@@ -94,7 +95,18 @@ const CartScreen = () => {
   };
 
   const onSendCart = () => {
-    console.log(cartStore.cartItems[0].extra);
+    const token = authStore.userToken;
+    if(token){
+      const order = {
+        paymentMthod,
+        shippingMethod,
+        totalPrice,
+        products: cartStore.cartItems
+      }
+      cartStore.submitOrder(order, token)
+    }else{
+      navigation.navigate("login");
+    }
   };
 
   const onEditProduct = (index) => {

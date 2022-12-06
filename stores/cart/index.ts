@@ -1,5 +1,67 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { makeAutoObservable } from "mobx";
+import { toBase64 } from '../../helpers/convert-base64'
+import axios from "axios";
+import { BASE_URL, ORDER_API } from "../../consts/api";
+import Constants from "expo-constants";
+import * as Device from 'expo-device';
+import i18n from "../../translations";
+
+type TGradiants = {
+  id: number;
+  name: string;
+  value: any;
+}
+type TProduct = {
+  item_id: number;
+  qty: number;
+  price: number;
+  notes: string;
+  data: TGradiants[];
+}
+type TOrder = {
+  payment_method: 'CREDITCARD' | 'CASH';
+  receipt_method: 'DELIVERY' | 'TAKEAWAY';
+  creditcard_ReferenceNumber?: string;
+  address: string;
+  items: TProduct[];
+}
+
+type TCart = {
+  token: string;
+  order: TOrder;
+  total: number;
+  app_language: '1' | '2',
+  device_os: string,
+  app_version: string,
+  unique_hash?: string;
+}
+
+
+const prodcutExtrasAdapter = (extras) => {
+  let productExtras = [];
+  Object.keys(extras).map((key) => (
+    extras[key].map((extra) => {
+      productExtras.push({ id: extra.id, name: extra.name, value: extra.value });
+    })
+  ))
+  return productExtras;
+}
+
+const produtsAdapter = (products) => {
+  let finalProducts = [];
+  products.map((product) => {
+    const finalProduct = {
+      item_id: product.data.id,
+      qty: product.others.count,
+      price: product.data.price,
+      notes: product.others.note,
+      data: prodcutExtrasAdapter(product.extras)
+    }
+    finalProducts.push(finalProduct);
+  })
+  return finalProducts;
+}
 
 class CartStore {
   cartItems = [];
@@ -53,7 +115,7 @@ class CartStore {
   updateProductCount = (productId, count) => {
     this.cartItems = this.cartItems.map((item, index) => {
       if (item.data.id + index === productId) {
-        item.data.price = item.data.price + ((count - item.others.count) * (item.data.price/item.others.count));
+        item.data.price = item.data.price + ((count - item.others.count) * (item.data.price / item.others.count));
         item.others.count = count;
       }
       return item;
@@ -67,7 +129,44 @@ class CartStore {
       count += product.others.count;
     })
     return count;
-  }
+  };
+
+  submitOrder = async(order: any, token: string) => {
+  
+    let finalOrder: TOrder = {
+      payment_method: order.paymentMthod,
+      receipt_method: order.shippingMethod,
+      address: 'test',
+      items: produtsAdapter(order.products)
+    }
+    const version = Constants.nativeAppVersion;
+
+    const cartData: TCart = {
+      token: token,
+      order: finalOrder,
+      total: order.totalPrice,
+      app_language: i18n.locale === "ar" ? '1' : '2',
+      device_os: Device.osName,
+      app_version:version,
+      unique_hash: null
+    }
+    console.log(cartData)
+    const orderBase64 = toBase64(cartData);
+    const body = orderBase64;
+    axios
+      .post(
+        `${BASE_URL}/${ORDER_API.CONTROLLER}/${ORDER_API.SUBMIT_ORDER_API}`,
+        body,
+        { headers: { "Content-Type": "application/json" } }
+      )
+      .then(function (response) {
+
+        console.log("tokennnn", response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
 }
 
 export default CartStore;

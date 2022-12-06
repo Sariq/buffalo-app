@@ -24,25 +24,25 @@ const LoginScreen = () => {
   const authinticate = () => {
     navigation.navigate("verify-code");
 
-    // const body = {
-    //   phone: phoneNumber,
-    //   device_type: Device.deviceName || "IOS",
-    //   language: languageStore.selectedLang === "ar" ? 0 : 1,
-    //   datetime: new Date(),
-    // };
-    // axios
-    //   .post(
-    //     `${BASE_URL}/${AUTH_API.CONTROLLER}/${AUTH_API.AUTHINTICATE_API}`,
-    //     base64.encode(JSON.stringify(body)),{ headers: { "Content-Type": "application/json" } }
-    //   )
-    //   .then(function (response) {
-    //     const res = JSON.parse(base64.decode(response.data));
-    //     authStore.setVerifyCodeToken(res.token);
-    //     navigation.navigate("verify-code");
-    //   })
-    //   .catch(function (error) {
-    //     console.log(error);
-    //   });
+    const body = {
+      phone: phoneNumber,
+      device_type: Device.deviceName || "IOS",
+      language: languageStore.selectedLang === "ar" ? 0 : 1,
+      datetime: new Date(),
+    };
+    axios
+      .post(
+        `${BASE_URL}/${AUTH_API.CONTROLLER}/${AUTH_API.AUTHINTICATE_API}`,
+        base64.encode(JSON.stringify(body)),{ headers: { "Content-Type": "application/json" } }
+      )
+      .then(function (response) {
+        const res = JSON.parse(base64.decode(response.data));
+        authStore.setVerifyCodeToken(res.token);
+        navigation.navigate("verify-code");
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   return (

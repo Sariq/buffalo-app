@@ -9,3 +9,7 @@ export const MENU_API = {
     CONTROLLER: "config",
     GET_MENU_API : "GetRestaurantMenu",
 };
+export const ORDER_API = {
+    CONTROLLER: "order",
+    SUBMIT_ORDER_API : "submit",
+};
