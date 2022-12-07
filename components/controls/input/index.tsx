@@ -23,22 +23,6 @@ export default function InputText({ onChange, value, label }: TProps) {
   );
 }
 const styles = StyleSheet.create({
-  container: {},
-  counterValue: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  btn: {
-    backgroundColor: themeStyle.PRIMARY_COLOR,
-    width: 30,
-    height: 30,
-    borderRadius: 10,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  btnText: {
-    fontSize: 20,
-  },
+  container: {  width: "100%"},
+
 });

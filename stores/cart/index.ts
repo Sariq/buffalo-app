@@ -1,11 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { makeAutoObservable } from "mobx";
 import { toBase64 } from '../../helpers/convert-base64'
-import axios from "axios";
 import { BASE_URL, ORDER_API } from "../../consts/api";
 import Constants from "expo-constants";
 import * as Device from 'expo-device';
 import i18n from "../../translations";
+import { axiosInstance } from "../../utils/http-interceptor";
 
 type TGradiants = {
   id: number;
@@ -153,9 +153,9 @@ class CartStore {
     console.log(cartData)
     const orderBase64 = toBase64(cartData);
     const body = orderBase64;
-    axios
+    axiosInstance
       .post(
-        `${BASE_URL}/${ORDER_API.CONTROLLER}/${ORDER_API.SUBMIT_ORDER_API}`,
+        `${ORDER_API.CONTROLLER}/${ORDER_API.SUBMIT_ORDER_API}`,
         body,
         { headers: { "Content-Type": "application/json" } }
       )
@@ -169,4 +169,4 @@ class CartStore {
   };
 }
 
-export default CartStore;
+export const cartStore = new CartStore();

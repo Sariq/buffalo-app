@@ -7,10 +7,11 @@ import { useState } from "react";
 import * as Device from "expo-device";
 import { useContext } from "react";
 import { StoreContext } from "../../stores";
-import axios from "axios";
 import base64 from 'react-native-base64'
 import { observer } from "mobx-react";
 import { useNavigation } from "@react-navigation/native";
+import CreditCard from "../../components/credit-card";
+import { axiosInstance } from "../../utils/http-interceptor";
 
 const LoginScreen = () => {
   const { languageStore, authStore } = useContext(StoreContext);
@@ -30,9 +31,9 @@ const LoginScreen = () => {
       language: languageStore.selectedLang === "ar" ? 0 : 1,
       datetime: new Date(),
     };
-    axios
+    axiosInstance
       .post(
-        `${BASE_URL}/${AUTH_API.CONTROLLER}/${AUTH_API.AUTHINTICATE_API}`,
+        `${AUTH_API.CONTROLLER}/${AUTH_API.AUTHINTICATE_API}`,
         base64.encode(JSON.stringify(body)),{ headers: { "Content-Type": "application/json" } }
       )
       .then(function (response) {
@@ -46,27 +47,29 @@ const LoginScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.inputsContainer}>
-        <Text style={{ marginTop: 50, fontSize: 25 }}>ادخل رقم هاتفك</Text>
-        <Text style={{ marginTop: 20, fontSize: 17 }}>
-          سوف نبعث لك رسالة مع رقم سري
-        </Text>
+    <CreditCard/>
 
-        <View style={{ width: "100%", paddingHorizontal: 50, marginTop: 15 }}>
-          <InputText onChange={onChange} label="هاتف" />
-        </View>
+    // <View style={styles.container}>
+    //   <View style={styles.inputsContainer}>
+    //     <Text style={{ marginTop: 50, fontSize: 25 }}>ادخل رقم هاتفك</Text>
+    //     <Text style={{ marginTop: 20, fontSize: 17 }}>
+    //       سوف نبعث لك رسالة مع رقم سري
+    //     </Text>
 
-        <View style={{ width: "100%", paddingHorizontal: 50, marginTop: 25 }}>
-          <Button
-            bgColor={themeStyle.PRIMARY_COLOR}
-            text={"تحقق من رقم الهاتف"}
-            fontSize={20}
-            onClickFn={authinticate}
-          />
-        </View>
-      </View>
-    </View>
+    //     <View style={{ width: "100%", paddingHorizontal: 50, marginTop: 15 }}>
+    //       <InputText onChange={onChange} label="هاتف" />
+    //     </View>
+
+    //     <View style={{ width: "100%", paddingHorizontal: 50, marginTop: 25 }}>
+    //       <Button
+    //         bgColor={themeStyle.PRIMARY_COLOR}
+    //         text={"تحقق من رقم الهاتف"}
+    //         fontSize={20}
+    //         onClickFn={authinticate}
+    //       />
+    //     </View>
+    //   </View>
+    // </View>
   );
 }
 export default observer(LoginScreen);

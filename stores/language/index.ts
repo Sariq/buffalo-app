@@ -17,4 +17,4 @@ class LanguageStore {
   };
 }
 
-export default LanguageStore;
+export const languageStore = new LanguageStore();

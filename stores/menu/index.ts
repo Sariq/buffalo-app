@@ -1,11 +1,9 @@
 import { makeAutoObservable, runInAction } from "mobx";
-import { CONSTS_MENU_API } from "../../consts/menu-api-mock";
 import { groupBy } from "lodash";
-import axios from "axios";
-import { BASE_URL, MENU_API } from "../../consts/api";
-//import base64 from "react-native-base64";
+import { MENU_API } from "../../consts/api";
 import { fromBase64 } from '../../helpers/convert-base64'
-    
+import { axiosInstance } from "../../utils/http-interceptor";
+
 class MenuStore {
   menu = null;
   categories = null;
@@ -21,14 +19,13 @@ class MenuStore {
   }
   getMenuFromServer = () => {
     const body = {};
-    return axios
+    return axiosInstance
       .post(
-        `${BASE_URL}/${MENU_API.CONTROLLER}/${MENU_API.GET_MENU_API}`,
+        `${MENU_API.CONTROLLER}/${MENU_API.GET_MENU_API}`,
         body,
       )
       .then(function (response) {
-        //const res = JSON.parse(base64.decode(response.data));
-         const res = JSON.parse(fromBase64(response.data));
+        const res = JSON.parse(fromBase64(response.data));
         return res;
       });
   }
@@ -82,4 +79,4 @@ class MenuStore {
   }
 }
 
-export default MenuStore;
+export const menuStore = new MenuStore();

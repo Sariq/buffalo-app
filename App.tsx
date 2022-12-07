@@ -9,13 +9,13 @@ I18nManager.forceRTL(true);
 I18nManager.allowRTL(true);
 import i18n from "./translations";
 /* stores*/
-import CartStore from "./stores/cart";
-import MenuStore from "./stores/menu";
+import { cartStore } from "./stores/cart";
+import { menuStore } from "./stores/menu";
 import * as SplashScreen from "expo-splash-screen";
 import { StoreContext } from "./stores";
-import LanguageStore from "./stores/language";
-import AuthStore from "./stores/auth";
+import { authStore } from "./stores/auth";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { languageStore } from "./stores/language";
 // Keep the splash screen visible while we fetch resources
 //SplashScreen.preventAutoHideAsync();
 let customARFonts = {
@@ -109,10 +109,10 @@ export default function App() {
   return (
     <StoreContext.Provider
       value={{
-        cartStore: new CartStore(),
-        authStore: new AuthStore(),
-        menuStore: new MenuStore(),
-        languageStore: new LanguageStore(),
+        cartStore: cartStore,
+        authStore: authStore,
+        menuStore: menuStore,
+        languageStore: languageStore,
         globalStyles: globalStyles,
       }}
     >

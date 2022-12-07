@@ -1,7 +1,13 @@
-import {createContext} from "react";
-import CartStore from "./cart";
-import AuthStore from "./auth";
-import MenuStore from "./menu";
-import LanguageStore from "./language";
+import { createContext } from "react";
+import { cartStore } from "./cart";
+import { authStore } from "./auth";
+import { menuStore } from "./menu";
+import { languageStore } from "./language";
 
-export const StoreContext = createContext({cartStore: new CartStore(), authStore: new AuthStore(), menuStore: new MenuStore(), languageStore: new LanguageStore(), globalStyles: {fontFamily: ""}});
+export const StoreContext = createContext({ 
+    cartStore: cartStore, 
+    authStore: authStore, 
+    menuStore: menuStore, 
+    languageStore: languageStore, 
+    globalStyles: { fontFamily: "" } 
+});

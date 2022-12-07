@@ -6,10 +6,10 @@ import { BASE_URL, AUTH_API } from "../../consts/api";
 import { useState, useEffect } from "react";
 import { useContext } from "react";
 import { StoreContext } from "../../stores";
-import axios from "axios";
 import base64 from "react-native-base64";
 import { observer } from "mobx-react";
 import { useNavigation } from "@react-navigation/native";
+import { axiosInstance } from "../../utils/http-interceptor";
 
 const VerifyCodeScreen = () => {
   const { authStore } = useContext(StoreContext);
@@ -30,9 +30,9 @@ const VerifyCodeScreen = () => {
       token: authStore.verifyCodeToken,
       secret_code: verifyCode,
     };
-    axios
+    axiosInstance
       .post(
-        `${BASE_URL}/${AUTH_API.CONTROLLER}/${AUTH_API.VERIFY_API}`,
+        `${AUTH_API.CONTROLLER}/${AUTH_API.VERIFY_API}`,
         base64.encode(JSON.stringify(body)),
         { headers: { "Content-Type": "application/json" } }
       )

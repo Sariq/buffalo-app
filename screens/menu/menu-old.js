@@ -1,9 +1,6 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { useState, useEffect } from "react";
-import { SvgXml } from "react-native-svg";
-import { CONSTS_ICONS } from "../../consts/consts-icons";
 import themeStyle from "../../styles/theme.style";
-import axios from "axios";
 
 /* components */
 import CategoryItemsList from "./components/categoryItemsList";
@@ -43,21 +40,6 @@ export default function MenuScreen() {
   const onCategorySelect = (category) => {
     setSelectedCategory(category);
   };
-
-  goForAxios = () => {
-    axios
-      .get("https://jsonplaceholder.typicode.com/users")
-      .then((response) => {
-        console.log("getting data from axios", response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  useEffect(()=>{
-    goForAxios()
-  })
 
   return (
     <View style={{ height: "100%", backgroundColor: "white" }}>

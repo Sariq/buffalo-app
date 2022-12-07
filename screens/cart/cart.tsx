@@ -95,8 +95,9 @@ const CartScreen = () => {
   };
 
   const onSendCart = () => {
-    const token = authStore.userToken;
-    if(token){
+    const isLoggedIn = authStore.isLoggedIn();
+    if(isLoggedIn){
+      const token = authStore.userToken;
       const order = {
         paymentMthod,
         shippingMethod,
