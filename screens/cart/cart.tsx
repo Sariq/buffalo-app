@@ -18,7 +18,6 @@ import { StoreContext } from "../../stores";
 import Counter from "../../components/controls/counter";
 import Icon from "../../components/icon";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
-import CartStore from "../../stores/cart";
 import BackButton from "../../components/back-button";
 
 const SHIPPING_METHODS = {
