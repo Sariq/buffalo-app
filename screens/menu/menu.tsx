@@ -5,39 +5,45 @@ import { useContext } from "react";
 import { StoreContext } from "../../stores";
 import themeStyle from "../../styles/theme.style";
 //import base64 from "react-native-base64";
-import base64 from 'base-64';
-import utf8 from 'base-64';
+
 /* components */
 import CategoryItemsList from "./components/categoryItemsList";
 import Icon from "../../components/icon";
-import { Buffer } from 'buffer'
-    
+import { Buffer } from "buffer";
+
 export function toBase64(input) {
-  return Buffer.from(input, 'utf-8').toString('base64')
+  return Buffer.from(input, "utf-8").toString("base64");
 }
 
 export function fromBase64(encoded) {
-  return Buffer.from(encoded, 'base64').toString('utf8')
+  return Buffer.from(encoded, "base64").toString("utf8");
 }
+
+const categoryListIcons = {
+  "BURGERS": 'burger_icon'
+}
+
+
+
 const MenuScreen = () => {
   const { menuStore } = useContext(StoreContext);
 
   const [categoryList, setCategoryList] = useState();
   const [selectedCategory, setSelectedCategory] = useState();
+  const [selectedCategoryKey, setSelectedCategoryKey] = useState("BURGERS");
 
-  const onCategorySelect = (category) => {
+  const onCategorySelect = (category, key) => {
     setSelectedCategory(category);
+    setSelectedCategoryKey(key);
   };
   // const Buffer = require("buffer").Buffer;
   // let encodedAuth = new Buffer("سشسيشسي").toString("base64");
-  const text =("سابييبب");
-  var bytes = toBase64(text);
-var encoded = fromBase64(bytes);
-console.log(encoded);
+ ;
   const getMenu = () => {
     const categories = menuStore.categories;
     setCategoryList(categories);
-      setSelectedCategory(categories["BURGERS"]);
+    setSelectedCategory(categories["BURGERS"]);
+
     //   axios
     //     .get("https://jsonplaceholder.typicode.com/users")
     //     .then((response) => {
@@ -57,13 +63,14 @@ console.log(encoded);
   }
 
   return (
-    <View style={{ height: "100%", backgroundColor: "white" }}>
+    <View style={{ height: "100%", backgroundColor: "#F1F1F1" }}>
       <View style={styles.container}>
         {Object.keys(categoryList).map((key, index) => (
+          <View style={{width: 80, height: 96}}>
           <TouchableOpacity
             style={[styles.categoryItem]}
             onPress={() => {
-              onCategorySelect(categoryList[key]);
+              onCategorySelect(categoryList[key], key);
             }}
           >
             <View
@@ -72,8 +79,8 @@ console.log(encoded);
 
                 {
                   backgroundColor:
-                    categoryList[key].id === selectedCategory?.id
-                      ? themeStyle.PRIMARY_COLOR
+                  key === selectedCategoryKey
+                  ? themeStyle.PRIMARY_COLOR
                       : themeStyle.WHITE_COLOR,
                 },
               ]}
@@ -88,9 +95,9 @@ console.log(encoded);
                       : themeStyle.GRAY_300,
                 }}
               /> */}
-                <Image
-                style={{ width:"100%",height:"100%" }}
-                source={{uri:categoryList[key].image_url}}
+              <Image
+                style={{ width: "100%", height: "100%" }}
+                source={{ uri: categoryList[key].image_url }}
               />
             </View>
             <Text
@@ -98,7 +105,7 @@ console.log(encoded);
                 {
                   marginTop: 10,
                   color:
-                    categoryList[key].id === selectedCategory?.id
+                    key === selectedCategoryKey
                       ? themeStyle.GRAY_700
                       : themeStyle.GRAY_300,
                 },
@@ -107,6 +114,7 @@ console.log(encoded);
               {key}
             </Text>
           </TouchableOpacity>
+          </View>
         ))}
       </View>
       <View style={styles.itemsListConainer}>
@@ -124,12 +132,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    height: 100,
+    height: 120,
     alignContent: "space-between",
     paddingHorizontal: 5,
     paddingTop: 20,
+    paddingBottom: 10,
     width: "100%",
-    backgroundColor:"#F1F1F1"
+    backgroundColor: "#F1F1F1",
   },
   categoryItem: {
     alignItems: "center",
@@ -146,7 +155,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
-  itemsListConainer:{
-    paddingBottom:130
-  }
+  itemsListConainer: {
+    paddingBottom: 130,
+  },
 });

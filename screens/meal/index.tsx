@@ -29,9 +29,9 @@ const MealScreen = ({ route }) => {
     let tmpProduct: any = {};
     if (product) {
       setIsEdit(false);
-
       tmpProduct = menuStore.getMealByKey(product.id);
-      if(isEmpty(tmpProduct)){
+
+      if (isEmpty(tmpProduct)) {
         tmpProduct.data = product;
       }
       tmpProduct.others = { count: 1, note: "" };
@@ -122,13 +122,14 @@ const MealScreen = ({ route }) => {
   }
 
   return (
-    <View style={{ height: "100%", marginBottom: 40 }}>
+    <View
+      style={{ height: "100%", marginBottom: 40, backgroundColor: "white" }}
+    >
       <ScrollView>
         <View
           style={{
             alignItems: "center",
             justifyContent: "center",
-            backgroundColor: "white",
             paddingTop: 20,
           }}
         >
@@ -147,29 +148,31 @@ const MealScreen = ({ route }) => {
                 X
               </Text>
             </TouchableOpacity>
-            <View style={{    width: 300,
-    height: 220,padding:30}}>
-            <Image                 
-            style={{ width:"100%",height:"100%" }}
-            source={{uri:meal.data.image_url}} />
-
+            <View style={{ width: 300, height: 220, padding: 20 }}>
+              <Image
+                style={{ width: "100%", height: "100%" }}
+                source={{ uri: meal.data.image_url }}
+              />
             </View>
-
           </View>
           <View
             style={{
               backgroundColor: "white",
               marginTop: 0,
               alignSelf: "flex-start",
-              paddingHorizontal: 50,
-              top: -40,
+              paddingHorizontal: 40,
+              paddingBottom: 15,
             }}
           >
             <View>
-              <Text style={{ fontSize: 25 }}>{meal.data[`name_${languageStore.selectedLang}`]}</Text>
+              <Text style={{ fontSize: 25, textAlign: "left" }}>
+                {meal.data[`name_${languageStore.selectedLang}`]}
+              </Text>
             </View>
             <View>
-              <Text style={{ fontSize: 15 }}>{meal.data[`description_${languageStore.selectedLang}`]}</Text>
+              <Text style={{ fontSize: 15, textAlign: "left" }}>
+                {meal.data[`description_${languageStore.selectedLang}`]}
+              </Text>
             </View>
           </View>
         </View>
@@ -186,32 +189,34 @@ const MealScreen = ({ route }) => {
             />
           </View>
         </View>
-        {meal.extras && Object.keys(meal.extras).map((key) => (
-          <View key={key} style={styles.sectionContainer}>
-            <View style={styles.gradiantRowContainer}>
-              <Text>{key}</Text>
-              {Object.keys(meal.extras[key]).map((tagId) => {
-                const tag = meal.extras[key][tagId];
-                return (
-                  <View key={tagId}>
-                    <GradiantRow
-                      onChangeFn={(value) => {
-                        updateMeal(value, tag, key);
-                      }}
-                      //  icon={CONSTS_PRODUCT_EXTRAS[key].icon}
-                      type={tag.type}
-                      title={tag.name}
-                      price={tag.price}
-                      minValue={tag.counter_min_value}
-                      stepValue={tag.counter_step_value}
-                      value={tag.value}
-                    />
-                  </View>
-                );
-              })}
+        {meal.extras &&
+          Object.keys(meal.extras).map((key) => (
+            <View key={key} style={[styles.sectionContainer, styles.boxShadow]}>
+              <View style={styles.gradiantRowContainer}>
+                {Object.keys(meal.extras[key]).map((tagId) => {
+                  const tag = meal.extras[key][tagId];
+                  if (tag.available_on_app) {
+                    return (
+                      <View key={tagId}>
+                        <GradiantRow
+                          onChangeFn={(value) => {
+                            updateMeal(value, tag, key);
+                          }}
+                          //  icon={CONSTS_PRODUCT_EXTRAS[key].icon}
+                          type={tag.type}
+                          title={tag.name}
+                          price={tag.price}
+                          minValue={tag.counter_min_value}
+                          stepValue={tag.counter_step_value}
+                          value={tag.value}
+                        />
+                      </View>
+                    );
+                  }
+                })}
+              </View>
             </View>
-          </View>
-        ))}
+          ))}
 
         <View style={styles.sectionContainer}>
           <View style={styles.gradiantRowContainer}>
@@ -287,5 +292,13 @@ const styles = StyleSheet.create({
   sectionContainer: {
     backgroundColor: "white",
     marginTop: 25,
+    shadowColor: "#F1F1F1",
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 30,
+    elevation: 0,
   },
 });

@@ -33,7 +33,7 @@ type TShippingMethod = {
   takAway: string;
 };
 const CartScreen = () => {
-  const { cartStore, authStore } = useContext(StoreContext);
+  const { cartStore, authStore, languageStore } = useContext(StoreContext);
 
   const navigation = useNavigation();
 
@@ -95,16 +95,16 @@ const CartScreen = () => {
 
   const onSendCart = () => {
     const isLoggedIn = authStore.isLoggedIn();
-    if(isLoggedIn){
+    if (isLoggedIn) {
       const token = authStore.userToken;
       const order = {
         paymentMthod,
         shippingMethod,
         totalPrice,
-        products: cartStore.cartItems
-      }
-      cartStore.submitOrder(order, token)
-    }else{
+        products: cartStore.cartItems,
+      };
+      cartStore.submitOrder(order, token);
+    } else {
       navigation.navigate("login");
     }
   };
@@ -151,6 +151,7 @@ const CartScreen = () => {
                 style={{
                   marginTop: 25,
                   borderBottomWidth: 0.5,
+                  borderColor: "#707070"
                 }}
               >
                 <View
@@ -161,7 +162,7 @@ const CartScreen = () => {
                   }}
                 >
                   <View style={{ marginRight: 50 }}>
-                    <Text>{product.data.name}</Text>
+                    <Text>{product.data[`name_${languageStore.selectedLang}`]}</Text>
                   </View>
                   <View style={{ width: "35%" }}>
                     <Counter
@@ -184,20 +185,28 @@ const CartScreen = () => {
                     style={{
                       flexDirection: "row",
                       alignItems: "center",
+                      paddingVertical: 10,
                     }}
                   >
-                    <View>
+                    <View
+                      style={{
+                        width: 130,
+                        height: 80,
+                        padding: 0,
+                      }}
+                    >
                       <Image
-                        style={{ width: 140, height: 140 }}
-                        source={product.icon}
+                        style={{ width: "90%", height: "100%" }}
+                        source={{ uri: product.data.image_url }}
                       />
                     </View>
                     <View style={{ marginLeft: 20 }}>
-                      {product.extras && Object.keys(product.extras).map((key) => (
-                        <View>
-                          <Text>+ {key}</Text>
-                        </View>
-                      ))}
+                      {product.extras &&
+                        Object.keys(product.extras).map((key) => (
+                          <View>
+                            <Text style={{ textAlign: "left" }}>+ {key}</Text>
+                          </View>
+                        ))}
                     </View>
                   </View>
 

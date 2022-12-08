@@ -13,7 +13,7 @@ class AuthStore {
   isLoggedIn = () => {
     return !!this.userToken;
   }
-  
+
   getUserToken = async () => {
     const token = await AsyncStorage.getItem("@storage_userToken");
     this.setUserToken(token);

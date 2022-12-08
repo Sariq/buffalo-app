@@ -17,7 +17,6 @@ const CategoryItemsList = ({ productsList }) => {
   const { languageStore } = useContext(StoreContext);
 
   const [selectedItem, setSelectedItem] = useState();
-
   const onItemSelect = (item) => {
     setSelectedItem(item);
     navigation.navigate("meal", { product: item });
@@ -25,7 +24,11 @@ const CategoryItemsList = ({ productsList }) => {
   return (
     <ScrollView>
       <View style={styles.container}>
-        {productsList.map((item) => (
+        {productsList.map((item) => { 
+          if(item.out_of_stock){
+            return null;
+          }
+          return(
           <View
             style={styles.categoryItem}
             onTouchEnd={() => {
@@ -39,11 +42,12 @@ const CategoryItemsList = ({ productsList }) => {
               />
             </View>
             <Text
-              style={[
+              style={
                 {
                   color: themeStyle.GRAY_700,
-                },
-              ]}
+                  marginTop:30
+                }
+              }
             >
               {item[`name_${languageStore.selectedLang}`]}
               {/* {i18n.t(`products.${item.name}.name`)} */}
@@ -52,13 +56,14 @@ const CategoryItemsList = ({ productsList }) => {
               style={[
                 {
                   color: themeStyle.GRAY_700,
+                  marginTop:5
                 },
               ]}
             >
               ₪{item.price}
             </Text>
           </View>
-        ))}
+        )})}
       </View>
     </ScrollView>
   );
@@ -73,33 +78,34 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     paddingHorizontal: 10,
-    backgroundColor:"#F1F1F1"
+    backgroundColor:"#F1F1F1",
   },
   categoryItem: {
     flexBasis: '47%',
     marginBottom:15,
-    width: 165,
-    height: 180,
+
+    height: 220,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 15,
     backgroundColor: themeStyle.WHITE_COLOR,
-    paddingVertical: 20,
+    paddingVertical: 50,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0,
+    shadowOpacity: 0.1,
     shadowRadius: 3.84,
     elevation: 2,
+    
   },
   iconContainer: {
     alignItems: "center",
     justifyContent: "center",
-    flex: 1,
     width: "100%",
     height: "100%",
+    padding: 10
   },
   square: {
     alignSelf: "center",

@@ -4,11 +4,13 @@ import InputText from "../controls/input";
 import { useState } from "react";
 import theme from "../../styles/theme.style";
 import { Button } from "react-native-paper";
+import validateCard, { TValidateCardProps } from "./api/validate-card";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const CreditCard = () => {
   const [creditCardNumber, setCreditCardNumber] = useState();
-  const [creditCardExpDateMonth, setCreditCardExpDateMonth] = useState('java');
-  const [creditCardExpDateYear, setCreditCardExpDateYear] = useState('java');
+  const [creditCardExpDateMonth, setCreditCardExpDateMonth] = useState("java");
+  const [creditCardExpDateYear, setCreditCardExpDateYear] = useState("java");
   const [creditCardCVV, setCreditCardCVV] = useState();
 
   const onNumberChange = (value) => {
@@ -23,9 +25,24 @@ const CreditCard = () => {
   const onCVVChange = (value) => {
     setCreditCardCVV(value);
   };
-  
 
-  const onSaveCreditCard = () => {};
+  const onSaveCreditCard = () => {
+    const validateCardData: TValidateCardProps = {
+      cardNumber: creditCardNumber,
+      expDate: creditCardExpDateMonth + creditCardExpDateYear,
+    };
+    validateCard(validateCardData).then(async (res) => {
+      if (res.isValid) {
+        await AsyncStorage.setItem("@storage_CCData", {
+          cardNumber: creditCardNumber,
+          expDate: creditCardExpDateMonth + creditCardExpDateYear,
+          cvv: creditCardCVV,
+        });
+      } else {
+        // TODO: show try another card modal
+      }
+    });
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -69,9 +86,6 @@ const CreditCard = () => {
         >
           save card
         </Button>
-      </View>
-      <View>
-
       </View>
     </SafeAreaView>
   );
