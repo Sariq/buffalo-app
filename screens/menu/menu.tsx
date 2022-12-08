@@ -20,7 +20,8 @@ export function fromBase64(encoded) {
 }
 
 const categoryListIcons = {
-  "BURGERS": 'burger_icon'
+  "BURGERS": 'burger_icon',
+  'CHICKEN': 'crispy_icon'
 }
 
 
@@ -85,8 +86,8 @@ const MenuScreen = () => {
                 },
               ]}
             >
-              {/* <Icon
-                icon={categoryList[key].icon}
+               <Icon
+                icon={categoryListIcons[key]}
                 size={30}
                 style={{
                   color:
@@ -94,11 +95,8 @@ const MenuScreen = () => {
                       ? themeStyle.GRAY_700
                       : themeStyle.GRAY_300,
                 }}
-              /> */}
-              <Image
-                style={{ width: "100%", height: "100%" }}
-                source={{ uri: categoryList[key].image_url }}
-              />
+              /> 
+     
             </View>
             <Text
               style={[

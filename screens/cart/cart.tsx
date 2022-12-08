@@ -161,7 +161,7 @@ const CartScreen = () => {
                     paddingHorizontal: 20,
                   }}
                 >
-                  <View style={{ marginRight: 50 }}>
+                  <View style={{ marginRight: 50, flexBasis:"28%", justifyContent: "center", }}>
                     <Text>{product.data[`name_${languageStore.selectedLang}`]}</Text>
                   </View>
                   <View style={{ width: "35%" }}>
@@ -193,6 +193,7 @@ const CartScreen = () => {
                         width: 130,
                         height: 80,
                         padding: 0,
+                        alignItems: "center",
                       }}
                     >
                       <Image
@@ -203,9 +204,17 @@ const CartScreen = () => {
                     <View style={{ marginLeft: 20 }}>
                       {product.extras &&
                         Object.keys(product.extras).map((key) => (
-                          <View>
-                            <Text style={{ textAlign: "left" }}>+ {key}</Text>
-                          </View>
+                          product.extras[key].map((extra) => {
+                            if(extra.value && extra.isdefault != extra.value && extra.counter_init_value != extra.value){
+                              return (
+                                <View>
+                                <Text style={{ textAlign: "left" }}>+ {extra.name}</Text>
+                              </View>
+                              )
+                            }
+                           
+                          })
+                    
                         ))}
                     </View>
                   </View>
