@@ -6,6 +6,7 @@ import Constants from "expo-constants";
 import * as Device from 'expo-device';
 import i18n from "../../translations";
 import { axiosInstance } from "../../utils/http-interceptor";
+var hash = require('object-hash');
 
 type TGradiants = {
   id: number;
@@ -131,6 +132,17 @@ class CartStore {
     return count;
   };
 
+  generateUniqueHash = (value: any) => {
+    var hash = 0,
+    i, chr;
+  if (value.length === 0) return hash;
+  for (i = 0; i < value.length; i++) {
+    chr = value.charCodeAt(i);
+    hash = ((hash << 5) - hash) + chr;
+    hash |= 0; // Convert to 32bit integer
+  }
+  return hash;
+  }
   submitOrder = async(order: any) => {
   
     let finalOrder: TOrder = {
@@ -147,11 +159,11 @@ class CartStore {
       app_language: i18n.locale === "ar" ? '1' : '2',
       device_os: Device.osName,
       app_version:version,
-      unique_hash: null,
+      unique_hash: hash(finalOrder),
       datetime: new Date(),
     }
-    console.log(cartData)
     const orderBase64 = toBase64(cartData);
+
     const body = orderBase64;
     axiosInstance
       .post(

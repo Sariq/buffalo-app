@@ -37,6 +37,7 @@
     "i18n-js": "^4.1.1",
     "mobx": "^6.6.2",
     "mobx-react": "^7.5.3",
+    "object-hash": "^3.0.0",
     "react": "18.0.0",
     "react-dom": "18.0.0",
     "react-icomoon": "^2.5.4",
