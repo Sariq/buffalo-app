@@ -32,7 +32,8 @@ const Header = () => {
   };
 
   const handleProfileClick = () => {
-    navigation.navigate("profile");
+   // navigation.navigate("profile");
+    navigation.navigate("order-submitted");
     //navigation.navigate("login");
     // navigation.navigate("verify-code");
   };

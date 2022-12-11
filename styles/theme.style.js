@@ -7,6 +7,7 @@ export default {
     WHITE_COLOR: 'white',
     SUCCESS_COLOR: 'green',
     GRAY_300: '#c1c1c1',
+    GRAY_600: '#707070',
     GRAY_700: '#442213',
     BROWN_700: '#341910',
     FONT_WEIGHT_LIGHT: 200,

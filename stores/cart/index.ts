@@ -163,21 +163,21 @@ class CartStore {
       datetime: new Date(),
     }
     const orderBase64 = toBase64(cartData);
-
+    console.log("SSSUB")
     const body = orderBase64;
-    axiosInstance
-      .post(
-        `${ORDER_API.CONTROLLER}/${ORDER_API.SUBMIT_ORDER_API}`,
-        body,
-        { headers: { "Content-Type": "application/json" } }
-      )
-      .then(function (response) {
+    // axiosInstance
+    //   .post(
+    //     `${ORDER_API.CONTROLLER}/${ORDER_API.SUBMIT_ORDER_API}`,
+    //     body,
+    //     { headers: { "Content-Type": "application/json" } }
+    //   )
+    //   .then(function (response) {
 
-        console.log("tokennnn", response);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    //     console.log("tokennnn", response);
+    //   })
+    //   .catch(function (error) {
+    //     console.log(error);
+    //   });
   };
 }
 

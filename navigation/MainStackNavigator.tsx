@@ -8,6 +8,8 @@ import ProfileScreen from "../screens/profile";
 import LoginScreen from "../screens/login";
 import VerifyCodeScreen from "../screens/verify-code";
 import LanguageScreen from "../screens/language";
+import OrderSubmittedScreen from "../screens/order/submitted";
+
 const Stack = createStackNavigator();
 
 export const MainStackNavigator = ({}) => {
@@ -24,6 +26,7 @@ export const MainStackNavigator = ({}) => {
       <Stack.Screen name="login" component={LoginScreen} />
       <Stack.Screen name="verify-code" component={VerifyCodeScreen} />
       <Stack.Screen name="language" component={LanguageScreen} />
+      <Stack.Screen name="order-submitted" component={OrderSubmittedScreen} />
       <Stack.Screen
         name="meal"
         component={MealScreen}

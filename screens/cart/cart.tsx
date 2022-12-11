@@ -19,6 +19,7 @@ import Counter from "../../components/controls/counter";
 import Icon from "../../components/icon";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import BackButton from "../../components/back-button";
+import PaymentMethodDialog from "../../components/dialogs/delivery-method";
 
 const SHIPPING_METHODS = {
   shipping: "DELIVERY",
@@ -43,6 +44,15 @@ const CartScreen = () => {
   const [paymentMthod, setPaymentMthod] = React.useState(
     PAYMENT_METHODS.creditCard
   );
+
+  const [isShippingMethodAgrred, setIsShippingMethodAgrred] = React.useState(
+    false
+  );
+  const [
+    isOpenShippingMethodDialog,
+    setIsOpenShippingMethodDialog,
+  ] = React.useState(false);
+
   const [itemsPrice, setItemsPrice] = React.useState(0);
   const [totalPrice, setTotalPrice] = React.useState(0);
 
@@ -94,22 +104,45 @@ const CartScreen = () => {
   };
 
   const onSendCart = () => {
+    console.log(shippingMethod === SHIPPING_METHODS.shipping);
+
     const isLoggedIn = authStore.isLoggedIn();
     if (isLoggedIn) {
-      const order = {
-        paymentMthod,
-        shippingMethod,
-        totalPrice,
-        products: cartStore.cartItems,
-      };
-      cartStore.submitOrder(order);
+      if (
+        shippingMethod === SHIPPING_METHODS.shipping &&
+        !isShippingMethodAgrred
+      ) {
+        setIsOpenShippingMethodDialog(true);
+        return;
+      } else {
+        submitCart();
+      }
     } else {
       navigation.navigate("login");
     }
   };
 
+  const submitCart = () => {
+    const order = {
+      paymentMthod,
+      shippingMethod,
+      totalPrice,
+      products: cartStore.cartItems,
+    };
+    cartStore.submitOrder(order);
+  };
+
   const onEditProduct = (index) => {
     navigation.navigate("meal", { index });
+  };
+
+  const handleShippingMethoAnswer = (value: boolean) => {
+    console.log(value);
+    setIsOpenShippingMethodDialog(value);
+    setIsShippingMethodAgrred(value);
+    if (value) {
+      submitCart();
+    }
   };
 
   //   let text = "Waiting..";
@@ -150,7 +183,7 @@ const CartScreen = () => {
                 style={{
                   marginTop: 25,
                   borderBottomWidth: 0.5,
-                  borderColor: "#707070"
+                  borderColor: "#707070",
                 }}
               >
                 <View
@@ -160,8 +193,16 @@ const CartScreen = () => {
                     paddingHorizontal: 20,
                   }}
                 >
-                  <View style={{ marginRight: 50, flexBasis:"28%", justifyContent: "center", }}>
-                    <Text>{product.data[`name_${languageStore.selectedLang}`]}</Text>
+                  <View
+                    style={{
+                      marginRight: 50,
+                      flexBasis: "28%",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Text>
+                      {product.data[`name_${languageStore.selectedLang}`]}
+                    </Text>
                   </View>
                   <View style={{ width: "35%" }}>
                     <Counter
@@ -202,19 +243,23 @@ const CartScreen = () => {
                     </View>
                     <View style={{ marginLeft: 20 }}>
                       {product.extras &&
-                        Object.keys(product.extras).map((key) => (
+                        Object.keys(product.extras).map((key) =>
                           product.extras[key].map((extra) => {
-                            if(extra.value && extra.isdefault != extra.value && extra.counter_init_value != extra.value){
+                            if (
+                              extra.value &&
+                              extra.isdefault != extra.value &&
+                              extra.counter_init_value != extra.value
+                            ) {
                               return (
                                 <View>
-                                <Text style={{ textAlign: "left" }}>+ {extra.name}</Text>
-                              </View>
-                              )
+                                  <Text style={{ textAlign: "left" }}>
+                                    + {extra.name}
+                                  </Text>
+                                </View>
+                              );
                             }
-                           
                           })
-                    
-                        ))}
+                        )}
                     </View>
                   </View>
 
@@ -424,6 +469,10 @@ const CartScreen = () => {
           </View>
         </View>
       </View>
+      <PaymentMethodDialog
+        handleAnswer={handleShippingMethoAnswer}
+        isOpen={isOpenShippingMethodDialog}
+      />
     </ScrollView>
   );
 };
