@@ -17,7 +17,38 @@ import { useContext, useState, useEffect } from "react";
 import { StoreContext } from "../../stores";
 import { ScrollView } from "react-native-gesture-handler";
 import themeStyle from "../../styles/theme.style";
+import Icon from "../../components/icon";
 
+const extrasIcons = {
+  "1132": require("../../assets/menu/gradiant/burgerSlice.png"),
+  "1115": require("../../assets/menu/gradiant/cheese.png"),
+  "1116": require("../../assets/menu/gradiant/baecon.png"),
+  "1117": require("../../assets/menu/gradiant/baecon.png"),
+  "1118": require("../../assets/menu/gradiant/jalapeno.png"),
+  "1119": require("../../assets/menu/gradiant/egg.png"),
+  "1120": require("../../assets/menu/gradiant/truffle.png"),
+  "1135": require("../../assets/menu/gradiant/friedOnion.png"),
+  "1136": require("../../assets/menu/gradiant/burgerSlice.png"),
+  "1643": require("../../assets/menu/gradiant/burgerSlice.png"),
+  "1133": require("../../assets/menu/gradiant/burgerSlice.png"),
+  "1134": require("../../assets/menu/gradiant/burgerSlice.png"),
+  "1142": require("../../assets/menu/gradiant/burgerSlice.png"),
+  "1137": require("../../assets/menu/gradiant/burgerSlice.png"),
+  "1138": require("../../assets/menu/gradiant/burgerSlice.png"),
+  "1139": require("../../assets/menu/gradiant/burgerSlice.png"),
+  "1121": require("../../assets/menu/gradiant/burgerSlice.png"),
+  "1122": require("../../assets/menu/gradiant/burgerSlice.png"),
+  "1123": require("../../assets/menu/gradiant/burgerSlice.png"),
+  "1124": require("../../assets/menu/gradiant/burgerSlice.png"),
+  "1127": require("../../assets/menu/gradiant/burgerSlice.png"),
+  "1128": require("../../assets/menu/gradiant/burgerSlice.png"),
+  "1129": require("../../assets/menu/gradiant/burgerSlice.png"),
+  "1130": require("../../assets/menu/gradiant/burgerSlice.png"),
+  "1131": require("../../assets/menu/gradiant/burgerSlice.png"),
+  "1140": require("../../assets/menu/gradiant/burgerSlice.png"),
+  "1141": require("../../assets/menu/gradiant/burgerSlice.png"),
+ 
+}
 const MealScreen = ({ route }) => {
   const { product, index } = route.params;
   const navigation = useNavigation();
@@ -30,7 +61,6 @@ const MealScreen = ({ route }) => {
     if (product) {
       setIsEdit(false);
       tmpProduct = menuStore.getMealByKey(product.id);
-
       if (isEmpty(tmpProduct)) {
         tmpProduct.data = product;
       }
@@ -191,18 +221,18 @@ const MealScreen = ({ route }) => {
         </View>
         {meal.extras &&
           Object.keys(meal.extras).map((key) => (
-            <View key={key} style={[styles.sectionContainer, styles.boxShadow]}>
+            <View key={key} style={[styles.sectionContainer]}>
               <View style={styles.gradiantRowContainer}>
                 {Object.keys(meal.extras[key]).map((tagId) => {
                   const tag = meal.extras[key][tagId];
                   if (tag.available_on_app) {
                     return (
-                      <View key={tagId}>
+                      <View key={tagId} style={{paddingVertical:10}}>
                         <GradiantRow
                           onChangeFn={(value) => {
                             updateMeal(value, tag, key);
                           }}
-                          //  icon={CONSTS_PRODUCT_EXTRAS[key].icon}
+                          icon={extrasIcons[tag.id]}
                           type={tag.type}
                           title={tag.name}
                           price={tag.price}
@@ -211,6 +241,7 @@ const MealScreen = ({ route }) => {
                           value={tag.value}
                         />
                       </View>
+
                     );
                   }
                 })}
@@ -224,24 +255,41 @@ const MealScreen = ({ route }) => {
               <View>
                 <Text style={{ textAlign: "left" }}>ملاحظات للمطعم</Text>
               </View>
-              <View>
-                <TextInput
-                  onChange={(e) => {
-                    updateOthers(e.nativeEvent.text, "note", "others");
-                  }}
-                  multiline={true}
-                  selectionColor="black"
-                  underlineColorAndroid="transparent"
-                  numberOfLines={3}
+              <View
+                style={{ flexDirection: "row", width: "100%", marginTop: 10, alignItems: "center", justifyContent: "space-between"}}
+              >
+                <View
                   style={{
-                    marginTop: 10,
-                    backgroundColor: "white",
-                    borderWidth: 1,
-                    textAlignVertical: "top",
-                    textAlign: "right",
-                    padding: 10,
+                    flexBasis: "10%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backgroundColor: "rgba(254, 203, 5, 0.18)",
+                    borderRadius: 10,
+                    height:40
                   }}
-                />
+                >
+                  <Icon icon="pen" size={20} />
+                </View>
+                <View style={{ flexBasis: "88%", justifyContent: "center" }}>
+                  <TextInput
+                    onChange={(e) => {
+                      updateOthers(e.nativeEvent.text, "note", "others");
+                    }}
+                    placeholder="اكتب ملاحظات هنا"
+                    multiline={true}
+                    selectionColor="black"
+                    underlineColorAndroid="transparent"
+                    numberOfLines={5}
+                    style={{
+                      backgroundColor: "white",
+                      borderWidth: 1,
+                      textAlignVertical: "top",
+                      textAlign: "right",
+                      padding: 10,
+                      height:70
+                    }}
+                  />
+                </View>
               </View>
             </View>
           </View>

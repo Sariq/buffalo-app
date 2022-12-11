@@ -96,14 +96,13 @@ const CartScreen = () => {
   const onSendCart = () => {
     const isLoggedIn = authStore.isLoggedIn();
     if (isLoggedIn) {
-      const token = authStore.userToken;
       const order = {
         paymentMthod,
         shippingMethod,
         totalPrice,
         products: cartStore.cartItems,
       };
-      cartStore.submitOrder(order, token);
+      cartStore.submitOrder(order);
     } else {
       navigation.navigate("login");
     }
@@ -420,7 +419,7 @@ const CartScreen = () => {
               mode="contained"
               onPress={onSendCart}
             >
-              ارسل الظلبية
+              ارسل الطلبية
             </Button>
           </View>
         </View>

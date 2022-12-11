@@ -251,6 +251,7 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+    namespace 'com.sariq.buffalo'
 
     // applicationVariants are e.g. debug, release
     applicationVariants.all { variant ->

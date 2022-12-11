@@ -28,13 +28,13 @@ type TOrder = {
 }
 
 type TCart = {
-  token: string;
   order: TOrder;
   total: number;
   app_language: '1' | '2',
   device_os: string,
   app_version: string,
   unique_hash?: string;
+  datetime: Date
 }
 
 
@@ -131,7 +131,7 @@ class CartStore {
     return count;
   };
 
-  submitOrder = async(order: any, token: string) => {
+  submitOrder = async(order: any) => {
   
     let finalOrder: TOrder = {
       payment_method: order.paymentMthod,
@@ -142,13 +142,13 @@ class CartStore {
     const version = Constants.nativeAppVersion;
 
     const cartData: TCart = {
-      token: token,
       order: finalOrder,
       total: order.totalPrice,
       app_language: i18n.locale === "ar" ? '1' : '2',
       device_os: Device.osName,
       app_version:version,
-      unique_hash: null
+      unique_hash: null,
+      datetime: new Date(),
     }
     console.log(cartData)
     const orderBase64 = toBase64(cartData);

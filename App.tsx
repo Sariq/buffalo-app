@@ -2,7 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import { useState, useEffect, useCallback } from "react";
 import * as Font from "expo-font";
 import Constants from "expo-constants";
-
+import RNRestart from 'react-native-restart';
 import { View, I18nManager, ImageBackground, Text } from "react-native";
 import RootNavigator from "./navigation";
 I18nManager.forceRTL(true);
@@ -43,6 +43,13 @@ export default function App() {
   const [globalStyles, setGlobalStyles] = useState({
     fontFamily: `${i18n.locale}-SemiBold`,
   });
+
+  useEffect(()=>{
+    if(!I18nManager.isRTL){
+      I18nManager.forceRTL(true);
+      RNRestart.Restart();
+   }
+  },[])
   useEffect(() => {
     async function prepare() {
       try {

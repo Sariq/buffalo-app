@@ -47,29 +47,28 @@ const LoginScreen = () => {
   };
 
   return (
-    <CreditCard/>
 
-    // <View style={styles.container}>
-    //   <View style={styles.inputsContainer}>
-    //     <Text style={{ marginTop: 50, fontSize: 25 }}>ادخل رقم هاتفك</Text>
-    //     <Text style={{ marginTop: 20, fontSize: 17 }}>
-    //       سوف نبعث لك رسالة مع رقم سري
-    //     </Text>
+    <View style={styles.container}>
+      <View style={styles.inputsContainer}>
+        <Text style={{ marginTop: 50, fontSize: 25 }}>ادخل رقم هاتفك</Text>
+        <Text style={{ marginTop: 20, fontSize: 17 }}>
+          سوف نبعث لك رسالة مع رقم سري
+        </Text>
 
-    //     <View style={{ width: "100%", paddingHorizontal: 50, marginTop: 15 }}>
-    //       <InputText onChange={onChange} label="هاتف" />
-    //     </View>
+        <View style={{ width: "100%", paddingHorizontal: 50, marginTop: 15 }}>
+          <InputText onChange={onChange} label="هاتف" />
+        </View>
 
-    //     <View style={{ width: "100%", paddingHorizontal: 50, marginTop: 25 }}>
-    //       <Button
-    //         bgColor={themeStyle.PRIMARY_COLOR}
-    //         text={"تحقق من رقم الهاتف"}
-    //         fontSize={20}
-    //         onClickFn={authinticate}
-    //       />
-    //     </View>
-    //   </View>
-    // </View>
+        <View style={{ width: "100%", paddingHorizontal: 50, marginTop: 25 }}>
+          <Button
+            bgColor={themeStyle.PRIMARY_COLOR}
+            text={"تحقق من رقم الهاتف"}
+            fontSize={20}
+            onClickFn={authinticate}
+          />
+        </View>
+      </View>
+    </View>
   );
 }
 export default observer(LoginScreen);

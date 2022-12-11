@@ -40,6 +40,7 @@ const VerifyCodeScreen = () => {
         const res = JSON.parse(base64.decode(response.data));
         console.log("tokennnn", res.token);
         authStore.updateUserToken(res.token);
+        navigation.navigate("cart");
       })
       .catch(function (error) {
         console.log(error);

@@ -21,7 +21,9 @@ export function fromBase64(encoded) {
 
 const categoryListIcons = {
   "BURGERS": 'burger_icon',
-  'CHICKEN': 'crispy_icon'
+  'CHICKEN': 'crispy_icon',
+  'SIDES': 'box-icon',
+  'DRINK': 'drinks_icon',
 }
 
 
@@ -154,6 +156,6 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   itemsListConainer: {
-    paddingBottom: 130,
+    paddingBottom: 120,
   },
 });

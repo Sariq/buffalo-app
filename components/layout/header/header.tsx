@@ -32,8 +32,8 @@ const Header = () => {
   };
 
   const handleProfileClick = () => {
-    //navigation.navigate("profile");
-    navigation.navigate("login");
+    navigation.navigate("profile");
+    //navigation.navigate("login");
     // navigation.navigate("verify-code");
   };
 

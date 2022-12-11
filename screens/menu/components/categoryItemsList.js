@@ -29,9 +29,10 @@ const CategoryItemsList = ({ productsList }) => {
             return null;
           }
           return(
-          <View
+          <TouchableOpacity
             style={styles.categoryItem}
-            onTouchEnd={() => {
+            delayPressIn={0}
+            onPress={() => {
               onItemSelect(item);
             }}
           >
@@ -62,7 +63,7 @@ const CategoryItemsList = ({ productsList }) => {
             >
               ₪{item.price}
             </Text>
-          </View>
+          </TouchableOpacity>
         )})}
       </View>
     </ScrollView>
