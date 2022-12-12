@@ -16,6 +16,8 @@ import { StoreContext } from "./stores";
 import { authStore } from "./stores/auth";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { languageStore } from "./stores/language";
+import { storeDataStore } from "./stores/store";
+import { userDetailsStore } from "./stores/user-details";
 // Keep the splash screen visible while we fetch resources
 //SplashScreen.preventAutoHideAsync();
 let customARFonts = {
@@ -120,7 +122,9 @@ export default function App() {
         authStore: authStore,
         menuStore: menuStore,
         languageStore: languageStore,
+        userDetailsStore: userDetailsStore,
         globalStyles: globalStyles,
+        storeDataStore: storeDataStore,
       }}
     >
       <SafeAreaView onLayout={onLayoutRootView}>

@@ -4,6 +4,7 @@ export const AUTH_API = {
     AUTHINTICATE_API : "Authenticate",
     VERIFY_API : "Verify",
     UPDATE_CUSTOMER_NAME_API : "UpdateCustomerName",
+    GET_USER_DETAILS: "GetCustomerInfo"
 };
 export const MENU_API = {
     CONTROLLER: "config",
@@ -12,4 +13,8 @@ export const MENU_API = {
 export const ORDER_API = {
     CONTROLLER: "order",
     SUBMIT_ORDER_API : "submit",
+};
+export const STORE_API = {
+    CONTROLLER: "Store",
+    GET_STORE_API : "getStore",
 };

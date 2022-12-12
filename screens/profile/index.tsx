@@ -1,8 +1,15 @@
 import { StyleSheet, Text, View } from "react-native";
 import Icon from "../../components/icon";
 import BackButton from "../../components/back-button";
+import { useContext, useEffect } from "react";
+import { StoreContext } from "../../stores";
+import { observer } from "mobx-react";
 
-export default function ProfileScreen() {
+
+const ProfileScreen = () => {
+
+  const { userDetailsStore } = useContext(StoreContext);
+
   return (
     <View
       style={{
@@ -15,7 +22,7 @@ export default function ProfileScreen() {
 
       <View style={styles.container}>
         <View style={{ alignItems: "center", width: "100%" }}>
-          <Text style={{ fontSize: 25 }}>مرحباً، sabri qashuw</Text>
+          <Text style={{ fontSize: 25 }}>مرحباً، {userDetailsStore?.userDetails?.name}</Text>
         </View>
         <View style={{ marginTop: 60 }}>
           <View style={styles.rowContainer}>
@@ -38,7 +45,7 @@ export default function ProfileScreen() {
               </View>
               <View>
                 <Text style={{ fontSize: 25, color: "#442213" }}>
-                  052-4043814
+                  {userDetailsStore?.userDetails?.phone}
                 </Text>
               </View>
             </View>
@@ -59,6 +66,9 @@ export default function ProfileScreen() {
     </View>
   );
 }
+
+export default observer(ProfileScreen);
+
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#fff",
