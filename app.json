@@ -12,6 +12,18 @@
       "resizeMode": "cover",
       "backgroundColor": "#FFCB05"
     },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon.png",
+          "color": "#ffffff",
+          "sounds": [
+            "./assets/sounds/buffalo-sound.wav"
+          ]
+        }
+      ]
+    ],
     "updates": {
       "fallbackToCacheTimeout": 0,
       "url": "https://u.expo.dev/635e3b9c-c23e-4347-a1d4-a97b516fb5d9"

@@ -19,7 +19,7 @@ const ProfileScreen = () => {
       }}
     >
       <BackButton />
-
+      
       <View style={styles.container}>
         <View style={{ alignItems: "center", width: "100%" }}>
           <Text style={{ fontSize: 25 }}>مرحباً، {userDetailsStore?.userDetails?.name}</Text>

@@ -12,7 +12,7 @@ const yellowBgScreens = ["homeScreen"];
 const Header = () => {
   const navigation = useNavigation();
   const routeState = useNavigationState((state) => state);
-  let cartStore = useContext(StoreContext).cartStore;
+  const { cartStore, authStore } = useContext(StoreContext);
 
   const [bgColor, setBgColor] = useState(themeStyle.PRIMARY_COLOR);
 
@@ -28,7 +28,9 @@ const Header = () => {
   }, [routeState]);
 
   const handleCartClick = () => {
-    navigation.navigate("cart");
+    if(cartStore.getProductsCount() > 0){
+      navigation.navigate("cart");
+    }
   };
 
   const handleProfileClick = () => {
@@ -66,7 +68,7 @@ const Header = () => {
             />
           </TouchableOpacity>
         </View>
-        <View>
+        <View style={{opacity: authStore.isLoggedIn() ? 1 : 0}}>
           <TouchableOpacity
             onPress={handleProfileClick}
             style={styles.buttonContainer}
