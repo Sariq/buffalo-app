@@ -114,8 +114,8 @@ const styles = StyleSheet.create({
   container: {
     display: "flex",
     flexDirection: "row-reverse",
-    height: 80,
-    paddingTop: 30,
+    height: 50,
+    paddingTop: 0,
     justifyContent: "space-between",
     paddingRight: 15,
     paddingLeft: 15,

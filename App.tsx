@@ -2,7 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import { useState, useEffect, useCallback } from "react";
 import * as Font from "expo-font";
 import Constants from "expo-constants";
-import RNRestart from 'react-native-restart';
+import RNRestart from "react-native-restart";
 import { View, I18nManager, ImageBackground, Text } from "react-native";
 import RootNavigator from "./navigation";
 I18nManager.forceRTL(true);
@@ -14,10 +14,15 @@ import { menuStore } from "./stores/menu";
 import * as SplashScreen from "expo-splash-screen";
 import { StoreContext } from "./stores";
 import { authStore } from "./stores/auth";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+  SafeAreaProvider,
+} from "react-native-safe-area-context";
 import { languageStore } from "./stores/language";
 import { storeDataStore } from "./stores/store";
 import { userDetailsStore } from "./stores/user-details";
+import themeStyle from "./styles/theme.style";
 // Keep the splash screen visible while we fetch resources
 //SplashScreen.preventAutoHideAsync();
 let customARFonts = {
@@ -46,12 +51,12 @@ export default function App() {
     fontFamily: `${i18n.locale}-SemiBold`,
   });
 
-  useEffect(()=>{
-    if(!I18nManager.isRTL){
+  useEffect(() => {
+    if (!I18nManager.isRTL) {
       I18nManager.forceRTL(true);
       RNRestart.Restart();
-   }
-  },[])
+    }
+  }, []);
   useEffect(() => {
     async function prepare() {
       try {
@@ -116,23 +121,42 @@ export default function App() {
   }
 
   return (
-    <StoreContext.Provider
-      value={{
-        cartStore: cartStore,
-        authStore: authStore,
-        menuStore: menuStore,
-        languageStore: languageStore,
-        userDetailsStore: userDetailsStore,
-        globalStyles: globalStyles,
-        storeDataStore: storeDataStore,
-      }}
-    >
-      <SafeAreaView onLayout={onLayoutRootView}>
-        <View style={{ height: "100%" }}>
-          <StatusBar />
-          <RootNavigator />
-        </View>
-      </SafeAreaView>
-    </StoreContext.Provider>
+    <SafeAreaProvider>
+      <StoreContext.Provider
+        value={{
+          cartStore: cartStore,
+          authStore: authStore,
+          menuStore: menuStore,
+          languageStore: languageStore,
+          userDetailsStore: userDetailsStore,
+          globalStyles: globalStyles,
+          storeDataStore: storeDataStore,
+        }}
+      >
+        <SafeAreaView
+          edges={["top"]}
+          style={{
+            flex: 0,
+            backgroundColor: themeStyle.PRIMARY_COLOR,
+            marginBottom: 0,
+            height: 0,
+          }}
+        />
+
+        <SafeAreaView
+          edges={["left", "right", "bottom"]}
+          style={{
+            flex: 1,
+            backgroundColor: themeStyle.PRIMARY_COLOR,
+            position: "relative",
+          }}
+        >
+          <View style={{ flex: 1 }}>
+            <StatusBar />
+            <RootNavigator />
+          </View>
+        </SafeAreaView>
+      </StoreContext.Provider>
+    </SafeAreaProvider>
   );
 }
