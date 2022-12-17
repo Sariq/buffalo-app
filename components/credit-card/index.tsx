@@ -1,41 +1,41 @@
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import InputText from "../controls/input";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import theme from "../../styles/theme.style";
 import { Button } from "react-native-paper";
 import validateCard, { TValidateCardProps } from "./api/validate-card";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import MonthPicker from "react-native-month-year-picker";
+import moment from "moment";
 
 const CreditCard = () => {
   const [creditCardNumber, setCreditCardNumber] = useState();
-  const [creditCardExpDateMonth, setCreditCardExpDateMonth] = useState("java");
-  const [creditCardExpDateYear, setCreditCardExpDateYear] = useState("java");
+  const [creditCardExpDate, setCreditCardExpDate] = useState();
   const [creditCardCVV, setCreditCardCVV] = useState();
+  const [cardHolderID, setCardHolderID] = useState();
 
   const onNumberChange = (value) => {
     setCreditCardNumber(value);
   };
-  const onMonthChange = (value) => {
-    setCreditCardExpDateMonth(value);
-  };
-  const onYearChange = (value) => {
-    setCreditCardExpDateYear(value);
-  };
+
   const onCVVChange = (value) => {
     setCreditCardCVV(value);
+  };
+  const onCardHolderNameChange = (value) => {
+    setCardHolderID(value);
   };
 
   const onSaveCreditCard = () => {
     const validateCardData: TValidateCardProps = {
       cardNumber: creditCardNumber,
-      expDate: creditCardExpDateMonth + creditCardExpDateYear,
+      expDate: creditCardExpDate,
     };
     validateCard(validateCardData).then(async (res) => {
       if (res.isValid) {
         await AsyncStorage.setItem("@storage_CCData", {
           cardNumber: creditCardNumber,
-          expDate: creditCardExpDateMonth + creditCardExpDateYear,
+          expDate: creditCardExpDate,
           cvv: creditCardCVV,
         });
       } else {
@@ -44,11 +44,27 @@ const CreditCard = () => {
     });
   };
 
+  const [date, setDate] = useState(new Date());
+  const [show, setShow] = useState(false);
+
+  const showPicker = useCallback((value) => setShow(value), []);
+
+  const onValueChange = useCallback(
+    (event, newDate) => {
+      const selectedDate = newDate || date;
+
+      showPicker(false);
+      setDate(selectedDate);
+      setCreditCardExpDate(moment(selectedDate).format("MM/YY"));
+    },
+    [date, showPicker]
+  );
+
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={{ height: "100%" }}>
       <View>
         <InputText
-          label="insert"
+          label="מספר כרטיס אשראי"
           onChange={onNumberChange}
           value={creditCardNumber}
         />
@@ -56,25 +72,19 @@ const CreditCard = () => {
       <View style={styles.monthExpContainer}>
         <View style={styles.monthExpContainerChild}>
           <InputText
-            label="month"
-            onChange={onNumberChange}
-            value={creditCardNumber}
-          />
-        </View>
-        <View style={styles.monthExpContainerChild}>
-          <InputText
-            label="year"
-            onChange={onNumberChange}
-            value={creditCardNumber}
+            label="תוקף הכרטיס"
+            onChange={() => {}}
+            value={creditCardExpDate}
+            isEditable={false}
+            onClick={() => showPicker(true)}
           />
         </View>
       </View>
-      <View>
-        <InputText
-          label="cvv"
-          onChange={onNumberChange}
-          value={creditCardNumber}
-        />
+      <View style={{ marginTop: 10 }}>
+        <InputText label="CVV" onChange={onCVVChange} value={creditCardCVV} />
+      </View>
+      <View style={{ marginTop: 10 }}>
+        <InputText label="תעודת זהות" onChange={onCardHolderNameChange} value={cardHolderID} />
       </View>
       <View>
         <Button
@@ -87,6 +97,17 @@ const CreditCard = () => {
           save card
         </Button>
       </View>
+      {show && (
+        <MonthPicker
+          onChange={onValueChange}
+          value={date}
+          mode="number"
+          minimumDate={new Date()}
+          maximumDate={new Date(2030, 11)}
+          okButton="אוקיי"
+          autoTheme
+        />
+      )}
     </SafeAreaView>
   );
 };
@@ -98,13 +119,8 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
-  monthExpContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  monthExpContainerChild: {
-    flexBasis: "47%",
-  },
+  monthExpContainer: { marginTop: 10 },
+  monthExpContainerChild: {},
   submitButton: {
     backgroundColor: theme.SUCCESS_COLOR,
     borderRadius: 15,

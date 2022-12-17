@@ -16,7 +16,7 @@ export async function schedulePushNotification(data: any) {
             title: "Buffalo",
             body: 'היי סברי קשוע - ההזמנה שלך מוכנה',
             data: data,
-            sound: 'buffalo-sound.wav',
+            sound: 'buffalosound.wav',
             vibrate: [10]
         },
         trigger: { seconds: 2 },

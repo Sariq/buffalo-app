@@ -54,7 +54,7 @@ export default function App() {
   useEffect(() => {
     if (!I18nManager.isRTL) {
       I18nManager.forceRTL(true);
-      RNRestart.Restart();
+      //RNRestart.Restart();
     }
   }, []);
   useEffect(() => {
@@ -107,7 +107,6 @@ export default function App() {
           style={{
             bottom: 0,
             flexDirection: "row",
-            borderWidth: 1,
             height: "100%",
             justifyContent: "center",
           }}
