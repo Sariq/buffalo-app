@@ -18,8 +18,6 @@ type TProps = {
   isOpen: boolean;
   handleAnswer?: any;
 };
-const bodyText =
-  "בניגוד לטענה הרווחת, Lorem Ipsum אינו סתם טקסט רנדומלי. יש לו שורשים וחלקים מתוך הספרות הלטינית הקלאסית מאז 45 לפני הספירה. מה שהופך אותו לעתיק מעל 2000 שנה. ריצ’רד מקלינטוק, פרופסור לטיני בקולג’ של המפדן-סידני בורג’יניה, חיפש את אחת המילים המעורפלות ביותר";
 
 export default function PaymentMethodDialog({ isOpen, handleAnswer }: TProps) {
   const [visible, setVisible] = useState(isOpen);
@@ -32,7 +30,6 @@ export default function PaymentMethodDialog({ isOpen, handleAnswer }: TProps) {
     handleAnswer && handleAnswer(value);
     setVisible(false);
   };
-
   return (
     <Provider>
       <Portal>

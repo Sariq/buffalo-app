@@ -8,6 +8,10 @@ import i18n from "../../translations";
 import { axiosInstance } from "../../utils/http-interceptor";
 var hash = require('object-hash');
 
+type TOrderHistory = {
+  phoneNumber: string;
+  ordersList: TCart[];
+}
 type TGradiants = {
   id: number;
   name: string;
@@ -143,8 +147,8 @@ class CartStore {
   }
   return hash;
   }
-  submitOrder = async(order: any) => {
-  
+
+  getCartData = (order: any) => {
     let finalOrder: TOrder = {
       payment_method: order.paymentMthod,
       receipt_method: order.shippingMethod,
@@ -162,23 +166,61 @@ class CartStore {
       unique_hash: hash(finalOrder),
       datetime: new Date(),
     }
+    return cartData;
+  }
+
+  resetCart = () => {
+    this.cartItems = [];
+    this.updateLocalStorage();
+  }
+
+  submitOrder = async(order: any) => {
+    const cartData = this.getCartData(order);
+  
     const orderBase64 = toBase64(cartData);
     console.log("SSSUB")
     const body = orderBase64;
-    // axiosInstance
-    //   .post(
-    //     `${ORDER_API.CONTROLLER}/${ORDER_API.SUBMIT_ORDER_API}`,
-    //     body,
-    //     { headers: { "Content-Type": "application/json" } }
-    //   )
-    //   .then(function (response) {
+    axiosInstance
+      .post(
+        `${ORDER_API.CONTROLLER}/${ORDER_API.SUBMIT_ORDER_API}`,
+        body,
+        { headers: { "Content-Type": "application/json" } }
+      )
+      .then(function (response) {
 
-    //     console.log("tokennnn", response);
-    //   })
-    //   .catch(function (error) {
-    //     console.log(error);
-    //   });
+        console.log("tokennnn", response);
+        return response;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
+
+  addNewOrderToHistory = async (order: any, phoneNumber: string)=>{
+    const ordersHistory: TOrderHistory = {
+      phoneNumber,
+      ordersList: [order]
+    };
+    console.log("ordersHistory", ordersHistory);
+    const jsonValue = JSON.stringify(ordersHistory);
+    await AsyncStorage.setItem("@storage_orderHistory", jsonValue);
+  }
+  addOrderToHistory = async (order: any, phoneNumber: string)=>{
+    const jsonValue = await AsyncStorage.getItem("@storage_orderHistory");
+    const currentOrderdHistory = jsonValue != null ? JSON.parse(jsonValue) : [];
+    console.log("currentHostory", currentOrderdHistory);
+    console.log("order", order);
+    console.log("phoneNumber", phoneNumber);
+
+    if(currentOrderdHistory.length == 0){
+      this.addNewOrderToHistory(order, phoneNumber);
+    }
+  }
+  getOrderHistory = async () => {
+    const jsonValue = await AsyncStorage.getItem("@storage_orderHistory");
+    const currentOrderdHistory = jsonValue != null ? JSON.parse(jsonValue) : [];
+    return currentOrderdHistory;
+  }
 }
 
 export const cartStore = new CartStore();

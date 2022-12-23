@@ -23,11 +23,10 @@ const LoginScreen = () => {
   };
 
   const authinticate = () => {
-    navigation.navigate("verify-code");
 
     const body = {
       phone: phoneNumber,
-      device_type: Device.deviceName || "IOS",
+      device_type: Device.osName || "IOS",
       language: languageStore.selectedLang === "ar" ? 0 : 1,
       datetime: new Date(),
     };

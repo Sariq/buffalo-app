@@ -23,6 +23,7 @@ import { languageStore } from "./stores/language";
 import { storeDataStore } from "./stores/store";
 import { userDetailsStore } from "./stores/user-details";
 import themeStyle from "./styles/theme.style";
+import ExpiryDate from "./components/expiry-date";
 // Keep the splash screen visible while we fetch resources
 //SplashScreen.preventAutoHideAsync();
 let customARFonts = {
@@ -54,7 +55,7 @@ export default function App() {
   useEffect(() => {
     if (!I18nManager.isRTL) {
       I18nManager.forceRTL(true);
-      //RNRestart.Restart();
+      RNRestart.Restart();
     }
   }, []);
   useEffect(() => {
@@ -154,6 +155,7 @@ export default function App() {
             <StatusBar />
             <RootNavigator />
           </View>
+          <ExpiryDate/>
         </SafeAreaView>
       </StoreContext.Provider>
     </SafeAreaProvider>

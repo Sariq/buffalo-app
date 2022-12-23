@@ -6,8 +6,11 @@ import { StoreContext } from "../../../stores";
 import i18n from "../../../translations";
 import Button from "../../../components/controls/button/button";
 import themeStyle from "../../../styles/theme.style";
+import { SHIPPING_METHODS } from "../../cart/cart";
 
-const OrderSubmittedScreen = () => {
+const OrderSubmittedScreen = ({ route }) => {
+  const { shippingMethod } = route.params;
+
   const { languageStore, globalStyles } = useContext(StoreContext);
   const navigation = useNavigation();
 
@@ -28,10 +31,17 @@ const OrderSubmittedScreen = () => {
           >
             تم ارسال الطلبية بنجاح
           </Text>
-          <View style={{ alignItems: "center" }}>
-            <Image
-              source={require("../../../assets/order/order-delivery.png")}
-            />
+          <View style={{ alignItems: "center", height: 300 }}>
+            {shippingMethod === SHIPPING_METHODS.shipping && (
+              <Image
+                source={require("../../../assets/order/order-delivery.png")}
+              />
+            )}
+             {shippingMethod === SHIPPING_METHODS.takAway && (
+              <Image
+                source={require("../../../assets/order/order-take-away.png")}
+              />
+            )}
           </View>
           <View>
             <Text

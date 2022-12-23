@@ -6,6 +6,7 @@ import { StoreContext } from "../../stores";
 import { observer } from "mobx-react";
 import i18n from "../../translations";
 import { useNavigation } from "@react-navigation/native";
+import CreditCard from "../../components/credit-card";
 
 const LanguageScreen = () => {
   const { languageStore, globalStyles } = useContext(StoreContext);
@@ -15,6 +16,10 @@ const LanguageScreen = () => {
     languageStore.changeLang(lng);
     navigation.goBack();
   };
+
+  return (
+    <CreditCard/>
+  )
 
   return (
     <View style={styles(globalStyles).container}>

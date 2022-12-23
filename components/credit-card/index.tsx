@@ -1,7 +1,14 @@
-import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  Keyboard,
+  DeviceEventEmitter,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import InputText from "../controls/input";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import theme from "../../styles/theme.style";
 import { Button } from "react-native-paper";
 import validateCard, { TValidateCardProps } from "./api/validate-card";
@@ -14,7 +21,22 @@ const CreditCard = () => {
   const [creditCardExpDate, setCreditCardExpDate] = useState();
   const [creditCardCVV, setCreditCardCVV] = useState();
   const [cardHolderID, setCardHolderID] = useState();
+  const [date, setDate] = useState(new Date());
+  const [show, setShow] = useState(false);
 
+  useEffect(() => {
+    DeviceEventEmitter.addListener(`EXP_DATE_PICKER_CHANGE`, setExpData);
+  }, []);
+
+  const setExpData = (data) => {
+    console.log(data);
+    setCreditCardExpDate(data.expDate);
+  };
+
+  const showPicker = () => {
+    console.log("xxx");
+    DeviceEventEmitter.emit(`SHOW_EXP_DATE_PICKER`, { show: true });
+  };
   const onNumberChange = (value) => {
     setCreditCardNumber(value);
   };
@@ -26,43 +48,34 @@ const CreditCard = () => {
     setCardHolderID(value);
   };
 
+  const getCCData = async () => {
+    const data = await AsyncStorage.getItem("@storage_CCData");
+    console.log(data);
+  };
+
   const onSaveCreditCard = () => {
     const validateCardData: TValidateCardProps = {
       cardNumber: creditCardNumber,
-      expDate: creditCardExpDate,
+      expDate: moment(date).format("MMYY"),
     };
+    console.log(validateCardData);
     validateCard(validateCardData).then(async (res) => {
       if (res.isValid) {
-        await AsyncStorage.setItem("@storage_CCData", {
-          cardNumber: creditCardNumber,
-          expDate: creditCardExpDate,
-          cvv: creditCardCVV,
-        });
+        const ccDetailsString = JSON.stringify(res.ccDetails);
+        await AsyncStorage.setItem("@storage_CCData", ccDetailsString);
       } else {
+        console.log("error", res);
         // TODO: show try another card modal
       }
     });
   };
 
-  const [date, setDate] = useState(new Date());
-  const [show, setShow] = useState(false);
-
-  const showPicker = useCallback((value) => setShow(value), []);
-
-  const onValueChange = useCallback(
-    (event, newDate) => {
-      const selectedDate = newDate || date;
-
-      showPicker(false);
-      setDate(selectedDate);
-      setCreditCardExpDate(moment(selectedDate).format("MM/YY"));
-    },
-    [date, showPicker]
-  );
-
   return (
-    <SafeAreaView style={{ height: "100%" }}>
-      <View>
+    <View style={styles.container}>
+      <View style={{ alignItems: "flex-start" }}>
+        <Text style={{ fontSize: 18 }}>הזן פרטי כרטיס אשראי</Text>
+      </View>
+      <View style={{ marginTop: 10 }}>
         <InputText
           label="מספר כרטיס אשראי"
           onChange={onNumberChange}
@@ -76,7 +89,10 @@ const CreditCard = () => {
             onChange={() => {}}
             value={creditCardExpDate}
             isEditable={false}
-            onClick={() => showPicker(true)}
+            onClick={() => {
+              Keyboard.dismiss();
+              showPicker();
+            }}
           />
         </View>
       </View>
@@ -84,7 +100,11 @@ const CreditCard = () => {
         <InputText label="CVV" onChange={onCVVChange} value={creditCardCVV} />
       </View>
       <View style={{ marginTop: 10 }}>
-        <InputText label="תעודת זהות" onChange={onCardHolderNameChange} value={cardHolderID} />
+        <InputText
+          label="תעודת זהות"
+          onChange={onCardHolderNameChange}
+          value={cardHolderID}
+        />
       </View>
       <View>
         <Button
@@ -94,31 +114,17 @@ const CreditCard = () => {
           mode="contained"
           onPress={onSaveCreditCard}
         >
-          save card
+          שמור כרטיס אשראי
         </Button>
       </View>
-      {show && (
-        <MonthPicker
-          onChange={onValueChange}
-          value={date}
-          mode="number"
-          minimumDate={new Date()}
-          maximumDate={new Date(2030, 11)}
-          okButton="אוקיי"
-          autoTheme
-        />
-      )}
-    </SafeAreaView>
+    </View>
   );
 };
 
 export default CreditCard;
 
 const styles = StyleSheet.create({
-  container: {
-    width: "100%",
-    height: "100%",
-  },
+  container: {},
   monthExpContainer: { marginTop: 10 },
   monthExpContainerChild: {},
   submitButton: {

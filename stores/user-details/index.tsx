@@ -10,7 +10,7 @@ type TUserDetails = {
 };
 
 class UserDetailsStore {
-  userDetails = null;
+  userDetails: TUserDetails = null;
 
   constructor() {
     makeAutoObservable(this);

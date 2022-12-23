@@ -7,6 +7,7 @@ import { useNavigation, useNavigationState } from "@react-navigation/native";
 import theme from "../../../styles/theme.style";
 import Icon from "../../icon";
 import { StoreContext } from "../../../stores";
+import { SHIPPING_METHODS } from "../../../screens/cart/cart";
 
 const yellowBgScreens = ["homeScreen"];
 const Header = () => {
@@ -34,8 +35,10 @@ const Header = () => {
   };
 
   const handleProfileClick = () => {
-    navigation.navigate("profile");
-    //navigation.navigate("order-submitted");
+    //navigation.navigate("profile");
+    
+    navigation.navigate("order-history");
+    //navigation.navigate("order-submitted",{shippingMethod: SHIPPING_METHODS.shipping});
     //navigation.navigate("login");
     // navigation.navigate("verify-code");
   };

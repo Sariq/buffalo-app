@@ -1,4 +1,5 @@
 import axios from "axios";
+import { AsyncStorage } from "react-native";
 
 // TODO: get terminal and password from server
 export const TerminalNumber = '2665648015';
@@ -17,6 +18,11 @@ export type TValidateCardProps = {
     expDate: string;
 }
 
+export type TCCDetails = {
+  last4Digits: string;
+  ccToken: string;
+}
+
 
 const validateCard = ({cardNumber, expDate}: TValidateCardProps) => {
     const body: TPayload = {
@@ -31,7 +37,11 @@ const validateCard = ({cardNumber, expDate}: TValidateCardProps) => {
       body,
     )
     .then(function (res: any) {
-      return {isValid: !res.HasError}
+      const ccDetails:TCCDetails = {
+        last4Digits: cardNumber.substr(cardNumber.length - 4),
+        ccToken: res.data.Token
+      }  
+      return {isValid: !res.HasError, ccDetails}
     });
 }
 

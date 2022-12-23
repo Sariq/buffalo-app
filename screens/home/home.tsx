@@ -36,7 +36,7 @@ export default function HomeScreen({ navigation }) {
               size={20}
               style={{ color: theme.GRAY_700 }}
             />
-            <Text style={{ ...styles.buttonText, fontFamily: globalStyles.fontFamily }}>
+            <Text style={{ ...styles.buttonText, fontFamily: globalStyles.fontFamily, fontSize: 40 }}>
             {i18n.t('home.newOrder')}
             </Text>
           </TouchableOpacity>

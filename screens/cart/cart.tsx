@@ -4,7 +4,7 @@ import * as Font from "expo-font";
 
 import { useContext } from "react";
 import { observer } from "mobx-react";
-import { Image, Text, View, StyleSheet } from "react-native";
+import { Image, Text, View, StyleSheet, AsyncStorage } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { Dimensions } from "react-native";
 import { ToggleButton, Divider, Button } from "react-native-paper";
@@ -20,8 +20,9 @@ import Icon from "../../components/icon";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import BackButton from "../../components/back-button";
 import PaymentMethodDialog from "../../components/dialogs/delivery-method";
+import NewPaymentMethodDialog from "../../components/dialogs/new-credit-card";
 
-const SHIPPING_METHODS = {
+export const SHIPPING_METHODS = {
   shipping: "DELIVERY",
   takAway: "TAKEAWAY",
 };
@@ -34,16 +35,14 @@ type TShippingMethod = {
   takAway: string;
 };
 const CartScreen = () => {
-  const { cartStore, authStore, languageStore } = useContext(StoreContext);
+  const { cartStore, authStore, languageStore, userDetailsStore } = useContext(StoreContext);
 
   const navigation = useNavigation();
 
   const [shippingMethod, setShippingMethod] = React.useState(
     SHIPPING_METHODS.shipping
   );
-  const [paymentMthod, setPaymentMthod] = React.useState(
-    PAYMENT_METHODS.creditCard
-  );
+  const [paymentMthod, setPaymentMthod] = React.useState(PAYMENT_METHODS.cash);
 
   const [isShippingMethodAgrred, setIsShippingMethodAgrred] = React.useState(
     false
@@ -52,6 +51,12 @@ const CartScreen = () => {
     isOpenShippingMethodDialog,
     setIsOpenShippingMethodDialog,
   ] = React.useState(false);
+  const [
+    isOpenNewCreditCardDialog,
+    setOpenNewCreditCardDialog,
+  ] = React.useState(false);
+
+  const [ccData, setCCData] = React.useState();
 
   const [itemsPrice, setItemsPrice] = React.useState(0);
   const [totalPrice, setTotalPrice] = React.useState(0);
@@ -60,6 +65,7 @@ const CartScreen = () => {
   const [errorMsg, setErrorMsg] = useState(null);
 
   useEffect(() => {
+    console.log("xx")
     if (shippingMethod === SHIPPING_METHODS.shipping) {
       (async () => {
         let { status } = await Location.requestForegroundPermissionsAsync();
@@ -67,17 +73,22 @@ const CartScreen = () => {
           setErrorMsg("Permission to access location was denied");
           return;
         }
-
         let location = await Location.getCurrentPositionAsync({});
         setLocation(location);
       })();
     }
-  }, [shippingMethod === SHIPPING_METHODS.shipping]);
+  }, [shippingMethod]);
 
   useEffect(() => {
     const shippingPrice = shippingMethod === SHIPPING_METHODS.shipping ? 15 : 0;
     setTotalPrice(shippingPrice + itemsPrice);
-  }, [shippingMethod === SHIPPING_METHODS.shipping, itemsPrice]);
+  }, [shippingMethod, itemsPrice]);
+
+  useEffect(() => {
+    if (paymentMthod === PAYMENT_METHODS.creditCard && !ccData) {
+      setOpenNewCreditCardDialog(true);
+    }
+  }, [paymentMthod]);
 
   useEffect(() => {
     if (cartStore.cartItems.length === 0) {
@@ -88,9 +99,19 @@ const CartScreen = () => {
     cartStore.cartItems.forEach((item) => {
       tmpOrderPrice += item.data.price;
     });
-    // console.log(cartStore.cartItems[0].extras["מידת עשיה"])
     setItemsPrice(tmpOrderPrice);
   }, [cartStore.cartItems]);
+
+  const getCCData = async () => {
+    await AsyncStorage.setItem("@storage_CCData","");
+
+    const data = await AsyncStorage.getItem("@storage_CCData");
+    setCCData(JSON.parse(data));
+  };
+
+  useEffect(() => {
+    getCCData();
+  });
 
   const onCheckBoxChange = (isSelected) => {
     console.log(isSelected);
@@ -104,8 +125,6 @@ const CartScreen = () => {
   };
 
   const onSendCart = () => {
-    console.log(shippingMethod === SHIPPING_METHODS.shipping);
-
     const isLoggedIn = authStore.isLoggedIn();
     if (isLoggedIn) {
       if (
@@ -122,6 +141,14 @@ const CartScreen = () => {
     }
   };
 
+  const postSubmitOrderActions = () => {
+    if(paymentMthod === PAYMENT_METHODS.creditCard){
+      // TODO handle credit card
+    }else{
+      cartStore.resetCart();
+      navigation.navigate("order-submitted",{shippingMethod});
+    }
+  }
   const submitCart = () => {
     const order = {
       paymentMthod,
@@ -129,7 +156,11 @@ const CartScreen = () => {
       totalPrice,
       products: cartStore.cartItems,
     };
-    cartStore.submitOrder(order);
+    //cartStore.addOrderToHistory(order,userDetailsStore.userDetails.phone);
+    cartStore.submitOrder(order).then((res)=>{
+      console.log("RRREESSS", res);
+      postSubmitOrderActions();
+    });
   };
 
   const onEditProduct = (index) => {
@@ -152,328 +183,352 @@ const CartScreen = () => {
   //     text = JSON.stringify(location);
   //   }
   return (
-    <ScrollView>
-      <View style={{ ...styles.container }}>
-        <View>
-          <View style={styles.backContainer}>
-            <View
-              style={{
-                borderWidth: 1,
-                borderColor: "rgba(112,112,112,0.1)",
-                borderRadius: 30,
-                width: 35,
-                height: 35,
-                alignItems: "center",
-                justifyContent: "center",
-                marginVertical: 10,
-                marginLeft: 10,
-              }}
-            >
-              <BackButton />
-            </View>
-            <View>
-              <Text style={{ fontWeight: "bold", fontSize: 20 }}>
-                {cartStore.getProductsCount()} وجبات
-              </Text>
-            </View>
-          </View>
-          <View style={{ marginTop: -20 }}>
-            {cartStore.cartItems.map((product, index) => (
+    <View>
+      <ScrollView style={{ height: "100%", backgroundColor: "white" }}>
+        <View style={{ ...styles.container }}>
+          <View>
+            <View style={styles.backContainer}>
               <View
                 style={{
-                  marginTop: 25,
-                  borderBottomWidth: 0.5,
-                  borderColor: "#707070",
+                  borderWidth: 1,
+                  borderColor: "rgba(112,112,112,0.1)",
+                  borderRadius: 30,
+                  width: 35,
+                  height: 35,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginVertical: 10,
+                  marginLeft: 10,
                 }}
               >
+                <BackButton />
+              </View>
+              <View>
+                <Text style={{ fontWeight: "bold", fontSize: 20 }}>
+                  {cartStore.getProductsCount()} وجبات
+                </Text>
+              </View>
+            </View>
+            <View style={{ marginTop: -20 }}>
+              {cartStore.cartItems.map((product, index) => (
                 <View
                   style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    paddingHorizontal: 20,
-                  }}
-                >
-                  <View
-                    style={{
-                      marginRight: 50,
-                      flexBasis: "28%",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Text>
-                      {product.data[`name_${languageStore.selectedLang}`]}
-                    </Text>
-                  </View>
-                  <View style={{ width: "35%" }}>
-                    <Counter
-                      value={product.others.count}
-                      minValue={1}
-                      onCounterChange={(value) => {
-                        onCounterChange(product, index, value);
-                      }}
-                    />
-                  </View>
-                </View>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "space-between",
+                    marginTop: 25,
+                    borderBottomWidth: 0.5,
+                    borderColor: "#707070",
                   }}
                 >
                   <View
                     style={{
                       flexDirection: "row",
                       alignItems: "center",
-                      paddingVertical: 10,
+                      paddingHorizontal: 20,
                     }}
                   >
                     <View
                       style={{
-                        width: 130,
-                        height: 80,
-                        padding: 0,
-                        alignItems: "center",
+                        marginRight: 50,
+                        flexBasis: "28%",
+                        justifyContent: "center",
                       }}
                     >
-                      <Image
-                        style={{ width: "90%", height: "100%" }}
-                        source={{ uri: product.data.image_url }}
+                      <Text>
+                        {product.data[`name_${languageStore.selectedLang}`]}
+                      </Text>
+                    </View>
+                    <View style={{ width: "35%" }}>
+                      <Counter
+                        value={product.others.count}
+                        minValue={1}
+                        onCounterChange={(value) => {
+                          onCounterChange(product, index, value);
+                        }}
                       />
                     </View>
-                    <View style={{ marginLeft: 20 }}>
-                      {product.extras &&
-                        Object.keys(product.extras).map((key) =>
-                          product.extras[key].map((extra) => {
-                            if (
-                              extra.value &&
-                              extra.isdefault != extra.value &&
-                              extra.counter_init_value != extra.value
-                            ) {
-                              return (
-                                <View>
-                                  <Text style={{ textAlign: "left" }}>
-                                    + {extra.name}
-                                  </Text>
-                                </View>
-                              );
-                            }
-                          })
-                        )}
-                    </View>
                   </View>
-
-                  <View style={{ alignItems: "center", marginRight: 20 }}>
-                    <TouchableOpacity
-                      style={{ padding: 5 }}
-                      onPress={() => {
-                        onRemoveProduct(product, index);
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        paddingVertical: 10,
                       }}
                     >
-                      <View>
-                        <Icon
-                          icon="trash_icon"
-                          size={25}
-                          style={{ color: theme.GRAY_700 }}
+                      <View
+                        style={{
+                          width: 130,
+                          height: 80,
+                          padding: 0,
+                          alignItems: "center",
+                        }}
+                      >
+                        <Image
+                          style={{ width: "90%", height: "100%" }}
+                          source={{ uri: product.data.image_url }}
                         />
                       </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={{ padding: 5 }}
-                      onPress={() => {
-                        onEditProduct(index);
-                      }}
-                    >
-                      <View>
-                        <Text>edit</Text>
+                      <View style={{ marginLeft: 20 }}>
+                        {product.extras &&
+                          Object.keys(product.extras).map((key) =>
+                            product.extras[key].map((extra) => {
+                              if (
+                                extra.value &&
+                                extra.isdefault != extra.value &&
+                                extra.counter_init_value != extra.value
+                              ) {
+                                return (
+                                  <View>
+                                    <Text style={{ textAlign: "left" }}>
+                                      + {extra.name}
+                                    </Text>
+                                  </View>
+                                );
+                              }
+                            })
+                          )}
                       </View>
-                    </TouchableOpacity>
+                    </View>
 
-                    <View style={{ marginTop: 0 }}>
-                      <Text>₪{product.data.price}</Text>
+                    <View style={{ alignItems: "center", marginRight: 20 }}>
+                      <TouchableOpacity
+                        style={{ padding: 5 }}
+                        onPress={() => {
+                          onRemoveProduct(product, index);
+                        }}
+                      >
+                        <View>
+                          <Icon
+                            icon="trash_icon"
+                            size={25}
+                            style={{ color: theme.GRAY_700 }}
+                          />
+                        </View>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={{ padding: 5 }}
+                        onPress={() => {
+                          onEditProduct(index);
+                        }}
+                      >
+                        <View>
+                          <Text>edit</Text>
+                        </View>
+                      </TouchableOpacity>
+
+                      <View style={{ marginTop: 0 }}>
+                        <Text>₪{product.data.price}</Text>
+                      </View>
                     </View>
                   </View>
                 </View>
-              </View>
-            ))}
-          </View>
-          <ToggleButton.Row
-            onValueChange={(value) => setShippingMethod(value)}
-            value={shippingMethod}
-            style={styles.togglleContainer}
-          >
-            <ToggleButton
-              style={{
-                ...styles.togglleCItem,
-                backgroundColor:
-                  shippingMethod === SHIPPING_METHODS.shipping
-                    ? theme.PRIMARY_COLOR
-                    : "white",
-              }}
-              icon={() => (
-                <View style={styles.togglleItemContentContainer}>
-                  <Icon
-                    icon="shipping_icon"
-                    size={25}
-                    style={{ color: theme.GRAY_700 }}
-                  />
-                  <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                    {" "}
-                    משלוח
-                  </Text>
-                </View>
-              )}
-              value={SHIPPING_METHODS.shipping}
-            />
-            <ToggleButton
-              style={{
-                ...styles.togglleCItem,
-                backgroundColor:
-                  shippingMethod === SHIPPING_METHODS.takAway
-                    ? theme.PRIMARY_COLOR
-                    : "white",
-              }}
-              icon={() => (
-                <View style={styles.togglleItemContentContainer}>
-                  <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                    איסוף עצמי
-                  </Text>
-
-                  <Icon
-                    icon="cart_burger_icon"
-                    size={25}
-                    style={{ color: theme.GRAY_700 }}
-                  />
-                </View>
-              )}
-              value={SHIPPING_METHODS.takAway}
-            />
-          </ToggleButton.Row>
-        </View>
-
-        <View style={{ alignItems: "center" }}>
-          {shippingMethod === SHIPPING_METHODS.shipping && location && (
-            <MapView
-              style={styles.mapContainer}
-              initialRegion={{
-                latitude: location.coords.latitude,
-                latitudeDelta: 0.01,
-                longitude: location.coords.longitude,
-                longitudeDelta: 0.01,
-              }}
-            >
-              <Marker
-                coordinate={{
-                  latitude: location.coords.latitude,
-                  longitude: location.coords.longitude,
-                }}
-              />
-            </MapView>
-          )}
-        </View>
-        <View>
-          <ToggleButton.Row
-            onValueChange={(value) => setPaymentMthod(value)}
-            value={paymentMthod}
-            style={styles.togglleContainer}
-          >
-            <ToggleButton
-              style={{
-                ...styles.togglleCItem,
-                backgroundColor:
-                  paymentMthod === PAYMENT_METHODS.cash
-                    ? theme.PRIMARY_COLOR
-                    : "white",
-              }}
-              icon={() => (
-                <View style={styles.togglleItemContentContainer}>
-                  <Text style={{ fontSize: 20, fontWeight: "bold" }}>₪</Text>
-                  <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                    מזומן
-                  </Text>
-                </View>
-              )}
-              value={PAYMENT_METHODS.cash}
-            />
-            <ToggleButton
-              style={{
-                ...styles.togglleCItem,
-                backgroundColor:
-                  paymentMthod === PAYMENT_METHODS.creditCard
-                    ? theme.PRIMARY_COLOR
-                    : "white",
-              }}
-              icon={() => (
-                <View style={styles.togglleItemContentContainer}>
-                  <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                    אשראי
-                  </Text>
-                  <Icon
-                    icon="credit_card_icom"
-                    size={25}
-                    style={{ color: theme.GRAY_700 }}
-                  />
-                </View>
-              )}
-              value={PAYMENT_METHODS.creditCard}
-            />
-          </ToggleButton.Row>
-        </View>
-
-        <View style={styles.totalPrictContainer}>
-          <View style={{ alignItems: "center" }}>
-            <Text style={{ fontWeight: "bold" }}>المجموع</Text>
-          </View>
-          <View style={{ marginTop: 30 }}>
-            {shippingMethod === SHIPPING_METHODS.shipping && (
-              <View style={styles.priceRowContainer}>
-                <View>
-                  <Text>مبلغ الطلبية</Text>
-                </View>
-                <View>
-                  <Text>₪{itemsPrice}</Text>
-                </View>
-              </View>
-            )}
-
-            {shippingMethod === SHIPPING_METHODS.shipping && (
-              <View style={styles.priceRowContainer}>
-                <View>
-                  <Text>التوصيل</Text>
-                </View>
-                <View>
-                  <Text>₪15</Text>
-                </View>
-              </View>
-            )}
-
-            <View style={styles.priceRowContainer}>
-              <View>
-                <Text>المبلغ النهائي</Text>
-              </View>
-              <View>
-                <Text>₪{totalPrice}</Text>
-              </View>
+              ))}
             </View>
+            <ToggleButton.Row
+              onValueChange={(value) => setShippingMethod(value)}
+              value={shippingMethod}
+              style={styles.togglleContainer}
+            >
+              <ToggleButton
+                style={{
+                  ...styles.togglleCItem,
+                  backgroundColor:
+                    shippingMethod === SHIPPING_METHODS.shipping
+                      ? theme.PRIMARY_COLOR
+                      : "white",
+                }}
+                icon={() => (
+                  <View style={styles.togglleItemContentContainer}>
+                    <Icon
+                      icon="shipping_icon"
+                      size={25}
+                      style={{ color: theme.GRAY_700 }}
+                    />
+                    <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+                      {" "}
+                      משלוח
+                    </Text>
+                  </View>
+                )}
+                value={SHIPPING_METHODS.shipping}
+              />
+              <ToggleButton
+                style={{
+                  ...styles.togglleCItem,
+                  backgroundColor:
+                    shippingMethod === SHIPPING_METHODS.takAway
+                      ? theme.PRIMARY_COLOR
+                      : "white",
+                }}
+                icon={() => (
+                  <View style={styles.togglleItemContentContainer}>
+                    <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+                      איסוף עצמי
+                    </Text>
+
+                    <Icon
+                      icon="cart_burger_icon"
+                      size={25}
+                      style={{ color: theme.GRAY_700 }}
+                    />
+                  </View>
+                )}
+                value={SHIPPING_METHODS.takAway}
+              />
+            </ToggleButton.Row>
+          </View>
+
+          <View style={{ alignItems: "center" }}>
+            {shippingMethod === SHIPPING_METHODS.shipping && location ? (              
+              <MapView
+                style={styles.mapContainer}
+                initialRegion={{
+                  latitude: location.coords.latitude,
+                  latitudeDelta: 0.01,
+                  longitude: location.coords.longitude,
+                  longitudeDelta: 0.01,
+                }}
+              >
+                <Marker
+                  coordinate={{
+                    latitude: location.coords.latitude,
+                    longitude: location.coords.longitude,
+                  }}
+                />
+              </MapView>
+            ):
+            <Text>טוען מיקום...</Text>
+            }
           </View>
           <View>
-            <Button
-              labelStyle={{ fontSize: 22 }}
-              style={styles.submitButton}
-              contentStyle={styles.submitContentButton}
-              mode="contained"
-              onPress={onSendCart}
+            <ToggleButton.Row
+              onValueChange={(value) => setPaymentMthod(value)}
+              value={paymentMthod}
+              style={styles.togglleContainer}
             >
-              ارسل الطلبية
-            </Button>
+              <ToggleButton
+                style={{
+                  ...styles.togglleCItem,
+                  backgroundColor:
+                    paymentMthod === PAYMENT_METHODS.cash
+                      ? theme.PRIMARY_COLOR
+                      : "white",
+                }}
+                icon={() => (
+                  <View style={styles.togglleItemContentContainer}>
+                    <Text style={{ fontSize: 20, fontWeight: "bold" }}>₪</Text>
+                    <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+                      מזומן
+                    </Text>
+                  </View>
+                )}
+                value={PAYMENT_METHODS.cash}
+              />
+              <ToggleButton
+                style={{
+                  ...styles.togglleCItem,
+                  backgroundColor:
+                    paymentMthod === PAYMENT_METHODS.creditCard
+                      ? theme.PRIMARY_COLOR
+                      : "white",
+                }}
+                icon={() => (
+                  <View style={styles.togglleItemContentContainer}>
+                    <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+                      אשראי
+                    </Text>
+                    <Icon
+                      icon="credit_card_icom"
+                      size={25}
+                      style={{ color: theme.GRAY_700 }}
+                    />
+                  </View>
+                )}
+                value={PAYMENT_METHODS.creditCard}
+              />
+            </ToggleButton.Row>
+          </View>
+
+          {paymentMthod === PAYMENT_METHODS.creditCard && (
+            <View
+              style={{
+                alignItems: "center",
+                backgroundColor: "#F5F5F5",
+                borderRadius: 15,
+                padding: 8,
+                marginTop: 5,
+              }}
+            >
+              <Text
+                style={{ fontSize: 20 }}
+              >{`****_****_****_${ccData?.last4Digits}`}</Text>
+            </View>
+          )}
+
+          <View style={styles.totalPrictContainer}>
+            <View style={{ alignItems: "center" }}>
+              <Text style={{ fontWeight: "bold" }}>المجموع</Text>
+            </View>
+            <View style={{ marginTop: 30 }}>
+              {shippingMethod === SHIPPING_METHODS.shipping && (
+                <View style={styles.priceRowContainer}>
+                  <View>
+                    <Text>مبلغ الطلبية</Text>
+                  </View>
+                  <View>
+                    <Text>₪{itemsPrice}</Text>
+                  </View>
+                </View>
+              )}
+
+              {shippingMethod === SHIPPING_METHODS.shipping && (
+                <View style={styles.priceRowContainer}>
+                  <View>
+                    <Text>التوصيل</Text>
+                  </View>
+                  <View>
+                    <Text>₪15</Text>
+                  </View>
+                </View>
+              )}
+
+              <View style={styles.priceRowContainer}>
+                <View>
+                  <Text>المبلغ النهائي</Text>
+                </View>
+                <View>
+                  <Text>₪{totalPrice}</Text>
+                </View>
+              </View>
+            </View>
+            <View>
+              <Button
+                labelStyle={{ fontSize: 22 }}
+                style={styles.submitButton}
+                contentStyle={styles.submitContentButton}
+                mode="contained"
+                onPress={onSendCart}
+              >
+                ارسل الطلبية
+              </Button>
+            </View>
           </View>
         </View>
-      </View>
+      </ScrollView>
       <PaymentMethodDialog
         handleAnswer={handleShippingMethoAnswer}
         isOpen={isOpenShippingMethodDialog}
       />
-    </ScrollView>
+      <NewPaymentMethodDialog
+        handleAnswer={handleShippingMethoAnswer}
+        isOpen={isOpenNewCreditCardDialog}
+      />
+    </View>
   );
 };
 
@@ -487,6 +542,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     paddingHorizontal: 20,
     marginBottom: 40,
+    height: "100%",
   },
   backContainer: {
     flexDirection: "row",

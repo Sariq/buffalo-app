@@ -9,6 +9,7 @@ import LoginScreen from "../screens/login";
 import VerifyCodeScreen from "../screens/verify-code";
 import LanguageScreen from "../screens/language";
 import OrderSubmittedScreen from "../screens/order/submitted";
+import OrderHistoryScreen from "../screens/order/history";
 
 const Stack = createStackNavigator();
 
@@ -26,7 +27,12 @@ export const MainStackNavigator = ({}) => {
       <Stack.Screen name="login" component={LoginScreen} />
       <Stack.Screen name="verify-code" component={VerifyCodeScreen} />
       <Stack.Screen name="language" component={LanguageScreen} />
-      <Stack.Screen name="order-submitted" component={OrderSubmittedScreen} />
+      <Stack.Screen name="order-history" component={OrderHistoryScreen} />
+      <Stack.Screen
+        name="order-submitted"
+        component={OrderSubmittedScreen}
+        initialParams={{ shippingMethod: null }}
+      />
       <Stack.Screen
         name="meal"
         component={MealScreen}
