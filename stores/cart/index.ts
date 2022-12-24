@@ -1,13 +1,26 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { makeAutoObservable } from "mobx";
-import { toBase64 } from '../../helpers/convert-base64'
-import { BASE_URL, ORDER_API } from "../../consts/api";
+import { toBase64, fromBase64 } from '../../helpers/convert-base64'
+import { ORDER_API } from "../../consts/api";
 import Constants from "expo-constants";
 import * as Device from 'expo-device';
 import i18n from "../../translations";
 import { axiosInstance } from "../../utils/http-interceptor";
 var hash = require('object-hash');
 
+export type TOrderSubmitResponse = {
+  has_err:boolean;
+  code:number;
+  order_id:number;
+  status:string;
+  salt: string;
+}
+
+export type TUpdateCCPaymentRequest = {
+  order_id: number;
+  creditcard_ReferenceNumber: string;
+  datetime: Date;
+}
 type TOrderHistory = {
   phoneNumber: string;
   ordersList: TCart[];
@@ -45,6 +58,9 @@ type TCart = {
 
 const prodcutExtrasAdapter = (extras) => {
   let productExtras = [];
+  if(!extras){
+    return productExtras;
+  }
   Object.keys(extras).map((key) => (
     extras[key].map((extra) => {
       productExtras.push({ id: extra.id, name: extra.name, value: extra.value });
@@ -152,7 +168,7 @@ class CartStore {
     let finalOrder: TOrder = {
       payment_method: order.paymentMthod,
       receipt_method: order.shippingMethod,
-      address: 'test',
+      address: 'test1',
       items: produtsAdapter(order.products)
     }
     const version = Constants.nativeAppVersion;
@@ -174,27 +190,52 @@ class CartStore {
     this.updateLocalStorage();
   }
 
-  submitOrder = async(order: any) => {
+  submitOrder = async(order: any): Promise<TOrderSubmitResponse> =>  {
     const cartData = this.getCartData(order);
-  
-    const orderBase64 = toBase64(cartData);
-    console.log("SSSUB")
+    const orderBase64 = toBase64(cartData).toString();
     const body = orderBase64;
-    axiosInstance
+    
+    return axiosInstance
       .post(
         `${ORDER_API.CONTROLLER}/${ORDER_API.SUBMIT_ORDER_API}`,
         body,
-        { headers: { "Content-Type": "application/json" } }
       )
       .then(function (response) {
+        const jsonValue:any = JSON.parse(fromBase64(response.data));
 
-        console.log("tokennnn", response);
-        return response;
+        const data:TOrderSubmitResponse = {
+          has_err: jsonValue.has_err,
+          order_id: jsonValue.order_id,
+          salt: jsonValue.salt,
+          status: jsonValue.status,
+          code: jsonValue.code,
+        }
+        return data;
+      })
+      .catch(function (error) {
+        const data:TOrderSubmitResponse = { has_err: true, order_id:0, salt:"",status:"", code: 0}
+        return data;
+      });
+  };
+
+  UpdateCCPayment = ({ order_id, creditcard_ReferenceNumber, datetime}: TUpdateCCPaymentRequest)=> {
+    const body: TUpdateCCPaymentRequest = {
+      order_id,
+      creditcard_ReferenceNumber,
+      datetime
+    }
+    return axiosInstance
+      .post(
+        `${ORDER_API.CONTROLLER}/${ORDER_API.UPDATE_CCPAYMENT_API}`,
+        toBase64(body),
+      )
+      .then(function (response) {
+        return JSON.parse(fromBase64(response.data));
       })
       .catch(function (error) {
         console.log(error);
       });
-  };
+  }
 
   addNewOrderToHistory = async (order: any, phoneNumber: string)=>{
     const ordersHistory: TOrderHistory = {

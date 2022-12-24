@@ -21,8 +21,10 @@ export type TValidateCardProps = {
 export type TCCDetails = {
   last4Digits: string;
   ccToken: string;
+  cvv?: string;
+  id?: number;
+  expDate?: string;
 }
-
 
 const validateCard = ({cardNumber, expDate}: TValidateCardProps) => {
     const body: TPayload = {

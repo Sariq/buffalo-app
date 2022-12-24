@@ -13,6 +13,8 @@ export const MENU_API = {
 export const ORDER_API = {
     CONTROLLER: "order",
     SUBMIT_ORDER_API : "submit",
+    GET_STATUS_API: "GetStatus",
+    UPDATE_CCPAYMENT_API: "UpdateCCPayment"
 };
 export const STORE_API = {
     CONTROLLER: "Store",

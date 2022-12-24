@@ -12,6 +12,7 @@ type TProps = {
   value?: string;
   isEditable?: boolean;
   onClick?: any;
+  keyboardType?: any;
 };
 export default function InputText({
   onChange,
@@ -19,6 +20,7 @@ export default function InputText({
   label,
   isEditable = true,
   onClick,
+  keyboardType 
 }: TProps) {
   const handleOnChange = (e) => {
     onChange && onChange(e.nativeEvent.text);
@@ -27,6 +29,7 @@ export default function InputText({
   return (
     <View style={styles.container}>
       <TextInput
+        keyboardType={keyboardType}
         onPressIn={onClick}
         value={value}
         editable={isEditable}

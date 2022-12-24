@@ -1,18 +1,11 @@
 import {
-    Text,
-    View,
-    TouchableOpacity,
     StyleSheet,
-    ImageBackground,
   } from "react-native";
-  import { Paragraph, Dialog, Portal, Provider } from "react-native-paper";
+  import { Dialog, Portal, Provider } from "react-native-paper";
   
   /* styles */
   import theme from "../../styles/theme.style";
-  import Icon from "../../components/icon";
   import { useState, useEffect } from "react";
-  import Button from "../../components/controls/button/button";
-  import themeStyle from "../../styles/theme.style";
 import CreditCard from "../credit-card";
   
   type TProps = {
@@ -24,11 +17,10 @@ import CreditCard from "../credit-card";
     const [visible, setVisible] = useState(isOpen);
   
     useEffect(() => {
-        console.log("isopen")
       setVisible(isOpen);
     }, [isOpen]);
   
-    const hideDialog = (value: boolean) => {
+    const hideDialog = async (value?: boolean) => {
       handleAnswer && handleAnswer(value);
       setVisible(false);
     };
@@ -54,7 +46,7 @@ import CreditCard from "../credit-card";
             dismissable={false}
           >
             <Dialog.Content >
-                <CreditCard />
+                <CreditCard onSaveCard={hideDialog}/>
 
             </Dialog.Content>
            

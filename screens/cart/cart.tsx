@@ -4,16 +4,12 @@ import * as Font from "expo-font";
 
 import { useContext } from "react";
 import { observer } from "mobx-react";
-import { Image, Text, View, StyleSheet, AsyncStorage } from "react-native";
+import { Image, Text, View, StyleSheet } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import { Dimensions } from "react-native";
-import { ToggleButton, Divider, Button } from "react-native-paper";
+import { ToggleButton, Button } from "react-native-paper";
 /* styles */
 import theme from "../../styles/theme.style";
 import * as Location from "expo-location";
-import { CONSTS_ICONS } from "../../consts/consts-icons";
-import { SvgXml } from "react-native-svg";
-import CheckBox from "../../components/controls/checkbox";
 import { StoreContext } from "../../stores";
 import Counter from "../../components/controls/counter";
 import Icon from "../../components/icon";
@@ -21,6 +17,10 @@ import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import BackButton from "../../components/back-button";
 import PaymentMethodDialog from "../../components/dialogs/delivery-method";
 import NewPaymentMethodDialog from "../../components/dialogs/new-credit-card";
+import { TOrderSubmitResponse, TUpdateCCPaymentRequest } from "../../stores/cart";
+import { TCCDetails } from "../../components/credit-card/api/validate-card";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import chargeCreditCard, { TPaymentProps } from "../../components/credit-card/api/payment";
 
 export const SHIPPING_METHODS = {
   shipping: "DELIVERY",
@@ -56,7 +56,7 @@ const CartScreen = () => {
     setOpenNewCreditCardDialog,
   ] = React.useState(false);
 
-  const [ccData, setCCData] = React.useState();
+  const [ccData, setCCData] = React.useState<TCCDetails | undefined>();
 
   const [itemsPrice, setItemsPrice] = React.useState(0);
   const [totalPrice, setTotalPrice] = React.useState(0);
@@ -65,7 +65,6 @@ const CartScreen = () => {
   const [errorMsg, setErrorMsg] = useState(null);
 
   useEffect(() => {
-    console.log("xx")
     if (shippingMethod === SHIPPING_METHODS.shipping) {
       (async () => {
         let { status } = await Location.requestForegroundPermissionsAsync();
@@ -103,19 +102,15 @@ const CartScreen = () => {
   }, [cartStore.cartItems]);
 
   const getCCData = async () => {
-    await AsyncStorage.setItem("@storage_CCData","");
-
+    //await AsyncStorage.setItem("@storage_CCData","");
     const data = await AsyncStorage.getItem("@storage_CCData");
     setCCData(JSON.parse(data));
   };
 
   useEffect(() => {
     getCCData();
-  });
+  },[]);
 
-  const onCheckBoxChange = (isSelected) => {
-    console.log(isSelected);
-  };
   const onCounterChange = (product, index, value) => {
     cartStore.updateProductCount(product.data.id + index, value);
   };
@@ -141,9 +136,40 @@ const CartScreen = () => {
     }
   };
 
-  const postSubmitOrderActions = () => {
+  const chargeOrder = (chargeData: TPaymentProps) => {
+    chargeCreditCard(chargeData).then((res)=>{
+      if(res.HasError){
+        return;
+      }
+      const updateCCData: TUpdateCCPaymentRequest = {
+        order_id: chargeData.orderId,
+        creditcard_ReferenceNumber: res.ReferenceNumber,
+        datetime: new Date()
+      }
+      cartStore.UpdateCCPayment(updateCCData).then((res)=>{
+        if(res.has_err){
+          return;
+        }
+        cartStore.resetCart();
+        navigation.navigate("order-submitted",{shippingMethod});
+      })
+    })
+  }
+  const postSubmitOrderActions = (orderData: TOrderSubmitResponse) => {
     if(paymentMthod === PAYMENT_METHODS.creditCard){
       // TODO handle credit card
+
+
+      const chargeData: TPaymentProps = {
+        cardNumber: ccData.ccToken,
+        expDate: ccData.expDate,
+        cvv: ccData.cvv,
+        totalPrice: totalPrice,
+        holderId: ccData.id,
+        orderId: orderData.order_id
+      }
+      chargeOrder(chargeData);
+
     }else{
       cartStore.resetCart();
       navigation.navigate("order-submitted",{shippingMethod});
@@ -157,9 +183,12 @@ const CartScreen = () => {
       products: cartStore.cartItems,
     };
     //cartStore.addOrderToHistory(order,userDetailsStore.userDetails.phone);
-    cartStore.submitOrder(order).then((res)=>{
-      console.log("RRREESSS", res);
-      postSubmitOrderActions();
+    cartStore.submitOrder(order).then((res: TOrderSubmitResponse)=>{
+      console.log("then",res)
+      if(res.has_err){
+        return;
+      }
+      postSubmitOrderActions(res);
     });
   };
 
@@ -168,20 +197,16 @@ const CartScreen = () => {
   };
 
   const handleShippingMethoAnswer = (value: boolean) => {
-    console.log(value);
     setIsOpenShippingMethodDialog(value);
     setIsShippingMethodAgrred(value);
     if (value) {
       submitCart();
     }
   };
+  const handleNewPMAnswer = (value: boolean) => {
+    getCCData();
+  };
 
-  //   let text = "Waiting..";
-  //   if (errorMsg) {
-  //     text = errorMsg;
-  //   } else if (location) {
-  //     text = JSON.stringify(location);
-  //   }
   return (
     <View>
       <ScrollView style={{ height: "100%", backgroundColor: "white" }}>
@@ -383,8 +408,8 @@ const CartScreen = () => {
             </ToggleButton.Row>
           </View>
 
-          <View style={{ alignItems: "center" }}>
-            {shippingMethod === SHIPPING_METHODS.shipping && location ? (              
+          {shippingMethod === SHIPPING_METHODS.shipping && <View style={{ alignItems: "center" }}>
+            {location ? (              
               <MapView
                 style={styles.mapContainer}
                 initialRegion={{
@@ -404,7 +429,7 @@ const CartScreen = () => {
             ):
             <Text>טוען מיקום...</Text>
             }
-          </View>
+          </View>}
           <View>
             <ToggleButton.Row
               onValueChange={(value) => setPaymentMthod(value)}
@@ -519,14 +544,14 @@ const CartScreen = () => {
             </View>
           </View>
         </View>
+        <NewPaymentMethodDialog
+        handleAnswer={handleNewPMAnswer}
+        isOpen={isOpenNewCreditCardDialog}
+      />
       </ScrollView>
       <PaymentMethodDialog
         handleAnswer={handleShippingMethoAnswer}
         isOpen={isOpenShippingMethodDialog}
-      />
-      <NewPaymentMethodDialog
-        handleAnswer={handleShippingMethoAnswer}
-        isOpen={isOpenNewCreditCardDialog}
       />
     </View>
   );
