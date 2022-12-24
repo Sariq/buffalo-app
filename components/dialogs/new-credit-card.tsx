@@ -1,5 +1,6 @@
 import {
-    StyleSheet,
+    StyleSheet, TouchableOpacity, Text,
+
   } from "react-native";
   import { Dialog, Portal, Provider } from "react-native-paper";
   
@@ -20,8 +21,12 @@ import CreditCard from "../credit-card";
       setVisible(isOpen);
     }, [isOpen]);
   
-    const hideDialog = async (value?: boolean) => {
+    const hideDialog = (value?: boolean) => {
       handleAnswer && handleAnswer(value);
+      setVisible(false);
+    };
+    const onClose = () => {
+      handleAnswer && handleAnswer('close');
       setVisible(false);
     };
   
@@ -46,6 +51,20 @@ import CreditCard from "../credit-card";
             dismissable={false}
           >
             <Dialog.Content >
+            <TouchableOpacity style={{ zIndex: 1, width: "100%" }}>
+              <Text
+                onPress={onClose}
+                style={{
+                  zIndex: 1,
+                  position: "absolute",
+                  left: 0,
+                  width: "100%",
+                  fontSize: 25,
+                }}
+              >
+                X
+              </Text>
+            </TouchableOpacity>
                 <CreditCard onSaveCard={hideDialog}/>
 
             </Dialog.Content>

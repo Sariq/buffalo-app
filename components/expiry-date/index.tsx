@@ -1,4 +1,4 @@
-import { StyleSheet, DeviceEventEmitter } from "react-native";
+import { StyleSheet, DeviceEventEmitter, Keyboard } from "react-native";
 import { useState, useCallback, useEffect } from "react";
 import theme from "../../styles/theme.style";
 import MonthPicker from "react-native-month-year-picker";
@@ -9,16 +9,24 @@ const ExpiryDate = () => {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-    DeviceEventEmitter.addListener(
-        `SHOW_EXP_DATE_PICKER`,
-        showPicker
-      );
+    DeviceEventEmitter.addListener(`SHOW_EXP_DATE_PICKER`, showPicker);
   }, []);
 
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
+      showPicker(false);
+    });
+    const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {});
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
 
   const showPicker = useCallback((value) => {
-    console.log('yyy')  
-    setShow(value)}, []);
+    setShow(value);
+  }, []);
 
   const onValueChange = useCallback(
     (event, newDate) => {
@@ -26,7 +34,9 @@ const ExpiryDate = () => {
 
       showPicker(false);
       setDate(selectedDate);
-      DeviceEventEmitter.emit(`EXP_DATE_PICKER_CHANGE`, {expDate: moment(selectedDate).format("MM/YY")});
+      DeviceEventEmitter.emit(`EXP_DATE_PICKER_CHANGE`, {
+        expDate: moment(selectedDate).format("MM/YY"),
+      });
 
       //   setCreditCardExpDate(moment(selectedDate).format("MM/YY"));
     },

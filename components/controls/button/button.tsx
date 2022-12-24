@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import theme from "../../../styles/theme.style";
 import Icon from "../../icon";
 import themeStyle from "../../../styles/theme.style";
+import { ActivityIndicator } from "react-native-paper";
 
 type TProps = {
   onClickFn: any;
@@ -10,9 +11,21 @@ type TProps = {
   fontSize?: any;
   bgColor?: any;
   textColor?: any;
-  fontFamily?:any;
-}
-export default function Button({ onClickFn, text, icon, fontSize, bgColor, textColor, fontFamily }: TProps) {
+  fontFamily?: any;
+  disabled?: boolean;
+  isLoading?: boolean;
+};
+export default function Button({
+  onClickFn,
+  text,
+  icon,
+  fontSize,
+  bgColor,
+  textColor,
+  fontFamily,
+  disabled,
+  isLoading,
+}: TProps) {
   const onBtnClick = () => {
     onClickFn();
   };
@@ -20,25 +33,41 @@ export default function Button({ onClickFn, text, icon, fontSize, bgColor, textC
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        style={{...styles.button, backgroundColor: bgColor, borderColor: bgColor == "white" && themeStyle.PRIMARY_COLOR, borderWidth: bgColor == "white" ? 1 : 0}}
+        style={{
+          ...styles.button,
+          backgroundColor: disabled ? themeStyle.GRAY_600 : bgColor,
+          borderColor: bgColor == "white" && themeStyle.PRIMARY_COLOR,
+          borderWidth: bgColor == "white" ? 1 : 0,
+          opacity: disabled && 0.3
+        }}
         onPress={() => {
           onBtnClick();
         }}
       >
-        <Icon
+        {icon && <Icon
           icon={icon}
           size={20}
           style={{ color: textColor || theme.GRAY_700 }}
-        />
-        <Text style={{...styles.buttonText, fontSize: fontSize, color:textColor, fontFamily:fontFamily}}>{text}</Text>
+        />}
+        <Text
+          style={{
+            ...styles.buttonText,
+            fontSize: fontSize,
+            color: textColor,
+            fontFamily: fontFamily,
+          }}
+        >
+          {text}
+        </Text>
+        {isLoading && <ActivityIndicator animating={true} color={theme.WHITE_COLOR} />}
       </TouchableOpacity>
     </View>
   );
 }
 const styles = StyleSheet.create({
-    container:{
-        width: "100%",
-    },
+  container: {
+    width: "100%",
+  },
   button: {
     backgroundColor: theme.PRIMARY_COLOR,
     borderRadius: 30,
@@ -46,10 +75,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    padding:10,
-
+    padding: 10,
   },
   buttonText: {
-    marginHorizontal: 20
+    marginHorizontal: 20,
   },
 });

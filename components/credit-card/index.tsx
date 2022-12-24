@@ -8,16 +8,21 @@ import {
 import InputText from "../controls/input";
 import { useState, useEffect } from "react";
 import theme from "../../styles/theme.style";
-import { Button } from "react-native-paper";
-import validateCard, { TValidateCardProps, TCCDetails } from "./api/validate-card";
+import validateCard, {
+  TValidateCardProps,
+  TCCDetails,
+} from "./api/validate-card";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";
 import cardValidator from "card-validator";
+import isValidID from "../../helpers/validate-id-number";
+import Button from "../controls/button/button";
+import themeStyle from "../../styles/theme.style";
 
 export type TProps = {
-  onSaveCard: ()=> void
-}
-const CreditCard = ({onSaveCard}) => {
+  onSaveCard: () => void;
+};
+const CreditCard = ({ onSaveCard }) => {
   const [creditCardNumber, setCreditCardNumber] = useState();
   const [creditCardExpDate, setCreditCardExpDate] = useState();
   const [creditCardCVV, setCreditCardCVV] = useState();
@@ -25,44 +30,50 @@ const CreditCard = ({onSaveCard}) => {
   const [date, setDate] = useState(new Date());
 
   const [formStatus, setFormStatus] = useState({
-    isNumberValid: false,
-    isExpDateValid: false,
-    isCVVValid: false,
-    idIDValid: false,
+    isNumberValid: undefined,
+    isCVVValid: undefined,
+    idIDValid: undefined,
   });
+  const [isExpDateValid, setIsExpDateValid] = useState(undefined)
 
   useEffect(() => {
-    DeviceEventEmitter.addListener(`EXP_DATE_PICKER_CHANGE`, setExpData);
+    const ExpDatePicjkerChange = DeviceEventEmitter.addListener(`EXP_DATE_PICKER_CHANGE`, setExpData.bind(this));
+    return () => {
+      ExpDatePicjkerChange.remove();
+    };
   }, []);
 
   const setExpData = (data) => {
-    console.log(data);
-    const validation:any = cardValidator.expirationDate(data.expDate);
-    setFormStatus({...formStatus, isExpDateValid: validation?.isValid })
+    const validation: any = cardValidator.expirationDate(data.expDate);
     setCreditCardExpDate(data.expDate);
+    setIsExpDateValid(validation?.isValid);
   };
 
   const showPicker = () => {
-    console.log("xxx");
     DeviceEventEmitter.emit(`SHOW_EXP_DATE_PICKER`, { show: true });
   };
-  const onNumberChange = (value) => {
-    const { card } = cardValidator.number(value);
-    setCreditCardNumber(value);
-    setFormStatus({...formStatus, isNumberValid: !!card })
-  };
 
+  const onNumberChange = (value) => {
+    const { isValid } :any = cardValidator.number(value);
+    console.log(isValid)
+    setCreditCardNumber(value);
+    setFormStatus({ ...formStatus, isNumberValid: isValid });
+  };
   const onCVVChange = (value) => {
     const { isValid } = cardValidator.cvv(value);
     setCreditCardCVV(value);
-    setFormStatus({...formStatus, isCVVValid: isValid })
+    setFormStatus({ ...formStatus, isCVVValid: isValid });
   };
   const onCardHolderNameChange = (value) => {
-    const validation:any = cardValidator.number(value, {maxLength: 16});
+    const isValid: any = isValidID(value);
     setCardHolderID(value);
-    setFormStatus({...formStatus, idIDValid: validation.isValid })
+    setFormStatus({ ...formStatus, idIDValid: isValid });
   };
 
+  const isFormValid = () => {
+    console.log(formStatus)
+    return !(formStatus.idIDValid && formStatus.isCVVValid && isExpDateValid && formStatus.isNumberValid);
+  }
 
   const onSaveCreditCard = () => {
     const validateCardData: TValidateCardProps = {
@@ -76,8 +87,8 @@ const CreditCard = ({onSaveCard}) => {
           last4Digits: res.ccDetails.last4Digits,
           cvv: creditCardCVV,
           expDate: moment(date).format("MMYY"),
-          id: cardHolderID
-        }
+          id: cardHolderID,
+        };
         const ccDetailsString = JSON.stringify(ccData);
         await AsyncStorage.setItem("@storage_CCData", ccDetailsString);
         onSaveCard();
@@ -92,56 +103,59 @@ const CreditCard = ({onSaveCard}) => {
       <View style={{ alignItems: "flex-start" }}>
         <Text style={{ fontSize: 18 }}>הזן פרטי כרטיס אשראי</Text>
       </View>
-      <View style={{ marginTop: 10, alignItems: "flex-start" }}>
+      <View style={{ marginTop: 25, alignItems: "flex-start" }}>
         <InputText
           label="מספר כרטיס אשראי"
           onChange={onNumberChange}
           value={creditCardNumber}
           keyboardType="numeric"
+          isError={formStatus.isNumberValid === false}
         />
-        {!formStatus.isNumberValid && <Text>מספר לא תקין</Text>}
+        {formStatus.isNumberValid === false && <Text style={{color: themeStyle.ERROR_COLOR }}>מספר לא תקין</Text>}
       </View>
       <View style={styles.monthExpContainer}>
-        <View style={styles.monthExpContainerChild}>
-          <InputText
-            label="תוקף הכרטיס"
-            onChange={() => {}}
-            value={creditCardExpDate}
-            isEditable={false}
-            onClick={() => {
-              Keyboard.dismiss();
-              showPicker();
-            }}
-          />
-        </View>
-        {!formStatus.isExpDateValid && <Text>מספר לא תקין</Text>}
+        <InputText
+          label="תוקף הכרטיס"
+          onChange={() => {}}
+          value={creditCardExpDate}
+          isEditable={false}
+          onClick={() => {
+            Keyboard.dismiss();
+            showPicker();
+          }}
+        />
+        {isExpDateValid === false && <Text style={{color: themeStyle.ERROR_COLOR }}>מספר לא תקין</Text>}
       </View>
-      <View style={{ marginTop: 10 }}>
+      <View style={{ marginTop: 10, alignItems: "flex-start" }}>
         <InputText
           keyboardType="numeric"
           label="CVV"
           onChange={onCVVChange}
           value={creditCardCVV}
+          isError={formStatus.isCVVValid === false}
         />
+        {formStatus.isCVVValid === false && <Text style={{color: themeStyle.ERROR_COLOR }}>מספר לא תקין</Text>}
       </View>
-      <View style={{ marginTop: 10 }}>
+      <View style={{ marginTop: 10, alignItems: "flex-start" }}>
         <InputText
           keyboardType="numeric"
           label="תעודת זהות"
           onChange={onCardHolderNameChange}
           value={cardHolderID}
+          isError={formStatus.idIDValid === false}
         />
+        {formStatus.idIDValid === false && <Text style={{color: themeStyle.ERROR_COLOR }}>מספר לא תקין</Text>}
       </View>
-      <View>
+      <View style={{marginTop:20}}>
         <Button
-          labelStyle={{ fontSize: 22 }}
-          style={styles.submitButton}
-          contentStyle={styles.submitContentButton}
-          mode="contained"
-          onPress={onSaveCreditCard}
-        >
-          שמור כרטיס אשראי
-        </Button>
+          bgColor={theme.SUCCESS_COLOR}
+          onClickFn={onSaveCreditCard}
+          disabled={isFormValid()}
+          text="שמור כרטיס אשראי"
+          fontSize={22}
+          textColor={theme.WHITE_COLOR}
+        />
+          
       </View>
     </View>
   );
@@ -151,8 +165,8 @@ export default CreditCard;
 
 const styles = StyleSheet.create({
   container: {},
-  monthExpContainer: { marginTop: 10 },
-  monthExpContainerChild: {alignItems: "flex-start"},
+  monthExpContainer: { marginTop: 10, alignItems: "flex-start" },
+  monthExpContainerChild: {},
   submitButton: {
     backgroundColor: theme.SUCCESS_COLOR,
     borderRadius: 15,

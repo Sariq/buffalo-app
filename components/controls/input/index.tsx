@@ -13,6 +13,7 @@ type TProps = {
   isEditable?: boolean;
   onClick?: any;
   keyboardType?: any;
+  isError?: boolean;
 };
 export default function InputText({
   onChange,
@@ -20,7 +21,8 @@ export default function InputText({
   label,
   isEditable = true,
   onClick,
-  keyboardType 
+  keyboardType,
+  isError 
 }: TProps) {
   const handleOnChange = (e) => {
     onChange && onChange(e.nativeEvent.text);
@@ -37,8 +39,8 @@ export default function InputText({
         mode="outlined"
         label={label}
         theme={{ roundness: 30 }} 
-        outlineColor={themeStyle.PRIMARY_COLOR}
-        activeOutlineColor={themeStyle.PRIMARY_COLOR}
+        outlineColor={isError ? themeStyle.ERROR_COLOR : themeStyle.PRIMARY_COLOR}
+        activeOutlineColor={isError ? themeStyle.ERROR_COLOR : themeStyle.PRIMARY_COLOR}
         style={{ fontSize: 20, backgroundColor: "white", borderRadius: 100 }}
       />
     </View>

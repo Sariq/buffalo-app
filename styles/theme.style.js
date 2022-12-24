@@ -3,6 +3,7 @@ export default {
     FONT_SIZE_MEDIUM: 14,
     FONT_SIZE_LARGE: 26,
     PRIMARY_COLOR: '#fecb04',
+    ERROR_COLOR: 'red',
     SECONDARY_COLOR: 'rgb(238, 167, 2)',
     WHITE_COLOR: 'white',
     SUCCESS_COLOR: 'green',
