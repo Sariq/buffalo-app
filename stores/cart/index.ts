@@ -113,7 +113,13 @@ class CartStore {
     }
   };
 
-  addProductToCart = (product) => {
+  addProductToCart = async (product) => {
+    if(this.cartItems.length === 0 ){
+      const storage_cartCreatedDate = {
+        date: new Date()
+      }
+      await AsyncStorage.setItem("@storage_cartCreatedDate", JSON.stringify(storage_cartCreatedDate));
+    }
     this.cartItems.push(product);
     this.updateLocalStorage();
   };
@@ -164,7 +170,17 @@ class CartStore {
   return hash;
   }
 
-  getCartData = (order: any) => {
+  getHashKey = async (finalOrder: any) => {
+    const cartCreatedDate = await AsyncStorage.getItem("@storage_cartCreatedDate");
+    const cartCreatedDateValue = JSON.parse(cartCreatedDate);
+    const hashObject = {
+      finalOrder,
+      cartCreatedDateValue: cartCreatedDateValue.date
+    };
+    return hash(hashObject);
+  }
+
+  getCartData = async (order: any) => {
     let finalOrder: TOrder = {
       payment_method: order.paymentMthod,
       receipt_method: order.shippingMethod,
@@ -172,6 +188,7 @@ class CartStore {
       items: produtsAdapter(order.products)
     }
     const version = Constants.nativeAppVersion;
+    const hashKey = await this.getHashKey(finalOrder);
 
     const cartData: TCart = {
       order: finalOrder,
@@ -179,7 +196,7 @@ class CartStore {
       app_language: i18n.locale === "ar" ? '1' : '2',
       device_os: Device.osName,
       app_version:version,
-      unique_hash: hash(finalOrder),
+      unique_hash: hashKey,
       datetime: new Date(),
     }
     return cartData;
@@ -191,10 +208,10 @@ class CartStore {
   }
 
   submitOrder = async(order: any): Promise<TOrderSubmitResponse> =>  {
-    const cartData = this.getCartData(order);
+    const cartData = await this.getCartData(order);
     const orderBase64 = toBase64(cartData).toString();
     const body = orderBase64;
-    
+
     return axiosInstance
       .post(
         `${ORDER_API.CONTROLLER}/${ORDER_API.SUBMIT_ORDER_API}`,
@@ -202,7 +219,7 @@ class CartStore {
       )
       .then(function (response) {
         const jsonValue:any = JSON.parse(fromBase64(response.data));
-
+        
         const data:TOrderSubmitResponse = {
           has_err: jsonValue.has_err,
           order_id: jsonValue.order_id,
