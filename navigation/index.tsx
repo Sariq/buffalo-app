@@ -1,7 +1,6 @@
 import React from "react";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
-import { MainStackNavigator } from "./MainStackNavigator";
-import Header from "../components/layout/header/header";
+import AppContainer from "../components/layout/app-container";
 
 const MyTheme = {
   ...DefaultTheme,
@@ -15,8 +14,7 @@ const MyTheme = {
 const RootNavigator = ({}) => {
   return (
     <NavigationContainer>
-      <Header />
-      <MainStackNavigator />
+      <AppContainer/>
     </NavigationContainer>
   );
 };

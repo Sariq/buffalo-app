@@ -11,18 +11,11 @@ import i18n from "./translations";
 /* stores*/
 import { cartStore } from "./stores/cart";
 import { menuStore } from "./stores/menu";
-import * as SplashScreen from "expo-splash-screen";
 import { StoreContext } from "./stores";
 import { authStore } from "./stores/auth";
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-  SafeAreaProvider,
-} from "react-native-safe-area-context";
 import { languageStore } from "./stores/language";
 import { storeDataStore } from "./stores/store";
 import { userDetailsStore } from "./stores/user-details";
-import themeStyle from "./styles/theme.style";
 import ExpiryDate from "./components/expiry-date";
 // Keep the splash screen visible while we fetch resources
 //SplashScreen.preventAutoHideAsync();
@@ -121,43 +114,21 @@ export default function App() {
   }
 
   return (
-    <SafeAreaProvider>
-      <StoreContext.Provider
-        value={{
-          cartStore: cartStore,
-          authStore: authStore,
-          menuStore: menuStore,
-          languageStore: languageStore,
-          userDetailsStore: userDetailsStore,
-          globalStyles: globalStyles,
-          storeDataStore: storeDataStore,
-        }}
-      >
-        <SafeAreaView
-          edges={["top"]}
-          style={{
-            flex: 0,
-            backgroundColor: themeStyle.PRIMARY_COLOR,
-            marginBottom: 0,
-            height: 0,
-          }}
-        />
-
-        <SafeAreaView
-          edges={["left", "right", "bottom"]}
-          style={{
-            flex: 1,
-            backgroundColor: themeStyle.PRIMARY_COLOR,
-            position: "relative",
-          }}
-        >
-          <View style={{ flex: 1 }}>
-            <StatusBar />
-            <RootNavigator />
-          </View>
-          <ExpiryDate/>
-        </SafeAreaView>
-      </StoreContext.Provider>
-    </SafeAreaProvider>
+    <StoreContext.Provider
+      value={{
+        cartStore: cartStore,
+        authStore: authStore,
+        menuStore: menuStore,
+        languageStore: languageStore,
+        userDetailsStore: userDetailsStore,
+        globalStyles: globalStyles,
+        storeDataStore: storeDataStore,
+      }}
+    >
+      <View style={{ flex: 1 }}>
+        <RootNavigator />
+      </View>
+      <ExpiryDate />
+    </StoreContext.Provider>
   );
 }

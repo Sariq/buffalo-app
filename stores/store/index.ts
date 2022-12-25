@@ -1,4 +1,3 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { makeAutoObservable } from "mobx";
 import { axiosInstance } from "../../utils/http-interceptor";
 import { STORE_API } from "../../consts/api";
@@ -22,7 +21,6 @@ class StoreDataStore {
           )
           .then(function (response) {
             const res = JSON.parse(fromBase64(response.data));
-            console.log(res)
             return res;
           });
   

@@ -331,7 +331,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     width: "100%",
-    paddingVertical: 20,
+    paddingTop: 20,
     backgroundColor: themeStyle.PRIMARY_COLOR,
   },
   titleContainer: {

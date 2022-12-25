@@ -35,9 +35,9 @@ const Header = () => {
   };
 
   const handleProfileClick = () => {
-    //navigation.navigate("profile");
+    navigation.navigate("profile");
     
-    navigation.navigate("order-history");
+    //navigation.navigate("order-history");
     //navigation.navigate("order-submitted",{shippingMethod: SHIPPING_METHODS.shipping});
     //navigation.navigate("login");
     // navigation.navigate("verify-code");
@@ -71,7 +71,7 @@ const Header = () => {
             />
           </TouchableOpacity>
         </View>
-        <View style={{opacity: authStore.isLoggedIn() ? 1 : 0}}>
+        <View>
           <TouchableOpacity
             onPress={handleProfileClick}
             style={styles.buttonContainer}
@@ -93,8 +93,8 @@ const Header = () => {
             style={{ color: theme.GRAY_700,  width:100 }}
           /> */}
           <Image
-            style={{ width: 120, height: "100%" }}
-            source={require("../../../assets/buffalo_logo.png")}
+            style={{ width: 140, height: "100%" }}
+            source={require("../../../assets/buffalo-logo-2x.png")}
           />
         </TouchableOpacity>
       </View>
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
   container: {
     display: "flex",
     flexDirection: "row-reverse",
-    height: 50,
+    height: 60,
     paddingTop: 0,
     justifyContent: "space-between",
     paddingRight: 15,

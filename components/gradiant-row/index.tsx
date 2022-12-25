@@ -36,9 +36,9 @@ export default function GradiantRow({ onChangeFn, icon, type, price, title, valu
       </View>
       <View style={styles.textAndPriceContainer}>
         <View>
-          <Text>{title}</Text>
+          <Text style={{fontSize: 20}}>{title}</Text>
         </View>
-        <View style={{ paddingHorizontal: 5 }}>
+        <View style={{ marginHorizontal: -10 }}>
           {price ? <Text>₪{price}</Text> : null}
         </View>
       </View>
