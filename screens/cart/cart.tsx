@@ -169,7 +169,7 @@ const CartScreen = () => {
     setIsLoadingOrderSent(false);
     cartStore.resetCart();
     navigation.navigate("order-submitted", { shippingMethod });
-  }
+  };
   const postSubmitOrderActions = (orderData: TOrderSubmitResponse) => {
     if (paymentMthod === PAYMENT_METHODS.creditCard) {
       // TODO handle credit card
@@ -217,7 +217,6 @@ const CartScreen = () => {
     }
   };
   const handleNewPMAnswer = (value: any) => {
-    console.log(value);
     if (value === "close") {
       setPaymentMthod(PAYMENT_METHODS.cash);
       setOpenNewCreditCardDialog(false);
@@ -227,14 +226,14 @@ const CartScreen = () => {
   };
 
   const isCartValid = () => {
-    if(shippingMethod === SHIPPING_METHODS.shipping){
-      if(!location){
+    if (shippingMethod === SHIPPING_METHODS.shipping) {
+      if (!location) {
         return false;
       }
       return true;
     }
     return true;
-  }
+  };
 
   return (
     <View>
@@ -263,6 +262,7 @@ const CartScreen = () => {
                 </Text>
               </View>
             </View>
+
             <View style={{ marginTop: -20 }}>
               {cartStore.cartItems.map((product, index) => (
                 <View
@@ -307,47 +307,49 @@ const CartScreen = () => {
                       justifyContent: "space-between",
                     }}
                   >
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        paddingVertical: 10,
-                      }}
-                    >
+                    <TouchableOpacity onPress={() => onEditProduct(index)}>
                       <View
                         style={{
-                          width: 130,
-                          height: 80,
-                          padding: 0,
+                          flexDirection: "row",
                           alignItems: "center",
+                          paddingVertical: 10,
                         }}
                       >
-                        <Image
-                          style={{ width: "90%", height: "100%" }}
-                          source={{ uri: product.data.image_url }}
-                        />
+                        <View
+                          style={{
+                            width: 130,
+                            height: 80,
+                            padding: 0,
+                            alignItems: "center",
+                          }}
+                        >
+                          <Image
+                            style={{ width: "90%", height: "100%" }}
+                            source={{ uri: product.data.image_url }}
+                          />
+                        </View>
+                        <View style={{ marginLeft: 20 }}>
+                          {product.extras &&
+                            Object.keys(product.extras).map((key) =>
+                              product.extras[key].map((extra) => {
+                                if (
+                                  extra.value &&
+                                  extra.isdefault != extra.value &&
+                                  extra.counter_init_value != extra.value
+                                ) {
+                                  return (
+                                    <View>
+                                      <Text style={{ textAlign: "left" }}>
+                                        + {extra.name} {extra.value}
+                                      </Text>
+                                    </View>
+                                  );
+                                }
+                              })
+                            )}
+                        </View>
                       </View>
-                      <View style={{ marginLeft: 20 }}>
-                        {product.extras &&
-                          Object.keys(product.extras).map((key) =>
-                            product.extras[key].map((extra) => {
-                              if (
-                                extra.value &&
-                                extra.isdefault != extra.value &&
-                                extra.counter_init_value != extra.value
-                              ) {
-                                return (
-                                  <View>
-                                    <Text style={{ textAlign: "left" }}>
-                                      + {extra.name}
-                                    </Text>
-                                  </View>
-                                );
-                              }
-                            })
-                          )}
-                      </View>
-                    </View>
+                    </TouchableOpacity>
 
                     <View style={{ alignItems: "center", marginRight: 20 }}>
                       <TouchableOpacity
@@ -364,17 +366,6 @@ const CartScreen = () => {
                           />
                         </View>
                       </TouchableOpacity>
-                      <TouchableOpacity
-                        style={{ padding: 5 }}
-                        onPress={() => {
-                          onEditProduct(index);
-                        }}
-                      >
-                        <View>
-                          <Text>edit</Text>
-                        </View>
-                      </TouchableOpacity>
-
                       <View style={{ marginTop: 0 }}>
                         <Text>₪{product.data.price}</Text>
                       </View>
@@ -562,11 +553,15 @@ const CartScreen = () => {
                 </View>
               </View>
             </View>
-            <View style={{marginTop: 30, marginHorizontal: 20}}>
+            <View style={{ marginTop: 30, marginHorizontal: 20 }}>
               <Button
                 bgColor={theme.SUCCESS_COLOR}
                 onClickFn={onSendCart}
-                disabled={!isCartValid() || isLoadingOrderSent || isOpenShippingMethodDialog}
+                disabled={
+                  !isCartValid() ||
+                  isLoadingOrderSent ||
+                  isOpenShippingMethodDialog
+                }
                 text="שלח את ההזמנה"
                 fontSize={22}
                 textColor={theme.WHITE_COLOR}
