@@ -1,10 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { Image, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { Text, View, TouchableOpacity } from "react-native";
-import { SvgXml } from "react-native-svg";
-import { CONSTS_ICONS } from "../../../consts/consts-icons";
-import themeStyle from "../../../styles/theme.style";
+import * as Linking from 'expo-linking';
 
 import Icon from "../../icon";
 
@@ -88,6 +85,10 @@ function MyTabBar({ state, descriptors, navigation }) {
         const isBcoin = currentRout.name === "BCOINSScreen";
 
         const onPress = () => {
+          if(route.name === "contactUsScreen"){
+            Linking.openURL('tel:0509333657')
+            return;
+          }
           onTabSelect(route.name);
           const event = navigation.emit({
             type: "tabPress",

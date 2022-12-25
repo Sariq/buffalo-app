@@ -63,7 +63,9 @@ const prodcutExtrasAdapter = (extras) => {
   }
   Object.keys(extras).map((key) => (
     extras[key].map((extra) => {
-      productExtras.push({ id: extra.id, name: extra.name, value: extra.value });
+      if((extra.type === "CHOICE" && extra.isdefault !== extra.value) || (extra.type === "COUNTER" && extra.counter_init_value !== extra.value)){
+        productExtras.push({ id: extra.id, name: extra.name, value: extra.value });
+      }
     })
   ))
   return productExtras;
@@ -211,7 +213,7 @@ class CartStore {
     const cartData = await this.getCartData(order);
     const orderBase64 = toBase64(cartData).toString();
     const body = orderBase64;
-
+    
     return axiosInstance
       .post(
         `${ORDER_API.CONTROLLER}/${ORDER_API.SUBMIT_ORDER_API}`,

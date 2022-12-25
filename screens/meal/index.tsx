@@ -47,8 +47,7 @@ const extrasIcons = {
   "1131": require("../../assets/menu/gradiant/burgerSlice.png"),
   "1140": require("../../assets/menu/gradiant/burgerSlice.png"),
   "1141": require("../../assets/menu/gradiant/burgerSlice.png"),
- 
-}
+};
 const MealScreen = ({ route }) => {
   const { product, index } = route.params;
   const navigation = useNavigation();
@@ -147,6 +146,17 @@ const MealScreen = ({ route }) => {
     }
   };
 
+  const isAvailableOnApp = (key: string) => {
+    let isAvailable = false;
+    Object.keys(meal.extras[key]).forEach((tagId) => {
+      const tag = meal.extras[key][tagId];
+      if (tag.available_on_app) {
+        isAvailable = true;
+      }
+    });
+    return isAvailable;
+  };
+
   if (!meal) {
     return null;
   }
@@ -214,40 +224,46 @@ const MealScreen = ({ route }) => {
                 updateOthers(value, "count", "others");
               }}
               type="COUNTER"
-              title={"moreFromSame"}
+              title={"الكمية من نفس الطلب"}
               value={meal["others"]["count"]}
+              hideIcon
             />
           </View>
         </View>
-        {meal.extras &&
-          Object.keys(meal.extras).map((key) => (
-            <View key={key} style={[styles.sectionContainer]}>
-              <View style={styles.gradiantRowContainer}>
-                {Object.keys(meal.extras[key]).map((tagId) => {
-                  const tag = meal.extras[key][tagId];
-                  if (tag.available_on_app) {
-                    return (
-                      <View key={tagId} style={{paddingVertical:10}}>
-                        <GradiantRow
-                          onChangeFn={(value) => {
-                            updateMeal(value, tag, key);
-                          }}
-                          icon={extrasIcons[tag.id]}
-                          type={tag.type}
-                          title={tag.name}
-                          price={tag.price}
-                          minValue={tag.counter_min_value}
-                          stepValue={tag.counter_step_value}
-                          value={tag.value}
-                        />
-                      </View>
 
-                    );
-                  }
-                })}
-              </View>
-            </View>
-          ))}
+        {meal.extras &&
+          Object.keys(meal.extras).map(
+            (key) =>
+              isAvailableOnApp(key) && (
+                <View key={key} style={[styles.sectionContainer]}>
+                  {meal.extras[key] && (
+                    <View style={styles.gradiantRowContainer}>
+                      {Object.keys(meal.extras[key]).map((tagId) => {
+                        const tag = meal.extras[key][tagId];
+                        if (tag.available_on_app) {
+                          return (
+                            <View key={tagId} style={{ paddingVertical: 10 }}>
+                              <GradiantRow
+                                onChangeFn={(value) => {
+                                  updateMeal(value, tag, key);
+                                }}
+                                icon={extrasIcons[tag.id]}
+                                type={tag.type}
+                                title={tag.name}
+                                price={tag.price}
+                                minValue={tag.counter_min_value}
+                                stepValue={tag.counter_step_value}
+                                value={tag.value}
+                              />
+                            </View>
+                          );
+                        }
+                      })}
+                    </View>
+                  )}
+                </View>
+              )
+          )}
 
         <View style={styles.sectionContainer}>
           <View style={styles.gradiantRowContainer}>
@@ -256,7 +272,13 @@ const MealScreen = ({ route }) => {
                 <Text style={{ textAlign: "left" }}>ملاحظات للمطعم</Text>
               </View>
               <View
-                style={{ flexDirection: "row", width: "100%", marginTop: 10, alignItems: "center", justifyContent: "space-between"}}
+                style={{
+                  flexDirection: "row",
+                  width: "100%",
+                  marginTop: 10,
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
               >
                 <View
                   style={{
@@ -265,7 +287,7 @@ const MealScreen = ({ route }) => {
                     alignItems: "center",
                     backgroundColor: "rgba(254, 203, 5, 0.18)",
                     borderRadius: 10,
-                    height:40
+                    height: 40,
                   }}
                 >
                   <Icon icon="pen" size={20} />
@@ -286,7 +308,7 @@ const MealScreen = ({ route }) => {
                       textAlignVertical: "top",
                       textAlign: "right",
                       padding: 10,
-                      height:70
+                      height: 70,
                     }}
                   />
                 </View>
@@ -331,8 +353,8 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     width: "100%",
-    paddingTop: 20,
-    backgroundColor: themeStyle.PRIMARY_COLOR,
+    paddingTop: 5,
+    backgroundColor: themeStyle.WHITE_COLOR,
   },
   titleContainer: {
     alignSelf: "center",

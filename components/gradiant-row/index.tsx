@@ -12,9 +12,10 @@ type TProps = {
   stepValue?: number;
   minValue?: number;
   price?: number;
+  hideIcon?: boolean;
 };
 
-export default function GradiantRow({ onChangeFn, icon, type, price, title, value, stepValue, minValue }: TProps) {
+export default function GradiantRow({ onChangeFn, icon, type, price, title, value, stepValue, minValue,hideIcon }: TProps) {
   const onChange = (value) => {
     onChangeFn(value);
   };
@@ -31,15 +32,15 @@ export default function GradiantRow({ onChangeFn, icon, type, price, title, valu
 
   return (
     <View style={styles.gradiantRow}>
-      <View style={{ width: "10%" }}>
+      {!hideIcon && <View style={{ width: "10%" }}>
         <Image style={{ width: 60, height: 40 }} source={icon} />
-      </View>
-      <View style={styles.textAndPriceContainer}>
+      </View>}
+      <View style={[styles.textAndPriceContainer,{marginLeft: hideIcon ? 40 : 0, width: hideIcon ? "50%" : "40%"}]}>
         <View>
-          <Text style={{fontSize: 20}}>{title}</Text>
+          <Text style={{fontSize: 17}}>{title}</Text>
         </View>
-        <View style={{ marginHorizontal: -10 }}>
-          {price ? <Text>₪{price}</Text> : null}
+        <View style={{ marginHorizontal: -10, }}>
+          {price ? <Text style={{fontSize: 16}}>₪{price}</Text> : null}
         </View>
       </View>
       <View style={styles.inputConatainer}>{getInputByType(type, value, minValue)}</View>
@@ -60,6 +61,5 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    width: "40%",
   },
 });
