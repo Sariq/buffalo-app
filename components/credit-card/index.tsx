@@ -110,6 +110,8 @@ const CreditCard = ({ onSaveCard }) => {
           value={creditCardNumber}
           keyboardType="numeric"
           isError={formStatus.isNumberValid === false}
+          variant="default"
+          placeHolder="xxxx-xxxx-xxxx-xxxx"
         />
         {formStatus.isNumberValid === false && <Text style={{color: themeStyle.ERROR_COLOR }}>מספר לא תקין</Text>}
       </View>
@@ -123,6 +125,8 @@ const CreditCard = ({ onSaveCard }) => {
             Keyboard.dismiss();
             showPicker();
           }}
+          variant="default"
+
         />
         {isExpDateValid === false && <Text style={{color: themeStyle.ERROR_COLOR }}>מספר לא תקין</Text>}
       </View>
@@ -133,6 +137,7 @@ const CreditCard = ({ onSaveCard }) => {
           onChange={onCVVChange}
           value={creditCardCVV}
           isError={formStatus.isCVVValid === false}
+          variant="default"
         />
         {formStatus.isCVVValid === false && <Text style={{color: themeStyle.ERROR_COLOR }}>מספר לא תקין</Text>}
       </View>
@@ -143,6 +148,7 @@ const CreditCard = ({ onSaveCard }) => {
           onChange={onCardHolderNameChange}
           value={cardHolderID}
           isError={formStatus.idIDValid === false}
+          variant="default"
         />
         {formStatus.idIDValid === false && <Text style={{color: themeStyle.ERROR_COLOR }}>מספר לא תקין</Text>}
       </View>

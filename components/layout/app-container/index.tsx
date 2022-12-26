@@ -66,7 +66,6 @@ const AppContainer = () => {
           <Header />
           <MainStackNavigator />
         </View>
-        <ExpiryDate />
       </SafeAreaView>
     </SafeAreaProvider>
   );

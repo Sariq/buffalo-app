@@ -174,15 +174,16 @@ const MealScreen = ({ route }) => {
           }}
         >
           <View>
-            <TouchableOpacity style={{ zIndex: 1, width: "83%" }}>
+            <TouchableOpacity style={{ zIndex: 1, }}>
               <Text
                 onPress={onClose}
                 style={{
                   zIndex: 1,
                   position: "absolute",
-                  left: 0,
-                  width: "100%",
-                  fontSize: 25,
+                  right: -10,
+                  width: "10%",
+                  fontSize: 30,
+                  padding:5
                 }}
               >
                 X

@@ -1,7 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { StyleSheet } from "react-native";
 import { Text, View, TouchableOpacity } from "react-native";
-import * as Linking from 'expo-linking';
+import * as Linking from "expo-linking";
 
 import Icon from "../../icon";
 
@@ -15,6 +15,7 @@ import MenuScreen from "../../../screens/menu/menu";
 
 import { useState } from "react";
 import TermsAndConditionsScreen from "../../../screens/terms-and-conditions";
+import i18n from "../../../translations";
 
 const routes = [
   {
@@ -85,8 +86,8 @@ function MyTabBar({ state, descriptors, navigation }) {
         const isBcoin = currentRout.name === "BCOINSScreen";
 
         const onPress = () => {
-          if(route.name === "contactUsScreen"){
-            Linking.openURL('tel:0509333657')
+          if (route.name === "contactUsScreen") {
+            Linking.openURL("tel:0509333657");
             return;
           }
           onTabSelect(route.name);
@@ -125,7 +126,13 @@ function MyTabBar({ state, descriptors, navigation }) {
                 size={isBcoin ? 75 : 30}
                 style={{ color: theme.GRAY_700 }}
               />
-              <Text style={{ marginTop: isBcoin ? 0 : 5 }}>
+              <Text
+                style={{
+                  marginTop: isBcoin ? 0 : 5,
+                  fontFamily: `${i18n.locale}-SemiBold`,
+                  fontSize: 12
+                }}
+              >
                 {route.params.title}
               </Text>
             </View>
