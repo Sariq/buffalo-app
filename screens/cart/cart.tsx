@@ -6,7 +6,7 @@ import { useContext } from "react";
 import { observer } from "mobx-react";
 import { Image, Text, View, StyleSheet } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import { ToggleButton } from "react-native-paper";
+import { ToggleButton, Divider } from "react-native-paper";
 /* styles */
 import theme from "../../styles/theme.style";
 import * as Location from "expo-location";
@@ -27,6 +27,7 @@ import chargeCreditCard, {
   TPaymentProps,
 } from "../../components/credit-card/api/payment";
 import Button from "../../components/controls/button/button";
+import i18n from "../../translations";
 
 export const SHIPPING_METHODS = {
   shipping: "DELIVERY",
@@ -281,12 +282,18 @@ const CartScreen = () => {
                   >
                     <View
                       style={{
-                        marginRight: 50,
-                        flexBasis: "28%",
+                        marginRight: 10,
+                        flexBasis: "40%",
                         justifyContent: "center",
                       }}
                     >
-                      <Text>
+                      <Text
+                        style={{
+                          textAlign: "left",
+                          fontFamily: `${i18n.locale}-SemiBold`,
+                          fontSize: 20,
+                        }}
+                      >
                         {product.data[`name_${languageStore.selectedLang}`]}
                       </Text>
                     </View>
@@ -311,7 +318,6 @@ const CartScreen = () => {
                       <View
                         style={{
                           flexDirection: "row",
-                          alignItems: "center",
                           paddingVertical: 10,
                         }}
                       >
@@ -320,7 +326,6 @@ const CartScreen = () => {
                             width: 130,
                             height: 80,
                             padding: 0,
-                            alignItems: "center",
                           }}
                         >
                           <Image
@@ -328,7 +333,7 @@ const CartScreen = () => {
                             source={{ uri: product.data.image_url }}
                           />
                         </View>
-                        <View style={{ marginLeft: 20 }}>
+                        <View style={{ marginLeft: 20, marginTop: 5 }}>
                           {product.extras &&
                             Object.keys(product.extras).map((key) =>
                               product.extras[key].map((extra) => {
@@ -339,7 +344,13 @@ const CartScreen = () => {
                                 ) {
                                   return (
                                     <View>
-                                      <Text style={{ textAlign: "left" }}>
+                                      <Text
+                                        style={{
+                                          textAlign: "left",
+                                          fontFamily: `${i18n.locale}-SemiBold`,
+                                          fontSize: 16,
+                                        }}
+                                      >
                                         + {extra.name} {extra.value}
                                       </Text>
                                     </View>
@@ -361,13 +372,24 @@ const CartScreen = () => {
                         <View>
                           <Icon
                             icon="trash_icon"
-                            size={25}
+                            size={28}
                             style={{ color: theme.GRAY_700 }}
                           />
                         </View>
                       </TouchableOpacity>
-                      <View style={{ marginTop: 0 }}>
-                        <Text>₪{product.data.price}</Text>
+                      <View
+                        style={{
+                          marginTop: 0,
+                          flexDirection: "row",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Text
+                          style={{ fontFamily: "Rubik-Regular", fontSize: 17 }}
+                        >
+                          {product.data.price}
+                        </Text>
+                        <Text>₪</Text>
                       </View>
                     </View>
                   </View>
@@ -525,10 +547,24 @@ const CartScreen = () => {
               {shippingMethod === SHIPPING_METHODS.shipping && (
                 <View style={styles.priceRowContainer}>
                   <View>
-                    <Text>مبلغ الطلبية</Text>
+                    <Text
+                      style={{
+                        fontFamily: `${i18n.locale}-Light`,
+                        fontSize: 20,
+                      }}
+                    >
+                      مبلغ الطلبية
+                    </Text>
                   </View>
                   <View>
-                    <Text>₪{itemsPrice}</Text>
+                    <Text
+                      style={{
+                        fontFamily: `${i18n.locale}-Light`,
+                        fontSize: 17,
+                      }}
+                    >
+                      ₪{itemsPrice}
+                    </Text>
                   </View>
                 </View>
               )}
@@ -536,20 +572,56 @@ const CartScreen = () => {
               {shippingMethod === SHIPPING_METHODS.shipping && (
                 <View style={styles.priceRowContainer}>
                   <View>
-                    <Text>التوصيل</Text>
+                    <Text
+                      style={{
+                        fontFamily: `${i18n.locale}-Light`,
+                        fontSize: 20,
+                      }}
+                    >
+                      التوصيل
+                    </Text>
                   </View>
                   <View>
-                    <Text>₪15</Text>
+                    <Text
+                      style={{
+                        fontFamily: `${i18n.locale}-Light`,
+                        fontSize: 17,
+                      }}
+                    >
+                      ₪15
+                    </Text>
                   </View>
                 </View>
               )}
-
-              <View style={styles.priceRowContainer}>
+              <View style={{ borderWidth: 0.3 }}></View>
+              <View style={[styles.priceRowContainer, { marginTop: 10 }]}>
                 <View>
-                  <Text>المبلغ النهائي</Text>
+                  <Text
+                    style={{
+                      fontFamily: `${i18n.locale}-SemiBold`,
+                      fontSize: 20,
+                    }}
+                  >
+                    المبلغ النهائي
+                  </Text>
                 </View>
-                <View>
-                  <Text>₪{totalPrice}</Text>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Text
+                    style={{
+                      fontSize: 17,
+                      fontWeight: 'bold'
+                    }}
+                  >
+                    {totalPrice}
+                  </Text>
+                  <Text
+                    style={{
+                      fontWeight: 'bold',
+                      fontSize: 17,
+                    }}
+                  >
+                    ₪
+                  </Text>
                 </View>
               </View>
             </View>

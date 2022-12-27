@@ -46,7 +46,9 @@ const CategoryItemsList = ({ productsList }) => {
               style={
                 {
                   color: themeStyle.GRAY_700,
-                  marginTop:30
+                  marginTop:20,
+                  fontSize:18,
+                  fontFamily: `${i18n.locale}-SemiBold`,
                 }
               }
             >
@@ -57,7 +59,9 @@ const CategoryItemsList = ({ productsList }) => {
               style={[
                 {
                   color: themeStyle.GRAY_700,
-                  marginTop:5
+                  marginTop:8,
+                  fontFamily: `${i18n.locale}-SemiBold`,
+                  fontSize:18,
                 },
               ]}
             >

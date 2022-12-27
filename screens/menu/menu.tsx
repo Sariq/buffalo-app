@@ -4,12 +4,12 @@ import { observer } from "mobx-react";
 import { useContext } from "react";
 import { StoreContext } from "../../stores";
 import themeStyle from "../../styles/theme.style";
-//import base64 from "react-native-base64";
 
 /* components */
 import CategoryItemsList from "./components/categoryItemsList";
 import Icon from "../../components/icon";
 import { Buffer } from "buffer";
+import i18n from "../../translations";
 
 export function toBase64(input) {
   return Buffer.from(input, "utf-8").toString("base64");
@@ -26,8 +26,6 @@ const categoryListIcons = {
   'DRINK': 'drinks_icon',
 }
 
-
-
 const MenuScreen = () => {
   const { menuStore } = useContext(StoreContext);
 
@@ -39,22 +37,12 @@ const MenuScreen = () => {
     setSelectedCategory(category);
     setSelectedCategoryKey(key);
   };
-  // const Buffer = require("buffer").Buffer;
-  // let encodedAuth = new Buffer("سشسيشسي").toString("base64");
+
  ;
   const getMenu = () => {
     const categories = menuStore.categories;
     setCategoryList(categories);
     setSelectedCategory(categories["BURGERS"]);
-
-    //   axios
-    //     .get("https://jsonplaceholder.typicode.com/users")
-    //     .then((response) => {
-    //       console.log("getting data from axios", response.data);
-    //     })
-    //     .catch((error) => {
-    //       console.log(error);
-    //     });
   };
 
   useEffect(() => {
@@ -108,7 +96,8 @@ const MenuScreen = () => {
                     key === selectedCategoryKey
                       ? themeStyle.GRAY_700
                       : themeStyle.GRAY_300,
-                },
+                      fontFamily: `${i18n.locale}-SemiBold`,
+                }
               ]}
             >
               {key}

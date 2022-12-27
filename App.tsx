@@ -35,6 +35,9 @@ let customARFonts = {
   "he-Medium": require(`./assets/fonts/he/Medium.ttf`),
   "he-Regular": require(`./assets/fonts/he/Regular.ttf`),
   "he-SemiBold": require(`./assets/fonts/he/SemiBold.ttf`),
+
+  "Poppins-Regular": require(`./assets/fonts/shared/Poppins-Regular.ttf`),
+  "Rubik-Regular": require(`./assets/fonts/shared/Rubik-Regular.ttf`),
 };
 
 export default function App() {

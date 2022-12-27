@@ -29,7 +29,7 @@ export default function Counter({ onCounterChange, value, stepValue = 1, minValu
         </TouchableOpacity>
       </View>
       <View style={styles.counterValue}>
-        <Text>{couter}</Text>
+        <Text style={{fontFamily: "Poppins-Regular", fontSize:16}}>{couter}</Text>
       </View>
       <View>
         <TouchableOpacity

@@ -206,12 +206,12 @@ const MealScreen = ({ route }) => {
             }}
           >
             <View>
-              <Text style={{ fontSize: 25, textAlign: "left" }}>
+              <Text style={{ fontSize: 25, textAlign: "left", fontFamily: `${i18n.locale}-SemiBold`,}}>
                 {meal.data[`name_${languageStore.selectedLang}`]}
               </Text>
             </View>
             <View>
-              <Text style={{ fontSize: 15, textAlign: "left" }}>
+              <Text style={{ fontSize: 15, textAlign: "left", fontFamily: `${i18n.locale}-SemiBold`,marginTop: 10 }}>
                 {meal.data[`description_${languageStore.selectedLang}`]}
               </Text>
             </View>
@@ -270,7 +270,7 @@ const MealScreen = ({ route }) => {
           <View style={styles.gradiantRowContainer}>
             <View style={{ padding: 10 }}>
               <View>
-                <Text style={{ textAlign: "left" }}>ملاحظات للمطعم</Text>
+                <Text style={{ textAlign: "left",fontFamily: `${i18n.locale}-SemiBold`,paddingLeft: 40, fontSize:15 }}>ملاحظات للمطعم</Text>
               </View>
               <View
                 style={{
@@ -325,6 +325,7 @@ const MealScreen = ({ route }) => {
             alignSelf: "center",
             flexDirection: "row",
             alignItems: "center",
+            marginRight: 95,
           }}
         >
           <View style={{ paddingRight: 10 }}>
@@ -337,8 +338,9 @@ const MealScreen = ({ route }) => {
             icon="cart_icon"
             fontSize={17}
             onClickFn={isEdit ? onUpdateCartProduct : onAddToCart}
-            bgColor={themeStyle.BROWN_700}
-            textColor={themeStyle.PRIMARY_COLOR}
+            bgColor={themeStyle.PRIMARY_COLOR}
+            textColor={themeStyle.BROWN_700}
+            fontFamily={`${i18n.locale}-SemiBold`}
           />
         </View>
       </View>
