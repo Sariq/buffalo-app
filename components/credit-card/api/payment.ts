@@ -1,5 +1,5 @@
-import { TerminalNumber, Password } from "./validate-card";
 import axios from "axios";
+import { storeDataStore } from "../../../stores/store";
 type TPayload = {
     TerminalNumber: string;
     Password: string;
@@ -19,9 +19,11 @@ export type TPaymentProps = {
     orderId: number;
 }
 const chargeCreditCard = ({ cardNumber, expDate, cvv, totalPrice, holderId, orderId }: TPaymentProps) => {
+    const paymentCredentials = storeDataStore.paymentCredentials;
+    
     const body: TPayload = {
-        TerminalNumber: TerminalNumber,
-        Password: Password,
+        TerminalNumber: paymentCredentials.credentials_terminal_number,
+        Password: paymentCredentials.credentials_password,
         CardNumber: cardNumber,
         ExpDate_MMYY: expDate,
         CVV: cvv,

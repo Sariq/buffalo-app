@@ -20,18 +20,20 @@ import themeStyle from "../../styles/theme.style";
 import Icon from "../../components/icon";
 
 const extrasIcons = {
-  "1132": require("../../assets/menu/gradiant/burgerSlice.png"),
-  "1115": require("../../assets/menu/gradiant/cheese.png"),
+  "משקל": require("../../assets/menu/gradiant/burgerSlice.png"),
+  "צ׳דר": require("../../assets/menu/gradiant/cheese.png"),
   "1116": require("../../assets/menu/gradiant/baecon.png"),
-  "1117": require("../../assets/menu/gradiant/baecon.png"),
-  "1118": require("../../assets/menu/gradiant/jalapeno.png"),
-  "1119": require("../../assets/menu/gradiant/egg.png"),
-  "1120": require("../../assets/menu/gradiant/truffle.png"),
-  "1135": require("../../assets/menu/gradiant/friedOnion.png"),
-  "1136": require("../../assets/menu/gradiant/burgerSlice.png"),
-  "1643": require("../../assets/menu/gradiant/burgerSlice.png"),
-  "1133": require("../../assets/menu/gradiant/burgerSlice.png"),
-  "1134": require("../../assets/menu/gradiant/burgerSlice.png"),
+  "בייקון טלה": require("../../assets/menu/gradiant/baecon.png"),
+  "בייקון עגל": require("../../assets/menu/gradiant/baecon.png"),
+  "חלפיניו": require("../../assets/menu/gradiant/jalapeno.png"),
+  "ביצת עין": require("../../assets/menu/gradiant/egg.png"),
+  " פטריות פורטבלו": require("../../assets/menu/gradiant/truffle.png"),
+  "בצל מטוגן": require("../../assets/menu/gradiant/friedOnion.png"),
+  "מיונז": require("../../assets/menu/gradiant/maio.png"),
+  "עגבנייה": require("../../assets/menu/gradiant/tomatto.png"),
+  "חסה": require("../../assets/menu/gradiant/khs.png"),
+  "מלפפון": require("../../assets/menu/gradiant/pickels.png"),
+  "בצל": require("../../assets/menu/gradiant/onion.png"),
   "1142": require("../../assets/menu/gradiant/burgerSlice.png"),
   "1137": require("../../assets/menu/gradiant/burgerSlice.png"),
   "1138": require("../../assets/menu/gradiant/burgerSlice.png"),
@@ -248,9 +250,9 @@ const MealScreen = ({ route }) => {
                                 onChangeFn={(value) => {
                                   updateMeal(value, tag, key);
                                 }}
-                                icon={extrasIcons[tag.id]}
+                                icon={extrasIcons[tag.name]}
                                 type={tag.type}
-                                title={tag.name}
+                                title={menuStore.translate(tag.name)}
                                 price={tag.price}
                                 minValue={tag.counter_min_value}
                                 stepValue={tag.counter_step_value}

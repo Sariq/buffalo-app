@@ -1,15 +1,15 @@
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, runInAction } from "mobx";
 import { axiosInstance } from "../../utils/http-interceptor";
 import { STORE_API } from "../../consts/api";
 import { fromBase64, toBase64 } from "../../helpers/convert-base64";
 
 class StoreDataStore {
-  userToken = null;
-  verifyCodeToken = null;
+  paymentCredentials = null;
+  storeData = null;
 
   constructor() {
     makeAutoObservable(this);
-    this.getStoreDataFromServer();
+    this.getStoreData();
   }
   
   getStoreDataFromServer = async () => {
@@ -21,11 +21,19 @@ class StoreDataStore {
           )
           .then(function (response) {
             const res = JSON.parse(fromBase64(response.data));
+           
             return res;
-          });
-  
+          })
   };
 
+  getStoreData = () => {
+    this.getStoreDataFromServer().then((res) => {
+      runInAction(()=>{
+        this.storeData = res.stores[0];
+        this.paymentCredentials = fromBase64(res.stores[0].credentials);
+      })
+    })
+  };
 }
 
 export const storeDataStore = new StoreDataStore();

@@ -1,6 +1,5 @@
 import { StyleSheet, Text, View, Image } from "react-native";
 import Counter from "../controls/counter";
-import { gradiantVariants } from "./consts.js";
 import CheckBox from "../controls/checkbox";
 import i18n from "../../translations";
 
@@ -34,7 +33,7 @@ export default function GradiantRow({ onChangeFn, icon, type, price, title, valu
   return (
     <View style={styles.gradiantRow}>
       {!hideIcon && <View style={{ width: "10%" }}>
-        <Image style={{ width: 60, height: 40 }} source={icon} />
+        <Image style={{ width: 60, height: 40, }} source={icon} />
       </View>}
       <View style={[styles.textAndPriceContainer,{marginLeft: hideIcon ? 40 : 0, width: hideIcon ? "50%" : "40%"}]}>
         <View>

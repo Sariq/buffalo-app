@@ -17,6 +17,6 @@ export const ORDER_API = {
     UPDATE_CCPAYMENT_API: "UpdateCCPayment"
 };
 export const STORE_API = {
-    CONTROLLER: "Store",
-    GET_STORE_API : "getStore",
+    CONTROLLER: "Stores",
+    GET_STORE_API : "getStores",
 };

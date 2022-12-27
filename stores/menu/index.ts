@@ -3,11 +3,13 @@ import { groupBy } from "lodash";
 import { MENU_API } from "../../consts/api";
 import { fromBase64 } from '../../helpers/convert-base64'
 import { axiosInstance } from "../../utils/http-interceptor";
+import i18n from "../../translations";
 
 class MenuStore {
   menu = null;
   categories = null;
   meals = null;
+  dictionary = null;
 
   constructor() {
     makeAutoObservable(this);
@@ -32,6 +34,7 @@ class MenuStore {
   getMenu = () => {
     this.getMenuFromServer().then((res) => {
       runInAction(() => {
+        this.dictionary = res.dictionary
         this.categories = groupBy(res.menu, (x) => x.category);
         this.meals = groupBy(res.menu_constants, (x) => x.menu_id);
         Object.keys(this.meals).map((key) => {
@@ -42,8 +45,6 @@ class MenuStore {
         });
       });
     })
-
-
   };
 
   getMealByKey = (key) => {
@@ -76,6 +77,15 @@ class MenuStore {
         this.initMealsTags(tag, key, mealKey);
       });
     });
+  }
+
+  translate = (id: string) => {
+    const item = this.dictionary.find((item)=> item.id === id )
+    console.log(item)
+    if(i18n.locale === "ar"){
+      return item.name_ar;
+    }
+    return item.name_he;
   }
 }
 
