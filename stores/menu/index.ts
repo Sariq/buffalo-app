@@ -13,7 +13,6 @@ class MenuStore {
 
   constructor() {
     makeAutoObservable(this);
-    this.getMenu();
   }
   getMealTags = (mealId) => {
     const mealTags = groupBy(this.meals[mealId], (x) => x.tag);
@@ -32,8 +31,12 @@ class MenuStore {
       });
   }
   getMenu = () => {
+    console.log("getMenu11111")
+
     this.getMenuFromServer().then((res) => {
       runInAction(() => {
+        console.log("getMenu11111", res)
+
         this.dictionary = res.dictionary
         this.categories = groupBy(res.menu, (x) => x.category);
         this.meals = groupBy(res.menu_constants, (x) => x.menu_id);

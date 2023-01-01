@@ -27,7 +27,6 @@ const CreditCard = ({ onSaveCard }) => {
   const [creditCardExpDate, setCreditCardExpDate] = useState();
   const [creditCardCVV, setCreditCardCVV] = useState();
   const [cardHolderID, setCardHolderID] = useState();
-  const [date, setDate] = useState(new Date());
 
   const [formStatus, setFormStatus] = useState({
     isNumberValid: undefined,
@@ -78,15 +77,16 @@ const CreditCard = ({ onSaveCard }) => {
   const onSaveCreditCard = () => {
     const validateCardData: TValidateCardProps = {
       cardNumber: creditCardNumber,
-      expDate: moment(date).format("MMYY"),
+      expDate: creditCardExpDate.replaceAll('\/', ''),
     };
     validateCard(validateCardData).then(async (res) => {
+      console.log("vlaidatecard", res)
       if (res.isValid) {
         const ccData: TCCDetails = {
           ccToken: res.ccDetails.ccToken,
           last4Digits: res.ccDetails.last4Digits,
           cvv: creditCardCVV,
-          expDate: moment(date).format("MMYY"),
+          expDate: creditCardExpDate.replaceAll('\/', ''),
           id: cardHolderID,
         };
         const ccDetailsString = JSON.stringify(ccData);

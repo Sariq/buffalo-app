@@ -28,23 +28,28 @@ export type TCCDetails = {
 
 const validateCard = ({ cardNumber, expDate }: TValidateCardProps) => {
   const paymentCredentials = storeDataStore.paymentCredentials;
-
+  console.log("paymentCredentials",paymentCredentials)
   const body: TPayload = {
     TerminalNumber: paymentCredentials.credentials_terminal_number,
     Password: paymentCredentials.credentials_password,
     CardNumber: cardNumber,
     ExpDate_MMYY: expDate,
   };
+  console.log("validatebody", body)
+
   return axios
     .post(
       'https://pci.zcredit.co.il/ZCreditWS/api/Transaction/ValidateCard',
       body,
     )
     .then(function (res: any) {
+      console.log("ressTokV", res)
       const ccDetails: TCCDetails = {
         last4Digits: cardNumber.substr(cardNumber.length - 4),
         ccToken: res.data.Token
       }
+      console.log("validateres", res)
+      console.log("validatedetails", ccDetails)
       return { isValid: !res.HasError, ccDetails }
     });
 }

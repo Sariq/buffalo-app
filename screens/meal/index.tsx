@@ -191,7 +191,7 @@ const MealScreen = ({ route }) => {
                 X
               </Text>
             </TouchableOpacity>
-            <View style={{ width: 300, height: 220, padding: 20 }}>
+            <View style={{ width: 310, height: 230, padding: 20 }}>
               <Image
                 style={{ width: "100%", height: "100%" }}
                 source={{ uri: meal.data.image_url }}

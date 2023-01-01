@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from "react";
 import * as Font from "expo-font";
 import Constants from "expo-constants";
 import RNRestart from "react-native-restart";
-import { View, I18nManager, ImageBackground, Text } from "react-native";
+import { View, I18nManager, ImageBackground, Text, DeviceEventEmitter } from "react-native";
 import RootNavigator from "./navigation";
 I18nManager.forceRTL(true);
 I18nManager.allowRTL(true);
@@ -45,7 +45,7 @@ export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
   const [isFontReady, setIsFontReady] = useState(false);
   const [globalStyles, setGlobalStyles] = useState({
-    fontFamily: `${i18n.locale}-SemiBold`,
+    
   });
 
   useEffect(() => {
@@ -54,28 +54,45 @@ export default function App() {
       RNRestart.Restart();
     }
   }, []);
-  useEffect(() => {
-    async function prepare() {
-      try {
-        // Pre-load fonts, make any API calls you need to do here
-        await Font.loadAsync(customARFonts);
-        setIsFontReady(true);
 
-        // Artificially delay for two seconds to simulate a slow loading
-        // experience. Please remove this if you copy and paste the code!
-        await new Promise((resolve) => setTimeout(resolve, 0));
-      } catch (e) {
-        console.warn(e);
-      } finally {
-        // Tell the application to render
-        setAssetsIsReady(true);
-      }
+  async function prepare() {
+    try {
+      // Pre-load fonts, make any API calls you need to do here
+      await Font.loadAsync(customARFonts);
+      setIsFontReady(true);
+      const fetchStoreDataStore = storeDataStore.getStoreData();
+      const fetchMenu = menuStore.getMenu();
+
+      Promise.all([ fetchStoreDataStore, fetchMenu ]).then((responses) => {
+        if(authStore.isLoggedIn()){
+          userDetailsStore.getUserDetails().then((res)=>{
+            setTimeout(() => {
+              setAppIsReady(true);
+            }, 1000);
+          })
+        }else{
+          setTimeout(() => {
+            setAppIsReady(true);
+          }, 1000);
+        }
+      });
+      // Artificially delay for two seconds to simulate a slow loading
+      // experience. Please remove this if you copy and paste the code!
+    } catch (e) {
+      console.warn(e);
+    } finally {
+      // Tell the application to render
+      setAssetsIsReady(true);
     }
-
+  }
+  useEffect(() => {
     prepare();
-    i18n.onChange(() => {
-      setGlobalStyles({ fontFamily: `${i18n.locale}-SemiBold` });
-    });
+  }, []);
+  useEffect(() => {
+    const ExpDatePicjkerChange = DeviceEventEmitter.addListener(`PREPARE_APP`, prepare);
+    return () => {
+      ExpDatePicjkerChange.remove();
+    };
   }, []);
 
   const onLayoutRootView = useCallback(async () => {
@@ -91,9 +108,7 @@ export default function App() {
 
   if (!appIsReady) {
     const version = Constants.nativeAppVersion;
-    setTimeout(() => {
-      setAppIsReady(true);
-    }, 1000);
+  
     return (
       <ImageBackground
         source={require("./assets/splash-screen-1.png")}
@@ -124,7 +139,6 @@ export default function App() {
         menuStore: menuStore,
         languageStore: languageStore,
         userDetailsStore: userDetailsStore,
-        globalStyles: globalStyles,
         storeDataStore: storeDataStore,
       }}
     >

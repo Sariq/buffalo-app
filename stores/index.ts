@@ -13,5 +13,4 @@ export const StoreContext = createContext({
     userDetailsStore: userDetailsStore,
     languageStore: languageStore, 
     storeDataStore: storeDataStore,
-    globalStyles: { fontFamily: "" } 
 });

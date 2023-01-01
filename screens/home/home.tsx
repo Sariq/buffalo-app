@@ -10,11 +10,8 @@ import i18n from "../../translations";
 /* styles */
 import theme from "../../styles/theme.style";
 import Icon from "../../components/icon";
-import sharedStyles from "../../styles/shared-styles"
-import { useContext } from "react";
-import { StoreContext } from "../../stores";
+
 export default function HomeScreen({ navigation }) {
-  let globalStyles = useContext(StoreContext).globalStyles;
 
   const goToNewOrder = () => {
     navigation.navigate("menuScreen");
@@ -36,7 +33,7 @@ export default function HomeScreen({ navigation }) {
               size={20}
               style={{ color: theme.GRAY_700 }}
             />
-            <Text style={{ ...styles.buttonText, fontFamily: globalStyles.fontFamily, fontSize: 40 }}>
+            <Text style={{ ...styles.buttonText, fontFamily: `${i18n.locale}-SemiBold`, fontSize: 40 }}>
             {i18n.t('home.newOrder')}
             </Text>
           </TouchableOpacity>

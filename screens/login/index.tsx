@@ -55,7 +55,7 @@ const LoginScreen = () => {
         </Text>
 
         <View style={{ width: "100%", paddingHorizontal: 50, marginTop: 15 }}>
-          <InputText onChange={onChange} label="هاتف" />
+          <InputText keyboardType="numeric" onChange={onChange} label="هاتف" />
         </View>
 
         <View style={{ width: "100%", paddingHorizontal: 50, marginTop: 25 }}>

@@ -27,11 +27,16 @@ class AuthStore {
   updateUserToken = async (token) => {
     try {
       await AsyncStorage.setItem("@storage_userToken", token);
-      this.setUserToken(token)
+      this.setUserToken(token);
     } catch (e) {
       // saving error
     }
   };
+
+  logOut = async () => {
+    await AsyncStorage.removeItem("@storage_userToken");
+    this.setUserToken(null)
+  }
 }
 
 export const authStore = new AuthStore();

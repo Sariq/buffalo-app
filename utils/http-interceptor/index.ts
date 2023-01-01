@@ -1,15 +1,15 @@
 import axios from "axios";
 import { BASE_URL } from "../../consts/api";
-import { authStore } from "../../stores/auth";
-import { StoreContext } from "../../stores";
-import React from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 export const axiosInstance = axios.create({
     baseURL: BASE_URL + '/',
 });
 
 axiosInstance.interceptors.request.use(
-    function (config) {
-        const token = authStore.userToken;
+    async function (config) {
+        const token = await AsyncStorage.getItem("@storage_userToken");
+        console.log("axiosInstance", token)
         if (token) {
             config.headers['Authorization'] = 'Bearer ' + token
         }

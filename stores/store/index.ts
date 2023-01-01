@@ -9,7 +9,7 @@ class StoreDataStore {
 
   constructor() {
     makeAutoObservable(this);
-    this.getStoreData();
+    
   }
   
   getStoreDataFromServer = async () => {
@@ -27,10 +27,12 @@ class StoreDataStore {
   };
 
   getStoreData = () => {
-    this.getStoreDataFromServer().then((res) => {
+    return this.getStoreDataFromServer().then((res) => {
       runInAction(()=>{
         this.storeData = res.stores[0];
-        this.paymentCredentials = fromBase64(res.stores[0].credentials);
+        this.paymentCredentials = JSON.parse(fromBase64(res.stores[0].credentials));
+        console.log(this.paymentCredentials)
+
       })
     })
   };

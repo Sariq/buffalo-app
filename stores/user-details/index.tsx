@@ -13,14 +13,9 @@ class UserDetailsStore {
 
   constructor() {
     makeAutoObservable(this);
-    this.getUserDetails();
+    console.log("AAAA", this.userDetails)
   }
 
-
-  printUser = () => {
-    console.log("printUser:", this.getUserDetails())
-
-  }
 
   getUserDetailsFromServer = () => {
     const body = { datetime: new Date() };
@@ -31,21 +26,24 @@ class UserDetailsStore {
       )
       .then(function (response) {
         const res = JSON.parse(fromBase64(response.data));
-
+        console.log("resUSerServe", res)
         return res;
       });
   };
 
   getUserDetails = () => {
-    this.getUserDetailsFromServer().then((res)=>{
+    return this.getUserDetailsFromServer().then((res)=>{
       const userDetailsTmp: TUserDetails = {
         name: res.name,
         phone: res.phone
       }
+      console.log("resUSer", res)
+
       runInAction(() => {
         this.userDetails = userDetailsTmp;
+        console.log("AAAAxx", this.userDetails)
+
       });
-      console.log(res)
     })
   };
 

@@ -35,7 +35,11 @@ const Header = () => {
   };
 
   const handleProfileClick = () => {
-    navigation.navigate("profile");
+    if(authStore.isLoggedIn()){
+      navigation.navigate("profile");
+    }else{
+      navigation.navigate("login");
+    }
     
     //navigation.navigate("order-history");
     //navigation.navigate("order-submitted",{shippingMethod: SHIPPING_METHODS.shipping});

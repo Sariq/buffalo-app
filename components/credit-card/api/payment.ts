@@ -31,12 +31,15 @@ const chargeCreditCard = ({ cardNumber, expDate, cvv, totalPrice, holderId, orde
         HolderID: holderId,
         ExtraData: orderId.toString()
     };
+    console.log("paybd", body)
+
     return axios
         .post(
             'https://pci.zcredit.co.il/ZCreditWS/api/Transaction/CommitFullTransaction',
             body,
         )
         .then(function (res: any) {
+            console.log("pay", res)
             return res.data;
         });
 

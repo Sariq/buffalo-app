@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, DeviceEventEmitter } from "react-native";
 import InputText from "../../components/controls/input";
 import Button from "../../components/controls/button/button";
 import themeStyle from "../../styles/theme.style";
@@ -12,7 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 import { axiosInstance } from "../../utils/http-interceptor";
 
 const VerifyCodeScreen = () => {
-  const { authStore } = useContext(StoreContext);
+  const { authStore, cartStore, userDetailsStore } = useContext(StoreContext);
   const navigation = useNavigation();
 
   const [verifyCode, setVerifyCode] = useState();
@@ -40,7 +40,16 @@ const VerifyCodeScreen = () => {
         const res = JSON.parse(base64.decode(response.data));
         console.log("tokennnn", res.token);
         authStore.updateUserToken(res.token);
-        navigation.navigate("cart");
+        DeviceEventEmitter.emit(`PREPARE_APP`);
+
+        // userDetailsStore.getUserDetails().then((res)=>{
+        //   if(cartStore.getProductsCount() > 0){
+        //     navigation.navigate("cart");
+        //   }else{
+        //     navigation.navigate("profile");
+        //   }
+        // });
+        
       })
       .catch(function (error) {
         console.log(error);
@@ -56,7 +65,7 @@ const VerifyCodeScreen = () => {
         </Text>
 
         <View style={{ width: "100%", paddingHorizontal: 50, marginTop: 15 }}>
-          <InputText onChange={onChange} label="الكود" />
+          <InputText keyboardType="numeric" onChange={onChange} label="الكود" />
         </View>
 
         <View style={{ width: "100%", paddingHorizontal: 50, marginTop: 25 }}>
@@ -85,7 +94,6 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     alignItems: "center",
-    borderWidth: 1,
   },
   footerTabs: {
     backgroundColor: "blue",

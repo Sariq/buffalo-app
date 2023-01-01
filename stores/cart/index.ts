@@ -41,7 +41,7 @@ type TOrder = {
   payment_method: 'CREDITCARD' | 'CASH';
   receipt_method: 'DELIVERY' | 'TAKEAWAY';
   creditcard_ReferenceNumber?: string;
-  address: string;
+  geo_positioning?: string;
   items: TProduct[];
 }
 
@@ -93,7 +93,6 @@ class CartStore {
 
   constructor() {
     makeAutoObservable(this);
-
     this.getDefaultValue();
   }
   getDefaultValue = async () => {
@@ -186,7 +185,7 @@ class CartStore {
     let finalOrder: TOrder = {
       payment_method: order.paymentMthod,
       receipt_method: order.shippingMethod,
-      address: 'test1',
+      geo_positioning: order.geo_positioning,
       items: produtsAdapter(order.products)
     }
     const version = Constants.nativeAppVersion;
@@ -213,7 +212,6 @@ class CartStore {
     const cartData = await this.getCartData(order);
     const orderBase64 = toBase64(cartData).toString();
     const body = orderBase64;
-    
     return axiosInstance
       .post(
         `${ORDER_API.CONTROLLER}/${ORDER_API.SUBMIT_ORDER_API}`,
@@ -280,6 +278,26 @@ class CartStore {
     const jsonValue = await AsyncStorage.getItem("@storage_orderHistory");
     const currentOrderdHistory = jsonValue != null ? JSON.parse(jsonValue) : [];
     return currentOrderdHistory;
+  }
+  isValidGeo = (latitude: number, longitude: number) => {
+    const body = {
+      latitude,
+      longitude,
+      datetime: new Date()
+    }
+    console.log((body))
+    return axiosInstance
+    .post(
+      `${ORDER_API.CONTROLLER}/${ORDER_API.IS_VALID_GEO_API}`,
+      toBase64(body),
+    )
+    .then(function (response) {
+      console.log(fromBase64(response.data))
+      return JSON.parse(fromBase64(response.data));
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
   }
 }
 

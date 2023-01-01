@@ -74,6 +74,7 @@ const CartScreen = () => {
   const [errorMsg, setErrorMsg] = useState(null);
 
   const [isLoadingOrderSent, setIsLoadingOrderSent] = useState(null);
+  const [isValidAddress, setIsValidAddress] = useState(true);
 
   useEffect(() => {
     if (shippingMethod === SHIPPING_METHODS.shipping) {
@@ -85,6 +86,9 @@ const CartScreen = () => {
         }
         let location = await Location.getCurrentPositionAsync({});
         setLocation(location);
+        cartStore.isValidGeo(location.coords.latitude, location.coords.longitude).then((res)=>{
+          setIsValidAddress(res.result)
+        })
       })();
     }
   }, [shippingMethod]);
@@ -149,6 +153,8 @@ const CartScreen = () => {
 
   const chargeOrder = (chargeData: TPaymentProps) => {
     chargeCreditCard(chargeData).then((res) => {
+      console.log("chargeCreditCardHasError", res.HasError)
+
       if (res.HasError) {
         return;
       }
@@ -161,6 +167,8 @@ const CartScreen = () => {
         if (res.has_err) {
           return;
         }
+        console.log("UpdateCCPayment", res.has_err)
+
         postChargeOrderActions();
       });
     });
@@ -183,6 +191,8 @@ const CartScreen = () => {
         holderId: ccData.id,
         orderId: orderData.order_id,
       };
+      console.log("chargeOrder", chargeData)
+
       chargeOrder(chargeData);
     } else {
       postChargeOrderActions();
@@ -190,14 +200,22 @@ const CartScreen = () => {
   };
   const submitCart = () => {
     setIsLoadingOrderSent(true);
-    const order = {
+    const order: any = {
       paymentMthod,
       shippingMethod,
       totalPrice,
       products: cartStore.cartItems,
     };
+    if(shippingMethod === SHIPPING_METHODS.shipping){
+      order.geo_positioning = {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude
+      }
+    }
     //cartStore.addOrderToHistory(order,userDetailsStore.userDetails.phone);
     cartStore.submitOrder(order).then((res: TOrderSubmitResponse) => {
+      console.log("has_err", res.has_err)
+
       if (res.has_err) {
         return;
       }
@@ -235,6 +253,10 @@ const CartScreen = () => {
     }
     return true;
   };
+
+  const replaceCreditCard = () => {
+    setOpenNewCreditCardDialog(true);
+  }
 
   return (
     <View>
@@ -529,10 +551,29 @@ const CartScreen = () => {
                 alignItems: "center",
                 backgroundColor: "#F5F5F5",
                 borderRadius: 15,
-                padding: 8,
+                padding: 2,
                 marginTop: 5,
+                flexDirection: 'row',
+                justifyContent: 'space-around',
               }}
             >
+              <TouchableOpacity
+              onPress={replaceCreditCard}
+              style={{
+                alignItems: "center",
+                flexDirection: 'row',
+                padding: 5
+              }}>
+              <Icon
+                      icon="circle-down-arrow"
+                      size={20}
+                      style={{ color: theme.GRAY_700 }}
+                    />
+               <Text
+                style={{ fontSize: 20, paddingTop: 3, paddingLeft:5 }}
+              >{'החלפה'}</Text>
+              </TouchableOpacity>
+     
               <Text
                 style={{ fontSize: 20 }}
               >{`****_****_****_${ccData?.last4Digits}`}</Text>
