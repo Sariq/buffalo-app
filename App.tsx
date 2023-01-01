@@ -61,11 +61,14 @@ export default function App() {
       await Font.loadAsync(customARFonts);
       setIsFontReady(true);
       const fetchStoreDataStore = storeDataStore.getStoreData();
+      const fetchUserDetails = userDetailsStore.getUserDetails();
       const fetchMenu = menuStore.getMenu();
+      Promise.all([fetchMenu ]).then((responses) => {
+        console.log("XXXX")
 
-      Promise.all([ fetchStoreDataStore, fetchMenu ]).then((responses) => {
         if(authStore.isLoggedIn()){
-          userDetailsStore.getUserDetails().then((res)=>{
+          
+          Promise.all([fetchStoreDataStore, fetchUserDetails ]).then((res)=>{
             setTimeout(() => {
               setAppIsReady(true);
             }, 1000);

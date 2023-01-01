@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigation } from "@react-navigation/native";
-import * as Font from "expo-font";
-
 import { useContext } from "react";
 import { observer } from "mobx-react";
-import { Image, Text, View, StyleSheet } from "react-native";
+import { Image, Text, View, StyleSheet, Linking, AppState } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { ToggleButton, Divider } from "react-native-paper";
 /* styles */
@@ -28,6 +26,7 @@ import chargeCreditCard, {
 } from "../../components/credit-card/api/payment";
 import Button from "../../components/controls/button/button";
 import i18n from "../../translations";
+import LocationIsDisabledDialog from "../../components/dialogs/location-is-disabled";
 
 export const SHIPPING_METHODS = {
   shipping: "DELIVERY",
@@ -41,10 +40,14 @@ type TShippingMethod = {
   shipping: string;
   takAway: string;
 };
+
+
+
 const CartScreen = () => {
   const { cartStore, authStore, languageStore, userDetailsStore } = useContext(
     StoreContext
   );
+
 
   const navigation = useNavigation();
 
@@ -59,6 +62,10 @@ const CartScreen = () => {
   const [
     isOpenShippingMethodDialog,
     setIsOpenShippingMethodDialog,
+  ] = React.useState(false);
+  const [
+    isOpenLocationIsDisabledDialog,
+    setIsOpenLocationIsDisableDialog,
   ] = React.useState(false);
   const [
     isOpenNewCreditCardDialog,
@@ -76,19 +83,53 @@ const CartScreen = () => {
   const [isLoadingOrderSent, setIsLoadingOrderSent] = useState(null);
   const [isValidAddress, setIsValidAddress] = useState(true);
 
+  const appState = useRef(AppState.currentState);
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener("change", async nextAppState => {
+      if (
+        appState.current.match(/inactive|background/) &&
+        nextAppState === "active"
+      ) {
+        const res = await Location.hasServicesEnabledAsync();
+        if(!res){
+          setIsOpenLocationIsDisableDialog(false);
+          setIsOpenLocationIsDisableDialog(true);
+        }else{
+          askForLocation();
+        }
+      }
+
+      appState.current = nextAppState;
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+
+  const askForLocation = async () => {
+    let { status, canAskAgain } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted" && canAskAgain) {
+      setErrorMsg("Permission to access location was denied");
+      return;
+    }
+    let location = await Location.getCurrentPositionAsync({});
+    setLocation(location);
+    cartStore.isValidGeo(location.coords.latitude, location.coords.longitude).then((res)=>{
+      setIsValidAddress(res.result)
+    })
+  }
   useEffect(() => {
     if (shippingMethod === SHIPPING_METHODS.shipping) {
       (async () => {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== "granted") {
-          setErrorMsg("Permission to access location was denied");
-          return;
+        const res = await Location.hasServicesEnabledAsync();
+        if(!res){
+          setIsOpenLocationIsDisableDialog(true);
+        }else{
+          askForLocation();
         }
-        let location = await Location.getCurrentPositionAsync({});
-        setLocation(location);
-        cartStore.isValidGeo(location.coords.latitude, location.coords.longitude).then((res)=>{
-          setIsValidAddress(res.result)
-        })
       })();
     }
   }, [shippingMethod]);
@@ -227,6 +268,15 @@ const CartScreen = () => {
     navigation.navigate("meal", { index });
   };
 
+  const handleLocationIsDiabledAnswer = (value: boolean) => {
+    console.log("handleLocationIsDiabledAnswer",value)
+    if(value){
+      Linking.openURL('App-Prefs:Privacy&path=LOCATION')
+    }else{
+      setIsOpenLocationIsDisableDialog(false)
+      setShippingMethod(SHIPPING_METHODS.takAway)
+    }
+  }
   const handleShippingMethoAnswer = (value: boolean) => {
     setIsOpenShippingMethodDialog(value);
     setIsShippingMethodAgrred(value);
@@ -691,6 +741,10 @@ const CartScreen = () => {
       <PaymentMethodDialog
         handleAnswer={handleShippingMethoAnswer}
         isOpen={isOpenShippingMethodDialog}
+      />
+      <LocationIsDisabledDialog
+      handleAnswer={handleLocationIsDiabledAnswer}
+      isOpen={isOpenLocationIsDisabledDialog}
       />
     </View>
   );

@@ -38,6 +38,7 @@
     "expo-react-native-shadow": "^1.0.3",
     "expo-splash-screen": "~0.16.2",
     "expo-status-bar": "~1.4.0",
+    "expo-task-manager": "~10.3.0",
     "expo-updates": "~0.14.7",
     "getenv": "^1.0.0",
     "i18n-js": "^4.1.1",

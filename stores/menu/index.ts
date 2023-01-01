@@ -31,11 +31,9 @@ class MenuStore {
       });
   }
   getMenu = () => {
-    console.log("getMenu11111")
 
     this.getMenuFromServer().then((res) => {
       runInAction(() => {
-        console.log("getMenu11111", res)
 
         this.dictionary = res.dictionary
         this.categories = groupBy(res.menu, (x) => x.category);

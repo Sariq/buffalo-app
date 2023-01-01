@@ -52,7 +52,6 @@ const MenuScreen = () => {
   if (!categoryList || !selectedCategory) {
     return null;
   }
-console.log(categoryList["BURGERS"])
   return (
     <View style={{ height: "100%", backgroundColor: "#F1F1F1" }}>
       <View style={styles.container}>
