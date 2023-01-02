@@ -2,7 +2,15 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { useContext } from "react";
 import { observer } from "mobx-react";
-import { Image, Text, View, StyleSheet, Linking, AppState } from "react-native";
+import {
+  Image,
+  Text,
+  View,
+  StyleSheet,
+  Linking,
+  AppState,
+  Platform,
+} from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { ToggleButton, Divider } from "react-native-paper";
 /* styles */
@@ -41,13 +49,10 @@ type TShippingMethod = {
   takAway: string;
 };
 
-
-
 const CartScreen = () => {
   const { cartStore, authStore, languageStore, userDetailsStore } = useContext(
     StoreContext
   );
-
 
   const navigation = useNavigation();
 
@@ -82,53 +87,67 @@ const CartScreen = () => {
 
   const [isLoadingOrderSent, setIsLoadingOrderSent] = useState(null);
   const [isValidAddress, setIsValidAddress] = useState(true);
+  const [
+    locationPermissionStatus,
+    requestPermission,
+  ] = Location.useForegroundPermissions();
 
   const appState = useRef(AppState.currentState);
 
   useEffect(() => {
-    const subscription = AppState.addEventListener("change", async nextAppState => {
-      if (
-        appState.current.match(/inactive|background/) &&
-        nextAppState === "active"
-      ) {
-        const res = await Location.hasServicesEnabledAsync();
-        if(!res){
-          setIsOpenLocationIsDisableDialog(false);
-          setIsOpenLocationIsDisableDialog(true);
-        }else{
-          askForLocation();
+    const subscription = AppState.addEventListener(
+      "change",
+      async (nextAppState) => {
+        if (
+          appState.current.match(/inactive|background/) &&
+          nextAppState === "active"
+        ) {
+          const res = await Location.hasServicesEnabledAsync();
+          if (!res) {
+            setIsOpenLocationIsDisableDialog(false);
+            setIsOpenLocationIsDisableDialog(true);
+          } else {
+            askForLocation();
+          }
         }
-      }
 
-      appState.current = nextAppState;
-    });
+        appState.current = nextAppState;
+      }
+    );
 
     return () => {
       subscription.remove();
     };
   }, []);
 
+  useEffect(() => {
+    if (locationPermissionStatus?.granted) {
+      askForLocation();
+    }
+  }, [locationPermissionStatus]);
 
   const askForLocation = async () => {
-    let { status, canAskAgain } = await Location.requestForegroundPermissionsAsync();
-    if (status !== "granted" && canAskAgain) {
-      setErrorMsg("Permission to access location was denied");
-      return;
-    }
-    let location = await Location.getCurrentPositionAsync({});
+    let location = await Location.getCurrentPositionAsync({
+      accuracy:
+        Platform.OS === "android"
+          ? Location.Accuracy.Low
+          : Location.Accuracy.Lowest,
+    });
     setLocation(location);
-    cartStore.isValidGeo(location.coords.latitude, location.coords.longitude).then((res)=>{
-      setIsValidAddress(res.result)
-    })
-  }
+    cartStore
+      .isValidGeo(location.coords.latitude, location.coords.longitude)
+      .then((res) => {
+        setIsValidAddress(res.result);
+      });
+  };
   useEffect(() => {
     if (shippingMethod === SHIPPING_METHODS.shipping) {
       (async () => {
         const res = await Location.hasServicesEnabledAsync();
-        if(!res){
+        if (!res) {
           setIsOpenLocationIsDisableDialog(true);
-        }else{
-          askForLocation();
+        } else {
+          requestPermission();
         }
       })();
     }
@@ -194,7 +213,7 @@ const CartScreen = () => {
 
   const chargeOrder = (chargeData: TPaymentProps) => {
     chargeCreditCard(chargeData).then((res) => {
-      console.log("chargeCreditCardHasError", res.HasError)
+      console.log("chargeCreditCardHasError", res.HasError);
 
       if (res.HasError) {
         return;
@@ -208,7 +227,7 @@ const CartScreen = () => {
         if (res.has_err) {
           return;
         }
-        console.log("UpdateCCPayment", res.has_err)
+        console.log("UpdateCCPayment", res.has_err);
 
         postChargeOrderActions();
       });
@@ -232,7 +251,7 @@ const CartScreen = () => {
         holderId: ccData.id,
         orderId: orderData.order_id,
       };
-      console.log("chargeOrder", chargeData)
+      console.log("chargeOrder", chargeData);
 
       chargeOrder(chargeData);
     } else {
@@ -247,15 +266,15 @@ const CartScreen = () => {
       totalPrice,
       products: cartStore.cartItems,
     };
-    if(shippingMethod === SHIPPING_METHODS.shipping){
+    if (shippingMethod === SHIPPING_METHODS.shipping) {
       order.geo_positioning = {
         latitude: location.coords.latitude,
-        longitude: location.coords.longitude
-      }
+        longitude: location.coords.longitude,
+      };
     }
     //cartStore.addOrderToHistory(order,userDetailsStore.userDetails.phone);
     cartStore.submitOrder(order).then((res: TOrderSubmitResponse) => {
-      console.log("has_err", res.has_err)
+      console.log("has_err", res.has_err);
 
       if (res.has_err) {
         return;
@@ -269,14 +288,16 @@ const CartScreen = () => {
   };
 
   const handleLocationIsDiabledAnswer = (value: boolean) => {
-    console.log("handleLocationIsDiabledAnswer",value)
-    if(value){
-      Linking.openURL('App-Prefs:Privacy&path=LOCATION')
-    }else{
-      setIsOpenLocationIsDisableDialog(false)
-      setShippingMethod(SHIPPING_METHODS.takAway)
+    console.log("handleLocationIsDiabledAnswer", value);
+    if (value) {
+      Platform.OS === "android"
+        ? Linking.sendIntent("android.settings.LOCATION_SOURCE_SETTINGS")
+        : Linking.openURL("App-Prefs:Privacy&path=LOCATION");
+    } else {
+      setIsOpenLocationIsDisableDialog(false);
+      setShippingMethod(SHIPPING_METHODS.takAway);
     }
-  }
+  };
   const handleShippingMethoAnswer = (value: boolean) => {
     setIsOpenShippingMethodDialog(value);
     setIsShippingMethodAgrred(value);
@@ -306,7 +327,7 @@ const CartScreen = () => {
 
   const replaceCreditCard = () => {
     setOpenNewCreditCardDialog(true);
-  }
+  };
 
   return (
     <View>
@@ -603,27 +624,28 @@ const CartScreen = () => {
                 borderRadius: 15,
                 padding: 2,
                 marginTop: 5,
-                flexDirection: 'row',
-                justifyContent: 'space-around',
+                flexDirection: "row",
+                justifyContent: "space-around",
               }}
             >
               <TouchableOpacity
-              onPress={replaceCreditCard}
-              style={{
-                alignItems: "center",
-                flexDirection: 'row',
-                padding: 5
-              }}>
-              <Icon
-                      icon="circle-down-arrow"
-                      size={20}
-                      style={{ color: theme.GRAY_700 }}
-                    />
-               <Text
-                style={{ fontSize: 20, paddingTop: 3, paddingLeft:5 }}
-              >{'החלפה'}</Text>
+                onPress={replaceCreditCard}
+                style={{
+                  alignItems: "center",
+                  flexDirection: "row",
+                  padding: 5,
+                }}
+              >
+                <Icon
+                  icon="circle-down-arrow"
+                  size={20}
+                  style={{ color: theme.GRAY_700 }}
+                />
+                <Text style={{ fontSize: 20, paddingTop: 3, paddingLeft: 5 }}>
+                  {"החלפה"}
+                </Text>
               </TouchableOpacity>
-     
+
               <Text
                 style={{ fontSize: 20 }}
               >{`****_****_****_${ccData?.last4Digits}`}</Text>
@@ -696,18 +718,18 @@ const CartScreen = () => {
                     المبلغ النهائي
                   </Text>
                 </View>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
                   <Text
                     style={{
                       fontSize: 17,
-                      fontWeight: 'bold'
+                      fontWeight: "bold",
                     }}
                   >
                     {totalPrice}
                   </Text>
                   <Text
                     style={{
-                      fontWeight: 'bold',
+                      fontWeight: "bold",
                       fontSize: 17,
                     }}
                   >
@@ -743,8 +765,8 @@ const CartScreen = () => {
         isOpen={isOpenShippingMethodDialog}
       />
       <LocationIsDisabledDialog
-      handleAnswer={handleLocationIsDiabledAnswer}
-      isOpen={isOpenLocationIsDisabledDialog}
+        handleAnswer={handleLocationIsDiabledAnswer}
+        isOpen={isOpenLocationIsDisabledDialog}
       />
     </View>
   );
