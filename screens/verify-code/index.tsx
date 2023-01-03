@@ -1,4 +1,10 @@
-import { StyleSheet, Text, View, DeviceEventEmitter, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  DeviceEventEmitter,
+  TouchableOpacity,
+} from "react-native";
 import InputText from "../../components/controls/input";
 import Button from "../../components/controls/button/button";
 import themeStyle from "../../styles/theme.style";
@@ -12,6 +18,8 @@ import { useNavigation } from "@react-navigation/native";
 import { axiosInstance } from "../../utils/http-interceptor";
 import { useTranslation } from "react-i18next";
 import { getCurrentLang } from "../../translations/i18n";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import moment from "moment";
 
 const VerifyCodeScreen = ({ route }) => {
   const { authStore, cartStore, userDetailsStore } = useContext(StoreContext);
@@ -21,6 +29,7 @@ const VerifyCodeScreen = ({ route }) => {
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
   const [isValid, setIsValid] = useState(true);
+  const [timer, setTimer] = useState(0);
 
   const [verifyCode, setVerifyCode] = useState();
   const onChange = (value) => {
@@ -28,9 +37,58 @@ const VerifyCodeScreen = ({ route }) => {
     setVerifyCode(value);
   };
 
-  const resendMeTheCode = () =>{
-    
+  const setTimertInterVal = async () => {
+    let timerIntreval;
+
+    const verifyDataFinal = await AsyncStorage.getItem("@storage_verifyCode");
+    const verifyDataValueFinal = JSON.parse(verifyDataFinal);
+
+    let interval = 1000;
+    let seconds = 30 * verifyDataValueFinal.count;
+    timerIntreval = setInterval(function () {
+      seconds = seconds - 1;
+      if (seconds === 0) {
+        clearInterval(timerIntreval);
+      }
+      setTimer(seconds);
+    }, interval);
   }
+  useEffect(()=>{
+
+    setTimertInterVal()
+   
+  },[])
+
+  const resendMeTheCode = async () => {
+
+    let timerIntreval;
+    const verifyData = await AsyncStorage.getItem("@storage_verifyCode");
+    const verifyDataValue = JSON.parse(verifyData);
+    if (!verifyDataValue) {
+      const data = {
+        date: new Date(),
+        count: 1,
+      };
+      await AsyncStorage.setItem("@storage_verifyCode", JSON.stringify(data));
+    } else {
+      var end = moment(new Date());
+      var now = moment(verifyDataValue.date);
+      var duration = moment.duration(end.diff(now));
+      let newCount = verifyDataValue.count * 2;
+
+      if (duration.asMinutes() > 10) {
+        newCount = 1;
+      }
+      const data = {
+        date: new Date(),
+        count: newCount,
+      };
+      await AsyncStorage.setItem("@storage_verifyCode", JSON.stringify(data));
+    }
+
+    setTimertInterVal();
+    navigation.navigate("login");
+  };
 
   const isValidNunber = () => {
     return verifyCode?.match(/\d/g).length === 4;
@@ -49,7 +107,8 @@ const VerifyCodeScreen = ({ route }) => {
           base64.encode(JSON.stringify(body)),
           { headers: { "Content-Type": "application/json" } }
         )
-        .then(function (response) {
+        .then(async function (response) {
+          await AsyncStorage.removeItem("@storage_verifyCode");
           const res = JSON.parse(base64.decode(response.data));
           console.log("tokennnn", res.token);
           authStore.updateUserToken(res.token);
@@ -80,7 +139,7 @@ const VerifyCodeScreen = ({ route }) => {
           style={{
             marginTop: 20,
             fontSize: 17,
-            paddingHorizontal: 15,
+            paddingHorizontal: 30,
             textAlign: "center",
           }}
         >
@@ -103,11 +162,37 @@ const VerifyCodeScreen = ({ route }) => {
           )}
         </View>
         <View style={{ marginTop: 20 }}>
-          <Text style={{fontSize:17, fontFamily: `${getCurrentLang()}-SemiBold`}}>{t("didnt-recive-sms")} ?</Text>
+          {timer > 0 && (
+            <Text>
+              {t("can-send-again")} {timer}
+            </Text>
+          )}
+          {timer == 0 && (
+            <Text
+              style={{
+                fontSize: 17,
+                fontFamily: `${getCurrentLang()}-SemiBold`,
+              }}
+            >
+              {t("didnt-recive-sms")} ?
+            </Text>
+          )}
         </View>
         <View style={{ marginTop: 10 }}>
-          <TouchableOpacity>
-            <Text style={{fontSize:17, fontFamily: `${getCurrentLang()}-SemiBold`,color: themeStyle.SUCCESS_COLOR, textDecorationLine: 'underline', padding:5}}>{t("resend-sms")}</Text>
+          <TouchableOpacity disabled={timer > 0} onPress={resendMeTheCode}>
+            <Text
+              style={{
+                fontSize: 17,
+                fontFamily: `${getCurrentLang()}-SemiBold`,
+                color:
+                  timer > 0 ? themeStyle.GRAY_300 : themeStyle.SUCCESS_COLOR,
+                textDecorationLine: "underline",
+                padding: 5,
+                opacity: 0.5,
+              }}
+            >
+              {t("resend-sms")}
+            </Text>
           </TouchableOpacity>
         </View>
 

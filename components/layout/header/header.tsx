@@ -38,8 +38,7 @@ const Header = () => {
     if(authStore.isLoggedIn()){
       navigation.navigate("profile");
     }else{
-      navigation.navigate("verify-code");
-            //navigation.navigate("login");
+      navigation.navigate("login");
     }
     
     //navigation.navigate("order-history");
