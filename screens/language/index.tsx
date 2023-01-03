@@ -4,11 +4,12 @@ import themeStyle from "../../styles/theme.style";
 import { useContext } from "react";
 import { StoreContext } from "../../stores";
 import { observer } from "mobx-react";
-import i18n from "../../translations";
+import i18n from "../../translations/index-x";
 import { useNavigation } from "@react-navigation/native";
+import { getCurrentLang } from "../../translations/i18n";
 
 const LanguageScreen = () => {
-  const { languageStore, globalStyles } = useContext(StoreContext);
+  const { languageStore } = useContext(StoreContext);
   const navigation = useNavigation();
 
   const onChangeLanguage = (lng) => {
@@ -17,12 +18,12 @@ const LanguageScreen = () => {
   };
   
   return (
-    <View style={styles(globalStyles).container}>
+    <View style={styles.container}>
       <View style={{ alignItems: "center" }}>
         <View>
           <Text
             style={{
-              ...styles(globalStyles).textLang,
+              ...styles.textLang,
               fontFamily: "ar-SemiBold",
             }}
           >
@@ -30,7 +31,7 @@ const LanguageScreen = () => {
           </Text>
           <Text
             style={{
-              ...styles(globalStyles).textLang,
+              ...styles.textLang,
               fontFamily: "he-SemiBold",
             }}
           >
@@ -44,7 +45,7 @@ const LanguageScreen = () => {
                 onChangeLanguage("ar");
               }}
               bgColor={
-                i18n.locale === "ar"
+                getCurrentLang() === "ar"
                   ? themeStyle.PRIMARY_COLOR
                   : "white"
               }
@@ -59,7 +60,7 @@ const LanguageScreen = () => {
                 onChangeLanguage("he");
               }}
               bgColor={
-                i18n.locale === "he"
+                getCurrentLang() === "he"
                   ? themeStyle.PRIMARY_COLOR
                   : "white"
               }
@@ -79,8 +80,7 @@ const LanguageScreen = () => {
 };
 export default observer(LanguageScreen);
 
-const styles = (props) =>
-  StyleSheet.create({
+const styles = StyleSheet.create({
     container: {
       backgroundColor: "white",
       justifyContent: "center",

@@ -33,8 +33,9 @@ import chargeCreditCard, {
   TPaymentProps,
 } from "../../components/credit-card/api/payment";
 import Button from "../../components/controls/button/button";
-import i18n from "../../translations";
 import LocationIsDisabledDialog from "../../components/dialogs/location-is-disabled";
+import { getCurrentLang } from "../../translations/i18n";
+import { useTranslation } from "react-i18next";
 
 export const SHIPPING_METHODS = {
   shipping: "DELIVERY",
@@ -53,6 +54,7 @@ const CartScreen = () => {
   const { cartStore, authStore, languageStore, userDetailsStore } = useContext(
     StoreContext
   );
+  const [t, i18n] = useTranslation();
 
   const navigation = useNavigation();
 
@@ -383,7 +385,7 @@ const CartScreen = () => {
                       <Text
                         style={{
                           textAlign: "left",
-                          fontFamily: `${i18n.locale}-SemiBold`,
+                          fontFamily: `${getCurrentLang()}-SemiBold`,
                           fontSize: 20,
                         }}
                       >
@@ -440,7 +442,7 @@ const CartScreen = () => {
                                       <Text
                                         style={{
                                           textAlign: "left",
-                                          fontFamily: `${i18n.locale}-SemiBold`,
+                                          fontFamily: `${getCurrentLang()}-SemiBold`,
                                           fontSize: 16,
                                         }}
                                       >
@@ -511,7 +513,7 @@ const CartScreen = () => {
                     />
                     <Text style={{ fontSize: 20, fontWeight: "bold" }}>
                       {" "}
-                      משלוח
+                      {t('delivery')}
                     </Text>
                   </View>
                 )}
@@ -528,7 +530,7 @@ const CartScreen = () => {
                 icon={() => (
                   <View style={styles.togglleItemContentContainer}>
                     <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                      איסוף עצמי
+                    {t('take-away')}
                     </Text>
 
                     <Icon
@@ -585,7 +587,7 @@ const CartScreen = () => {
                   <View style={styles.togglleItemContentContainer}>
                     <Text style={{ fontSize: 20, fontWeight: "bold" }}>₪</Text>
                     <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                      מזומן
+                    {t('cash')}
                     </Text>
                   </View>
                 )}
@@ -602,7 +604,7 @@ const CartScreen = () => {
                 icon={() => (
                   <View style={styles.togglleItemContentContainer}>
                     <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                      אשראי
+                    {t('credit-card')}
                     </Text>
                     <Icon
                       icon="credit_card_icom"
@@ -654,7 +656,7 @@ const CartScreen = () => {
 
           <View style={styles.totalPrictContainer}>
             <View style={{ alignItems: "center" }}>
-              <Text style={{ fontWeight: "bold" }}>المجموع</Text>
+              <Text style={{ fontWeight: "bold" }}>{t('total')}</Text>
             </View>
             <View style={{ marginTop: 30 }}>
               {shippingMethod === SHIPPING_METHODS.shipping && (
@@ -662,17 +664,17 @@ const CartScreen = () => {
                   <View>
                     <Text
                       style={{
-                        fontFamily: `${i18n.locale}-Light`,
+                        fontFamily: `${getCurrentLang()}-Light`,
                         fontSize: 20,
                       }}
                     >
-                      مبلغ الطلبية
+                      {t("order-price")}
                     </Text>
                   </View>
                   <View>
                     <Text
                       style={{
-                        fontFamily: `${i18n.locale}-Light`,
+                        fontFamily: `${getCurrentLang()}-Light`,
                         fontSize: 17,
                       }}
                     >
@@ -687,17 +689,17 @@ const CartScreen = () => {
                   <View>
                     <Text
                       style={{
-                        fontFamily: `${i18n.locale}-Light`,
+                        fontFamily: `${getCurrentLang()}-Light`,
                         fontSize: 20,
                       }}
                     >
-                      التوصيل
+                      {t("delivery")}
                     </Text>
                   </View>
                   <View>
                     <Text
                       style={{
-                        fontFamily: `${i18n.locale}-Light`,
+                        fontFamily: `${getCurrentLang()}-Light`,
                         fontSize: 17,
                       }}
                     >
@@ -711,11 +713,11 @@ const CartScreen = () => {
                 <View>
                   <Text
                     style={{
-                      fontFamily: `${i18n.locale}-SemiBold`,
+                      fontFamily: `${getCurrentLang()}-SemiBold`,
                       fontSize: 20,
                     }}
                   >
-                    المبلغ النهائي
+                    {t("final-price")}
                   </Text>
                 </View>
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -747,7 +749,7 @@ const CartScreen = () => {
                   isLoadingOrderSent ||
                   isOpenShippingMethodDialog
                 }
-                text="שלח את ההזמנה"
+                text={t("send-order")}
                 fontSize={22}
                 textColor={theme.WHITE_COLOR}
                 isLoading={isLoadingOrderSent}

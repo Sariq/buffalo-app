@@ -25,10 +25,10 @@ export const MainStackNavigator = ({}) => {
       <Stack.Screen name="cart" component={CartScreen} />
       <Stack.Screen name="profile" component={ProfileScreen} />
       <Stack.Screen name="login" component={LoginScreen} />
-      <Stack.Screen name="verify-code" component={VerifyCodeScreen} />
+      <Stack.Screen name="verify-code" component={VerifyCodeScreen} initialParams={{ phoneNumber: null }} />
       <Stack.Screen name="language" component={LanguageScreen} />
       <Stack.Screen name="order-history" component={OrderHistoryScreen} />
-      <Stack.Screen
+      <Stack.Screen 
         name="order-submitted"
         component={OrderSubmittedScreen}
         initialParams={{ shippingMethod: null }}

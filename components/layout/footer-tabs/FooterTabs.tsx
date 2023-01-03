@@ -15,20 +15,21 @@ import MenuScreen from "../../../screens/menu/menu";
 
 import { useState } from "react";
 import TermsAndConditionsScreen from "../../../screens/terms-and-conditions";
-import i18n from "../../../translations";
+import { useTranslation } from "react-i18next";
+import { getCurrentLang } from "../../../translations/i18n";
 
 const routes = [
   {
     id: 1,
     name: "homeScreen",
-    title: "الرئيسية",
+    title: "footer_home",
     icon: "home_icon",
     component: HomeScreen,
   },
   {
     id: 2,
     name: "menuScreen",
-    title: "قائمة الطعام",
+    title: "footer_menu",
     icon: "burger_icon",
     component: MenuScreen,
   },
@@ -49,7 +50,7 @@ const routes = [
   {
     id: 5,
     name: "contactUsScreen",
-    title: "اتصل بنا",
+    title: "footer_contactus",
     icon: "phone_icon",
     component: ContactUs,
   },
@@ -57,7 +58,7 @@ const routes = [
 
 function MyTabBar({ state, descriptors, navigation }) {
   const [selectedRoute, setSelectedRoute] = useState(routes[0]);
-
+  const [t, i18n] = useTranslation();
   const onTabSelect = (name) => {
     const currentRout = routes.find((route) => route.name === name);
     setSelectedRoute(currentRout);
@@ -129,11 +130,11 @@ function MyTabBar({ state, descriptors, navigation }) {
               <Text
                 style={{
                   marginTop: isBcoin ? 0 : 5,
-                  fontFamily: `${i18n.locale}-SemiBold`,
+                  fontFamily: `${getCurrentLang()}-SemiBold`,
                   fontSize: 12
                 }}
               >
-                {route.params.title}
+                {t(route.params.title)}
               </Text>
             </View>
           </TouchableOpacity>

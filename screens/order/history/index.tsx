@@ -3,13 +3,13 @@ import { useContext, useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import { useNavigation } from "@react-navigation/native";
 import { StoreContext } from "../../../stores";
-import i18n from "../../../translations";
+import i18n from "../../../translations/index-x";
 import Button from "../../../components/controls/button/button";
 import themeStyle from "../../../styles/theme.style";
 import { SHIPPING_METHODS } from "../../cart/cart";
 
 const OrderHistoryScreen = ({ route }) => {
-  const { globalStyles, cartStore } = useContext(StoreContext);
+  const { cartStore } = useContext(StoreContext);
   const navigation = useNavigation();
   const [ordersList, setOrdersList] = useState([]);
 
@@ -28,7 +28,7 @@ const OrderHistoryScreen = ({ route }) => {
         >
           <Text
             style={{
-              ...styles(globalStyles).textLang,
+              ...styles.textLang,
               fontFamily: "ar-SemiBold",
             }}
           >
@@ -36,7 +36,7 @@ const OrderHistoryScreen = ({ route }) => {
           </Text>
           <View style={{ marginTop: 30, width: "100%" }}>
             {ordersList.map((order) => (
-              <View style={{ ...styles(globalStyles).orderContainer }}>
+              <View style={{ ...styles.orderContainer }}>
                 <Text>{order.totalPrice}</Text>
               </View>
             ))}
@@ -48,8 +48,7 @@ const OrderHistoryScreen = ({ route }) => {
 };
 export default observer(OrderHistoryScreen);
 
-const styles = (props) =>
-  StyleSheet.create({
+const styles = StyleSheet.create({
     orderContainer: {
       backgroundColor: "white",
       padding: 10,

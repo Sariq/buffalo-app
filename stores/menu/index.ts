@@ -3,7 +3,8 @@ import { groupBy } from "lodash";
 import { MENU_API } from "../../consts/api";
 import { fromBase64 } from '../../helpers/convert-base64'
 import { axiosInstance } from "../../utils/http-interceptor";
-import i18n from "../../translations";
+import i18n from "../../translations/index-x";
+import { setTranslations, getCurrentLang } from "../../translations/i18n";
 
 class MenuStore {
   menu = null;
@@ -35,7 +36,8 @@ class MenuStore {
     this.getMenuFromServer().then((res) => {
       runInAction(() => {
 
-        this.dictionary = res.dictionary
+        this.dictionary = res.dictionary;
+        setTranslations(this.dictionary)
         this.categories = groupBy(res.menu, (x) => x.category);
         this.meals = groupBy(res.menu_constants, (x) => x.menu_id);
         Object.keys(this.meals).map((key) => {
@@ -81,9 +83,9 @@ class MenuStore {
   }
 
   translate = (id: string) => {
+    console.log(id)
     const item = this.dictionary.find((item)=> item.id === id )
-    console.log(item)
-    if(i18n.locale === "ar"){
+    if(getCurrentLang() === "ar"){
       return item.name_ar;
     }
     return item.name_he;

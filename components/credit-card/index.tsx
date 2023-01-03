@@ -18,11 +18,14 @@ import cardValidator from "card-validator";
 import isValidID from "../../helpers/validate-id-number";
 import Button from "../controls/button/button";
 import themeStyle from "../../styles/theme.style";
+import { useTranslation } from "react-i18next";
 
 export type TProps = {
   onSaveCard: () => void;
 };
 const CreditCard = ({ onSaveCard }) => {
+  const [t, i18n] = useTranslation();
+
   const [creditCardNumber, setCreditCardNumber] = useState();
   const [creditCardExpDate, setCreditCardExpDate] = useState();
   const [creditCardCVV, setCreditCardCVV] = useState();
@@ -101,11 +104,11 @@ const CreditCard = ({ onSaveCard }) => {
   return (
     <View style={styles.container}>
       <View style={{ alignItems: "flex-start" }}>
-        <Text style={{ fontSize: 18 }}>הזן פרטי כרטיס אשראי</Text>
-      </View>
+        <Text style={{ fontSize: 18 }}>{t('inser-credit-card-details')}</Text>
+      </View>	
       <View style={{ marginTop: 25, alignItems: "flex-start" }}>
         <InputText
-          label="מספר כרטיס אשראי"
+          label={t('credit-card-number')}
           onChange={onNumberChange}
           value={creditCardNumber}
           keyboardType="numeric"
@@ -117,7 +120,7 @@ const CreditCard = ({ onSaveCard }) => {
       </View>
       <View style={styles.monthExpContainer}>
         <InputText
-          label="תוקף הכרטיס"
+          label={t('expiry-date')}
           onChange={() => {}}
           value={creditCardExpDate}
           isEditable={false}
@@ -144,7 +147,7 @@ const CreditCard = ({ onSaveCard }) => {
       <View style={{ marginTop: 10, alignItems: "flex-start" }}>
         <InputText
           keyboardType="numeric"
-          label="תעודת זהות"
+          label={t('id-number')}
           onChange={onCardHolderNameChange}
           value={cardHolderID}
           isError={formStatus.idIDValid === false}
@@ -157,7 +160,7 @@ const CreditCard = ({ onSaveCard }) => {
           bgColor={theme.SUCCESS_COLOR}
           onClickFn={onSaveCreditCard}
           disabled={isFormValid()}
-          text="שמור כרטיס אשראי"
+          text={t('save-credit-card')}
           fontSize={22}
           textColor={theme.WHITE_COLOR}
         />

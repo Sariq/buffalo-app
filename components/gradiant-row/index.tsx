@@ -1,7 +1,8 @@
 import { StyleSheet, Text, View, Image } from "react-native";
 import Counter from "../controls/counter";
 import CheckBox from "../controls/checkbox";
-import i18n from "../../translations";
+import i18n from "../../translations/index-x";
+import { getCurrentLang } from "../../translations/i18n";
 
 type TProps = {
   onChangeFn: any;
@@ -37,7 +38,7 @@ export default function GradiantRow({ onChangeFn, icon, type, price, title, valu
       </View>}
       <View style={[styles.textAndPriceContainer,{marginLeft: hideIcon ? 40 : 0, width: hideIcon ? "50%" : "40%"}]}>
         <View>
-          <Text style={{fontSize: 15, fontFamily:`${i18n.locale}-SemiBold`}}>{title}</Text>
+          <Text style={{fontSize: 15, fontFamily:`${getCurrentLang()}-SemiBold`}}>{title}</Text>
         </View>
         <View style={{ marginHorizontal: -10,flexDirection: 'row', alignItems: 'center' }}>
           {price ? <Text style={{fontSize: 14, fontFamily: 'Rubik-Regular'}}>{price}</Text> : null}

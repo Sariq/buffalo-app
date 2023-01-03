@@ -9,7 +9,9 @@ import themeStyle from "../../styles/theme.style";
 import CategoryItemsList from "./components/categoryItemsList";
 import Icon from "../../components/icon";
 import { Buffer } from "buffer";
-import i18n from "../../translations";
+import i18n from "../../translations/index-x";
+import { getCurrentLang } from "../../translations/i18n";
+import { useTranslation } from "react-i18next";
 
 export function toBase64(input) {
   return Buffer.from(input, "utf-8").toString("base64");
@@ -25,9 +27,21 @@ const categoryListIcons = {
   'SIDES': 'box-icon',
   'DRINK': 'drinks_icon',
 }
+const categoryListOrder = {
+  1: 'BURGERS',
+  2: 'CHICKEN',
+  3: 'SIDES',
+  4: 'DRINK',
+}
 
 const MenuScreen = () => {
-  const { menuStore } = useContext(StoreContext);
+  const { menuStore, languageStore } = useContext(StoreContext);
+  const [t, i18n] = useTranslation();
+
+  
+  useEffect(()=>{
+
+  },[languageStore])
 
   const [categoryList, setCategoryList] = useState();
   const [selectedCategory, setSelectedCategory] = useState();
@@ -41,6 +55,7 @@ const MenuScreen = () => {
  ;
   const getMenu = () => {
     const categories = menuStore.categories;
+    console.log("CCCATT", categories)
     setCategoryList(categories);
     setSelectedCategory(categories["BURGERS"]);
   };
@@ -55,12 +70,12 @@ const MenuScreen = () => {
   return (
     <View style={{ height: "100%", backgroundColor: "#F1F1F1" }}>
       <View style={styles.container}>
-        {Object.keys(categoryList).map((key, index) => (
-          <View style={{width: 80, height: 96}}>
+        {Object.keys(categoryListOrder).map((key, index) => (
+          <View style={{width: 80, height: 96, flexBasis: 90,}}>
           <TouchableOpacity
             style={[styles.categoryItem]}
             onPress={() => {
-              onCategorySelect(categoryList[key], key);
+              onCategorySelect(categoryList[categoryListOrder[key]], categoryListOrder[key]);
             }}
           >
             <View
@@ -69,18 +84,18 @@ const MenuScreen = () => {
 
                 {
                   backgroundColor:
-                  key === selectedCategoryKey
+                  categoryListOrder[key] === selectedCategoryKey
                   ? themeStyle.PRIMARY_COLOR
                       : themeStyle.WHITE_COLOR,
                 },
               ]}
             >
                <Icon
-                icon={categoryListIcons[key]}
-                size={30}
+                icon={categoryListIcons[categoryListOrder[key]]}
+                size={35}
                 style={{
                   color:
-                    categoryList[key].id === selectedCategory?.id
+                    categoryList[categoryListOrder[key]].id === selectedCategory?.id
                       ? themeStyle.GRAY_700
                       : themeStyle.GRAY_300,
                 }}
@@ -92,14 +107,14 @@ const MenuScreen = () => {
                 {
                   marginTop: 10,
                   color:
-                    key === selectedCategoryKey
+                  categoryListOrder[key] === selectedCategoryKey
                       ? themeStyle.GRAY_700
                       : themeStyle.GRAY_300,
-                      fontFamily: `${i18n.locale}-SemiBold`,
+                      fontFamily: `${getCurrentLang()}-SemiBold`,
                 }
               ]}
             >
-              {key}
+              {t(categoryListOrder[key])}
             </Text>
           </TouchableOpacity>
           </View>
@@ -129,6 +144,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F1F1F1",
   },
   categoryItem: {
+    
     alignItems: "center",
     justifyContent: "center",
     flex: 1,

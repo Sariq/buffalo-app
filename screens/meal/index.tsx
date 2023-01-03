@@ -10,7 +10,6 @@ import { useNavigation } from "@react-navigation/native";
 import { observer } from "mobx-react";
 import { isEmpty } from "lodash";
 
-import i18n from "../../translations";
 import GradiantRow from "../../components/gradiant-row";
 import Button from "../../components/controls/button/button";
 import { useContext, useState, useEffect } from "react";
@@ -18,6 +17,7 @@ import { StoreContext } from "../../stores";
 import { ScrollView } from "react-native-gesture-handler";
 import themeStyle from "../../styles/theme.style";
 import Icon from "../../components/icon";
+import { getCurrentLang } from "../../translations/i18n";
 
 const extrasIcons = {
   "משקל": require("../../assets/menu/gradiant/burgerSlice.png"),
@@ -208,12 +208,12 @@ const MealScreen = ({ route }) => {
             }}
           >
             <View>
-              <Text style={{ fontSize: 25, textAlign: "left", fontFamily: `${i18n.locale}-SemiBold`,}}>
+              <Text style={{ fontSize: 25, textAlign: "left", fontFamily: `${getCurrentLang()}-SemiBold`,}}>
                 {meal.data[`name_${languageStore.selectedLang}`]}
               </Text>
             </View>
             <View>
-              <Text style={{ fontSize: 15, textAlign: "left", fontFamily: `${i18n.locale}-SemiBold`,marginTop: 10 }}>
+              <Text style={{ fontSize: 15, textAlign: "left", fontFamily: `${getCurrentLang()}-SemiBold`,marginTop: 10 }}>
                 {meal.data[`description_${languageStore.selectedLang}`]}
               </Text>
             </View>
@@ -272,7 +272,7 @@ const MealScreen = ({ route }) => {
           <View style={styles.gradiantRowContainer}>
             <View style={{ padding: 10 }}>
               <View>
-                <Text style={{ textAlign: "left",fontFamily: `${i18n.locale}-SemiBold`,paddingLeft: 40, fontSize:15 }}>ملاحظات للمطعم</Text>
+                <Text style={{ textAlign: "left",fontFamily: `${getCurrentLang()}-SemiBold`,paddingLeft: 40, fontSize:15 }}>ملاحظات للمطعم</Text>
               </View>
               <View
                 style={{
@@ -342,7 +342,7 @@ const MealScreen = ({ route }) => {
             onClickFn={isEdit ? onUpdateCartProduct : onAddToCart}
             bgColor={themeStyle.PRIMARY_COLOR}
             textColor={themeStyle.BROWN_700}
-            fontFamily={`${i18n.locale}-SemiBold`}
+            fontFamily={`${getCurrentLang()}-SemiBold`}
           />
         </View>
       </View>

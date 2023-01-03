@@ -12,58 +12,75 @@ import { observer } from "mobx-react";
 import { useNavigation } from "@react-navigation/native";
 import CreditCard from "../../components/credit-card";
 import { axiosInstance } from "../../utils/http-interceptor";
+import { useTranslation } from "react-i18next";
 
 const LoginScreen = () => {
   const { languageStore, authStore } = useContext(StoreContext);
-  const navigation = useNavigation();
+  const [t, i18n] = useTranslation();
 
+  const navigation = useNavigation();
+  const [isLoading, setIsLoading] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState();
+  const [isValid, setIsValid] = useState(true);
   const onChange = (value) => {
+    setIsValid(true);
     setPhoneNumber(value);
   };
 
-  const authinticate = () => {
+  const isValidNunber = () =>{
+    return phoneNumber?.match(/\d/g).length===10
+  }
 
-    const body = {
-      phone: phoneNumber,
-      device_type: Device.osName || "IOS",
-      language: languageStore.selectedLang === "ar" ? 0 : 1,
-      datetime: new Date(),
-    };
-    axiosInstance
-      .post(
-        `${AUTH_API.CONTROLLER}/${AUTH_API.AUTHINTICATE_API}`,
-        base64.encode(JSON.stringify(body)),{ headers: { "Content-Type": "application/json" } }
-      )
-      .then(function (response) {
-        const res = JSON.parse(base64.decode(response.data));
-        authStore.setVerifyCodeToken(res.token);
-        navigation.navigate("verify-code");
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+  const authinticate = () => {
+    if(isValidNunber()){
+      setIsLoading(true);
+      const body = {
+        phone: phoneNumber,
+        device_type: Device.osName || "IOS",
+        language: languageStore.selectedLang === "ar" ? 0 : 1,
+        datetime: new Date(),
+      };
+      axiosInstance
+        .post(
+          `${AUTH_API.CONTROLLER}/${AUTH_API.AUTHINTICATE_API}`,
+          base64.encode(JSON.stringify(body)),{ headers: { "Content-Type": "application/json" } }
+        )
+        .then(function (response) {
+          setIsLoading(false);
+          const res = JSON.parse(base64.decode(response.data));
+          authStore.setVerifyCodeToken(res.token);
+          navigation.navigate("verify-code", {phoneNumber});
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }else{
+      setIsValid(false);
+    }
   };
 
   return (
 
     <View style={styles.container}>
       <View style={styles.inputsContainer}>
-        <Text style={{ marginTop: 50, fontSize: 25 }}>ادخل رقم هاتفك</Text>
+        <Text style={{ marginTop: 50, fontSize: 25 }}>{t('insert-phone-number')}</Text>
         <Text style={{ marginTop: 20, fontSize: 17 }}>
-          سوف نبعث لك رسالة مع رقم سري
+        {t('will-send-sms-with-code')}
         </Text>
 
-        <View style={{ width: "100%", paddingHorizontal: 50, marginTop: 15 }}>
-          <InputText keyboardType="numeric" onChange={onChange} label="هاتف" />
+        <View style={{ width: "100%", paddingHorizontal: 50, marginTop: 15, alignItems: "flex-start" }}>
+          <InputText keyboardType="numeric" onChange={onChange} label={t('phone')} />
+          {!isValid && <Text style={{color: themeStyle.ERROR_COLOR, paddingLeft:15 }}>{t('invalid-phone')}</Text>}
         </View>
 
         <View style={{ width: "100%", paddingHorizontal: 50, marginTop: 25 }}>
           <Button
             bgColor={themeStyle.PRIMARY_COLOR}
-            text={"تحقق من رقم الهاتف"}
+            text={t('verify-phone-number')}
             fontSize={20}
             onClickFn={authinticate}
+            isLoading={isLoading}
+            disabled={isLoading}
           />
         </View>
       </View>

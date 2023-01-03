@@ -4,11 +4,12 @@ import { useState } from "react";
 import { observer } from "mobx-react";
 import { useContext } from "react";
 import { StoreContext } from "../../../stores";
-import i18n from "../../../translations";
+import i18n from "../../../translations/index-x";
 import { ScrollView } from "react-native-gesture-handler";
 
 import themeStyle from "../../../styles/theme.style";
 import { CONSTS_PRODUCTS } from "../../../consts/products";
+import { getCurrentLang } from "../../../translations/i18n";
 
 // const productsList = CONSTS_PRODUCTS;
 
@@ -48,7 +49,7 @@ const CategoryItemsList = ({ productsList }) => {
                   color: themeStyle.GRAY_700,
                   marginTop:20,
                   fontSize:18,
-                  fontFamily: `${i18n.locale}-SemiBold`,
+                  fontFamily: `${getCurrentLang()}-SemiBold`,
                 }
               }
             >
@@ -60,7 +61,7 @@ const CategoryItemsList = ({ productsList }) => {
                 {
                   color: themeStyle.GRAY_700,
                   marginTop:8,
-                  fontFamily: `${i18n.locale}-SemiBold`,
+                  fontFamily: `${getCurrentLang()}-SemiBold`,
                   fontSize:18,
                 },
               ]}

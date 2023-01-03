@@ -1,5 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { useState, useEffect, useCallback } from "react";
+import './translations/i18n';
+
 import * as Font from "expo-font";
 import Constants from "expo-constants";
 import RNRestart from "react-native-restart";
@@ -7,7 +9,6 @@ import { View, I18nManager, ImageBackground, Text, DeviceEventEmitter } from "re
 import RootNavigator from "./navigation";
 I18nManager.forceRTL(true);
 I18nManager.allowRTL(true);
-import i18n from "./translations";
 /* stores*/
 import { cartStore } from "./stores/cart";
 import { menuStore } from "./stores/menu";

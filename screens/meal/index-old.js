@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-import i18n from "../../translations";
+import i18n from "../../translations/index-x";
 import GradiantRow from "../../components/gradiant-row";
 import Button from "../../components/controls/button/button";
 import { useContext, useState, useEffect } from "react";

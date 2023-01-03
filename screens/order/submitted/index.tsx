@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { observer } from "mobx-react";
 import { useNavigation } from "@react-navigation/native";
 import { StoreContext } from "../../../stores";
-import i18n from "../../../translations";
+import i18n from "../../../translations/index-x";
 import Button from "../../../components/controls/button/button";
 import themeStyle from "../../../styles/theme.style";
 import { SHIPPING_METHODS } from "../../cart/cart";
@@ -11,7 +11,7 @@ import { SHIPPING_METHODS } from "../../cart/cart";
 const OrderSubmittedScreen = ({ route }) => {
   const { shippingMethod } = route.params;
 
-  const { languageStore, globalStyles } = useContext(StoreContext);
+  const { languageStore } = useContext(StoreContext);
   const navigation = useNavigation();
 
   const onChangeLanguage = (lng) => {
@@ -20,12 +20,12 @@ const OrderSubmittedScreen = ({ route }) => {
   };
 
   return (
-    <View style={styles(globalStyles).container}>
+    <View style={styles.container}>
       <View style={{ alignItems: "center" }}>
         <View style={{ alignItems: "center", paddingHorizontal: 40 }}>
           <Text
             style={{
-              ...styles(globalStyles).textLang,
+              ...styles.textLang,
               fontFamily: "ar-SemiBold",
             }}
           >
@@ -46,7 +46,7 @@ const OrderSubmittedScreen = ({ route }) => {
           <View>
             <Text
               style={{
-                ...styles(globalStyles).textLang,
+                ...styles.textLang,
                 fontFamily: "ar-SemiBold",
                 fontSize: 20,
                 textAlign: "center",
@@ -78,8 +78,7 @@ const OrderSubmittedScreen = ({ route }) => {
 };
 export default observer(OrderSubmittedScreen);
 
-const styles = (props) =>
-  StyleSheet.create({
+const styles = StyleSheet.create({
     container: {
       backgroundColor: "white",
       justifyContent: "center",

@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
-import i18n from "../../../translations";
+import i18n from "../../../translations/index-x";
 
 import themeStyle from "../../../styles/theme.style";
 import { CONSTS_PRODUCTS } from "../../../consts/products";

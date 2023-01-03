@@ -4,8 +4,9 @@ import { toBase64, fromBase64 } from '../../helpers/convert-base64'
 import { ORDER_API } from "../../consts/api";
 import Constants from "expo-constants";
 import * as Device from 'expo-device';
-import i18n from "../../translations";
+import i18n from "../../translations/index-x";
 import { axiosInstance } from "../../utils/http-interceptor";
+import { getCurrentLang } from "../../translations/i18n";
 var hash = require('object-hash');
 
 export type TOrderSubmitResponse = {
@@ -194,7 +195,7 @@ class CartStore {
     const cartData: TCart = {
       order: finalOrder,
       total: order.totalPrice,
-      app_language: i18n.locale === "ar" ? '1' : '2',
+      app_language: getCurrentLang() === "ar" ? '1' : '2',
       device_os: Device.osName,
       app_version:version,
       unique_hash: hashKey,
