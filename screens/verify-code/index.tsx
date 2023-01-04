@@ -4,6 +4,7 @@ import {
   View,
   DeviceEventEmitter,
   TouchableOpacity,
+  Image
 } from "react-native";
 import InputText from "../../components/controls/input";
 import Button from "../../components/controls/button/button";
@@ -21,6 +22,14 @@ import { getCurrentLang } from "../../translations/i18n";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";
 
+import {
+  CodeField,
+  Cursor,
+  useBlurOnFulfill,
+  useClearByFocusCell,
+} from 'react-native-confirmation-code-field';
+const CELL_COUNT = 4;
+
 const VerifyCodeScreen = ({ route }) => {
   const { authStore, cartStore, userDetailsStore } = useContext(StoreContext);
   const [t, i18n] = useTranslation();
@@ -31,7 +40,17 @@ const VerifyCodeScreen = ({ route }) => {
   const [isValid, setIsValid] = useState(true);
   const [timer, setTimer] = useState(0);
 
-  const [verifyCode, setVerifyCode] = useState();
+  const [verifyCode, setVerifyCode] = useState('****');
+  const ref = useBlurOnFulfill({value: verifyCode, cellCount: CELL_COUNT});
+  const [props, getCellOnLayoutHandler] = useClearByFocusCell({
+    value: verifyCode,
+    setValue:setVerifyCode ,
+  });
+
+  useEffect(()=>{
+    console.log(verifyCode)
+  },[verifyCode])
+
   const onChange = (value) => {
     setIsValid(true);
     setVerifyCode(value);
@@ -91,6 +110,9 @@ const VerifyCodeScreen = ({ route }) => {
   };
 
   const isValidNunber = () => {
+    if(verifyCode === '****'){
+      return false;
+    }
     return verifyCode?.match(/\d/g).length === 4;
   };
 
@@ -133,8 +155,14 @@ const VerifyCodeScreen = ({ route }) => {
 
   return (
     <View style={styles.container}>
+                <View style={{marginTop:20}}>
+          <Image
+            style={{ width: 190, height: 140 }}
+            source={require("../../assets/insert_code.png")}
+          />
+          </View>
       <View style={styles.inputsContainer}>
-        <Text style={{ marginTop: 50, fontSize: 25 }}>{t("inser-code")}</Text>
+        <Text style={{ marginTop: 0, fontSize: 25 }}>{t("inser-code")}</Text>
         <Text
           style={{
             marginTop: 20,
@@ -151,12 +179,36 @@ const VerifyCodeScreen = ({ route }) => {
             width: "100%",
             paddingHorizontal: 50,
             marginTop: 15,
-            alignItems: "flex-start",
+            alignItems: "center",
           }}
         >
-          <InputText keyboardType="numeric" onChange={onChange} label="الكود" />
+
+          <View style={{direction: "ltr"}}>
+        <CodeField
+      
+        ref={ref}
+        {...props}
+        // Use `caretHidden={false}` when users can't paste a text value, because context menu doesn't appear
+        value={verifyCode}
+        onChangeText={setVerifyCode}
+        cellCount={CELL_COUNT}
+        rootStyle={styles.codeFieldRoot}
+        keyboardType="number-pad"
+        textContentType="oneTimeCode"
+        renderCell={({index, symbol, isFocused}) => (
+          <View style={{borderBottomWidth:2, marginHorizontal: 10, borderColor: themeStyle.PRIMARY_COLOR,}}>
+          <Text
+            key={index}
+            style={[styles.cell, isFocused && styles.focusCell]}
+            onLayout={getCellOnLayoutHandler(index)}>
+            {symbol || (isFocused ? <Cursor /> : null)}
+          </Text>
+          </View>
+        )}
+      />
+      </View>
           {!isValid && (
-            <Text style={{ color: themeStyle.ERROR_COLOR, paddingLeft: 15 }}>
+            <Text style={{ color: themeStyle.ERROR_COLOR, paddingLeft: 15, marginTop: 20 }}>
               {t("invalid-code")}
             </Text>
           )}
@@ -218,6 +270,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     height: "100%",
+    
   },
   inputsContainer: {
     marginTop: 30,
@@ -230,5 +283,19 @@ const styles = StyleSheet.create({
     width: "100%",
     position: "absolute",
     bottom: 0,
+  },
+  root: {flex: 1, padding: 20},
+  title: {textAlign: 'center', fontSize: 30},
+  codeFieldRoot: {marginTop: 20},
+  cell: {
+    width: 66,
+    height: 66,
+    lineHeight: 65,
+    fontSize: 30,
+    borderColor: '#00000030',
+    textAlign: 'center',
+  },
+  focusCell: {
+    borderColor: '#000',
   },
 });
