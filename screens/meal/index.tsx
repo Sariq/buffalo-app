@@ -18,6 +18,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import themeStyle from "../../styles/theme.style";
 import Icon from "../../components/icon";
 import { getCurrentLang } from "../../translations/i18n";
+import { useTranslation } from "react-i18next";
 
 const extrasIcons = {
   "משקל": require("../../assets/menu/gradiant/burgerSlice.png"),
@@ -56,6 +57,7 @@ const MealScreen = ({ route }) => {
   let { cartStore, menuStore, languageStore } = useContext(StoreContext);
   const [meal, setMeal] = useState();
   const [isEdit, setIsEdit] = useState(false);
+  const [t, i18n] = useTranslation();
 
   useEffect(() => {
     let tmpProduct: any = {};
@@ -336,7 +338,7 @@ const MealScreen = ({ route }) => {
             </Text>
           </View>
           <Button
-            text={isEdit ? "update" : "اضف للكيس"}
+            text={isEdit ? t('save') : t('add-to-cart')}
             icon="cart_icon"
             fontSize={17}
             onClickFn={isEdit ? onUpdateCartProduct : onAddToCart}

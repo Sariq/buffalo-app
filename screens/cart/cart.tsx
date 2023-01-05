@@ -13,6 +13,9 @@ import {
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { ToggleButton, Divider } from "react-native-paper";
+import DashedLine from "react-native-dashed-line";
+import { LinearGradient } from "expo-linear-gradient";
+
 /* styles */
 import theme from "../../styles/theme.style";
 import * as Location from "expo-location";
@@ -36,6 +39,7 @@ import Button from "../../components/controls/button/button";
 import LocationIsDisabledDialog from "../../components/dialogs/location-is-disabled";
 import { getCurrentLang } from "../../translations/i18n";
 import { useTranslation } from "react-i18next";
+import themeStyle from "../../styles/theme.style";
 
 export const SHIPPING_METHODS = {
   shipping: "DELIVERY",
@@ -333,8 +337,14 @@ const CartScreen = () => {
 
   return (
     <View>
-      <ScrollView style={{ height: "100%", backgroundColor: "white" }}>
+      <ScrollView style={{ height: "100%" }}>
         <View style={{ ...styles.container }}>
+          <LinearGradient
+            colors={["#F1F1F1", "white"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 0, y: 0.9 }}
+            style={styles.background}
+          />
           <View>
             <View style={styles.backContainer}>
               <View
@@ -364,21 +374,20 @@ const CartScreen = () => {
                 <View
                   style={{
                     marginTop: 25,
-                    borderBottomWidth: 0.5,
                     borderColor: "#707070",
+                    borderRadius: 20,
+                    padding: 10,
+                    backgroundColor: themeStyle.WHITE_COLOR,
                   }}
                 >
                   <View
                     style={{
                       flexDirection: "row",
                       alignItems: "center",
-                      paddingHorizontal: 20,
                     }}
                   >
                     <View
                       style={{
-                        marginRight: 10,
-                        flexBasis: "40%",
                         justifyContent: "center",
                       }}
                     >
@@ -392,15 +401,6 @@ const CartScreen = () => {
                         {product.data[`name_${languageStore.selectedLang}`]}
                       </Text>
                     </View>
-                    <View style={{ width: "35%" }}>
-                      <Counter
-                        value={product.others.count}
-                        minValue={1}
-                        onCounterChange={(value) => {
-                          onCounterChange(product, index, value);
-                        }}
-                      />
-                    </View>
                   </View>
                   <View
                     style={{
@@ -409,7 +409,7 @@ const CartScreen = () => {
                       justifyContent: "space-between",
                     }}
                   >
-                    <TouchableOpacity onPress={() => onEditProduct(index)}>
+                    <View>
                       <View
                         style={{
                           flexDirection: "row",
@@ -428,7 +428,7 @@ const CartScreen = () => {
                             source={{ uri: product.data.image_url }}
                           />
                         </View>
-                        <View style={{ marginLeft: 20, marginTop: 5 }}>
+                        <View style={{ marginLeft: 0, marginTop: 5 }}>
                           {product.extras &&
                             Object.keys(product.extras).map((key) =>
                               product.extras[key].map((extra) => {
@@ -455,23 +455,98 @@ const CartScreen = () => {
                             )}
                         </View>
                       </View>
-                    </TouchableOpacity>
+                    </View>
 
                     <View style={{ alignItems: "center", marginRight: 20 }}>
-                      <TouchableOpacity
-                        style={{ padding: 5 }}
-                        onPress={() => {
-                          onRemoveProduct(product, index);
-                        }}
-                      >
-                        <View>
-                          <Icon
-                            icon="trash_icon"
-                            size={28}
-                            style={{ color: theme.GRAY_700 }}
-                          />
+                      <View style={{ width: "35%" }}>
+                        <Counter
+                          value={product.others.count}
+                          minValue={1}
+                          onCounterChange={(value) => {
+                            onCounterChange(product, index, value);
+                          }}
+                          isVertical
+                        />
+                      </View>
+                    </View>
+                  </View>
+
+                  <View
+                    style={{
+                      paddingHorizontal: 15,
+                      marginTop: 10,
+                    }}
+                  >
+                    <DashedLine
+                      dashLength={5}
+                      dashThickness={1}
+                      dashGap={5}
+                      dashColor={themeStyle.GRAY_300}
+                    />
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        marginTop: 10,
+                      }}
+                    >
+                      <View style={{ flexDirection: "row" }}>
+                        <View style={{ padding: 5, flexDirection: "row" }}>
+                          <TouchableOpacity
+                            style={{
+                              flexDirection: "row",
+                              alignItems: "center",
+                            }}
+                            onPress={() => {
+                              onEditProduct(index);
+                            }}
+                          >
+                            <Text
+                              style={{
+                                fontSize: 20,
+                                fontFamily: `${getCurrentLang()}-SemiBold`,
+                              }}
+                            >
+                              {t("edit")}
+                            </Text>
+                            <View>
+                              <Icon
+                                icon="edit"
+                                size={20}
+                                style={{ color: theme.GRAY_700 }}
+                              />
+                            </View>
+                          </TouchableOpacity>
                         </View>
-                      </TouchableOpacity>
+                        <View style={{ padding: 5, flexDirection: "row" }}>
+                          <TouchableOpacity
+                            style={{
+                              flexDirection: "row",
+                              alignItems: "center",
+                            }}
+                            onPress={() => {
+                              onRemoveProduct(product, index);
+                            }}
+                          >
+                            <Text
+                              style={{
+                                fontSize: 20,
+                                fontFamily: `${getCurrentLang()}-SemiBold`,
+                              }}
+                            >
+                              {t("delete")}
+                            </Text>
+
+                            <View>
+                              <Icon
+                                icon="delete"
+                                size={20}
+                                style={{ color: theme.GRAY_700 }}
+                              />
+                            </View>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
                       <View
                         style={{
                           marginTop: 0,
@@ -479,12 +554,12 @@ const CartScreen = () => {
                           alignItems: "center",
                         }}
                       >
-                        <Text
-                          style={{ fontFamily: "Rubik-Regular", fontSize: 17 }}
-                        >
+                        <Text style={{ fontWeight: "bold", fontSize: 17 }}>
                           {product.data.price}
                         </Text>
-                        <Text>₪</Text>
+                        <Text style={{ fontWeight: "bold", fontSize: 17 }}>
+                          ₪
+                        </Text>
                       </View>
                     </View>
                   </View>
@@ -513,7 +588,7 @@ const CartScreen = () => {
                     />
                     <Text style={{ fontSize: 20, fontWeight: "bold" }}>
                       {" "}
-                      {t('delivery')}
+                      {t("delivery")}
                     </Text>
                   </View>
                 )}
@@ -530,7 +605,7 @@ const CartScreen = () => {
                 icon={() => (
                   <View style={styles.togglleItemContentContainer}>
                     <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                    {t('take-away')}
+                      {t("take-away")}
                     </Text>
 
                     <Icon
@@ -587,7 +662,7 @@ const CartScreen = () => {
                   <View style={styles.togglleItemContentContainer}>
                     <Text style={{ fontSize: 20, fontWeight: "bold" }}>₪</Text>
                     <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                    {t('cash')}
+                      {t("cash")}
                     </Text>
                   </View>
                 )}
@@ -604,7 +679,7 @@ const CartScreen = () => {
                 icon={() => (
                   <View style={styles.togglleItemContentContainer}>
                     <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                    {t('credit-card')}
+                      {t("credit-card")}
                     </Text>
                     <Icon
                       icon="credit_card_icom"
@@ -656,7 +731,7 @@ const CartScreen = () => {
 
           <View style={styles.totalPrictContainer}>
             <View style={{ alignItems: "center" }}>
-              <Text style={{ fontWeight: "bold" }}>{t('total')}</Text>
+              <Text style={{ fontWeight: "bold" }}>{t("total")}</Text>
             </View>
             <View style={{ marginTop: 30 }}>
               {shippingMethod === SHIPPING_METHODS.shipping && (
@@ -781,10 +856,10 @@ export default observer(CartScreen);
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "white",
     paddingHorizontal: 20,
     marginBottom: 40,
     height: "100%",
+    backgroundColor: "#F1F1F1",
   },
   backContainer: {
     flexDirection: "row",
@@ -834,5 +909,12 @@ const styles = StyleSheet.create({
   },
   submitContentButton: {
     height: 50,
+  },
+  background: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
   },
 });

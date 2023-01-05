@@ -28,7 +28,7 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = buffalo/main.m; sourceTree = "<group>"; };
 		46FAB32CE0D207E050CBB48C /* libPods-buffalo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-buffalo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		788FBBD5EA96304396586D77 /* Pods-buffalo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-buffalo.debug.xcconfig"; path = "Target Support Files/Pods-buffalo/Pods-buffalo.debug.xcconfig"; sourceTree = "<group>"; };
-		85FEC6A637254C7682C562EA /* buffalosound.wav */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = buffalosound.wav; path = buffalo/buffalosound.wav; sourceTree = "<group>"; };
+		85FEC6A637254C7682C562EA /* buffalosound.wav */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = buffalosound.wav; path = buffalo/buffalosound.wav; sourceTree = "<group>"; };
 		8FB5C6E3AFD74A63B5717ABD /* noop-file.swift */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = "noop-file.swift"; path = "buffalo/noop-file.swift"; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = buffalo/SplashScreen.storyboard; sourceTree = "<group>"; };
 		B0D93428B4EC2576A7FC55C6 /* Pods-buffalo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-buffalo.release.xcconfig"; path = "Target Support Files/Pods-buffalo/Pods-buffalo.release.xcconfig"; sourceTree = "<group>"; };
@@ -148,9 +148,9 @@
 			buildPhases = (
 				28A63B45B0C2834021FE693A /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
-				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
+				13B07F871A680F5B00A75B9A /* Sources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				941B14B5A384321F9189A20D /* [CP] Copy Pods Resources */,
 			);
@@ -332,7 +332,7 @@
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sariq.buffalo;
-				PRODUCT_NAME = Buffalo;
+				PRODUCT_NAME = "Buffalo";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -359,7 +359,7 @@
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sariq.buffalo;
-				PRODUCT_NAME = Buffalo;
+				PRODUCT_NAME = "Buffalo";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
