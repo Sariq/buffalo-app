@@ -8,6 +8,8 @@ type TProps = {
   onClickFn: any;
   text: any;
   icon?: any;
+  iconSize?: any;
+  iconPosition?: 'right' | 'left';
   fontSize?: any;
   bgColor?: any;
   textColor?: any;
@@ -19,7 +21,9 @@ export default function Button({
   onClickFn,
   text,
   icon,
+  iconSize,
   fontSize,
+  iconPosition = 'right',
   bgColor,
   textColor,
   fontFamily,
@@ -30,25 +34,30 @@ export default function Button({
     onClickFn();
   };
 
+  const renderIcon = () => (
+    <Icon
+      icon={icon}
+      size={iconSize ? iconSize : 20}
+      style={{ color: textColor || theme.GRAY_700, top: -1 }}
+    />
+  );
   return (
     <View style={styles.container}>
       <TouchableOpacity
         style={{
           ...styles.button,
           backgroundColor: disabled ? themeStyle.GRAY_600 : bgColor,
-          borderColor: bgColor == "white" && themeStyle.PRIMARY_COLOR,
-          borderWidth: bgColor == "white" ? 1 : 0,
-          opacity: disabled && 0.3
+          borderColor: (bgColor == "white" || bgColor == themeStyle.PRIMARY_COLOR) && themeStyle.PRIMARY_COLOR,
+          borderWidth: 1,
+          opacity: disabled && 0.3,
+          alignItems: "center",
         }}
         onPress={() => {
           onBtnClick();
         }}
       >
-        {icon && <Icon
-          icon={icon}
-          size={20}
-          style={{ color: textColor || theme.GRAY_700 }}
-        />}
+                {icon && iconPosition && iconPosition === 'right' && renderIcon()}
+
         <Text
           style={{
             ...styles.buttonText,
@@ -59,7 +68,10 @@ export default function Button({
         >
           {text}
         </Text>
-        {isLoading && <ActivityIndicator animating={true} color={theme.WHITE_COLOR} />}
+        {icon && iconPosition && iconPosition === 'left' && renderIcon()}
+        {isLoading && (
+          <ActivityIndicator animating={true} color={theme.WHITE_COLOR} />
+        )}
       </TouchableOpacity>
     </View>
   );
@@ -76,6 +88,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 10,
+    
   },
   buttonText: {
     marginHorizontal: 20,

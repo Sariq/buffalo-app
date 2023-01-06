@@ -349,13 +349,7 @@ const CartScreen = () => {
     <View>
       <ScrollView style={{ height: "100%" }}>
         <View style={{ ...styles.container }}>
-          <LinearGradient
-            colors={["#F1F1F1", "white"]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 0, y: 0.9 }}
-            style={styles.background}
-          />
-          <View>
+          <View style={{paddingHorizontal: 20}}>
             <View style={styles.backContainer}>
               <View
                 style={{
@@ -540,7 +534,13 @@ const CartScreen = () => {
                       }}
                     >
                       <View style={{ flexDirection: "row" }}>
-                        <View style={{ padding: 5, flexDirection: "row" }}>
+                        <View
+                          style={{
+                            padding: 5,
+                            flexDirection: "row",
+                            marginRight: 15,
+                          }}
+                        >
                           <TouchableOpacity
                             style={{
                               flexDirection: "row",
@@ -572,6 +572,7 @@ const CartScreen = () => {
                             style={{
                               flexDirection: "row",
                               alignItems: "center",
+                              justifyContent: "center",
                             }}
                             onPress={() => {
                               onRemoveProduct(product, index);
@@ -581,17 +582,14 @@ const CartScreen = () => {
                               style={{
                                 fontSize: 20,
                                 fontFamily: `${getCurrentLang()}-SemiBold`,
+                                height: "100%",
                               }}
                             >
                               {t("delete")}
                             </Text>
 
-                            <View>
-                              <Icon
-                                icon="delete"
-                                size={20}
-                                style={{ color: theme.GRAY_700 }}
-                              />
+                            <View style={{ top: -1 }}>
+                              <Icon icon="delete" size={20} />
                             </View>
                           </TouchableOpacity>
                         </View>
@@ -615,64 +613,73 @@ const CartScreen = () => {
                 </View>
               ))}
             </View>
-            <ToggleButton.Row
-              onValueChange={(value) => setShippingMethod(value)}
-              value={shippingMethod}
-              style={styles.togglleContainer}
+            </View>
+
+
+
+
+
+            <View>
+            <LinearGradient
+            colors={["#F1F1F1", "white"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 0, y: 0.1 }}
+            style={styles.background}
+          />
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginTop: 30,
+                paddingHorizontal: 20,
+              }}
             >
-              <ToggleButton
-                style={{
-                  ...styles.togglleCItem,
-                  backgroundColor:
+              <View style={{ flexBasis: "49%" }}>
+                <Button
+                  onClickFn={() => setShippingMethod(SHIPPING_METHODS.shipping)}
+                  text={t("delivery")}
+                  bgColor={
                     shippingMethod === SHIPPING_METHODS.shipping
                       ? theme.PRIMARY_COLOR
-                      : "white",
-                }}
-                icon={() => (
-                  <View style={styles.togglleItemContentContainer}>
-                    <Icon
-                      icon="shipping_icon"
-                      size={25}
-                      style={{ color: theme.GRAY_700 }}
-                    />
-                    <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                      {" "}
-                      {t("delivery")}
-                    </Text>
-                  </View>
-                )}
-                value={SHIPPING_METHODS.shipping}
-              />
-              <ToggleButton
-                style={{
-                  ...styles.togglleCItem,
-                  backgroundColor:
+                      : "white"
+                  }
+                  fontFamily={`${getCurrentLang()}-SemiBold`}
+                  fontSize={20}
+                  icon="shipping_icon"
+                  iconSize={25}
+                />
+              </View>
+              <View style={{ flexBasis: "49%" }}>
+                <Button
+                  onClickFn={() => setShippingMethod(SHIPPING_METHODS.takAway)}
+                  text={t("take-away")}
+                  bgColor={
                     shippingMethod === SHIPPING_METHODS.takAway
                       ? theme.PRIMARY_COLOR
-                      : "white",
-                }}
-                icon={() => (
-                  <View style={styles.togglleItemContentContainer}>
-                    <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                      {t("take-away")}
-                    </Text>
-
-                    <Icon
-                      icon="cart_burger_icon"
-                      size={25}
-                      style={{ color: theme.GRAY_700 }}
-                    />
-                  </View>
-                )}
-                value={SHIPPING_METHODS.takAway}
-              />
-            </ToggleButton.Row>
-          </View>
+                      : "white"
+                  }
+                  fontFamily={`${getCurrentLang()}-SemiBold`}
+                  fontSize={20}
+                  icon="cart_burger_icon"
+                  iconSize={25}
+                  iconPosition={"left"}
+                />
+              </View>
+            </View>
 
           {shippingMethod === SHIPPING_METHODS.shipping && (
-            <View style={{ alignItems: "center" }}>
+            <View
+            pointerEvents="none"
+              style={{
+                alignItems: "center",
+                marginTop: 5,
+                paddingHorizontal: 20,
+                
+              }}
+            >
               {location ? (
                 <MapView
+                
                   style={styles.mapContainer}
                   initialRegion={{
                     latitude: location.coords.latitude,
@@ -693,53 +700,45 @@ const CartScreen = () => {
               )}
             </View>
           )}
-          <View>
-            <ToggleButton.Row
-              onValueChange={(value) => setPaymentMthod(value)}
-              value={paymentMthod}
-              style={styles.togglleContainer}
-            >
-              <ToggleButton
-                style={{
-                  ...styles.togglleCItem,
-                  backgroundColor:
-                    paymentMthod === PAYMENT_METHODS.cash
-                      ? theme.PRIMARY_COLOR
-                      : "white",
-                }}
-                icon={() => (
-                  <View style={styles.togglleItemContentContainer}>
-                    <Text style={{ fontSize: 20, fontWeight: "bold" }}>₪</Text>
-                    <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                      {t("cash")}
-                    </Text>
-                  </View>
-                )}
-                value={PAYMENT_METHODS.cash}
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginTop: 30,
+              paddingHorizontal: 20,
+            }}
+          >
+            <View style={{ flexBasis: "49%" }}>
+              <Button
+                onClickFn={() => setPaymentMthod(PAYMENT_METHODS.cash)}
+                text={t("cash")}
+                bgColor={
+                  paymentMthod === PAYMENT_METHODS.cash
+                    ? theme.PRIMARY_COLOR
+                    : "white"
+                }
+                fontFamily={`${getCurrentLang()}-SemiBold`}
+                fontSize={20}
+                icon="shekel"
+                iconSize={25}
               />
-              <ToggleButton
-                style={{
-                  ...styles.togglleCItem,
-                  backgroundColor:
-                    paymentMthod === PAYMENT_METHODS.creditCard
-                      ? theme.PRIMARY_COLOR
-                      : "white",
-                }}
-                icon={() => (
-                  <View style={styles.togglleItemContentContainer}>
-                    <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                      {t("credit-card")}
-                    </Text>
-                    <Icon
-                      icon="credit_card_icom"
-                      size={25}
-                      style={{ color: theme.GRAY_700 }}
-                    />
-                  </View>
-                )}
-                value={PAYMENT_METHODS.creditCard}
+            </View>
+            <View style={{ flexBasis: "49%" }}>
+              <Button
+                onClickFn={() => setPaymentMthod(PAYMENT_METHODS.creditCard)}
+                text={t("credit-card")}
+                bgColor={
+                  paymentMthod === PAYMENT_METHODS.creditCard
+                    ? theme.PRIMARY_COLOR
+                    : "white"
+                }
+                fontFamily={`${getCurrentLang()}-SemiBold`}
+                fontSize={20}
+                icon="credit_card_icom"
+                iconSize={25}
+                iconPosition={"left"}
               />
-            </ToggleButton.Row>
+            </View>
           </View>
 
           {paymentMthod === PAYMENT_METHODS.creditCard && ccData?.last4Digits && (
@@ -777,91 +776,92 @@ const CartScreen = () => {
               >{`****_****_****_${ccData?.last4Digits}`}</Text>
             </View>
           )}
-
+          </View>
           <View style={styles.totalPrictContainer}>
-            <View style={{ alignItems: "center" }}>
-              <Text style={{ fontWeight: "bold" }}>{t("total")}</Text>
-            </View>
-            <View style={{ marginTop: 30 }}>
-              {shippingMethod === SHIPPING_METHODS.shipping && (
-                <View style={styles.priceRowContainer}>
-                  <View>
-                    <Text
-                      style={{
-                        fontFamily: `${getCurrentLang()}-Light`,
-                        fontSize: 20,
-                      }}
-                    >
-                      {t("order-price")}
-                    </Text>
-                  </View>
-                  <View>
-                    <Text
-                      style={{
-                        fontFamily: `${getCurrentLang()}-Light`,
-                        fontSize: 17,
-                      }}
-                    >
-                      ₪{itemsPrice}
-                    </Text>
-                  </View>
+            {shippingMethod === SHIPPING_METHODS.shipping && (
+              <View>
+                <View style={{ alignItems: "center" }}>
+                  <Text style={{ fontWeight: "bold" }}>{t("total")}</Text>
                 </View>
-              )}
+                <View style={{ marginTop: 30 }}>
+                  <View style={styles.priceRowContainer}>
+                    <View>
+                      <Text
+                        style={{
+                          fontFamily: `${getCurrentLang()}-Light`,
+                          fontSize: 20,
+                        }}
+                      >
+                        {t("order-price")}
+                      </Text>
+                    </View>
+                    <View>
+                      <Text
+                        style={{
+                          fontFamily: `${getCurrentLang()}-Light`,
+                          fontSize: 17,
+                        }}
+                      >
+                        ₪{itemsPrice}
+                      </Text>
+                    </View>
+                  </View>
 
-              {shippingMethod === SHIPPING_METHODS.shipping && (
-                <View style={styles.priceRowContainer}>
-                  <View>
-                    <Text
-                      style={{
-                        fontFamily: `${getCurrentLang()}-Light`,
-                        fontSize: 20,
-                      }}
-                    >
-                      {t("delivery")}
-                    </Text>
+                  <View style={styles.priceRowContainer}>
+                    <View>
+                      <Text
+                        style={{
+                          fontFamily: `${getCurrentLang()}-Light`,
+                          fontSize: 20,
+                        }}
+                      >
+                        {t("delivery")}
+                      </Text>
+                    </View>
+                    <View>
+                      <Text
+                        style={{
+                          fontFamily: `${getCurrentLang()}-Light`,
+                          fontSize: 17,
+                        }}
+                      >
+                        ₪15
+                      </Text>
+                    </View>
                   </View>
-                  <View>
-                    <Text
-                      style={{
-                        fontFamily: `${getCurrentLang()}-Light`,
-                        fontSize: 17,
-                      }}
-                    >
-                      ₪15
-                    </Text>
-                  </View>
                 </View>
-              )}
-              <View style={{ borderWidth: 0.3 }}></View>
-              <View style={[styles.priceRowContainer, { marginTop: 10 }]}>
-                <View>
-                  <Text
-                    style={{
-                      fontFamily: `${getCurrentLang()}-SemiBold`,
-                      fontSize: 20,
-                    }}
-                  >
-                    {t("final-price")}
-                  </Text>
-                </View>
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  <Text
-                    style={{
-                      fontSize: 17,
-                      fontWeight: "bold",
-                    }}
-                  >
-                    {totalPrice}
-                  </Text>
-                  <Text
-                    style={{
-                      fontWeight: "bold",
-                      fontSize: 17,
-                    }}
-                  >
-                    ₪
-                  </Text>
-                </View>
+              </View>
+            )}
+            <View style={{ borderWidth: 0.3 }}></View>
+
+            <View style={[styles.priceRowContainer, { marginTop: 10 }]}>
+              <View>
+                <Text
+                  style={{
+                    fontFamily: `${getCurrentLang()}-SemiBold`,
+                    fontSize: 20,
+                  }}
+                >
+                  {t("final-price")}
+                </Text>
+              </View>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Text
+                  style={{
+                    fontSize: 17,
+                    fontWeight: "bold",
+                  }}
+                >
+                  {totalPrice}
+                </Text>
+                <Text
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: 17,
+                  }}
+                >
+                  ₪
+                </Text>
               </View>
             </View>
             <View style={{ marginTop: 30, marginHorizontal: 20 }}>
@@ -905,8 +905,6 @@ export default observer(CartScreen);
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 20,
-    marginBottom: 40,
     height: "100%",
     backgroundColor: "#F1F1F1",
   },
@@ -943,7 +941,11 @@ const styles = StyleSheet.create({
     height: 200,
   },
   totalPrictContainer: {
-    marginTop: 40,
+    paddingHorizontal: 20,
+    paddingBottom: 40,
+
+    paddingTop: 40,
+    backgroundColor: themeStyle.WHITE_COLOR,
   },
   priceRowContainer: {
     flexDirection: "row",

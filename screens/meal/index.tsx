@@ -5,6 +5,7 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
+  KeyboardAvoidingView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { observer } from "mobx-react";
@@ -21,20 +22,20 @@ import { getCurrentLang } from "../../translations/i18n";
 import { useTranslation } from "react-i18next";
 
 const extrasIcons = {
-  "משקל": require("../../assets/menu/gradiant/burgerSlice.png"),
+  משקל: require("../../assets/menu/gradiant/burgerSlice.png"),
   "צ׳דר": require("../../assets/menu/gradiant/cheese.png"),
   "1116": require("../../assets/menu/gradiant/baecon.png"),
   "בייקון טלה": require("../../assets/menu/gradiant/baecon.png"),
   "בייקון עגל": require("../../assets/menu/gradiant/baecon.png"),
-  "חלפיניו": require("../../assets/menu/gradiant/jalapeno.png"),
+  חלפיניו: require("../../assets/menu/gradiant/jalapeno.png"),
   "ביצת עין": require("../../assets/menu/gradiant/egg.png"),
   " פטריות פורטבלו": require("../../assets/menu/gradiant/truffle.png"),
   "בצל מטוגן": require("../../assets/menu/gradiant/friedOnion.png"),
-  "מיונז": require("../../assets/menu/gradiant/maio.png"),
-  "עגבנייה": require("../../assets/menu/gradiant/tomatto.png"),
-  "חסה": require("../../assets/menu/gradiant/khs.png"),
-  "מלפפון": require("../../assets/menu/gradiant/pickels.png"),
-  "בצל": require("../../assets/menu/gradiant/onion.png"),
+  מיונז: require("../../assets/menu/gradiant/maio.png"),
+  עגבנייה: require("../../assets/menu/gradiant/tomatto.png"),
+  חסה: require("../../assets/menu/gradiant/khs.png"),
+  מלפפון: require("../../assets/menu/gradiant/pickels.png"),
+  בצל: require("../../assets/menu/gradiant/onion.png"),
   "1142": require("../../assets/menu/gradiant/burgerSlice.png"),
   "1137": require("../../assets/menu/gradiant/burgerSlice.png"),
   "1138": require("../../assets/menu/gradiant/burgerSlice.png"),
@@ -169,159 +170,188 @@ const MealScreen = ({ route }) => {
     <View
       style={{ height: "100%", marginBottom: 40, backgroundColor: "white" }}
     >
-      <ScrollView>
-        <View
-          style={{
-            alignItems: "center",
-            justifyContent: "center",
-            paddingTop: 20,
-          }}
-        >
-          <View>
-            <TouchableOpacity style={{ zIndex: 1, }}>
-              <Text
-                onPress={onClose}
-                style={{
-                  zIndex: 1,
-                  position: "absolute",
-                  right: -10,
-                  width: "10%",
-                  fontSize: 30,
-                  padding:5
-                }}
-              >
-                X
-              </Text>
-            </TouchableOpacity>
-            <View style={{ width: 310, height: 230, padding: 20 }}>
-              <Image
-                style={{ width: "100%", height: "100%" }}
-                source={{ uri: meal.data.image_url }}
-              />
-            </View>
-          </View>
+      <KeyboardAvoidingView
+        keyboardVerticalOffset={100}
+        behavior="position"
+        style={{ flex: 1 }}
+      >
+        <ScrollView>
           <View
             style={{
-              backgroundColor: "white",
-              marginTop: 0,
-              alignSelf: "flex-start",
-              paddingHorizontal: 40,
-              paddingBottom: 15,
+              alignItems: "center",
+              justifyContent: "center",
+              paddingTop: 20,
             }}
           >
             <View>
-              <Text style={{ fontSize: 25, textAlign: "left", fontFamily: `${getCurrentLang()}-SemiBold`,}}>
-                {meal.data[`name_${languageStore.selectedLang}`]}
-              </Text>
-            </View>
-            <View>
-              <Text style={{ fontSize: 15, textAlign: "left", fontFamily: `${getCurrentLang()}-SemiBold`,marginTop: 10 }}>
-                {meal.data[`description_${languageStore.selectedLang}`]}
-              </Text>
-            </View>
-          </View>
-        </View>
-
-        <View style={styles.sectionContainer}>
-          <View style={styles.gradiantRowContainer}>
-            <GradiantRow
-              onChangeFn={(value) => {
-                updateOthers(value, "count", "others");
-              }}
-              type="COUNTER"
-              title={"الكمية من نفس الطلب"}
-              value={meal["others"]["count"]}
-              hideIcon
-            />
-          </View>
-        </View>
-
-        {meal.extras &&
-          Object.keys(meal.extras).map(
-            (key) =>
-              isAvailableOnApp(key) && (
-                <View key={key} style={[styles.sectionContainer]}>
-                  {meal.extras[key] && (
-                    <View style={styles.gradiantRowContainer}>
-                      {Object.keys(meal.extras[key]).map((tagId) => {
-                        const tag = meal.extras[key][tagId];
-                        if (tag.available_on_app) {
-                          return (
-                            <View key={tagId} style={{ paddingVertical: 10 }}>
-                              <GradiantRow
-                                onChangeFn={(value) => {
-                                  updateMeal(value, tag, key);
-                                }}
-                                icon={extrasIcons[tag.name]}
-                                type={tag.type}
-                                title={menuStore.translate(tag.name)}
-                                price={tag.price}
-                                minValue={tag.counter_min_value}
-                                stepValue={tag.counter_step_value}
-                                value={tag.value}
-                              />
-                            </View>
-                          );
-                        }
-                      })}
-                    </View>
-                  )}
-                </View>
-              )
-          )}
-
-        <View style={styles.sectionContainer}>
-          <View style={styles.gradiantRowContainer}>
-            <View style={{ padding: 10 }}>
-              <View>
-                <Text style={{ textAlign: "left",fontFamily: `${getCurrentLang()}-SemiBold`,paddingLeft: 40, fontSize:15 }}>ملاحظات للمطعم</Text>
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  width: "100%",
-                  marginTop: 10,
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
-                <View
+              <TouchableOpacity style={{ zIndex: 1 }}>
+                <Text
+                  onPress={onClose}
                   style={{
-                    flexBasis: "10%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    backgroundColor: "rgba(254, 203, 5, 0.18)",
-                    borderRadius: 10,
-                    height: 40,
+                    zIndex: 1,
+                    position: "absolute",
+                    right: -10,
+                    width: "10%",
+                    fontSize: 30,
+                    padding: 5,
                   }}
                 >
-                  <Icon icon="pen" size={20} />
-                </View>
-                <View style={{ flexBasis: "88%", justifyContent: "center" }}>
-                  <TextInput
-                    onChange={(e) => {
-                      updateOthers(e.nativeEvent.text, "note", "others");
-                    }}
-                    placeholder="اكتب ملاحظات هنا"
-                    multiline={true}
-                    selectionColor="black"
-                    underlineColorAndroid="transparent"
-                    numberOfLines={5}
+                  X
+                </Text>
+              </TouchableOpacity>
+              <View style={{ width: 310, height: 230, padding: 20 }}>
+                <Image
+                  style={{ width: "100%", height: "100%" }}
+                  source={{ uri: meal.data.image_url }}
+                />
+              </View>
+            </View>
+            <View
+              style={{
+                backgroundColor: "white",
+                marginTop: 0,
+                alignSelf: "flex-start",
+                paddingHorizontal: 40,
+                paddingBottom: 15,
+              }}
+            >
+              <View>
+                <Text
+                  style={{
+                    fontSize: 25,
+                    textAlign: "left",
+                    fontFamily: `${getCurrentLang()}-SemiBold`,
+                  }}
+                >
+                  {meal.data[`name_${languageStore.selectedLang}`]}
+                </Text>
+              </View>
+              <View>
+                <Text
+                  style={{
+                    fontSize: 15,
+                    textAlign: "left",
+                    fontFamily: `${getCurrentLang()}-SemiBold`,
+                    marginTop: 10,
+                  }}
+                >
+                  {meal.data[`description_${languageStore.selectedLang}`]}
+                </Text>
+              </View>
+            </View>
+          </View>
+
+          <View style={styles.sectionContainer}>
+            <View style={styles.gradiantRowContainer}>
+              <GradiantRow
+                onChangeFn={(value) => {
+                  updateOthers(value, "count", "others");
+                }}
+                type="COUNTER"
+                title={"الكمية من نفس الطلب"}
+                value={meal["others"]["count"]}
+                hideIcon
+              />
+            </View>
+          </View>
+
+          {meal.extras &&
+            Object.keys(meal.extras).map(
+              (key) =>
+                isAvailableOnApp(key) && (
+                  <View key={key} style={[styles.sectionContainer]}>
+                    {meal.extras[key] && (
+                      <View style={styles.gradiantRowContainer}>
+                        {Object.keys(meal.extras[key]).map((tagId) => {
+                          const tag = meal.extras[key][tagId];
+                          if (tag.available_on_app) {
+                            return (
+                              <View key={tagId} style={{ paddingVertical: 10 }}>
+                                <GradiantRow
+                                  onChangeFn={(value) => {
+                                    updateMeal(value, tag, key);
+                                  }}
+                                  icon={extrasIcons[tag.name]}
+                                  type={tag.type}
+                                  title={menuStore.translate(tag.name)}
+                                  price={tag.price}
+                                  minValue={tag.counter_min_value}
+                                  stepValue={tag.counter_step_value}
+                                  value={tag.value}
+                                />
+                              </View>
+                            );
+                          }
+                        })}
+                      </View>
+                    )}
+                  </View>
+                )
+            )}
+
+          <View style={styles.sectionContainer}>
+            <View style={styles.gradiantRowContainer}>
+              <View style={{ padding: 10 }}>
+                <View>
+                  <Text
                     style={{
-                      backgroundColor: "white",
-                      borderWidth: 1,
-                      textAlignVertical: "top",
-                      textAlign: "right",
-                      padding: 10,
-                      height: 70,
+                      textAlign: "left",
+                      fontFamily: `${getCurrentLang()}-SemiBold`,
+                      paddingLeft: 40,
+                      fontSize: 15,
                     }}
-                  />
+                  >
+                    {t('meal-notes')}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    width: "100%",
+                    marginTop: 10,
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <View
+                    style={{
+                      flexBasis: "10%",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      backgroundColor: "rgba(254, 203, 5, 0.18)",
+                      borderRadius: 10,
+                      height: 40,
+                    }}
+                  >
+                    <Icon icon="pen" size={20} />
+                  </View>
+                  <View style={{ flexBasis: "88%", justifyContent: "center" }}>
+                    <TextInput
+                      onChange={(e) => {
+                        updateOthers(e.nativeEvent.text, "note", "others");
+                      }}
+                      placeholder={t('inser-notes-here')}
+                      multiline={true}
+                      selectionColor="black"
+                      underlineColorAndroid="transparent"
+                      numberOfLines={5}
+                      style={{
+                        backgroundColor: "white",
+                        borderWidth: 1,
+                        textAlignVertical: "top",
+                        textAlign: "right",
+                        padding: 10,
+                        height: 70,
+                      }}
+                    />
+                  </View>
                 </View>
               </View>
             </View>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
+
       <View style={styles.buttonContainer}>
         <View
           style={{
@@ -338,7 +368,7 @@ const MealScreen = ({ route }) => {
             </Text>
           </View>
           <Button
-            text={isEdit ? t('save') : t('add-to-cart')}
+            text={isEdit ? t("save") : t("add-to-cart")}
             icon="cart_icon"
             fontSize={17}
             onClickFn={isEdit ? onUpdateCartProduct : onAddToCart}
