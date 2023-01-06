@@ -13,6 +13,7 @@ import Icon from "../../components/icon";
 import { useState, useEffect } from "react";
 import Button from "../../components/controls/button/button";
 import themeStyle from "../../styles/theme.style";
+import { useTranslation } from "react-i18next";
 
 type TProps = {
   isOpen: boolean;
@@ -24,6 +25,7 @@ export default function LocationIsDisabledDialog({
   handleAnswer,
 }: TProps) {
   const [visible, setVisible] = useState(isOpen);
+  const [t, i18n] = useTranslation();
 
   useEffect(() => {
     setVisible(isOpen);
@@ -59,8 +61,7 @@ export default function LocationIsDisabledDialog({
                 fontWeight: "bold",
               }}
             >
-              لا يمكننا تحديد موقعك الرجاء الدخول الي اعدادات الهاتف وفتح خدمة
-              تحديد الموقع
+              {t('location-is-disabled	')}
             </Paragraph>
           </Dialog.Content>
           <Dialog.Actions>
@@ -74,7 +75,7 @@ export default function LocationIsDisabledDialog({
               <View style={{ flexBasis: "47%" }}>
                 <Button
                   onClickFn={() => hideDialog(true)}
-                  text="الاعدادات"
+                  text={t('settings')}
                   bgColor={themeStyle.SUCCESS_COLOR}
                   textColor={themeStyle.WHITE_COLOR}
                   fontSize={16}
@@ -83,7 +84,7 @@ export default function LocationIsDisabledDialog({
               <View style={{ flexBasis: "47%" }}>
                 <Button
                   onClickFn={() => hideDialog(false)}
-                  text="لا شكرا"
+                  text={t('no-thanks')}
                   bgColor={themeStyle.GRAY_600}
                   textColor={themeStyle.WHITE_COLOR}
                   fontSize={16}

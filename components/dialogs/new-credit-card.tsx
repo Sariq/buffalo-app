@@ -1,9 +1,4 @@
-import {
-  StyleSheet,
-  TouchableOpacity,
-  Text,
-  View,
-} from "react-native";
+import { StyleSheet, TouchableOpacity, Text, View } from "react-native";
 import { Dialog, Portal, Provider } from "react-native-paper";
 
 /* styles */
@@ -95,16 +90,11 @@ export default function NewPaymentMethodDialog({
               </View>
             </View>
 
-            <ScrollView
-              keyboardShouldPersistTaps="handled"
-            >
-            <View               style={{ paddingHorizontal: 20 }}
->
-            <CreditCard onSaveCard={hideDialog} />
-
-            </View>
+            <ScrollView keyboardShouldPersistTaps="handled">
+              <View style={{ paddingHorizontal: 20 }}>
+                <CreditCard onSaveCard={hideDialog} />
+              </View>
             </ScrollView>
-
           </Dialog.Content>
         </Dialog>
       </Portal>
