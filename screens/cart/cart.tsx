@@ -335,6 +335,16 @@ const CartScreen = () => {
     setOpenNewCreditCardDialog(true);
   };
 
+  const filterMealExtras = (extras) => {
+    const filteredExtras = extras.filter(
+      (extra) =>
+        extra.value &&
+        extra.isdefault != extra.value &&
+        extra.counter_init_value != extra.value
+    );
+    return filteredExtras;
+  };
+
   return (
     <View>
       <ScrollView style={{ height: "100%" }}>
@@ -430,8 +440,12 @@ const CartScreen = () => {
                         </View>
                         <View style={{ marginLeft: 0, marginTop: 5 }}>
                           {product.extras &&
-                            Object.keys(product.extras).map((key) =>
-                              product.extras[key].map((extra) => {
+                            Object.keys(product.extras).map((key) => {
+                              const filteredExtras = filterMealExtras(
+                                product.extras[key]
+                              );
+                              return filteredExtras.map((extra, index) => {
+                                let lastKey = filteredExtras.length;
                                 if (
                                   extra.value &&
                                   extra.isdefault != extra.value &&
@@ -439,20 +453,55 @@ const CartScreen = () => {
                                 ) {
                                   return (
                                     <View>
-                                      <Text
+                                      <View
                                         style={{
-                                          textAlign: "left",
-                                          fontFamily: `${getCurrentLang()}-SemiBold`,
-                                          fontSize: 16,
+                                          flexDirection: "row",
+                                          alignItems: "center",
+                                          paddingBottom: 10,
                                         }}
                                       >
-                                        + {extra.name} {extra.value}
-                                      </Text>
+                                        <View
+                                          style={{
+                                            height: 8,
+                                            width: 8,
+                                            backgroundColor:
+                                              themeStyle.PRIMARY_COLOR,
+                                            borderRadius: 100,
+                                            marginRight: 5,
+                                          }}
+                                        ></View>
+                                        <View>
+                                          <Text
+                                            style={{
+                                              textAlign: "left",
+                                              fontFamily: `${getCurrentLang()}-SemiBold`,
+                                              fontSize: 14,
+                                              color: themeStyle.SUCCESS_COLOR,
+                                            }}
+                                          >
+                                            {extra.name} {extra.value}
+                                          </Text>
+                                        </View>
+                                      </View>
+                                      {lastKey - 1 !== index && (
+                                        <View
+                                          style={{
+                                            borderWidth: 1,
+                                            width: 1,
+                                            height: 20,
+                                            position: "absolute",
+                                            top: 10,
+                                            left: 3,
+                                            borderColor:
+                                              themeStyle.PRIMARY_COLOR,
+                                          }}
+                                        ></View>
+                                      )}
                                     </View>
                                   );
                                 }
-                              })
-                            )}
+                              });
+                            })}
                         </View>
                       </View>
                     </View>
