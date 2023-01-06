@@ -60,17 +60,25 @@ const CreditCard = ({ onSaveCard }) => {
 
   const onNumberChange = (value) => {
     const { isValid }: any = cardValidator.number(value);
-    console.log(isValid);
+    if(isValid){
+      Keyboard.dismiss();
+    }
     setCreditCardNumber(value);
     setFormStatus({ ...formStatus, isNumberValid: isValid });
   };
   const onCVVChange = (value) => {
     const { isValid } = cardValidator.cvv(value);
+    if(isValid){
+      Keyboard.dismiss();
+    }
     setCreditCardCVV(value);
     setFormStatus({ ...formStatus, isCVVValid: isValid });
   };
   const onCardHolderNameChange = (value) => {
     const isValid: any = isValidID(value);
+    if(isValid){
+      Keyboard.dismiss();
+    }
     setCardHolderID(value);
     setFormStatus({ ...formStatus, idIDValid: isValid });
   };
