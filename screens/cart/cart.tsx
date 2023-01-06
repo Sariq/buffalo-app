@@ -41,6 +41,7 @@ import { getCurrentLang } from "../../translations/i18n";
 import { useTranslation } from "react-i18next";
 import themeStyle from "../../styles/theme.style";
 import InvalidAddressdDialog from "../../components/dialogs/invalid-address";
+import StoreIsCloseDialog from "../../components/dialogs/store-is-close";
 
 export const SHIPPING_METHODS = {
   shipping: "DELIVERY",
@@ -56,7 +57,7 @@ type TShippingMethod = {
 };
 
 const CartScreen = () => {
-  const { cartStore, authStore, languageStore, userDetailsStore } = useContext(
+  const { cartStore, authStore, languageStore, storeDataStore } = useContext(
     StoreContext
   );
   const [t, i18n] = useTranslation();
@@ -92,6 +93,7 @@ const CartScreen = () => {
 
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
+  const [showStoreIsCloseDialog, setShowStoreIsCloseDialog] = useState(false);
 
   const [isLoadingOrderSent, setIsLoadingOrderSent] = useState(null);
   const [isValidAddress, setIsValidAddress] = useState(false);
@@ -148,15 +150,15 @@ const CartScreen = () => {
     setLocation(location);
     cartStore
       .isValidGeo(location.coords.latitude, location.coords.longitude)
-      .then((res) => {        
+      .then((res) => {
         setIsValidAddress(res.result);
-        setIsOpenInvalidAddressDialod(!res.result)
+        setIsOpenInvalidAddressDialod(!res.result);
       });
   };
   useEffect(() => {
     if (shippingMethod === SHIPPING_METHODS.shipping) {
       (async () => {
-        if(!location){
+        if (!location) {
           const res = await Location.hasServicesEnabledAsync();
           if (!res) {
             setIsOpenLocationIsDisableDialog(true);
@@ -209,21 +211,35 @@ const CartScreen = () => {
     cartStore.removeProduct(product.data.id + index);
   };
 
-  const onSendCart = () => {
+  const isStoreAvailable = () => {
+    return storeDataStore.getStoreData().then((res) => {
+      return {
+        isOpen: res.isOpen,
+        isBusy: false,
+      };
+    });
+  };
+
+  const onSendCart = async () => {
     const isLoggedIn = authStore.isLoggedIn();
     if (isLoggedIn) {
-      if(isValidAddress){
-        if (
-          shippingMethod === SHIPPING_METHODS.shipping &&
-          !isShippingMethodAgrred
-        ) {
-          setIsOpenShippingMethodDialog(true);
-          return;
+      const storeStatus = await isStoreAvailable();
+      if (storeStatus.isOpen) {
+        if (isValidAddress) {
+          if (
+            shippingMethod === SHIPPING_METHODS.shipping &&
+            !isShippingMethodAgrred
+          ) {
+            setIsOpenShippingMethodDialog(true);
+            return;
+          } else {
+            submitCart();
+          }
         } else {
-          submitCart();
+          setIsOpenInvalidAddressDialod(true);
         }
-      }else{
-        setIsOpenInvalidAddressDialod(true)
+      } else {
+        setShowStoreIsCloseDialog(true);
       }
     } else {
       navigation.navigate("login");
@@ -326,8 +342,10 @@ const CartScreen = () => {
     }
   };
   const handleInvalidLocationAnswer = (value: boolean) => {
-    setIsOpenInvalidAddressDialod(false)
-
+    setIsOpenInvalidAddressDialod(false);
+  };
+  const handleStoreIsCloseAnswer = (value: boolean) => {
+    setShowStoreIsCloseDialog(false);
   };
   const handleNewPMAnswer = (value: any) => {
     if (value === "close") {
@@ -909,8 +927,12 @@ const CartScreen = () => {
         isOpen={isOpenLocationIsDisabledDialog}
       />
       <InvalidAddressdDialog
-      handleAnswer={handleInvalidLocationAnswer}
-      isOpen={isOpenInvalidAddressDialod}
+        handleAnswer={handleInvalidLocationAnswer}
+        isOpen={isOpenInvalidAddressDialod}
+      />
+      <StoreIsCloseDialog
+        handleAnswer={handleStoreIsCloseAnswer}
+        isOpen={showStoreIsCloseDialog}
       />
     </View>
   );

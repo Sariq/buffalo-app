@@ -34,6 +34,7 @@ class StoreDataStore {
         console.log(this.paymentCredentials)
 
       })
+      return res.stores[0];
     })
   };
 }
