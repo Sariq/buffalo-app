@@ -4,16 +4,16 @@ import {
   Text,
   Keyboard,
   DeviceEventEmitter,
+  KeyboardAvoidingView,
 } from "react-native";
 import InputText from "../controls/input";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import theme from "../../styles/theme.style";
 import validateCard, {
   TValidateCardProps,
   TCCDetails,
 } from "./api/validate-card";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import moment from "moment";
 import cardValidator from "card-validator";
 import isValidID from "../../helpers/validate-id-number";
 import Button from "../controls/button/button";
@@ -36,10 +36,13 @@ const CreditCard = ({ onSaveCard }) => {
     isCVVValid: undefined,
     idIDValid: undefined,
   });
-  const [isExpDateValid, setIsExpDateValid] = useState(undefined)
+  const [isExpDateValid, setIsExpDateValid] = useState(undefined);
 
   useEffect(() => {
-    const ExpDatePicjkerChange = DeviceEventEmitter.addListener(`EXP_DATE_PICKER_CHANGE`, setExpData.bind(this));
+    const ExpDatePicjkerChange = DeviceEventEmitter.addListener(
+      `EXP_DATE_PICKER_CHANGE`,
+      setExpData.bind(this)
+    );
     return () => {
       ExpDatePicjkerChange.remove();
     };
@@ -56,8 +59,8 @@ const CreditCard = ({ onSaveCard }) => {
   };
 
   const onNumberChange = (value) => {
-    const { isValid } :any = cardValidator.number(value);
-    console.log(isValid)
+    const { isValid }: any = cardValidator.number(value);
+    console.log(isValid);
     setCreditCardNumber(value);
     setFormStatus({ ...formStatus, isNumberValid: isValid });
   };
@@ -73,23 +76,28 @@ const CreditCard = ({ onSaveCard }) => {
   };
 
   const isFormValid = () => {
-    console.log(formStatus)
-    return !(formStatus.idIDValid && formStatus.isCVVValid && isExpDateValid && formStatus.isNumberValid);
-  }
+    console.log(formStatus);
+    return !(
+      formStatus.idIDValid &&
+      formStatus.isCVVValid &&
+      isExpDateValid &&
+      formStatus.isNumberValid
+    );
+  };
 
   const onSaveCreditCard = () => {
     const validateCardData: TValidateCardProps = {
       cardNumber: creditCardNumber,
-      expDate: creditCardExpDate.replaceAll('\/', ''),
+      expDate: creditCardExpDate.replaceAll("/", ""),
     };
     validateCard(validateCardData).then(async (res) => {
-      console.log("vlaidatecard", res)
+      console.log("vlaidatecard", res);
       if (res.isValid) {
         const ccData: TCCDetails = {
           ccToken: res.ccDetails.ccToken,
           last4Digits: res.ccDetails.last4Digits,
           cvv: creditCardCVV,
-          expDate: creditCardExpDate.replaceAll('\/', ''),
+          expDate: creditCardExpDate.replaceAll("/", ""),
           id: cardHolderID,
         };
         const ccDetailsString = JSON.stringify(ccData);
@@ -100,73 +108,83 @@ const CreditCard = ({ onSaveCard }) => {
       }
     });
   };
-
+  const [keyboardVerticalOffset, setkeyboardVerticalOffset] = useState(0);
   return (
-    <View style={styles.container}>
-      <View style={{ alignItems: "flex-start" }}>
-        <Text style={{ fontSize: 18 }}>{t('inser-credit-card-details')}</Text>
-      </View>	
-      <View style={{ marginTop: 25, alignItems: "flex-start" }}>
-        <InputText
-          label={t('credit-card-number')}
-          onChange={onNumberChange}
-          value={creditCardNumber}
-          keyboardType="numeric"
-          isError={formStatus.isNumberValid === false}
-          variant="default"
-          placeHolder="xxxx-xxxx-xxxx-xxxx"
-        />
-        {formStatus.isNumberValid === false && <Text style={{color: themeStyle.ERROR_COLOR }}>מספר לא תקין</Text>}
+    <KeyboardAvoidingView
+      keyboardVerticalOffset={keyboardVerticalOffset}
+      behavior="position"
+    >
+      <View style={styles.container}>
+        <View style={{ marginTop: 25, alignItems: "flex-start" }}>
+          <InputText
+            label={t("credit-card-number")}
+            onChange={onNumberChange}
+            value={creditCardNumber}
+            keyboardType="numeric"
+            isError={formStatus.isNumberValid === false}
+            variant="default"
+            placeHolder="xxxx-xxxx-xxxx-xxxx"
+          />
+          {formStatus.isNumberValid === false && (
+            <Text style={{ color: themeStyle.ERROR_COLOR }}>מספר לא תקין</Text>
+          )}
+        </View>
+        <View style={styles.monthExpContainer}>
+          <InputText
+            label={t("expiry-date")}
+            onChange={() => {}}
+            value={creditCardExpDate}
+            isEditable={false}
+            onClick={() => {
+              Keyboard.dismiss();
+              showPicker();
+            }}
+            variant="default"
+          />
+          {isExpDateValid === false && (
+            <Text style={{ color: themeStyle.ERROR_COLOR }}>מספר לא תקין</Text>
+          )}
+        </View>
+        <View style={{ marginTop: 10, alignItems: "flex-start" }}>
+          <InputText
+            keyboardType="numeric"
+            label="CVV"
+            onChange={onCVVChange}
+            value={creditCardCVV}
+            isError={formStatus.isCVVValid === false}
+            variant="default"
+          />
+          {formStatus.isCVVValid === false && (
+            <Text style={{ color: themeStyle.ERROR_COLOR }}>מספר לא תקין</Text>
+          )}
+        </View>
+        <View style={{ marginTop: 10, alignItems: "flex-start" }}>
+          <InputText
+            keyboardType="numeric"
+            label={t("id-number")}
+            onChange={onCardHolderNameChange}
+            value={cardHolderID}
+            isError={formStatus.idIDValid === false}
+            variant="default"
+            onFocus={() => setkeyboardVerticalOffset(150)}
+            onBlur={() => setkeyboardVerticalOffset(0)}
+          />
+          {formStatus.idIDValid === false && (
+            <Text style={{ color: themeStyle.ERROR_COLOR }}>מספר לא תקין</Text>
+          )}
+        </View>
+        <View style={{ marginTop: 20 }}>
+          <Button
+            bgColor={theme.SUCCESS_COLOR}
+            onClickFn={onSaveCreditCard}
+            disabled={isFormValid()}
+            text={t("save-credit-card")}
+            fontSize={22}
+            textColor={theme.WHITE_COLOR}
+          />
+        </View>
       </View>
-      <View style={styles.monthExpContainer}>
-        <InputText
-          label={t('expiry-date')}
-          onChange={() => {}}
-          value={creditCardExpDate}
-          isEditable={false}
-          onClick={() => {
-            Keyboard.dismiss();
-            showPicker();
-          }}
-          variant="default"
-
-        />
-        {isExpDateValid === false && <Text style={{color: themeStyle.ERROR_COLOR }}>מספר לא תקין</Text>}
-      </View>
-      <View style={{ marginTop: 10, alignItems: "flex-start" }}>
-        <InputText
-          keyboardType="numeric"
-          label="CVV"
-          onChange={onCVVChange}
-          value={creditCardCVV}
-          isError={formStatus.isCVVValid === false}
-          variant="default"
-        />
-        {formStatus.isCVVValid === false && <Text style={{color: themeStyle.ERROR_COLOR }}>מספר לא תקין</Text>}
-      </View>
-      <View style={{ marginTop: 10, alignItems: "flex-start" }}>
-        <InputText
-          keyboardType="numeric"
-          label={t('id-number')}
-          onChange={onCardHolderNameChange}
-          value={cardHolderID}
-          isError={formStatus.idIDValid === false}
-          variant="default"
-        />
-        {formStatus.idIDValid === false && <Text style={{color: themeStyle.ERROR_COLOR }}>מספר לא תקין</Text>}
-      </View>
-      <View style={{marginTop:20}}>
-        <Button
-          bgColor={theme.SUCCESS_COLOR}
-          onClickFn={onSaveCreditCard}
-          disabled={isFormValid()}
-          text={t('save-credit-card')}
-          fontSize={22}
-          textColor={theme.WHITE_COLOR}
-        />
-          
-      </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

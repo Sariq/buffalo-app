@@ -17,6 +17,8 @@ type TProps = {
   isError?: boolean;
   variant?: "default" | "outlined";
   placeHolder?: string;
+  onFocus?: any;
+  onBlur?: any;
 };
 export default function InputText({
   onChange,
@@ -27,7 +29,9 @@ export default function InputText({
   keyboardType,
   isError,
   variant,
-  placeHolder
+  placeHolder,
+  onFocus,
+  onBlur
 }: TProps) {
   const handleOnChange = (e) => {
     onChange && onChange(e.nativeEvent.text);
@@ -53,6 +57,8 @@ export default function InputText({
           placeholder={placeHolder}
           selectionColor={"black"}
           keyboardType={keyboardType}
+          onFocus={onFocus}
+          onBlur={onBlur}
           style={{
             textAlign: "center",
             height: 50,

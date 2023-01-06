@@ -1,10 +1,17 @@
-import { StyleSheet, TouchableOpacity, Text } from "react-native";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  View,
+} from "react-native";
 import { Dialog, Portal, Provider } from "react-native-paper";
 
 /* styles */
 import theme from "../../styles/theme.style";
 import { useState, useEffect } from "react";
 import CreditCard from "../credit-card";
+import { useTranslation } from "react-i18next";
+import { ScrollView } from "react-native-gesture-handler";
 
 type TProps = {
   isOpen: boolean;
@@ -16,6 +23,7 @@ export default function NewPaymentMethodDialog({
   handleAnswer,
 }: TProps) {
   const [visible, setVisible] = useState(isOpen);
+  const [t, i18n] = useTranslation();
 
   useEffect(() => {
     setVisible(isOpen);
@@ -40,33 +48,63 @@ export default function NewPaymentMethodDialog({
           style={{
             width: "85%",
             marginHorizontal: 30,
-            paddingVertical: 10,
+            paddingVertical: 0,
             borderRadius: 10,
             top: 0,
             position: "absolute",
             paddingHorizontal: 0,
+            overflow: "hidden",
           }}
           visible={visible}
           dismissable={false}
         >
-          <Dialog.Content>
-            <TouchableOpacity style={{zIndex: 1}}>
-              <Text
-                onPress={onClose}
-                style={{
-                  zIndex: 1,
-                  position: "absolute",
-                  right: 0,
-                  padding: 5,
-                  top:-10,
-                  width: "10%",
-                  fontSize: 25,
-                }}
-              >
-                X
-              </Text>
-            </TouchableOpacity>
+          <Dialog.Content
+            style={{
+              paddingLeft: 0,
+              paddingRight: 0,
+              paddingTop: 0,
+              paddingBottom: 30,
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                backgroundColor: "white",
+                zIndex: 1,
+                paddingBottom: 5,
+                padding: 20,
+              }}
+            >
+              <View style={{ alignItems: "flex-start" }}>
+                <Text style={{ fontSize: 18 }}>
+                  {t("inser-credit-card-details")}
+                </Text>
+              </View>
+              <View>
+                <TouchableOpacity>
+                  <Text
+                    onPress={onClose}
+                    style={{
+                      fontSize: 25,
+                    }}
+                  >
+                    X
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            <ScrollView
+              keyboardShouldPersistTaps="handled"
+            >
+            <View               style={{ paddingHorizontal: 20 }}
+>
             <CreditCard onSaveCard={hideDialog} />
+
+            </View>
+            </ScrollView>
+
           </Dialog.Content>
         </Dialog>
       </Portal>

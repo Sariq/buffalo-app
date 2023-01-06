@@ -346,10 +346,10 @@ const CartScreen = () => {
   };
 
   return (
-    <View>
-      <ScrollView style={{ height: "100%" }}>
+    <View style={{ position: "relative" }}>
+      <ScrollView>
         <View style={{ ...styles.container }}>
-          <View style={{paddingHorizontal: 20}}>
+          <View style={{ paddingHorizontal: 20 }}>
             <View style={styles.backContainer}>
               <View
                 style={{
@@ -613,19 +613,15 @@ const CartScreen = () => {
                 </View>
               ))}
             </View>
-            </View>
+          </View>
 
-
-
-
-
-            <View>
+          <View>
             <LinearGradient
-            colors={["#F1F1F1", "white"]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 0, y: 0.1 }}
-            style={styles.background}
-          />
+              colors={["#F1F1F1", "white"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 0, y: 0.1 }}
+              style={styles.background}
+            />
             <View
               style={{
                 flexDirection: "row",
@@ -667,115 +663,116 @@ const CartScreen = () => {
               </View>
             </View>
 
-          {shippingMethod === SHIPPING_METHODS.shipping && (
-            <View
-            pointerEvents="none"
-              style={{
-                alignItems: "center",
-                marginTop: 5,
-                paddingHorizontal: 20,
-                
-              }}
-            >
-              {location ? (
-                <MapView
-                
-                  style={styles.mapContainer}
-                  initialRegion={{
-                    latitude: location.coords.latitude,
-                    latitudeDelta: 0.01,
-                    longitude: location.coords.longitude,
-                    longitudeDelta: 0.01,
-                  }}
-                >
-                  <Marker
-                    coordinate={{
-                      latitude: location.coords.latitude,
-                      longitude: location.coords.longitude,
-                    }}
-                  />
-                </MapView>
-              ) : (
-                <Text>טוען מיקום...</Text>
-              )}
-            </View>
-          )}
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              marginTop: 30,
-              paddingHorizontal: 20,
-            }}
-          >
-            <View style={{ flexBasis: "49%" }}>
-              <Button
-                onClickFn={() => setPaymentMthod(PAYMENT_METHODS.cash)}
-                text={t("cash")}
-                bgColor={
-                  paymentMthod === PAYMENT_METHODS.cash
-                    ? theme.PRIMARY_COLOR
-                    : "white"
-                }
-                fontFamily={`${getCurrentLang()}-SemiBold`}
-                fontSize={20}
-                icon="shekel"
-                iconSize={25}
-              />
-            </View>
-            <View style={{ flexBasis: "49%" }}>
-              <Button
-                onClickFn={() => setPaymentMthod(PAYMENT_METHODS.creditCard)}
-                text={t("credit-card")}
-                bgColor={
-                  paymentMthod === PAYMENT_METHODS.creditCard
-                    ? theme.PRIMARY_COLOR
-                    : "white"
-                }
-                fontFamily={`${getCurrentLang()}-SemiBold`}
-                fontSize={20}
-                icon="credit_card_icom"
-                iconSize={25}
-                iconPosition={"left"}
-              />
-            </View>
-          </View>
-
-          {paymentMthod === PAYMENT_METHODS.creditCard && ccData?.last4Digits && (
-            <View
-              style={{
-                alignItems: "center",
-                backgroundColor: "#F5F5F5",
-                borderRadius: 15,
-                padding: 2,
-                marginTop: 5,
-                flexDirection: "row",
-                justifyContent: "space-around",
-              }}
-            >
-              <TouchableOpacity
-                onPress={replaceCreditCard}
+            {shippingMethod === SHIPPING_METHODS.shipping && (
+              <View
+                pointerEvents="none"
                 style={{
                   alignItems: "center",
-                  flexDirection: "row",
-                  padding: 5,
+                  marginTop: 5,
+                  paddingHorizontal: 20,
                 }}
               >
-                <Icon
-                  icon="circle-down-arrow"
-                  size={20}
-                  style={{ color: theme.GRAY_700 }}
+                {location ? (
+                  <MapView
+                    style={styles.mapContainer}
+                    initialRegion={{
+                      latitude: location.coords.latitude,
+                      latitudeDelta: 0.01,
+                      longitude: location.coords.longitude,
+                      longitudeDelta: 0.01,
+                    }}
+                  >
+                    <Marker
+                      coordinate={{
+                        latitude: location.coords.latitude,
+                        longitude: location.coords.longitude,
+                      }}
+                    />
+                  </MapView>
+                ) : (
+                  <Text>טוען מיקום...</Text>
+                )}
+              </View>
+            )}
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginTop: 30,
+                paddingHorizontal: 20,
+              }}
+            >
+              <View style={{ flexBasis: "49%" }}>
+                <Button
+                  onClickFn={() => setPaymentMthod(PAYMENT_METHODS.cash)}
+                  text={t("cash")}
+                  bgColor={
+                    paymentMthod === PAYMENT_METHODS.cash
+                      ? theme.PRIMARY_COLOR
+                      : "white"
+                  }
+                  fontFamily={`${getCurrentLang()}-SemiBold`}
+                  fontSize={20}
+                  icon="shekel"
+                  iconSize={25}
                 />
-                <Text style={{ fontSize: 20, paddingTop: 3, paddingLeft: 5 }}>
-                  {"החלפה"}
-                </Text>
-              </TouchableOpacity>
-
-              <Text
-                style={{ fontSize: 20 }}
-              >{`****_****_****_${ccData?.last4Digits}`}</Text>
+              </View>
+              <View style={{ flexBasis: "49%" }}>
+                <Button
+                  onClickFn={() => setPaymentMthod(PAYMENT_METHODS.creditCard)}
+                  text={t("credit-card")}
+                  bgColor={
+                    paymentMthod === PAYMENT_METHODS.creditCard
+                      ? theme.PRIMARY_COLOR
+                      : "white"
+                  }
+                  fontFamily={`${getCurrentLang()}-SemiBold`}
+                  fontSize={20}
+                  icon="credit_card_icom"
+                  iconSize={25}
+                  iconPosition={"left"}
+                />
+              </View>
             </View>
-          )}
+
+            {paymentMthod === PAYMENT_METHODS.creditCard &&
+              ccData?.last4Digits && (
+                <View
+                  style={{
+                    alignItems: "center",
+                    backgroundColor: "#F5F5F5",
+                    borderRadius: 15,
+                    padding: 2,
+                    marginTop: 5,
+                    flexDirection: "row",
+                    justifyContent: "space-around",
+                  }}
+                >
+                  <TouchableOpacity
+                    onPress={replaceCreditCard}
+                    style={{
+                      alignItems: "center",
+                      flexDirection: "row",
+                      padding: 5,
+                    }}
+                  >
+                    <Icon
+                      icon="circle-down-arrow"
+                      size={20}
+                      style={{ color: theme.GRAY_700 }}
+                    />
+                    <Text
+                      style={{ fontSize: 20, paddingTop: 3, paddingLeft: 5 }}
+                    >
+                      {"החלפה"}
+                    </Text>
+                  </TouchableOpacity>
+
+                  <Text
+                    style={{ fontSize: 20 }}
+                  >{`****_****_****_${ccData?.last4Digits}`}</Text>
+                </View>
+              )}
           </View>
           <View style={styles.totalPrictContainer}>
             {shippingMethod === SHIPPING_METHODS.shipping && (
@@ -881,11 +878,11 @@ const CartScreen = () => {
             </View>
           </View>
         </View>
-        <NewPaymentMethodDialog
-          handleAnswer={handleNewPMAnswer}
-          isOpen={isOpenNewCreditCardDialog}
-        />
       </ScrollView>
+      <NewPaymentMethodDialog
+        handleAnswer={handleNewPMAnswer}
+        isOpen={isOpenNewCreditCardDialog}
+      />
       <PaymentMethodDialog
         handleAnswer={handleShippingMethoAnswer}
         isOpen={isOpenShippingMethodDialog}
