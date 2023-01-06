@@ -130,5 +130,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     width: "100%",
     alignItems: "center",
+    marginTop: 20
   },
 });

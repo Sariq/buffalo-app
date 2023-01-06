@@ -132,18 +132,20 @@ const VerifyCodeScreen = ({ route }) => {
         .then(async function (response) {
           await AsyncStorage.removeItem("@storage_verifyCode");
           const res = JSON.parse(base64.decode(response.data));
-          console.log("tokennnn", res.token);
           authStore.updateUserToken(res.token);
-          DeviceEventEmitter.emit(`PREPARE_APP`);
-
-          userDetailsStore.getUserDetails().then((res) => {
-            setIsLoading(false);
-            if (cartStore.getProductsCount() > 0) {
-              navigation.navigate("cart");
-            } else {
-              navigation.navigate("profile");
-            }
-          });
+          if(res.name){
+            DeviceEventEmitter.emit(`PREPARE_APP`);
+            userDetailsStore.getUserDetails().then((res) => {
+              setIsLoading(false);
+              if (cartStore.getProductsCount() > 0) {
+                navigation.navigate("cart");
+              } else {
+                navigation.navigate("profile");
+              }
+            });
+          }else{
+            navigation.navigate("insert-customer-name");
+          }
         })
         .catch(function (error) {
           console.log(error);

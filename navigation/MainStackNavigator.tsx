@@ -10,6 +10,7 @@ import VerifyCodeScreen from "../screens/verify-code";
 import LanguageScreen from "../screens/language";
 import OrderSubmittedScreen from "../screens/order/submitted";
 import OrderHistoryScreen from "../screens/order/history";
+import insertCustomerName from "../screens/insert-customer-name";
 
 const Stack = createStackNavigator();
 
@@ -25,6 +26,7 @@ export const MainStackNavigator = ({}) => {
       <Stack.Screen name="cart" component={CartScreen} />
       <Stack.Screen name="profile" component={ProfileScreen} />
       <Stack.Screen name="login" component={LoginScreen} />
+      <Stack.Screen name="insert-customer-name" component={insertCustomerName} />
       <Stack.Screen name="verify-code" component={VerifyCodeScreen} initialParams={{ phoneNumber: null }} />
       <Stack.Screen name="language" component={LanguageScreen} />
       <Stack.Screen name="order-history" component={OrderHistoryScreen} />
