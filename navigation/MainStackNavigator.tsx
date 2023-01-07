@@ -20,7 +20,7 @@ export const MainStackNavigator = ({}) => {
       initialRouteName={"Tab"}
       header={null}
       headerMode="none"
-      mode={"card"}
+      presentation={"presentation"}
     >
       <Stack.Screen name="Tab" component={FooterTabs} />
       <Stack.Screen name="cart" component={CartScreen} />

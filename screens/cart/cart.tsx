@@ -42,6 +42,7 @@ import { useTranslation } from "react-i18next";
 import themeStyle from "../../styles/theme.style";
 import InvalidAddressdDialog from "../../components/dialogs/invalid-address";
 import StoreIsCloseDialog from "../../components/dialogs/store-is-close";
+import PaymentFailedDialog from "../../components/dialogs/payment-failed";
 
 export const SHIPPING_METHODS = {
   shipping: "DELIVERY",
@@ -65,7 +66,7 @@ const CartScreen = () => {
   const navigation = useNavigation();
 
   const [shippingMethod, setShippingMethod] = React.useState(
-    SHIPPING_METHODS.shipping
+    SHIPPING_METHODS.takAway
   );
   const [paymentMthod, setPaymentMthod] = React.useState(PAYMENT_METHODS.cash);
 
@@ -94,6 +95,8 @@ const CartScreen = () => {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [showStoreIsCloseDialog, setShowStoreIsCloseDialog] = useState(false);
+  const [showPaymentFailedDialog, setShowPaymentFailedDialog] = useState(false);
+  const [paymentErrorMessage, setPaymentErrorMessage] = useState();
 
   const [isLoadingOrderSent, setIsLoadingOrderSent] = useState(null);
   const [isValidAddress, setIsValidAddress] = useState(false);
@@ -116,12 +119,14 @@ const CartScreen = () => {
           appState.current.match(/inactive|background/) &&
           nextAppState === "active"
         ) {
-          const res = await Location.hasServicesEnabledAsync();
-          if (!res) {
-            setIsOpenLocationIsDisableDialog(false);
-            setIsOpenLocationIsDisableDialog(true);
-          } else {
-            askForLocation();
+          if (shippingMethod === SHIPPING_METHODS.shipping) {
+            const res = await Location.hasServicesEnabledAsync();
+            if (!res) {
+              setIsOpenLocationIsDisableDialog(false);
+              setIsOpenLocationIsDisableDialog(true);
+            } else {
+              askForLocation();
+            }
           }
         }
 
@@ -132,10 +137,13 @@ const CartScreen = () => {
     return () => {
       subscription.remove();
     };
-  }, []);
+  }, [shippingMethod]);
 
   useEffect(() => {
-    if (locationPermissionStatus?.granted) {
+    if (
+      locationPermissionStatus?.granted &&
+      shippingMethod === SHIPPING_METHODS.shipping
+    ) {
       askForLocation();
     }
   }, [locationPermissionStatus]);
@@ -214,7 +222,7 @@ const CartScreen = () => {
   const isStoreAvailable = () => {
     return storeDataStore.getStoreData().then((res) => {
       return {
-        isOpen: res.isOpen,
+        isOpen: true, //res.isOpen,
         isBusy: false,
       };
     });
@@ -225,18 +233,19 @@ const CartScreen = () => {
     if (isLoggedIn) {
       const storeStatus = await isStoreAvailable();
       if (storeStatus.isOpen) {
-        if (isValidAddress) {
-          if (
-            shippingMethod === SHIPPING_METHODS.shipping &&
-            !isShippingMethodAgrred
-          ) {
-            setIsOpenShippingMethodDialog(true);
-            return;
+        if (shippingMethod === SHIPPING_METHODS.shipping) {
+          if (isValidAddress) {
+            if (!isShippingMethodAgrred) {
+              setIsOpenShippingMethodDialog(true);
+              return;
+            } else {
+              submitCart();
+            }
           } else {
-            submitCart();
+            setIsOpenInvalidAddressDialod(true);
           }
         } else {
-          setIsOpenInvalidAddressDialod(true);
+          submitCart();
         }
       } else {
         setShowStoreIsCloseDialog(true);
@@ -247,18 +256,23 @@ const CartScreen = () => {
   };
 
   const chargeOrder = (chargeData: TPaymentProps) => {
-    chargeCreditCard(chargeData).then((res) => {
-      console.log("chargeCreditCardHasError", res.HasError);
+    chargeCreditCard(chargeData).then((resCharge) => {
+      console.log("chargeCreditCardHasError", resCharge.ReferenceNumber);
 
-      if (res.HasError) {
-        return;
-      }
       const updateCCData: TUpdateCCPaymentRequest = {
         order_id: chargeData.orderId,
-        creditcard_ReferenceNumber: res.ReferenceNumber,
+        creditcard_ReferenceNumber: resCharge.ReferenceNumber,
         datetime: new Date(),
       };
       cartStore.UpdateCCPayment(updateCCData).then((res) => {
+        console.log("UpdateCCPayment", res);
+
+        if (resCharge.HasError) {
+          setPaymentErrorMessage(resCharge.ReturnMessage);
+          setShowPaymentFailedDialog(true);
+          setIsLoadingOrderSent(false);
+          return;
+        }
         if (res.has_err) {
           return;
         }
@@ -279,11 +293,10 @@ const CartScreen = () => {
       // TODO handle credit card
 
       const chargeData: TPaymentProps = {
-        cardNumber: ccData.ccToken,
+        token: ccData.ccToken,
         expDate: ccData.expDate,
         cvv: ccData.cvv,
         totalPrice: totalPrice,
-        holderId: ccData.id,
         orderId: orderData.order_id,
       };
       console.log("chargeOrder", chargeData);
@@ -308,10 +321,14 @@ const CartScreen = () => {
       };
     }
     //cartStore.addOrderToHistory(order,userDetailsStore.userDetails.phone);
-    cartStore.submitOrder(order).then((res: TOrderSubmitResponse) => {
-      console.log("has_err", res.has_err);
+    cartStore.submitOrder(order).then((res: TOrderSubmitResponse | any) => {
+      console.log("has_err", res);
+      if (res == "sameHashKey") {
+        if (paymentMthod === PAYMENT_METHODS.creditCard) {
+        }
+      }
 
-      if (res.has_err) {
+      if (res?.has_err) {
         return;
       }
       postSubmitOrderActions(res);
@@ -347,6 +364,9 @@ const CartScreen = () => {
   const handleStoreIsCloseAnswer = (value: boolean) => {
     setShowStoreIsCloseDialog(false);
   };
+  const handlePaymentFailedAnswer = (value: boolean) => {
+    setShowPaymentFailedDialog(false);
+  };
   const handleNewPMAnswer = (value: any) => {
     if (value === "close") {
       setPaymentMthod(PAYMENT_METHODS.cash);
@@ -381,7 +401,9 @@ const CartScreen = () => {
   };
 
   return (
-    <View style={{ position: "relative" }}>
+    <View
+      style={{ position: "relative", backgroundColor: "white", height: "100%" }}
+    >
       <ScrollView>
         <View style={{ ...styles.container }}>
           <View style={{ paddingHorizontal: 20 }}>
@@ -418,6 +440,7 @@ const CartScreen = () => {
                     padding: 10,
                     backgroundColor: themeStyle.WHITE_COLOR,
                   }}
+                  key={product.data.id}
                 >
                   <View
                     style={{
@@ -781,6 +804,7 @@ const CartScreen = () => {
                     marginTop: 5,
                     flexDirection: "row",
                     justifyContent: "space-around",
+                    marginHorizontal: 20,
                   }}
                 >
                   <TouchableOpacity
@@ -933,6 +957,11 @@ const CartScreen = () => {
       <StoreIsCloseDialog
         handleAnswer={handleStoreIsCloseAnswer}
         isOpen={showStoreIsCloseDialog}
+      />
+      <PaymentFailedDialog
+        handleAnswer={handlePaymentFailedAnswer}
+        isOpen={showPaymentFailedDialog}
+        errorMessage={paymentErrorMessage}
       />
     </View>
   );

@@ -30,6 +30,7 @@ const CreditCard = ({ onSaveCard }) => {
   const [creditCardExpDate, setCreditCardExpDate] = useState();
   const [creditCardCVV, setCreditCardCVV] = useState();
   const [cardHolderID, setCardHolderID] = useState();
+  const [isLoading, setIsLoading] = useState(false);
 
   const [formStatus, setFormStatus] = useState({
     isNumberValid: undefined,
@@ -94,6 +95,7 @@ const CreditCard = ({ onSaveCard }) => {
   };
 
   const onSaveCreditCard = () => {
+    setIsLoading(true);
     const validateCardData: TValidateCardProps = {
       cardNumber: creditCardNumber,
       expDate: creditCardExpDate.replaceAll("/", ""),
@@ -110,6 +112,7 @@ const CreditCard = ({ onSaveCard }) => {
         };
         const ccDetailsString = JSON.stringify(ccData);
         await AsyncStorage.setItem("@storage_CCData", ccDetailsString);
+        setIsLoading(false);
         onSaveCard();
       } else {
         // TODO: show try another card modal
@@ -185,10 +188,11 @@ const CreditCard = ({ onSaveCard }) => {
           <Button
             bgColor={theme.SUCCESS_COLOR}
             onClickFn={onSaveCreditCard}
-            disabled={isFormValid()}
+            disabled={isFormValid() || isLoading}
             text={t("save-credit-card")}
             fontSize={22}
             textColor={theme.WHITE_COLOR}
+            isLoading={isLoading}
           />
         </View>
       </View>

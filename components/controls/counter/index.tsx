@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    width:40
   },
   btn: {
     backgroundColor: themeStyle.PRIMARY_COLOR,

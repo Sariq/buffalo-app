@@ -209,31 +209,40 @@ class CartStore {
     this.updateLocalStorage();
   }
 
-  submitOrder = async(order: any): Promise<TOrderSubmitResponse> =>  {
+  submitOrder = async(order: any): Promise<TOrderSubmitResponse | string> =>  {
     const cartData = await this.getCartData(order);
-    const orderBase64 = toBase64(cartData).toString();
-    const body = orderBase64;
-    return axiosInstance
-      .post(
-        `${ORDER_API.CONTROLLER}/${ORDER_API.SUBMIT_ORDER_API}`,
-        body,
-      )
-      .then(function (response) {
-        const jsonValue:any = JSON.parse(fromBase64(response.data));
-        
-        const data:TOrderSubmitResponse = {
-          has_err: jsonValue.has_err,
-          order_id: jsonValue.order_id,
-          salt: jsonValue.salt,
-          status: jsonValue.status,
-          code: jsonValue.code,
-        }
-        return data;
+    const currentHashKey = await AsyncStorage.getItem("@storage_orderHashKey");
+    if(cartData.unique_hash != JSON.parse(currentHashKey)){
+      await AsyncStorage.setItem("@storage_orderHashKey", JSON.stringify(cartData.unique_hash));
+      const orderBase64 = toBase64(cartData).toString();
+      const body = orderBase64;
+      return axiosInstance
+        .post(
+          `${ORDER_API.CONTROLLER}/${ORDER_API.SUBMIT_ORDER_API}`,
+          body,
+        )
+        .then(function (response) {
+          const jsonValue:any = JSON.parse(fromBase64(response.data));
+          
+          const data:TOrderSubmitResponse = {
+            has_err: jsonValue.has_err,
+            order_id: jsonValue.order_id,
+            salt: jsonValue.salt,
+            status: jsonValue.status,
+            code: jsonValue.code,
+          }
+          return data;
+        })
+        .catch(function (error) {
+          const data:TOrderSubmitResponse = { has_err: true, order_id:0, salt:"",status:"", code: 0}
+          return data;
+        });
+    }else{
+      return new Promise((resolve, reject)=>{
+        resolve('sameHashKey')
       })
-      .catch(function (error) {
-        const data:TOrderSubmitResponse = { has_err: true, order_id:0, salt:"",status:"", code: 0}
-        return data;
-      });
+    }
+  
   };
 
   UpdateCCPayment = ({ order_id, creditcard_ReferenceNumber, datetime}: TUpdateCCPaymentRequest)=> {

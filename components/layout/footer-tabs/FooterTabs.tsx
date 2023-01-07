@@ -154,11 +154,12 @@ export default function FooterTabs() {
       }}
       tabBar={(props) => <MyTabBar {...props} />}
     >
-      {routes.map((route) => (
+      {routes.map((route, index) => (
         <Tab.Screen
           name={route.name}
           component={route.component}
           initialParams={{ title: route.title }}
+          key={index}
         />
       ))}
     </Tab.Navigator>

@@ -36,6 +36,7 @@ const CategoryItemsList = ({ productsList }) => {
             onPress={() => {
               onItemSelect(item);
             }}
+            key={item.id}
           >
             <View style={[styles.iconContainer]}>
               <Image
