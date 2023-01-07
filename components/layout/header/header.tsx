@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, View, Text, Image } from "react-native";
+import { StyleSheet, TouchableOpacity, View, Text, Image, Animated } from "react-native";
 import { useContext, useEffect, useState } from "react";
 import { observer } from "mobx-react";
 
@@ -8,14 +8,60 @@ import theme from "../../../styles/theme.style";
 import Icon from "../../icon";
 import { StoreContext } from "../../../stores";
 import { SHIPPING_METHODS } from "../../../screens/cart/cart";
+import * as Haptics from 'expo-haptics';
 
 const yellowBgScreens = ["homeScreen"];
 const Header = () => {
   const navigation = useNavigation();
   const routeState = useNavigationState((state) => state);
   const { cartStore, authStore } = useContext(StoreContext);
-
+  const [cartItemsLenght, setCartItemsLength] = useState();
   const [bgColor, setBgColor] = useState(themeStyle.PRIMARY_COLOR);
+
+
+
+  useEffect(()=>{
+    if(cartItemsLenght === undefined || cartItemsLenght === cartStore.cartItems.length){
+      setCartItemsLength(cartStore.cartItems.length)
+      return;
+    }
+    Haptics.notificationAsync(
+      Haptics.NotificationFeedbackType.Success
+    )
+    handleAnimation()
+    setTimeout(()=>{
+      handleAnimation()
+    },700)
+    setCartItemsLength(cartStore.cartItems.length)
+  },[cartStore.cartItems.length])
+
+
+  const [rotateAnimation, setRotateAnimation] = useState(new Animated.Value(0));
+
+  const handleAnimation = () => {
+    // @ts-ignore
+    Animated.timing(rotateAnimation, {
+      toValue: 1,
+      duration: 700,
+      useNativeDriver: false
+    }).start(() => {
+      rotateAnimation.setValue(0);
+    });
+  };
+  const interpolateRotating = rotateAnimation.interpolate({
+    inputRange: [0, 1],
+    outputRange: [1, 0],
+  });
+  const interpolateRotating2 = rotateAnimation.interpolate({
+    inputRange: [0, 10],
+    outputRange: [1, 0],
+  });
+
+  const animatedStyle = {
+        opacity: interpolateRotating,
+        color: themeStyle.PRIMARY_COLOR,
+        transform: [{ scale: interpolateRotating2 }]
+  };
 
   useEffect(() => {
     if (
@@ -105,15 +151,15 @@ const Header = () => {
           />
         </TouchableOpacity>
       </View>
-      <View style={styles.headerItem}>
+      <Animated.View style={[styles.headerItem, animatedStyle]}>
         <TouchableOpacity
           style={styles.buttonContainer}
-          onPress={handleCartClick}
+         onPress={handleCartClick}
         >
           <Icon icon="cart_icon" size={30} style={{ color: theme.GRAY_700 }} />
           <Text style={styles.cartCount}>{cartStore.getProductsCount()}</Text>
         </TouchableOpacity>
-      </View>
+      </Animated.View>
     </View>
   );
 };

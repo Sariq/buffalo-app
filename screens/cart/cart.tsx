@@ -216,6 +216,7 @@ const CartScreen = () => {
   };
 
   const onRemoveProduct = (product, index) => {
+    console.log(product.data.id + index)
     cartStore.removeProduct(product.data.id + index);
   };
 
@@ -440,7 +441,7 @@ const CartScreen = () => {
                     padding: 10,
                     backgroundColor: themeStyle.WHITE_COLOR,
                   }}
-                  key={product.data.id}
+                  key={product.data.id + index}
                 >
                   <View
                     style={{

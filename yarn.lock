@@ -4989,6 +4989,11 @@
   dependencies:
     "fontfaceobserver" "^2.1.0"
 
+"expo-haptics@~11.3.0":
+  "integrity" "sha512-mQYSZsJ7LcdM2b8JecrV2qEw9ymNzGleS/+bpufdHZ+n5tCnWZXiMvZFFczaExHfaeGY3nGQvH1RjEOFIXSfig=="
+  "resolved" "https://registry.npmjs.org/expo-haptics/-/expo-haptics-11.3.0.tgz"
+  "version" "11.3.0"
+
 "expo-json-utils@~0.3.0":
   "integrity" "sha512-ceo0pWFJqRAsNjZWX3rVDhy+NDzmrBNFOdvW+HE4EHqlt+OEUu9INIYKO8fU+g3ifI0VcKqHfvvj5wKsSpvPBw=="
   "resolved" "https://registry.npmjs.org/expo-json-utils/-/expo-json-utils-0.3.0.tgz"

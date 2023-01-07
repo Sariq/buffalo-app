@@ -95,6 +95,8 @@ PODS:
     - expo-dev-menu/GestureHandler
     - expo-dev-menu/Reanimated
     - expo-dev-menu/SafeAreaView
+  - ExpoHaptics (11.3.0):
+    - ExpoModulesCore
   - ExpoKeepAwake (10.2.1):
     - ExpoModulesCore
   - ExpoLinearGradient (11.4.0):
@@ -478,6 +480,7 @@ DEPENDENCIES:
   - expo-dev-launcher (from `../node_modules/expo-dev-launcher`)
   - expo-dev-menu (from `../node_modules/expo-dev-menu`)
   - expo-dev-menu-interface (from `../node_modules/expo-dev-menu-interface/ios`)
+  - ExpoHaptics (from `../node_modules/expo-haptics/ios`)
   - ExpoKeepAwake (from `../node_modules/expo-keep-awake/ios`)
   - ExpoLinearGradient (from `../node_modules/expo-linear-gradient/ios`)
   - ExpoLocalization (from `../node_modules/expo-localization/ios`)
@@ -571,6 +574,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-dev-menu"
   expo-dev-menu-interface:
     :path: "../node_modules/expo-dev-menu-interface/ios"
+  ExpoHaptics:
+    :path: "../node_modules/expo-haptics/ios"
   ExpoKeepAwake:
     :path: "../node_modules/expo-keep-awake/ios"
   ExpoLinearGradient:
@@ -693,6 +698,7 @@ SPEC CHECKSUMS:
   expo-dev-launcher: 5a2a86276911631997b8821d278a964252bfbbf7
   expo-dev-menu: 5c8f08081eedb470fc8384195c044feba5055cec
   expo-dev-menu-interface: 27047461614aee1dc082cacc0e0f5b4c7b8edd1b
+  ExpoHaptics: efe9e68e9dfe0d15c183c0c70a25f3874124ab9e
   ExpoKeepAwake: 8b47e5358d54ea4922b630a74f2acb026ab7a28b
   ExpoLinearGradient: 1a3af07c6dab3c612967a294836df9ae717431df
   ExpoLocalization: 63204f4b9d4f653469d266332ceaa6c6ac8a305d
