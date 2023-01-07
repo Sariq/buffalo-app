@@ -34,14 +34,14 @@ export default function GradiantRow({ onChangeFn, icon, type, price, title, valu
   return (
     <View style={styles.gradiantRow}>
       {!hideIcon && <View style={{ width: "10%" }}>
-        <Image style={{ width: 60, height: 40, }} source={icon} />
+        <Image style={{ width: 60, height: 50, }} source={icon} />
       </View>}
       <View style={[styles.textAndPriceContainer,{marginLeft: hideIcon ? 40 : 0, width: hideIcon ? "50%" : "40%"}]}>
         <View>
           <Text style={{fontSize: 15, fontFamily:`${getCurrentLang()}-SemiBold`}}>{title}</Text>
         </View>
         <View style={{ marginHorizontal: -10,flexDirection: 'row', alignItems: 'center' }}>
-          {price ? <Text style={{fontSize: 14, fontFamily: 'Rubik-Regular'}}>{price}</Text> : null}
+          {price ? <Text style={{fontSize: 14, fontFamily: 'Rubik-Regular'}}>{price}+</Text> : null}
           {price ? <Text>₪</Text> : null}
         </View>
       </View>

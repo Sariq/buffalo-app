@@ -11,6 +11,7 @@ import { useTranslation } from "react-i18next";
 /* styles */
 import theme from "../../styles/theme.style";
 import Icon from "../../components/icon";
+import { getCurrentLang } from "../../translations/i18n";
 const HomeScreen = ({ navigation }) => {
   const [t, i18n] = useTranslation();
 
@@ -34,7 +35,7 @@ const HomeScreen = ({ navigation }) => {
               size={20}
               style={{ color: theme.GRAY_700 }}
             />
-            <Text style={{ ...styles.buttonText, fontFamily: `ar-SemiBold`, fontSize: 40 }}>
+            <Text style={{ ...styles.buttonText, fontFamily: `${getCurrentLang()}-SemiBold`, fontSize: 40 }}>
             {t('new-order')}
             </Text>
           </TouchableOpacity>

@@ -13,6 +13,8 @@ import { useNavigation } from "@react-navigation/native";
 import CreditCard from "../../components/credit-card";
 import { axiosInstance } from "../../utils/http-interceptor";
 import { useTranslation } from "react-i18next";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 const LoginScreen = () => {
   const { languageStore, authStore } = useContext(StoreContext);
@@ -30,10 +32,22 @@ const LoginScreen = () => {
   const isValidNunber = () =>{
     return phoneNumber?.match(/\d/g).length===10
   }
-
-  const authinticate = () => {
+  const ifUserBlocked = async () => {
+    const userB = await AsyncStorage.getItem("@storage_user_b");
+    const userBJson = JSON.parse(userB);
+    if(userBJson){
+      return true;
+    }
+    return false;
+  }
+  const authinticate = async () => {
     if(isValidNunber()){
       setIsLoading(true);
+
+      if(ifUserBlocked()){
+        return;
+      }
+
       const body = {
         phone: phoneNumber,
         device_type: Device.osName || "IOS",
@@ -45,9 +59,16 @@ const LoginScreen = () => {
           `${AUTH_API.CONTROLLER}/${AUTH_API.AUTHINTICATE_API}`,
           base64.encode(JSON.stringify(body)),{ headers: { "Content-Type": "application/json" } }
         )
-        .then(function (response) {
+        .then(async function (response) {
           setIsLoading(false);
           const res = JSON.parse(base64.decode(response.data));
+          if (res.has_err ) {
+            if(res.code == PHONE_NUMBER_BLOCKED){
+              setIsLoading(false);
+              await AsyncStorage.setItem("@storage_user_b", JSON.stringify(true));
+              return;
+            }
+          }
           authStore.setVerifyCodeToken(res.token);
           navigation.navigate("verify-code", {phoneNumber});
         })

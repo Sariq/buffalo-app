@@ -4,7 +4,7 @@ import {
   View,
   DeviceEventEmitter,
   TouchableOpacity,
-  Image
+  Image,
 } from "react-native";
 import InputText from "../../components/controls/input";
 import Button from "../../components/controls/button/button";
@@ -27,7 +27,7 @@ import {
   Cursor,
   useBlurOnFulfill,
   useClearByFocusCell,
-} from 'react-native-confirmation-code-field';
+} from "react-native-confirmation-code-field";
 const CELL_COUNT = 4;
 
 const VerifyCodeScreen = ({ route }) => {
@@ -38,18 +38,19 @@ const VerifyCodeScreen = ({ route }) => {
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
   const [isValid, setIsValid] = useState(true);
+  const [isInvalidCodeRes, setIsInvalidCodeRes] = useState(false);
   const [timer, setTimer] = useState(0);
 
-  const [verifyCode, setVerifyCode] = useState('****');
-  const ref = useBlurOnFulfill({value: verifyCode, cellCount: CELL_COUNT});
+  const [verifyCode, setVerifyCode] = useState("****");
+  const ref = useBlurOnFulfill({ value: verifyCode, cellCount: CELL_COUNT });
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
     value: verifyCode,
-    setValue:setVerifyCode ,
+    setValue: setVerifyCode,
   });
 
-  useEffect(()=>{
-    console.log(verifyCode)
-  },[verifyCode])
+  useEffect(() => {
+    console.log(verifyCode);
+  }, [verifyCode]);
 
   const onChange = (value) => {
     setIsValid(true);
@@ -63,7 +64,7 @@ const VerifyCodeScreen = ({ route }) => {
     const verifyDataValueFinal = JSON.parse(verifyDataFinal);
 
     let interval = 1000;
-    let seconds = 30 * verifyDataValueFinal.count;
+    let seconds = 30 * verifyDataValueFinal?.count;
     timerIntreval = setInterval(function () {
       seconds = seconds - 1;
       if (seconds === 0) {
@@ -71,15 +72,13 @@ const VerifyCodeScreen = ({ route }) => {
       }
       setTimer(seconds);
     }, interval);
-  }
-  useEffect(()=>{
-
-    setTimertInterVal()
-   
-  },[])
+  };
+  useEffect(() => {
+    setTimertInterVal();
+  }, []);
 
   const resendMeTheCode = async () => {
-
+    setIsInvalidCodeRes(false);
     let timerIntreval;
     const verifyData = await AsyncStorage.getItem("@storage_verifyCode");
     const verifyDataValue = JSON.parse(verifyData);
@@ -110,19 +109,21 @@ const VerifyCodeScreen = ({ route }) => {
   };
 
   const isValidNunber = () => {
-    if(verifyCode === '****'){
+    if (verifyCode === "****") {
       return false;
     }
     return verifyCode?.match(/\d/g).length === 4;
   };
 
   const onVerifyCode = () => {
+    setIsInvalidCodeRes(false);
     if (isValidNunber()) {
       setIsLoading(true);
       const body = {
         token: authStore.verifyCodeToken,
         secret_code: verifyCode,
       };
+      console.log("sssss", body)
       axiosInstance
         .post(
           `${AUTH_API.CONTROLLER}/${AUTH_API.VERIFY_API}`,
@@ -132,8 +133,14 @@ const VerifyCodeScreen = ({ route }) => {
         .then(async function (response) {
           await AsyncStorage.removeItem("@storage_verifyCode");
           const res = JSON.parse(base64.decode(response.data));
+          console.log("VERIFY_API", res);
+          if (res.has_err && res.code == -3) {
+            setIsLoading(false);
+            setIsInvalidCodeRes(true);
+            return;
+          }
           authStore.updateUserToken(res.token);
-          if(res.name){
+          if (res.name) {
             DeviceEventEmitter.emit(`PREPARE_APP`);
             userDetailsStore.getUserDetails().then((res) => {
               setIsLoading(false);
@@ -143,7 +150,7 @@ const VerifyCodeScreen = ({ route }) => {
                 navigation.navigate("profile");
               }
             });
-          }else{
+          } else {
             navigation.navigate("insert-customer-name");
           }
         })
@@ -157,12 +164,12 @@ const VerifyCodeScreen = ({ route }) => {
 
   return (
     <View style={styles.container}>
-                <View style={{marginTop:20}}>
-          <Image
-            style={{ width: 190, height: 140 }}
-            source={require("../../assets/insert_code.png")}
-          />
-          </View>
+      <View style={{ marginTop: 20 }}>
+        <Image
+          style={{ width: 190, height: 140 }}
+          source={require("../../assets/insert_code.png")}
+        />
+      </View>
       <View style={styles.inputsContainer}>
         <Text style={{ marginTop: 0, fontSize: 25 }}>{t("inser-code")}</Text>
         <Text
@@ -176,6 +183,12 @@ const VerifyCodeScreen = ({ route }) => {
           {t("inser-recived-number")} {phoneNumber}
         </Text>
 
+        {isInvalidCodeRes && (
+          <View style={{marginTop: 10}}>
+            <Text style={{fontSize: 20, color:themeStyle.ERROR_COLOR}}>{t("invalid-code-res")}</Text>
+          </View>
+        )}
+
         <View
           style={{
             width: "100%",
@@ -184,33 +197,44 @@ const VerifyCodeScreen = ({ route }) => {
             alignItems: "center",
           }}
         >
-
-          <View style={{direction: "ltr"}}>
-        <CodeField
-      
-        ref={ref}
-        {...props}
-        // Use `caretHidden={false}` when users can't paste a text value, because context menu doesn't appear
-        value={verifyCode}
-        onChangeText={setVerifyCode}
-        cellCount={CELL_COUNT}
-        rootStyle={styles.codeFieldRoot}
-        keyboardType="number-pad"
-        textContentType="oneTimeCode"
-        renderCell={({index, symbol, isFocused}) => (
-          <View style={{borderBottomWidth:2, marginHorizontal: 10, borderColor: themeStyle.PRIMARY_COLOR,}}>
-          <Text
-            key={index}
-            style={[styles.cell, isFocused && styles.focusCell]}
-            onLayout={getCellOnLayoutHandler(index)}>
-            {symbol || (isFocused ? <Cursor /> : null)}
-          </Text>
+          <View style={{ direction: "ltr" }}>
+            <CodeField
+              ref={ref}
+              {...props}
+              // Use `caretHidden={false}` when users can't paste a text value, because context menu doesn't appear
+              value={verifyCode}
+              onChangeText={setVerifyCode}
+              cellCount={CELL_COUNT}
+              rootStyle={styles.codeFieldRoot}
+              keyboardType="number-pad"
+              textContentType="oneTimeCode"
+              renderCell={({ index, symbol, isFocused }) => (
+                <View
+                  style={{
+                    borderBottomWidth: 2,
+                    marginHorizontal: 10,
+                    borderColor: themeStyle.PRIMARY_COLOR,
+                  }}
+                >
+                  <Text
+                    key={index}
+                    style={[styles.cell, isFocused && styles.focusCell]}
+                    onLayout={getCellOnLayoutHandler(index)}
+                  >
+                    {symbol || (isFocused ? <Cursor /> : null)}
+                  </Text>
+                </View>
+              )}
+            />
           </View>
-        )}
-      />
-      </View>
           {!isValid && (
-            <Text style={{ color: themeStyle.ERROR_COLOR, paddingLeft: 15, marginTop: 20 }}>
+            <Text
+              style={{
+                color: themeStyle.ERROR_COLOR,
+                paddingLeft: 15,
+                marginTop: 20,
+              }}
+            >
               {t("invalid-code")}
             </Text>
           )}
@@ -272,7 +296,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     height: "100%",
-    
   },
   inputsContainer: {
     marginTop: 30,
@@ -286,18 +309,18 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
   },
-  root: {flex: 1, padding: 20},
-  title: {textAlign: 'center', fontSize: 30},
-  codeFieldRoot: {marginTop: 20},
+  root: { flex: 1, padding: 20 },
+  title: { textAlign: "center", fontSize: 30 },
+  codeFieldRoot: { marginTop: 20 },
   cell: {
     width: 66,
     height: 66,
     lineHeight: 65,
     fontSize: 30,
-    borderColor: '#00000030',
-    textAlign: 'center',
+    borderColor: "#00000030",
+    textAlign: "center",
   },
   focusCell: {
-    borderColor: '#000',
+    borderColor: "#000",
   },
 });

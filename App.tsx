@@ -25,6 +25,7 @@ import { storeDataStore } from "./stores/store";
 import { userDetailsStore } from "./stores/user-details";
 import ExpiryDate from "./components/expiry-date";
 import Icon from "./components/icon";
+import GeneralServerErrorDialog from "./components/dialogs/general-server-error";
 // Keep the splash screen visible while we fetch resources
 //SplashScreen.preventAutoHideAsync();
 let customARFonts = {
@@ -66,13 +67,14 @@ export default function App() {
       // Pre-load fonts, make any API calls you need to do here
       await Font.loadAsync(customARFonts);
       setIsFontReady(true);
-      const fetchStoreDataStore = storeDataStore.getStoreData();
-      const fetchUserDetails = userDetailsStore.getUserDetails();
       const fetchMenu = menuStore.getMenu();
       Promise.all([fetchMenu]).then((responses) => {
         console.log("XXXX");
 
         if (authStore.isLoggedIn()) {
+          const fetchUserDetails = userDetailsStore.getUserDetails();
+          const fetchStoreDataStore = storeDataStore.getStoreData();
+
           Promise.all([fetchStoreDataStore, fetchUserDetails]).then((res) => {
             setTimeout(() => {
               setAppIsReady(true);
@@ -160,6 +162,7 @@ export default function App() {
             Sari Qashuw
           </Text>
         </View>
+        <GeneralServerErrorDialog/>
       </ImageBackground>
     );
   }
@@ -175,10 +178,11 @@ export default function App() {
         storeDataStore: storeDataStore,
       }}
     >
-      <View style={{ flex: 1 }}>
+      <View style={{ height: "100%" }}>
         <RootNavigator />
       </View>
       <ExpiryDate />
+      <GeneralServerErrorDialog/>
     </StoreContext.Provider>
   );
 }

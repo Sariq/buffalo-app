@@ -21,7 +21,7 @@ class StoreDataStore {
           )
           .then(function (response) {
             const res = JSON.parse(fromBase64(response.data));
-           
+           console.log("storeRes", res)
             return res;
           })
   };
