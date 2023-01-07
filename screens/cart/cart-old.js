@@ -171,11 +171,7 @@ const CartScreen = () => {
                       }}
                     >
                       <View>
-                        <Icon
-                          icon="trash_icon"
-                          size={25}
-                          style={{ color: theme.GRAY_700 }}
-                        />
+            
                       </View>
                     </TouchableOpacity>
 

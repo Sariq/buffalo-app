@@ -83,7 +83,6 @@ class MenuStore {
   }
 
   translate = (id: string) => {
-    console.log(id)
     const item = this.dictionary.find((item)=> item.id === id )
     if(getCurrentLang() === "ar"){
       return item.name_ar;

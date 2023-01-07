@@ -8,7 +8,6 @@ import i18n from "../../../translations/index-x";
 import { ScrollView } from "react-native-gesture-handler";
 
 import themeStyle from "../../../styles/theme.style";
-import { CONSTS_PRODUCTS } from "../../../consts/products";
 import { getCurrentLang } from "../../../translations/i18n";
 
 // const productsList = CONSTS_PRODUCTS;
