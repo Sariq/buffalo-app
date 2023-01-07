@@ -128,7 +128,7 @@ class CartStore {
 
   removeProduct = (productId) => {
     this.cartItems = this.cartItems.filter(
-      (item, index) => item.data.id + index !== productId
+      (item, index) => item.data.id.toString() + index !== productId
     );
     this.updateLocalStorage();
   };
