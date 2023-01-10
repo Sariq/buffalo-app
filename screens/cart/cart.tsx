@@ -12,6 +12,7 @@ import {
   Platform,
   Animated,
   LayoutAnimation,
+  DeviceEventEmitter,
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import DashedLine from "react-native-dashed-line";
@@ -297,6 +298,7 @@ const CartScreen = () => {
           return;
         }
         if (res.has_err) {
+          setShowPaymentFailedDialog(true);
           return;
         }
         console.log("UpdateCCPayment", res.has_err);
@@ -352,7 +354,7 @@ const CartScreen = () => {
       }
 
       if (res?.has_err) {
-        return;
+        DeviceEventEmitter.emit(`OPEN_GENERAL_SERVER_ERROR_DIALOG`, { show: true });
       }
       postSubmitOrderActions(res);
     });
@@ -786,7 +788,8 @@ const CartScreen = () => {
                 style={{
                   alignItems: "center",
                   marginTop: 5,
-                  paddingHorizontal: 20,
+                  paddingHorizontal: 1,
+                  
                 }}
               >
                 {location ? (
@@ -992,6 +995,8 @@ const CartScreen = () => {
                 fontSize={22}
                 textColor={theme.WHITE_COLOR}
                 isLoading={isLoadingOrderSent}
+                borderRadious={19}
+                textPadding={5}
               />
             </View>
           </View>
@@ -1067,6 +1072,7 @@ const styles = StyleSheet.create({
   mapContainer: {
     width: "90%",
     height: 200,
+    borderRadius: 10
   },
   totalPrictContainer: {
     paddingHorizontal: 20,

@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { observer } from "mobx-react";
 import { useContext } from "react";
 import { StoreContext } from "../../../stores";
@@ -14,6 +14,8 @@ import { getCurrentLang } from "../../../translations/i18n";
 
 const CategoryItemsList = ({ productsList }) => {
   const navigation = useNavigation();
+  const scrollRef = useRef();
+
   const { languageStore } = useContext(StoreContext);
 
   const [selectedItem, setSelectedItem] = useState();
@@ -21,8 +23,16 @@ const CategoryItemsList = ({ productsList }) => {
     setSelectedItem(item);
     navigation.navigate("meal", { product: item });
   };
+
+  useEffect(()=>{
+    // @ts-ignore
+    scrollRef.current?.scrollTo({
+      y: 0,
+      animated: true,
+    });
+  }, [productsList])
   return (
-    <ScrollView>
+    <ScrollView ref={scrollRef}>
       <View style={styles.container}>
         {productsList.map((item) => { 
           if(item.out_of_stock){
@@ -83,11 +93,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flex: 1,
     justifyContent: 'space-between',
-    paddingHorizontal: 10,
-    backgroundColor:"#F1F1F1",
+    paddingHorizontal: 20,
+    // backgroundColor:"#F1F1F1",
   },
   categoryItem: {
-    flexBasis: '47%',
+    flexBasis: '48%',
     marginBottom:15,
 
     height: 220,

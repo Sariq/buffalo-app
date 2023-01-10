@@ -16,6 +16,8 @@ type TProps = {
   fontFamily?: any;
   disabled?: boolean;
   isLoading?: boolean;
+  borderRadious?: number;
+  textPadding?: number;
 };
 export default function Button({
   onClickFn,
@@ -29,11 +31,28 @@ export default function Button({
   fontFamily,
   disabled,
   isLoading,
+  borderRadious,
+  textPadding
 }: TProps) {
   const onBtnClick = () => {
     onClickFn();
   };
 
+
+  const getBorderColor = () => {
+    
+    if(disabled){
+      return themeStyle.GRAY_600;
+    }
+   
+    if(bgColor == "white" || bgColor == themeStyle.PRIMARY_COLOR){
+      return themeStyle.PRIMARY_COLOR
+    }
+
+    if(bgColor){
+      return "transparent";
+    }
+  }
   const renderIcon = () => (
     <Icon
       icon={icon}
@@ -46,8 +65,9 @@ export default function Button({
       <TouchableOpacity
         style={{
           ...styles.button,
+          borderRadius: borderRadious || 30,
           backgroundColor: disabled ? themeStyle.GRAY_600 : bgColor,
-          borderColor: (bgColor == "white" || bgColor == themeStyle.PRIMARY_COLOR) && themeStyle.PRIMARY_COLOR,
+          borderColor: getBorderColor(),
           borderWidth: 1,
           opacity: disabled && 0.3,
           alignItems: "center",
@@ -64,6 +84,7 @@ export default function Button({
             fontSize: fontSize,
             color: textColor,
             fontFamily: fontFamily,
+            padding: textPadding
           }}
         >
           {text}
@@ -82,7 +103,6 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: theme.PRIMARY_COLOR,
-    borderRadius: 30,
     display: "flex",
     flexDirection: "row",
     alignItems: "center",

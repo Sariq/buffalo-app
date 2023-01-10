@@ -35,16 +35,21 @@ const LoginScreen = () => {
   const ifUserBlocked = async () => {
     const userB = await AsyncStorage.getItem("@storage_user_b");
     const userBJson = JSON.parse(userB);
+    console.log("userBJson",userBJson)
     if(userBJson){
       return true;
     }
+    console.log("ifUserBlocked-false")
+
     return false;
   }
   const authinticate = async () => {
     if(isValidNunber()){
       setIsLoading(true);
 
-      if(ifUserBlocked()){
+      if(await ifUserBlocked()){
+        console.log("ifUserBlocked")
+
         return;
       }
 

@@ -98,12 +98,18 @@ const MealScreen = ({ route }) => {
                 : extraPrice - tagItem.price * meal.others.count;
             break;
           case "CHOICE":
+            console.log(tag.multiple_choice)
+            console.log(tagItem.value)
             if (!tag.multiple_choice) {
               const currentTag = currentExtraType.find(
                 (tagItem) => tagItem.value === true
               );
-              const tagDeltaPrice = tagItem.price - currentTag.price;
-              extraPrice = extraPrice + tagDeltaPrice;
+              console.log(currentTag)
+              if(currentTag){
+                const tagDeltaPrice = tagItem.price - currentTag.price;
+                extraPrice = extraPrice + tagDeltaPrice;
+              }
+   
             } else {
               extraPrice = value
                 ? extraPrice + tagItem.price * meal.others.count
@@ -207,6 +213,7 @@ const MealScreen = ({ route }) => {
                 alignSelf: "flex-start",
                 paddingHorizontal: 40,
                 paddingBottom: 15,
+                
               }}
             >
               <View>
@@ -227,6 +234,7 @@ const MealScreen = ({ route }) => {
                     textAlign: "left",
                     fontFamily: `${getCurrentLang()}-SemiBold`,
                     marginTop: 10,
+                    lineHeight: 16
                   }}
                 >
                   {meal.data[`description_${languageStore.selectedLang}`]}
@@ -245,6 +253,7 @@ const MealScreen = ({ route }) => {
                 title={"الكمية من نفس الطلب"}
                 value={meal["others"]["count"]}
                 hideIcon
+                fontSize={20}
               />
             </View>
           </View>
@@ -260,7 +269,7 @@ const MealScreen = ({ route }) => {
                           const tag = meal.extras[key][tagId];
                           if (tag.available_on_app) {
                             return (
-                              <View key={tagId} style={{ paddingVertical: 10 }}>
+                              <View key={tagId} style={{ paddingVertical: 3 }}>
                                 <GradiantRow
                                   onChangeFn={(value) => {
                                     updateMeal(value, tag, key);
@@ -357,7 +366,7 @@ const MealScreen = ({ route }) => {
           }}
         >
           <View style={{ paddingRight: 10 }}>
-            <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+            <Text style={{ fontSize: 20, fontWeight: "bold", color:"#442213" }}>
               ₪{meal.data.price}
             </Text>
           </View>
@@ -367,8 +376,9 @@ const MealScreen = ({ route }) => {
             fontSize={17}
             onClickFn={isEdit ? onUpdateCartProduct : onAddToCart}
             bgColor={themeStyle.PRIMARY_COLOR}
-            textColor={themeStyle.BROWN_700}
+            textColor={'#442213'}
             fontFamily={`${getCurrentLang()}-SemiBold`}
+            borderRadious={19}
           />
         </View>
       </View>

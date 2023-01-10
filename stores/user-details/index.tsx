@@ -10,12 +10,15 @@ type TUserDetails = {
 
 class UserDetailsStore {
   userDetails: TUserDetails = null;
-
+  isAcceptedTerms: boolean = false;
   constructor() {
     makeAutoObservable(this);
     console.log("AAAA", this.userDetails)
   }
 
+  setIsAcceptedTerms = (flag: boolean) =>{
+    this.isAcceptedTerms = flag;
+  }
 
   getUserDetailsFromServer = () => {
     const body = { datetime: new Date() };

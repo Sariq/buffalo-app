@@ -14,38 +14,86 @@ type TProps = {
   minValue?: number;
   price?: number;
   hideIcon?: boolean;
+  fontSize?: number;
 };
 
-export default function GradiantRow({ onChangeFn, icon, type, price, title, value, stepValue, minValue,hideIcon }: TProps) {
+export default function GradiantRow({
+  onChangeFn,
+  icon,
+  type,
+  price,
+  title,
+  value,
+  stepValue,
+  minValue,
+  hideIcon,
+  fontSize,
+}: TProps) {
   const onChange = (value) => {
     onChangeFn(value);
   };
 
-
   const getInputByType = (type, valuex, minValue) => {
     switch (type) {
       case "COUNTER":
-        return <Counter onCounterChange={onChange} value={valuex} stepValue={stepValue} minValue={minValue} />;
+        return (
+          <Counter
+            onCounterChange={onChange}
+            value={valuex}
+            stepValue={stepValue}
+            minValue={minValue}
+          />
+        );
       case "CHOICE":
-        return <CheckBox onChange={onChange} value={valuex} />;
+        return (
+          <View style={{ paddingLeft: 8 }}>
+            <CheckBox onChange={onChange} value={valuex} />
+          </View>
+        );
     }
   };
 
   return (
     <View style={styles.gradiantRow}>
-      {!hideIcon && <View style={{ width: "10%" }}>
-        <Image style={{ width: 60, height: 50, }} source={icon} />
-      </View>}
-      <View style={[styles.textAndPriceContainer,{marginLeft: hideIcon ? 40 : 0, width: hideIcon ? "50%" : "40%"}]}>
-        <View>
-          <Text style={{fontSize: 15, fontFamily:`${getCurrentLang()}-SemiBold`}}>{title}</Text>
+      {!hideIcon && (
+        <View style={{ width: "10%" }}>
+          <Image style={{ width: 60, height: 50 }} source={icon} />
         </View>
-        <View style={{ marginHorizontal: -10,flexDirection: 'row', alignItems: 'center' }}>
-          {price ? <Text style={{fontSize: 14, fontFamily: 'Rubik-Regular'}}>{price}+</Text> : null}
+      )}
+      <View
+        style={[
+          styles.textAndPriceContainer,
+          { marginLeft: hideIcon ? 20 : 0, width: hideIcon ? "60%" : "40%" },
+        ]}
+      >
+        <View>
+          <Text
+            style={{
+              fontSize: fontSize || 15,
+              fontFamily: `${getCurrentLang()}-SemiBold`,
+            }}
+          >
+            {title}
+          </Text>
+        </View>
+        <View
+          style={{
+            marginHorizontal: -10,
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          {price ? (
+            <Text style={{ fontSize: 14, fontFamily: "Rubik-Regular"}}>
+              {price}+
+            </Text>
+          ) : null}
           {price ? <Text>₪</Text> : null}
         </View>
       </View>
-      <View style={styles.inputConatainer}>{getInputByType(type, value, minValue)}</View>
+      <View style={styles.inputConatainer}>
+        {getInputByType(type, value, minValue)}
+      </View>
     </View>
   );
 }

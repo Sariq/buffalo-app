@@ -6,8 +6,10 @@ import themeStyle from "../../../styles/theme.style";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { useNavigation, useNavigationState } from "@react-navigation/native";
 import { useState, useEffect } from "react";
+import TermsAndConditionsScreen from "../../../screens/terms-and-conditions";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const yellowBgTopScreens = ["homeScreen"];
+const yellowBgTopScreens = ["homeScreen", "terms-and-conditions"];
 const yellowBgBottomScreens = ["homeScreen", "menuScreen"];
 
 const AppContainer = () => {
@@ -16,31 +18,34 @@ const AppContainer = () => {
   const [topBgColor, setTopBgColor] = useState(themeStyle.PRIMARY_COLOR);
   const [bottomBgColor, setBottomBgColor] = useState(themeStyle.PRIMARY_COLOR);
 
+
   const setTopColor = () => {
     if (
       navigation?.getCurrentRoute()?.name === undefined ||
       yellowBgTopScreens.indexOf(navigation?.getCurrentRoute()?.name) > -1
     ) {
-        setTopBgColor(themeStyle.PRIMARY_COLOR);
+      setTopBgColor(themeStyle.PRIMARY_COLOR);
     } else {
-        setTopBgColor("white");
+      setTopBgColor("white");
     }
   };
   const setBottomColor = () => {
     if (
-        navigation?.getCurrentRoute()?.name === undefined ||
-        yellowBgBottomScreens.indexOf(navigation?.getCurrentRoute()?.name) > -1
-      ) {
-        setBottomBgColor(themeStyle.PRIMARY_COLOR);
-      } else {
-        setBottomBgColor("white");
-      }
+      (navigation?.getCurrentRoute()?.name === undefined ||
+        yellowBgBottomScreens.indexOf(navigation?.getCurrentRoute()?.name) > -1)
+    ) {
+      setBottomBgColor(themeStyle.PRIMARY_COLOR);
+    } else {
+      setBottomBgColor("white");
+    }
   };
 
   useEffect(() => {
     setTopColor();
     setBottomColor();
   }, [routeState]);
+
+
 
   return (
     <SafeAreaProvider>
@@ -64,7 +69,7 @@ const AppContainer = () => {
       >
         <View style={{ flex: 1 }}>
           <Header />
-          <MainStackNavigator />
+          <MainStackNavigator/>
         </View>
       </SafeAreaView>
     </SafeAreaProvider>

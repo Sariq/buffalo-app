@@ -10,69 +10,103 @@ import { Paragraph, Dialog, Portal, Provider } from "react-native-paper";
 /* styles */
 import theme from "../../styles/theme.style";
 import Icon from "../../components/icon";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import Button from "../../components/controls/button/button";
 import themeStyle from "../../styles/theme.style";
+import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ScrollView } from "react-native-gesture-handler";
+import { StoreContext } from "../../stores";
 
 const bodyText =
   "בניגוד לטענה הרווחת, Lorem Ipsum אינו סתם טקסט רנדומלי. יש לו שורשים וחלקים מתוך הספרות הלטינית הקלאסית מאז 45 לפני הספירה. מה שהופך אותו לעתיק מעל 2000 שנה. ריצ’רד מקלינטוק, פרופסור לטיני בקולג’ של המפדן-סידני בורג’יניה, חיפש את אחת המילים המעורפלות ביותר";
 
-export default function TermsAndConditionsScreen({ navigation }) {
+export default function TermsAndConditionsScreen() {
+  let { userDetailsStore } = useContext(StoreContext);
+
   const [visible, setVisible] = useState(false);
+  const navigation = useNavigation();
 
   const showDialog = () => setVisible(true);
 
   const hideDialog = () => setVisible(false);
 
+  const acceptTerms = async () => {
+    await AsyncStorage.setItem("@storage_terms_accepted", JSON.stringify(true));
+    userDetailsStore.setIsAcceptedTerms(true);
+    navigation.navigate("homeScreen");
+  };
   return (
-    <Provider>
-      <View
-        style={{
-          alignItems: "center",
-          justifyContent: "center",
-          paddingTop: 20,
-          paddingHorizontal: 20,
-          backgroundColor: themeStyle.WHITE_COLOR,
-          height: "100%",
-        }}
-      >
-        <View>
-          <Text style={{ fontSize: 25, fontWeight: "bold" }}>
-            תנאי שימוש ומדיניות פרטיות בשירותי אפליקציית בופלו
-          </Text>
-        </View>
-        <View style={{ marginTop: 40 }}>
-          <Text style={{ fontSize: 15, textAlign: "center" }}>
-            {bodyText}
-            {bodyText}
-            {bodyText}
-            {bodyText}
-          </Text>
-        </View>
+    <View>
+      <View style={{ backgroundColor: themeStyle.WHITE_COLOR, height: "100%" }}>
+        <ScrollView>
+          <View
+            style={{
+              paddingHorizontal: 40,
+              alignItems: "center",
+              paddingTop: 20,
+            }}
+          >
+            <Text
+              style={{ fontSize: 25, fontWeight: "bold", textAlign: "center" }}
+            >
+              תנאי שימוש ומדיניות פרטיות בשירותי אפליקציית בופלו
+            </Text>
+          </View>
+          <View style={{ marginTop: 40, paddingHorizontal: 15 }}>
+            <Text style={{ fontSize: 15, textAlign: "center" }}>
+              {bodyText}
+              {bodyText}
+              {bodyText}
+              {bodyText}
+              {bodyText}
+              {bodyText}
+              {bodyText}
+              {bodyText}
+              {bodyText}
+              {bodyText}
+              {bodyText}
+              {bodyText}
+              {bodyText}
+              {bodyText}
+              {bodyText}
+              {bodyText}
+              {bodyText}
+              {bodyText}
+              {bodyText}
+              {bodyText}
+            </Text>
+          </View>
+        </ScrollView>
         <View
           style={{
             width: "100%",
-            paddingHorizontal: 20,
-            marginTop: 40,
+            paddingHorizontal: 15,
+            marginTop: 10,
+            padding: 10,
             flexDirection: "row",
             justifyContent: "space-between",
           }}
         >
-          <View style={{ width: 120 }}>
+          <View style={{ width: 160 }}>
             <Button
               onClickFn={showDialog}
               text="غير موافق"
               bgColor={themeStyle.PRIMARY_COLOR}
+              fontSize={20}
             />
           </View>
-          <View style={{ width: 120 }}>
+          <View style={{ width: 160 }}>
             <Button
-              onClickFn={showDialog}
+              onClickFn={acceptTerms}
               text="موافق"
               bgColor={themeStyle.PRIMARY_COLOR}
+              fontSize={20}
             />
           </View>
         </View>
+      </View>
+      <Provider>
         <Portal>
           <Dialog
             theme={{
@@ -84,12 +118,17 @@ export default function TermsAndConditionsScreen({ navigation }) {
               alignItems: "center",
               justifyContent: "center",
               backgroundColor: "rgba(254, 203, 5, 0.9)",
-              opacity: 0.9,
             }}
             visible={visible}
             onDismiss={hideDialog}
           >
-            <Dialog.Title>Alert</Dialog.Title>
+            <Dialog.Title>
+              <Icon
+                icon="exclamation-mark"
+                size={50}
+                style={{ color: theme.GRAY_700 }}
+              />
+            </Dialog.Title>
             <Dialog.Content>
               <Paragraph
                 style={{
@@ -114,8 +153,8 @@ export default function TermsAndConditionsScreen({ navigation }) {
             </Dialog.Actions>
           </Dialog>
         </Portal>
-      </View>
-    </Provider>
+      </Provider>
+    </View>
   );
 }
 

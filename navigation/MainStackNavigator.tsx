@@ -14,15 +14,17 @@ import insertCustomerName from "../screens/insert-customer-name";
 
 const Stack = createStackNavigator();
 
-export const MainStackNavigator = ({}) => {
+export const MainStackNavigator = () => {
   return (
     <Stack.Navigator
-      initialRouteName={"Tab"}
+      initialRouteName="Tab"
       header={null}
       headerMode="none"
       presentation={"presentation"}
     >
+      
       <Stack.Screen name="Tab" component={FooterTabs} />
+      <Stack.Screen name="terms-and-conditions" component={TermsAndConditionsScreen} />
       <Stack.Screen name="cart" component={CartScreen} />
       <Stack.Screen name="profile" component={ProfileScreen} />
       <Stack.Screen name="login" component={LoginScreen} />

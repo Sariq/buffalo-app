@@ -10,7 +10,11 @@ import { StoreContext } from "../../../stores";
 import { SHIPPING_METHODS } from "../../../screens/cart/cart";
 import * as Haptics from 'expo-haptics';
 
-const yellowBgScreens = ["homeScreen"];
+const yellowBgScreens = ["homeScreen", "terms-and-conditions"];
+const hideProfile = ["terms-and-conditions"]
+const hideProfileScreens = ["terms-and-conditions"];
+const hideLanguageScreens = ["terms-and-conditions"];
+const hideCartScreens = ["terms-and-conditions"];
 const Header = () => {
   const navigation = useNavigation();
   const routeState = useNavigationState((state) => state);
@@ -64,6 +68,7 @@ const Header = () => {
   };
 
   useEffect(() => {
+    console.log(navigation?.getCurrentRoute()?.name)
     if (
       navigation?.getCurrentRoute()?.name === undefined ||
       yellowBgScreens.indexOf(navigation?.getCurrentRoute()?.name) > -1
@@ -85,8 +90,8 @@ const Header = () => {
       navigation.navigate("profile");
     }else{
      //navigation.navigate("insert-customer-name");
-     navigation.navigate("login");
-        //navigation.navigate("verify-code");
+     //navigation.navigate("login");
+        navigation.navigate("verify-code");
 
     }
     
@@ -104,6 +109,16 @@ const Header = () => {
     navigation.navigate("language");
   };
 
+  const isHideProfile = () =>{
+    return hideProfileScreens.indexOf(navigation?.getCurrentRoute()?.name) > -1;
+  }
+  const isHideLanguage = () =>{
+    return hideLanguageScreens.indexOf(navigation?.getCurrentRoute()?.name) > -1;
+  }
+  const isHideCart = () =>{
+    return hideCartScreens.indexOf(navigation?.getCurrentRoute()?.name) > -1;
+  }
+
   return (
     <View style={{ ...styles.container, backgroundColor: bgColor }}>
       <View
@@ -115,7 +130,7 @@ const Header = () => {
         <View style={{ paddingHorizontal: 0 }}>
           <TouchableOpacity
             onPress={handleLanguageClick}
-            style={styles.buttonContainer}
+            style={[styles.buttonContainer, {opacity: isHideLanguage() ? 0 : 1}]}
           >
             <Icon
               icon="language_icon"
@@ -127,7 +142,7 @@ const Header = () => {
         <View>
           <TouchableOpacity
             onPress={handleProfileClick}
-            style={styles.buttonContainer}
+            style={[styles.buttonContainer, {opacity: isHideProfile() ? 0 : 1}]}
           >
             <Icon
               icon="profile_icon"
@@ -153,8 +168,8 @@ const Header = () => {
       </View>
       <Animated.View style={[styles.headerItem, animatedStyle]}>
         <TouchableOpacity
-          style={styles.buttonContainer}
-         onPress={handleCartClick}
+            style={[styles.buttonContainer, {opacity: isHideCart() ? 0 : 1}]}
+            onPress={handleCartClick}
         >
           <Icon icon="cart_icon" size={30} style={{ color: theme.GRAY_700 }} />
           <Text style={styles.cartCount}>{cartStore.getProductsCount()}</Text>

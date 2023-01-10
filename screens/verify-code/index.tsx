@@ -5,6 +5,7 @@ import {
   DeviceEventEmitter,
   TouchableOpacity,
   Image,
+  Keyboard,
 } from "react-native";
 import InputText from "../../components/controls/input";
 import Button from "../../components/controls/button/button";
@@ -27,6 +28,7 @@ import {
   Cursor,
   useBlurOnFulfill,
   useClearByFocusCell,
+  
 } from "react-native-confirmation-code-field";
 const CELL_COUNT = 4;
 
@@ -41,12 +43,14 @@ const VerifyCodeScreen = ({ route }) => {
   const [isInvalidCodeRes, setIsInvalidCodeRes] = useState(false);
   const [timer, setTimer] = useState(0);
 
-  const [verifyCode, setVerifyCode] = useState("****");
+
+  const [verifyCode, setVerifyCode] = useState("");
   const ref = useBlurOnFulfill({ value: verifyCode, cellCount: CELL_COUNT });
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
     value: verifyCode,
     setValue: setVerifyCode,
   });
+
 
   useEffect(() => {
     console.log(verifyCode);
@@ -59,6 +63,7 @@ const VerifyCodeScreen = ({ route }) => {
 
   const setTimertInterVal = async () => {
     let timerIntreval;
+    clearInterval(timerIntreval);
 
     const verifyDataFinal = await AsyncStorage.getItem("@storage_verifyCode");
     const verifyDataValueFinal = JSON.parse(verifyDataFinal);
@@ -74,7 +79,7 @@ const VerifyCodeScreen = ({ route }) => {
     }, interval);
   };
   useEffect(() => {
-    setTimertInterVal();
+    //setTimertInterVal();
   }, []);
 
   const resendMeTheCode = async () => {
@@ -208,7 +213,11 @@ const VerifyCodeScreen = ({ route }) => {
               rootStyle={styles.codeFieldRoot}
               keyboardType="number-pad"
               textContentType="oneTimeCode"
-              renderCell={({ index, symbol, isFocused }) => (
+              
+              renderCell={({ index, symbol, isFocused }) => {
+                console.log(verifyCode)
+
+                return(
                 <View
                   style={{
                     borderBottomWidth: 2,
@@ -221,10 +230,10 @@ const VerifyCodeScreen = ({ route }) => {
                     style={[styles.cell, isFocused && styles.focusCell]}
                     onLayout={getCellOnLayoutHandler(index)}
                   >
-                    {symbol || (isFocused ? <Cursor /> : null)}
+                    {symbol || (isFocused ? <Cursor /> : (verifyCode[index]!=='')  && '*')}
                   </Text>
                 </View>
-              )}
+              )}}
             />
           </View>
           {!isValid && (
@@ -317,7 +326,6 @@ const styles = StyleSheet.create({
     height: 66,
     lineHeight: 65,
     fontSize: 30,
-    borderColor: "#00000030",
     textAlign: "center",
   },
   focusCell: {

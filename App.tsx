@@ -26,6 +26,8 @@ import { userDetailsStore } from "./stores/user-details";
 import ExpiryDate from "./components/expiry-date";
 import Icon from "./components/icon";
 import GeneralServerErrorDialog from "./components/dialogs/general-server-error";
+import TermsAndConditionsScreen from "./screens/terms-and-conditions";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 // Keep the splash screen visible while we fetch resources
 //SplashScreen.preventAutoHideAsync();
 let customARFonts = {
@@ -61,6 +63,7 @@ export default function App() {
       RNRestart.Restart();
     }
   }, []);
+  
 
   async function prepare() {
     try {
@@ -68,9 +71,7 @@ export default function App() {
       await Font.loadAsync(customARFonts);
       setIsFontReady(true);
       const fetchMenu = menuStore.getMenu();
-      Promise.all([fetchMenu]).then((responses) => {
-        console.log("XXXX");
-
+      Promise.all([fetchMenu]).then(async (responses) => {
         if (authStore.isLoggedIn()) {
           const fetchUserDetails = userDetailsStore.getUserDetails();
           const fetchStoreDataStore = storeDataStore.getStoreData();
@@ -81,6 +82,12 @@ export default function App() {
             }, 1000);
           });
         } else {
+    //           await AsyncStorage.setItem(
+    //   "@storage_terms_accepted",
+    //   JSON.stringify(false)
+    // );
+          const data = await AsyncStorage.getItem("@storage_terms_accepted");
+          userDetailsStore.setIsAcceptedTerms(JSON.parse(data));
           setTimeout(() => {
             setAppIsReady(true);
           }, 1000);
@@ -144,11 +151,25 @@ export default function App() {
               flexDirection: "row",
             }}
           >
-            <Icon style={{width: 115,height:20, paddingLeft: 10}} icon="moveit"  />
-            <Icon style={{ color: "black", paddingLeft: 10 }} icon="created-by" size={20} />
+            <Icon
+              style={{ width: 115, height: 20, paddingLeft: 10 }}
+              icon="moveit"
+            />
+            <Icon
+              style={{ color: "black", paddingLeft: 10 }}
+              icon="created-by"
+              size={20}
+            />
           </View>
 
-          <Text style={{ position: "absolute", bottom: 10, marginBottom: 20,fontSize: 20 }}>
+          <Text
+            style={{
+              position: "absolute",
+              bottom: 10,
+              marginBottom: 20,
+              fontSize: 20,
+            }}
+          >
             {version}
           </Text>
           <Text
@@ -162,10 +183,12 @@ export default function App() {
             Sari Qashuw
           </Text>
         </View>
-        <GeneralServerErrorDialog/>
+        <GeneralServerErrorDialog />
       </ImageBackground>
     );
   }
+
+
 
   return (
     <StoreContext.Provider
@@ -182,7 +205,7 @@ export default function App() {
         <RootNavigator />
       </View>
       <ExpiryDate />
-      <GeneralServerErrorDialog/>
+      <GeneralServerErrorDialog />
     </StoreContext.Provider>
   );
 }
