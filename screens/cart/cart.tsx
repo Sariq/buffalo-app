@@ -354,7 +354,9 @@ const CartScreen = () => {
       }
 
       if (res?.has_err) {
-        DeviceEventEmitter.emit(`OPEN_GENERAL_SERVER_ERROR_DIALOG`, { show: true });
+        DeviceEventEmitter.emit(`OPEN_GENERAL_SERVER_ERROR_DIALOG`, {
+          show: true,
+        });
       }
       postSubmitOrderActions(res);
     });
@@ -555,8 +557,7 @@ const CartScreen = () => {
                                 const filteredExtras = filterMealExtras(
                                   product.extras[key]
                                 );
-                                return filteredExtras.map((extra, index) => {
-                                  let lastKey = filteredExtras.length;
+                                return filteredExtras.map((extra) => {
                                   if (
                                     extra.value &&
                                     extra.isdefault != extra.value &&
@@ -564,6 +565,18 @@ const CartScreen = () => {
                                   ) {
                                     return (
                                       <View>
+                                        <View
+                                          style={{
+                                            borderWidth: 1,
+                                            width: 1,
+                                            height: 20,
+                                            position: "absolute",
+                                            top: 10,
+                                            left: 3,
+                                            borderColor:
+                                              themeStyle.PRIMARY_COLOR,
+                                          }}
+                                        ></View>
                                         <View
                                           style={{
                                             flexDirection: "row",
@@ -594,25 +607,23 @@ const CartScreen = () => {
                                             </Text>
                                           </View>
                                         </View>
-                                        {lastKey - 1 !== index && (
-                                          <View
-                                            style={{
-                                              borderWidth: 1,
-                                              width: 1,
-                                              height: 20,
-                                              position: "absolute",
-                                              top: 10,
-                                              left: 3,
-                                              borderColor:
-                                                themeStyle.PRIMARY_COLOR,
-                                            }}
-                                          ></View>
-                                        )}
                                       </View>
                                     );
                                   }
                                 });
                               })}
+                            <View
+                              style={{
+                                borderWidth: 1,
+                                width: 1,
+                                height: 20,
+                                bottom: 13,
+                                left: 3,
+                                borderColor: themeStyle.WHITE_COLOR,
+                                zIndex: 1,
+                                marginBottom: -30,
+                              }}
+                            ></View>
                           </View>
                         </View>
                       </View>
@@ -789,7 +800,6 @@ const CartScreen = () => {
                   alignItems: "center",
                   marginTop: 5,
                   paddingHorizontal: 1,
-                  
                 }}
               >
                 {location ? (
@@ -1072,7 +1082,7 @@ const styles = StyleSheet.create({
   mapContainer: {
     width: "90%",
     height: 200,
-    borderRadius: 10
+    borderRadius: 10,
   },
   totalPrictContainer: {
     paddingHorizontal: 20,

@@ -90,8 +90,8 @@ const Header = () => {
       navigation.navigate("profile");
     }else{
      //navigation.navigate("insert-customer-name");
-     //navigation.navigate("login");
-        navigation.navigate("verify-code");
+     navigation.navigate("login");
+        //navigation.navigate("verify-code");
 
     }
     
