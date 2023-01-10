@@ -63,7 +63,6 @@ export default function App() {
       RNRestart.Restart();
     }
   }, []);
-  
 
   async function prepare() {
     try {
@@ -75,17 +74,17 @@ export default function App() {
         if (authStore.isLoggedIn()) {
           const fetchUserDetails = userDetailsStore.getUserDetails();
           const fetchStoreDataStore = storeDataStore.getStoreData();
-
+          userDetailsStore.setIsAcceptedTerms(true);
           Promise.all([fetchStoreDataStore, fetchUserDetails]).then((res) => {
             setTimeout(() => {
               setAppIsReady(true);
             }, 1000);
           });
         } else {
-    //           await AsyncStorage.setItem(
-    //   "@storage_terms_accepted",
-    //   JSON.stringify(false)
-    // );
+          //           await AsyncStorage.setItem(
+          //   "@storage_terms_accepted",
+          //   JSON.stringify(false)
+          // );
           const data = await AsyncStorage.getItem("@storage_terms_accepted");
           userDetailsStore.setIsAcceptedTerms(JSON.parse(data));
           setTimeout(() => {
@@ -150,45 +149,74 @@ export default function App() {
               marginBottom: 20,
               flexDirection: "row",
             }}
-          >
-            <Icon
-              style={{ width: 115, height: 20, paddingLeft: 10 }}
-              icon="moveit"
-            />
-            <Icon
-              style={{ color: "black", paddingLeft: 10 }}
-              icon="created-by"
-              size={20}
-            />
-          </View>
+          ></View>
 
           <Text
             style={{
               position: "absolute",
               bottom: 10,
-              marginBottom: 20,
+              marginBottom: 42,
               fontSize: 20,
             }}
           >
-            {version}
+     
+            <Icon
+              style={{ color: "black" }}
+              icon="created-by"
+              size={20}
+            />
           </Text>
-          <Text
+
+          <View
             style={{
               position: "absolute",
-              bottom: 0,
-              marginBottom: 0,
-              fontWeight: "bold",
+              bottom: 10,
+              marginBottom: 15,
+              flexDirection: "row-reverse",
+              paddingLeft: 10
             }}
           >
-            Sari Qashuw
-          </Text>
+            <Text
+              style={{
+                fontWeight: "bold",
+                fontSize: 15
+              }}
+            >
+              Sari Qashuw |
+            </Text>
+            <View
+              style={{
+                flexDirection: "row-reverse",
+                paddingLeft: 5,
+                paddingRight: 5,
+              }}
+            >
+              <Icon style={{ width: 80, height: 21 }} icon="moveit" />
+            </View>
+            <Text
+              style={{
+                fontWeight: "bold",
+                fontSize: 15
+
+              }}
+            >
+             | Sabri Qashuw 
+            </Text>
+          </View>
+          <View
+              style={{
+                position: "absolute",
+                bottom: 0,
+                marginBottom: 0,
+              }}
+          >
+          <Text style={{textAlign: "center"}}>{version}</Text>
+          </View>
         </View>
         <GeneralServerErrorDialog />
       </ImageBackground>
     );
   }
-
-
 
   return (
     <StoreContext.Provider

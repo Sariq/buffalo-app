@@ -151,12 +151,7 @@ const CartScreen = () => {
   }, [locationPermissionStatus]);
 
   const askForLocation = async () => {
-    let location = await Location.getCurrentPositionAsync({
-      accuracy:
-        Platform.OS === "android"
-          ? Location.Accuracy.Low
-          : Location.Accuracy.Lowest,
-    });
+    let location = await Location.getCurrentPositionAsync({});
     setLocation(location);
     cartStore
       .isValidGeo(location.coords.latitude, location.coords.longitude)
