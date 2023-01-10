@@ -38,13 +38,12 @@ const extrasIcons = {
   בצל: require("../../assets/menu/gradiant/onion.png"),
   קטשופ: require("../../assets/menu/gradiant/ketchup.png"),
   "סרירצ'ה": require("../../assets/menu/gradiant/sersachi.png"),
-  "ברביקיו": require("../../assets/menu/gradiant/barbicu.png"),
-  "חרדל": require("../../assets/menu/gradiant/musterd.png"),
+  ברביקיו: require("../../assets/menu/gradiant/barbicu.png"),
+  חרדל: require("../../assets/menu/gradiant/musterd.png"),
   //"צ'ילי מתוק": require("../../assets/menu/gradiant/barbicu.png"),
   //"מוצרלה": require("../../assets/menu/gradiant/barbicu.png"),
   //"תוספת קריספי": require("../../assets/menu/gradiant/barbicu.png"),
   //"לחתוך באמצע": require("../../assets/menu/gradiant/barbicu.png"),
- 
 };
 const MealScreen = ({ route }) => {
   const { product, index } = route.params;
@@ -98,18 +97,17 @@ const MealScreen = ({ route }) => {
                 : extraPrice - tagItem.price * meal.others.count;
             break;
           case "CHOICE":
-            console.log(tag.multiple_choice)
-            console.log(tagItem.value)
+            console.log(tag.multiple_choice);
+            console.log(tagItem.value);
             if (!tag.multiple_choice) {
               const currentTag = currentExtraType.find(
                 (tagItem) => tagItem.value === true
               );
-              console.log(currentTag)
-              if(currentTag){
+              console.log(currentTag);
+              if (currentTag) {
                 const tagDeltaPrice = tagItem.price - currentTag.price;
                 extraPrice = extraPrice + tagDeltaPrice;
               }
-   
             } else {
               extraPrice = value
                 ? extraPrice + tagItem.price * meal.others.count
@@ -160,6 +158,19 @@ const MealScreen = ({ route }) => {
       }
     });
     return isAvailable;
+  };
+
+  const isOneChoiceTag = (tags) => {
+    const result = tags.find((tag) => tag.multiple_choice === false);
+    return !!result;
+  };
+  const isOneChoiceTagStyle = (tags) => {
+    const result = isOneChoiceTag(tags);
+    const rowStyle = {
+      flexDirection: "row",
+      justifyContent: "space-evenly",
+    };
+    return result ? rowStyle : {};
   };
 
   if (!meal) {
@@ -213,7 +224,6 @@ const MealScreen = ({ route }) => {
                 alignSelf: "flex-start",
                 paddingHorizontal: 40,
                 paddingBottom: 15,
-                
               }}
             >
               <View>
@@ -234,7 +244,7 @@ const MealScreen = ({ route }) => {
                     textAlign: "left",
                     fontFamily: `${getCurrentLang()}-SemiBold`,
                     marginTop: 10,
-                    lineHeight: 16
+                    lineHeight: 17.5,
                   }}
                 >
                   {meal.data[`description_${languageStore.selectedLang}`]}
@@ -264,28 +274,51 @@ const MealScreen = ({ route }) => {
                 isAvailableOnApp(key) && (
                   <View key={key} style={[styles.sectionContainer]}>
                     {meal.extras[key] && (
-                      <View style={styles.gradiantRowContainer}>
-                        {Object.keys(meal.extras[key]).map((tagId) => {
-                          const tag = meal.extras[key][tagId];
-                          if (tag.available_on_app) {
-                            return (
-                              <View key={tagId} style={{ paddingVertical: 3 }}>
-                                <GradiantRow
-                                  onChangeFn={(value) => {
-                                    updateMeal(value, tag, key);
-                                  }}
-                                  icon={extrasIcons[tag.name]}
-                                  type={tag.type}
-                                  title={menuStore.translate(tag.name)}
-                                  price={tag.price}
-                                  minValue={tag.counter_min_value}
-                                  stepValue={tag.counter_step_value}
-                                  value={tag.value}
-                                />
-                              </View>
-                            );
-                          }
-                        })}
+                      <View style={[styles.gradiantRowContainer]}>
+                        {isOneChoiceTag(meal.extras[key]) && (
+                          <Text
+                            style={{
+                              fontSize: 20,
+                              textAlign: "center",
+                              marginBottom: 0,
+                            }}
+                          >
+                            {key}
+                          </Text>
+                        )}
+                        <View
+                          style={[
+                            isOneChoiceTag(meal.extras[key])
+                              ? { ...isOneChoiceTagStyle(meal.extras[key]) }
+                              : {},
+                          ]}
+                        >
+                          {Object.keys(meal.extras[key]).map((tagId) => {
+                            const tag = meal.extras[key][tagId];
+                            if (tag.available_on_app) {
+                              return (
+                                <View
+                                  key={tagId}
+                                  style={{ paddingVertical: 3 }}
+                                >
+                                  <GradiantRow
+                                    onChangeFn={(value) => {
+                                      updateMeal(value, tag, key);
+                                    }}
+                                    icon={extrasIcons[tag.name]}
+                                    type={tag.type}
+                                    title={menuStore.translate(tag.name)}
+                                    price={tag.price}
+                                    minValue={tag.counter_min_value}
+                                    stepValue={tag.counter_step_value}
+                                    value={tag.value}
+                                    isMultipleChoice={tag.multiple_choice}
+                                  />
+                                </View>
+                              );
+                            }
+                          })}
+                        </View>
                       </View>
                     )}
                   </View>
@@ -304,7 +337,7 @@ const MealScreen = ({ route }) => {
                       fontSize: 15,
                     }}
                   >
-                    {t('meal-notes')}
+                    {t("meal-notes")}
                   </Text>
                 </View>
                 <View
@@ -333,7 +366,7 @@ const MealScreen = ({ route }) => {
                       onChange={(e) => {
                         updateOthers(e.nativeEvent.text, "note", "others");
                       }}
-                      placeholder={t('inser-notes-here')}
+                      placeholder={t("inser-notes-here")}
                       multiline={true}
                       selectionColor="black"
                       underlineColorAndroid="transparent"
@@ -366,7 +399,9 @@ const MealScreen = ({ route }) => {
           }}
         >
           <View style={{ paddingRight: 10 }}>
-            <Text style={{ fontSize: 20, fontWeight: "bold", color:"#442213" }}>
+            <Text
+              style={{ fontSize: 20, fontWeight: "bold", color: "#442213" }}
+            >
               ₪{meal.data.price}
             </Text>
           </View>
@@ -376,7 +411,7 @@ const MealScreen = ({ route }) => {
             fontSize={17}
             onClickFn={isEdit ? onUpdateCartProduct : onAddToCart}
             bgColor={themeStyle.PRIMARY_COLOR}
-            textColor={'#442213'}
+            textColor={"#442213"}
             fontFamily={`${getCurrentLang()}-SemiBold`}
             borderRadious={19}
           />

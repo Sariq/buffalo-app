@@ -15,6 +15,7 @@ type TProps = {
   price?: number;
   hideIcon?: boolean;
   fontSize?: number;
+  isMultipleChoice?: boolean;
 };
 
 export default function GradiantRow({
@@ -28,6 +29,7 @@ export default function GradiantRow({
   minValue,
   hideIcon,
   fontSize,
+  isMultipleChoice,
 }: TProps) {
   const onChange = (value) => {
     onChangeFn(value);
@@ -53,6 +55,18 @@ export default function GradiantRow({
     }
   };
 
+  if (type === "CHOICE" && !isMultipleChoice) {
+    return (
+      <View style={{ paddingLeft: 8 }}>
+        <CheckBox
+          onChange={onChange}
+          value={value}
+          title={title}
+          variant={"button"}
+        />
+      </View>
+    );
+  }
   return (
     <View style={styles.gradiantRow}>
       {!hideIcon && (
@@ -84,7 +98,7 @@ export default function GradiantRow({
           }}
         >
           {price ? (
-            <Text style={{ fontSize: 14, fontFamily: "Rubik-Regular"}}>
+            <Text style={{ fontSize: 14, fontFamily: "Rubik-Regular" }}>
               {price}+
             </Text>
           ) : null}

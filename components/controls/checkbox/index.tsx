@@ -2,8 +2,9 @@ import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { useState, useEffect } from "react";
 import themeStyle from "../../../styles/theme.style";
 import Icon from "../../icon";
+import Button from "../button/button";
 
-export default function CheckBox({ onChange, value }) {
+export default function CheckBox({ onChange, value, title = undefined, variant = 'default' }) {
   const [isSelected, setIsSelected] = useState(value);
   const onBtnClick = () => {
     setIsSelected(!isSelected);
@@ -12,6 +13,24 @@ export default function CheckBox({ onChange, value }) {
   useEffect(() => {
     setIsSelected(value);
   }, [value]);
+
+  if(variant === 'button'){
+    return (
+      <View style={styles.container}>
+        <View
+          onTouchEnd={() => {
+            onBtnClick();
+          }}
+        >
+          {isSelected ? (
+            <Button fontSize={15} onClickFn={()=> onChange(value)}  text={title} textColor={themeStyle.BROWN_700} bgColor={themeStyle.PRIMARY_COLOR}/>
+          ) : (
+            <Button fontSize={15} onClickFn={()=> onChange(value)}  text={title} textColor={themeStyle.BROWN_700} bgColor={themeStyle.WHITE_COLOR}/>
+          )}
+        </View>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
