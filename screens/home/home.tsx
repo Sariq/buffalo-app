@@ -12,7 +12,6 @@ import { useTranslation } from "react-i18next";
 import theme from "../../styles/theme.style";
 import Icon from "../../components/icon";
 import { getCurrentLang } from "../../translations/i18n";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState, useContext } from "react";
 import { StoreContext } from "../../stores";
 const HomeScreen = ({ navigation }) => {
@@ -22,11 +21,6 @@ const HomeScreen = ({ navigation }) => {
   let { userDetailsStore } = useContext(StoreContext);
 
   const displayTemrsAndConditions = async () => {
-    // await AsyncStorage.setItem(
-    //   "@storage_terms_accepted",
-    //   JSON.stringify(false)
-    // );
-      // const data = await AsyncStorage.getItem("@storage_terms_accepted");
       if (!userDetailsStore.isAcceptedTerms) {
         setTimeout(()=>{
           navigation.navigate("terms-and-conditions");
@@ -45,6 +39,7 @@ const HomeScreen = ({ navigation }) => {
   if(!isAppReady){
     return;
   }
+  
   return (
     <View style={{ height: "100%" }}>
       <ImageBackground
