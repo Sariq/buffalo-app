@@ -36,8 +36,8 @@ const categoryListOrder = {
 };
 
 const MenuScreen = () => {
+  const { t } = useTranslation();
   const { menuStore, languageStore } = useContext(StoreContext);
-  const [t, i18n] = useTranslation();
 
   useEffect(() => {}, [languageStore]);
 

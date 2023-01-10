@@ -57,8 +57,8 @@ const routes = [
 ];
 
 function MyTabBar({ state, descriptors, navigation }) {
+  const { t } = useTranslation();
   const [selectedRoute, setSelectedRoute] = useState(routes[0]);
-  const [t, i18n] = useTranslation();
   const onTabSelect = (name) => {
     const currentRout = routes.find((route) => route.name === name);
     setSelectedRoute(currentRout);

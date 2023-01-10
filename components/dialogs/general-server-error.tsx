@@ -16,8 +16,8 @@ import { useTranslation } from "react-i18next";
   
   
   export default function GeneralServerErrorDialog() {
+    const { t } = useTranslation();
     const [visible, setVisible] = useState(false);
-    const [t, i18n] = useTranslation();
 
     useEffect(() => {
       DeviceEventEmitter.addListener(`OPEN_GENERAL_SERVER_ERROR_DIALOG`, openDialog);

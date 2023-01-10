@@ -24,7 +24,7 @@ export type TProps = {
   onSaveCard: () => void;
 };
 const CreditCard = ({ onSaveCard }) => {
-  const [t, i18n] = useTranslation();
+  const { t } = useTranslation();
 
   const [creditCardNumber, setCreditCardNumber] = useState();
   const [creditCardExpDate, setCreditCardExpDate] = useState();

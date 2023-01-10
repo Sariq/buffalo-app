@@ -23,8 +23,8 @@ import { useTranslation } from "react-i18next";
     handleAnswer,
     errorMessage,
   }: TProps) {
+    const { t } = useTranslation();
     const [visible, setVisible] = useState(isOpen);
-    const [t, i18n] = useTranslation();
 
     useEffect(() => {
       setVisible(isOpen);

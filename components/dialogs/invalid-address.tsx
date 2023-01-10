@@ -21,8 +21,8 @@ import { useTranslation } from "react-i18next";
     isOpen,
     handleAnswer,
   }: TProps) {
+    const { t } = useTranslation();
     const [visible, setVisible] = useState(isOpen);
-    const [t, i18n] = useTranslation();
 
     useEffect(() => {
       setVisible(isOpen);

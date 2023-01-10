@@ -295,7 +295,6 @@ class CartStore {
       longitude,
       datetime: new Date()
     }
-    console.log((body))
     return axiosInstance
     .post(
       `${ORDER_API.CONTROLLER}/${ORDER_API.IS_VALID_GEO_API}`,

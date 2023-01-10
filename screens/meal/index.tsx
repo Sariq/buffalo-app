@@ -46,12 +46,12 @@ const extrasIcons = {
   //"לחתוך באמצע": require("../../assets/menu/gradiant/barbicu.png"),
 };
 const MealScreen = ({ route }) => {
+  const { t } = useTranslation();
   const { product, index } = route.params;
   const navigation = useNavigation();
   let { cartStore, menuStore, languageStore } = useContext(StoreContext);
   const [meal, setMeal] = useState();
   const [isEdit, setIsEdit] = useState(false);
-  const [t, i18n] = useTranslation();
 
   useEffect(() => {
     let tmpProduct: any = {};

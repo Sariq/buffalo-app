@@ -60,10 +60,10 @@ type TShippingMethod = {
 };
 
 const CartScreen = () => {
+  const { t } = useTranslation();
   const { cartStore, authStore, languageStore, storeDataStore } = useContext(
     StoreContext
   );
-  const [t, i18n] = useTranslation();
 
   const navigation = useNavigation();
 
@@ -151,13 +151,20 @@ const CartScreen = () => {
   }, [locationPermissionStatus]);
 
   const askForLocation = async () => {
-    let location = await Location.getCurrentPositionAsync({});
+    let location = await Location.getCurrentPositionAsync({
+      accuracy:
+        Platform.OS === "android"
+          ? Location.Accuracy.Low
+          : Location.Accuracy.Lowest,
+    });
     setLocation(location);
     cartStore
       .isValidGeo(location.coords.latitude, location.coords.longitude)
       .then((res) => {
-        setIsValidAddress(res.result);
-        setIsOpenInvalidAddressDialod(!res.result);
+        if(res){
+          setIsValidAddress(res.result);
+          setIsOpenInvalidAddressDialod(!res.result);
+        }
       });
   };
   useEffect(() => {

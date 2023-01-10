@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from "react-native";
 import InputText from "../../components/controls/input";
 import Button from "../../components/controls/button/button";
 import themeStyle from "../../styles/theme.style";
-import { BASE_URL, AUTH_API } from "../../consts/api";
+import { AUTH_API } from "../../consts/api";
 import { useState } from "react";
 import * as Device from "expo-device";
 import { useContext } from "react";
@@ -10,15 +10,14 @@ import { StoreContext } from "../../stores";
 import base64 from 'react-native-base64'
 import { observer } from "mobx-react";
 import { useNavigation } from "@react-navigation/native";
-import CreditCard from "../../components/credit-card";
 import { axiosInstance } from "../../utils/http-interceptor";
 import { useTranslation } from "react-i18next";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 const LoginScreen = () => {
+  const { t } = useTranslation();
   const { languageStore, authStore } = useContext(StoreContext);
-  const [t, i18n] = useTranslation();
 
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(false);

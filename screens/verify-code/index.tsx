@@ -33,8 +33,8 @@ import {
 const CELL_COUNT = 4;
 
 const VerifyCodeScreen = ({ route }) => {
+  const { t } = useTranslation();
   const { authStore, cartStore, userDetailsStore } = useContext(StoreContext);
-  const [t, i18n] = useTranslation();
   const { phoneNumber } = route.params;
 
   const navigation = useNavigation();

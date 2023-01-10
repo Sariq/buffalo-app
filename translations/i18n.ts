@@ -54,5 +54,5 @@ export const setTranslations = (translations: any) => {
 
 export const getCurrentLang = () => {
   // @ts-ignore
-  return i18n.language;
+  return i18n.language || 'ar';
 }

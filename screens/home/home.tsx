@@ -15,7 +15,7 @@ import { getCurrentLang } from "../../translations/i18n";
 import { useEffect, useState, useContext } from "react";
 import { StoreContext } from "../../stores";
 const HomeScreen = ({ navigation }) => {
-  const [t, i18n] = useTranslation();
+  const { t } = useTranslation();
   const [isAppReady, setIsAppReady] = useState(false);
 
   let { userDetailsStore } = useContext(StoreContext);

@@ -15,8 +15,8 @@ import { axiosInstance } from "../../utils/http-interceptor";
 import { useTranslation } from "react-i18next";
 
 const InsertCustomerNameScreen = () => {
+  const { t } = useTranslation();
   const { cartStore, userDetailsStore } = useContext(StoreContext);
-  const [t, i18n] = useTranslation();
 
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
