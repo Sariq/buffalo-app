@@ -31,7 +31,7 @@ class StoreDataStore {
       runInAction(()=>{
         this.storeData = res.stores[0];
         this.paymentCredentials = JSON.parse(fromBase64(res.stores[0].credentials));
-        console.log(this.paymentCredentials)
+        console.log("paymentCredentials",res)
 
       })
       return res.stores[0];

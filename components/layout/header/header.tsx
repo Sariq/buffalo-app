@@ -68,7 +68,6 @@ const Header = () => {
   };
 
   useEffect(() => {
-    console.log(navigation?.getCurrentRoute()?.name)
     if (
       navigation?.getCurrentRoute()?.name === undefined ||
       yellowBgScreens.indexOf(navigation?.getCurrentRoute()?.name) > -1
@@ -80,9 +79,14 @@ const Header = () => {
   }, [routeState]);
 
   const handleCartClick = () => {
-    if(cartStore.getProductsCount() > 0){
-      navigation.navigate("cart");
+    if(authStore.isLoggedIn()){
+      if(cartStore.getProductsCount() > 0){
+        navigation.navigate("cart");
+      }
+    }else{
+     navigation.navigate("login");
     }
+   
   };
 
   const handleProfileClick = () => {
@@ -92,7 +96,6 @@ const Header = () => {
      //navigation.navigate("insert-customer-name");
      navigation.navigate("login");
         //navigation.navigate("verify-code");
-
     }
     
     //navigation.navigate("order-history");

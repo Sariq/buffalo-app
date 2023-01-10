@@ -128,7 +128,6 @@ const VerifyCodeScreen = ({ route }) => {
         token: authStore.verifyCodeToken,
         secret_code: verifyCode,
       };
-      console.log("sssss", body)
       axiosInstance
         .post(
           `${AUTH_API.CONTROLLER}/${AUTH_API.VERIFY_API}`,
@@ -138,13 +137,12 @@ const VerifyCodeScreen = ({ route }) => {
         .then(async function (response) {
           await AsyncStorage.removeItem("@storage_verifyCode");
           const res = JSON.parse(base64.decode(response.data));
-          console.log("VERIFY_API", res);
           if (res.has_err && res.code == -3) {
             setIsLoading(false);
             setIsInvalidCodeRes(true);
             return;
           }
-          authStore.updateUserToken(res.token);
+          await authStore.updateUserToken(res.token);
           if (res.name) {
             DeviceEventEmitter.emit(`PREPARE_APP`);
             userDetailsStore.getUserDetails().then((res) => {

@@ -137,7 +137,7 @@ const CreditCard = ({ onSaveCard }) => {
             placeHolder="xxxx-xxxx-xxxx-xxxx"
           />
           {formStatus.isNumberValid === false && (
-            <Text style={{ color: themeStyle.ERROR_COLOR }}>מספר לא תקין</Text>
+            <Text style={{ color: themeStyle.ERROR_COLOR,paddingLeft: 20 }}>{t('invalid-cc-number')}</Text>
           )}
         </View>
         <View style={styles.monthExpContainer}>
@@ -153,7 +153,7 @@ const CreditCard = ({ onSaveCard }) => {
             variant="default"
           />
           {isExpDateValid === false && (
-            <Text style={{ color: themeStyle.ERROR_COLOR }}>מספר לא תקין</Text>
+            <Text style={{ color: themeStyle.ERROR_COLOR,paddingLeft: 20 }}>{t('invalid-expiry-date')}</Text>
           )}
         </View>
         <View style={{ marginTop: 10, alignItems: "flex-start" }}>
@@ -166,7 +166,7 @@ const CreditCard = ({ onSaveCard }) => {
             variant="default"
           />
           {formStatus.isCVVValid === false && (
-            <Text style={{ color: themeStyle.ERROR_COLOR }}>מספר לא תקין</Text>
+            <Text style={{ color: themeStyle.ERROR_COLOR,paddingLeft: 20 }}>{t('invalid-cvv')}</Text>
           )}
         </View>
         <View style={{ marginTop: 10, alignItems: "flex-start" }}>
@@ -181,7 +181,7 @@ const CreditCard = ({ onSaveCard }) => {
             onBlur={() => setkeyboardVerticalOffset(0)}
           />
           {formStatus.idIDValid === false && (
-            <Text style={{ color: themeStyle.ERROR_COLOR }}>מספר לא תקין</Text>
+            <Text style={{ color: themeStyle.ERROR_COLOR }}>{t('invalid-id-number')}</Text>
           )}
         </View>
         <View style={{ marginTop: 20 }}>

@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useContext } from "react";
 import "./translations/i18n";
 
 import * as Font from "expo-font";
@@ -16,18 +16,14 @@ import RootNavigator from "./navigation";
 I18nManager.forceRTL(true);
 I18nManager.allowRTL(true);
 /* stores*/
-import { cartStore } from "./stores/cart";
-import { menuStore } from "./stores/menu";
-import { StoreContext } from "./stores";
-import { authStore } from "./stores/auth";
-import { languageStore } from "./stores/language";
-import { storeDataStore } from "./stores/store";
-import { userDetailsStore } from "./stores/user-details";
+
 import ExpiryDate from "./components/expiry-date";
 import Icon from "./components/icon";
 import GeneralServerErrorDialog from "./components/dialogs/general-server-error";
 import TermsAndConditionsScreen from "./screens/terms-and-conditions";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { observer } from "mobx-react";
+import { StoreContext } from "./stores";
 // Keep the splash screen visible while we fetch resources
 //SplashScreen.preventAutoHideAsync();
 let customARFonts = {
@@ -51,7 +47,9 @@ let customARFonts = {
   "Rubik-Regular": require(`./assets/fonts/shared/Rubik-Regular.ttf`),
 };
 
-export default function App() {
+const App = () => {
+  const { authStore, cartStore, userDetailsStore, menuStore, storeDataStore,languageStore } = useContext(StoreContext);
+
   const [assetsIsReady, setAssetsIsReady] = useState(false);
   const [appIsReady, setAppIsReady] = useState(false);
   const [isFontReady, setIsFontReady] = useState(false);
@@ -65,12 +63,14 @@ export default function App() {
   }, []);
 
   async function prepare() {
+    console.log("XXXXXWWWPREPARE")
     try {
       // Pre-load fonts, make any API calls you need to do here
       await Font.loadAsync(customARFonts);
       setIsFontReady(true);
       const fetchMenu = menuStore.getMenu();
       Promise.all([fetchMenu]).then(async (responses) => {
+        console.log("isLoggedIn",authStore.isLoggedIn())
         if (authStore.isLoggedIn()) {
           const fetchUserDetails = userDetailsStore.getUserDetails();
           const fetchStoreDataStore = storeDataStore.getStoreData();
@@ -237,3 +237,5 @@ export default function App() {
     </StoreContext.Provider>
   );
 }
+export default observer(App);
+
