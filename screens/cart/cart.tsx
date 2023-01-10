@@ -232,7 +232,6 @@ const CartScreen = () => {
     }
     setIsAnimating(true);
     setItemToRemove(getProductIndexId(product, index));
-    console.log("setItemToRemove", getProductIndexId(product, index));
 
     handleAnimation();
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut, () => {
@@ -248,7 +247,7 @@ const CartScreen = () => {
   const isStoreAvailable = () => {
     return storeDataStore.getStoreData().then((res) => {
       return {
-        isOpen: true, //res.isOpen,
+        isOpen: res.isOpen,
         isBusy: false,
       };
     });

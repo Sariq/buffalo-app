@@ -7,6 +7,7 @@ import {
 } from "react-native";
 import { observer } from "mobx-react";
 import { useTranslation } from "react-i18next";
+import Button from "../../components/controls/button/button";
 
 /* styles */
 import theme from "../../styles/theme.style";
@@ -14,6 +15,7 @@ import Icon from "../../components/icon";
 import { getCurrentLang } from "../../translations/i18n";
 import { useEffect, useState, useContext } from "react";
 import { StoreContext } from "../../stores";
+import themeStyle from "../../styles/theme.style";
 const HomeScreen = ({ navigation }) => {
   const { t } = useTranslation();
   const [isAppReady, setIsAppReady] = useState(false);
@@ -21,12 +23,12 @@ const HomeScreen = ({ navigation }) => {
   let { userDetailsStore } = useContext(StoreContext);
 
   const displayTemrsAndConditions = async () => {
-      if (!userDetailsStore.isAcceptedTerms) {
-        setTimeout(()=>{
-          navigation.navigate("terms-and-conditions");
-        },0)
-      }
-      setIsAppReady(true);
+    if (!userDetailsStore.isAcceptedTerms) {
+      setTimeout(() => {
+        navigation.navigate("terms-and-conditions");
+      }, 0);
+    }
+    setIsAppReady(true);
   };
   useEffect(() => {
     displayTemrsAndConditions();
@@ -36,10 +38,10 @@ const HomeScreen = ({ navigation }) => {
     navigation.navigate("menuScreen");
   };
 
-  if(!isAppReady){
+  if (!isAppReady) {
     return;
   }
-  
+
   return (
     <View style={{ height: "100%" }}>
       <ImageBackground
@@ -47,7 +49,20 @@ const HomeScreen = ({ navigation }) => {
         resizeMode="stretch"
         style={styles.image}
       >
-        <View style={styles.container}>
+        <View style={[styles.button, styles.bottomView]}>
+          <View style={{ width: "90%" }}>
+            <Button
+              bgColor={themeStyle.PRIMARY_COLOR}
+              text={t("new-order")}
+              onClickFn={goToNewOrder}
+              fontSize={40}
+              icon={'new_order_icon'}
+              borderRadious={0}
+              iconSize={30}
+            />
+          </View>
+        </View>
+        {/* <View style={styles.container}>
           <TouchableOpacity
             onPress={goToNewOrder}
             style={[styles.button, styles.bottomView]}
@@ -61,11 +76,11 @@ const HomeScreen = ({ navigation }) => {
             {t('new-order')}
             </Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
       </ImageBackground>
     </View>
   );
-}
+};
 export default observer(HomeScreen);
 
 const styles = StyleSheet.create({
@@ -75,7 +90,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   button: {
-    backgroundColor: theme.PRIMARY_COLOR,
     borderRadius: 5,
     display: "flex",
     flexDirection: "row",
@@ -84,13 +98,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20 / -2,
   },
   bottomView: {
-    width: "90%",
+    width: "100%",
     height: 50,
     justifyContent: "center",
     alignItems: "center",
     position: "absolute", //Here is the trick
     bottom: 0, //Here is the trick
-    marginBottom: 40,
+    marginBottom: 60,
   },
   buttonText: {
     fontSize: 20,

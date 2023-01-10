@@ -20,6 +20,7 @@ import themeStyle from "../../styles/theme.style";
 import Icon from "../../components/icon";
 import { getCurrentLang } from "../../translations/i18n";
 import { useTranslation } from "react-i18next";
+import { LinearGradient } from "expo-linear-gradient";
 
 const extrasIcons = {
   משקל: require("../../assets/menu/gradiant/burgerSlice.png"),
@@ -181,6 +182,12 @@ const MealScreen = ({ route }) => {
     <View
       style={{ height: "100%", marginBottom: 40, backgroundColor: "white" }}
     >
+      <LinearGradient
+        colors={["white", "#F9F9F9", "#FCFCFC", "#FCFCFC"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 0.1 }}
+        style={styles.background}
+      />
       <KeyboardAvoidingView
         keyboardVerticalOffset={100}
         behavior="position"
@@ -446,5 +453,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 1,
     shadowRadius: 30,
     elevation: 0,
+  },
+  background: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
   },
 });

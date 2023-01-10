@@ -65,7 +65,7 @@ export default function Button({
       <TouchableOpacity
         style={{
           ...styles.button,
-          borderRadius: borderRadious || 30,
+          borderRadius: borderRadious !== undefined ? borderRadious : 30,
           backgroundColor: disabled ? themeStyle.GRAY_600 : bgColor,
           borderColor: getBorderColor(),
           borderWidth: 1,
@@ -112,5 +112,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     marginHorizontal: 20,
+    height: "100%"
+
   },
 });
