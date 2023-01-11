@@ -24,6 +24,7 @@ import TermsAndConditionsScreen from "./screens/terms-and-conditions";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { observer } from "mobx-react";
 import { StoreContext } from "./stores";
+import i18n from "./translations/i18n";
 // Keep the splash screen visible while we fetch resources
 //SplashScreen.preventAutoHideAsync();
 let customARFonts = {
@@ -61,7 +62,7 @@ const App = () => {
       RNRestart.Restart();
     }
   }, []);
-
+  
   async function prepare() {
     console.log("XXXXXWWWPREPARE")
     try {
@@ -76,9 +77,7 @@ const App = () => {
           const fetchStoreDataStore = storeDataStore.getStoreData();
           userDetailsStore.setIsAcceptedTerms(true);
           Promise.all([fetchStoreDataStore, fetchUserDetails]).then((res) => {
-            setTimeout(() => {
               setAppIsReady(true);
-            }, 1000);
           });
         } else {
           //           await AsyncStorage.setItem(
@@ -87,9 +86,7 @@ const App = () => {
           // );
           const data = await AsyncStorage.getItem("@storage_terms_accepted");
           userDetailsStore.setIsAcceptedTerms(JSON.parse(data));
-          setTimeout(() => {
             setAppIsReady(true);
-          }, 1000);
         }
       });
       // Artificially delay for two seconds to simulate a slow loading

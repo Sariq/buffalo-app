@@ -32,22 +32,27 @@ class MenuStore {
       });
   }
   getMenu = () => {
-
-    this.getMenuFromServer().then((res) => {
-      runInAction(() => {
-
-        this.dictionary = res.dictionary;
-        setTranslations(this.dictionary)
-        this.categories = groupBy(res.menu, (x) => x.category);
-        this.meals = groupBy(res.menu_constants, (x) => x.menu_id);
-        Object.keys(this.meals).map((key) => {
-          const extras = this.getMealTags(key);
-          this.meals[key].extras = extras;
-          this.mainMealTags(key, extras);
-          this.meals[key].data = res.menu.find((product) => product.id.toString() === key)
+   return new Promise((resolve)=>{
+      this.getMenuFromServer().then((res) => {
+        runInAction(() => {
+  
+          this.dictionary = res.dictionary;
+          setTranslations(this.dictionary).then(()=>{
+            this.categories = groupBy(res.menu, (x) => x.category);
+            this.meals = groupBy(res.menu_constants, (x) => x.menu_id);
+            Object.keys(this.meals).map((key) => {
+              const extras = this.getMealTags(key);
+              this.meals[key].extras = extras;
+              this.mainMealTags(key, extras);
+              this.meals[key].data = res.menu.find((product) => product.id.toString() === key)
+            });
+            resolve(true)
+          })
+     
         });
-      });
+      })
     })
+
   };
 
   getMealByKey = (key) => {
