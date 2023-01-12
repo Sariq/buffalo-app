@@ -70,8 +70,8 @@ export default function GradiantRow({
   return (
     <View style={styles.gradiantRow}>
       {!hideIcon && (
-        <View style={{ width: "10%" }}>
-          <Image style={{ width: 60, height: 50 }} source={icon} />
+        <View style={{ width: "10%"}}>
+          <Image style={{ width: 60, height: 50}} source={icon} />
         </View>
       )}
       <View

@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+} from "react-native";
 import { useState, useEffect } from "react";
 import { observer } from "mobx-react";
 import { useContext } from "react";
@@ -27,12 +34,14 @@ const categoryListIcons = {
   CHICKEN: "crispy_icon",
   SIDES: "box-icon",
   DRINK: "drinks_icon",
+  SALADS: "salad-icon"
 };
 const categoryListOrder = {
   1: "BURGERS",
   2: "CHICKEN",
   3: "SIDES",
   4: "DRINK",
+  5: "SALADS",
 };
 
 const MenuScreen = () => {
@@ -67,63 +76,69 @@ const MenuScreen = () => {
   return (
     <View style={{ height: "100%" }}>
       <LinearGradient
-        colors={["white","#F9F9F9", "#FCFCFC", "#FCFCFC"]}
+        colors={["white", "#F9F9F9", "#FCFCFC", "#FCFCFC"]}
         start={{ x: 0, y: 0 }}
         end={{ x: 0, y: 0.1 }}
         style={styles.background}
       />
       <View style={styles.container}>
-        {Object.keys(categoryListOrder).map((key, index) => (
-          <View style={{ width: 80, height: 96, flexBasis: 90 }}>
-            <TouchableOpacity
-              style={[styles.categoryItem]}
-              onPress={() => {
-                onCategorySelect(
-                  categoryList[categoryListOrder[key]],
-                  categoryListOrder[key]
-                );
-              }}
-            >
-              <View
-                style={[
-                  styles.iconContainer,
+        <ScrollView
+          style={{ height: "100%", width: "100%" }}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+        >
+          {Object.keys(categoryListOrder).map((key, index) => (
+            <View style={{ width: 85, height: 96, flexBasis: 90 }}>
+              <TouchableOpacity
+                style={[styles.categoryItem]}
+                onPress={() => {
+                  onCategorySelect(
+                    categoryList[categoryListOrder[key]],
+                    categoryListOrder[key]
+                  );
+                }}
+              >
+                <View
+                  style={[
+                    styles.iconContainer,
 
-                  {
-                    backgroundColor:
-                      categoryListOrder[key] === selectedCategoryKey
-                        ? themeStyle.PRIMARY_COLOR
-                        : themeStyle.WHITE_COLOR,
-                  },
-                ]}
-              >
-                <Icon
-                  icon={categoryListIcons[categoryListOrder[key]]}
-                  size={38}
-                  style={{
-                    color:
-                      categoryListOrder[key] === selectedCategoryKey
-                        ? themeStyle.GRAY_700
-                        : themeStyle.GRAY_300,
-                  }}
-                />
-              </View>
-              <Text
-                style={[
-                  {
-                    marginTop: 10,
-                    color:
-                      categoryListOrder[key] === selectedCategoryKey
-                        ? themeStyle.GRAY_700
-                        : themeStyle.GRAY_300,
-                    fontFamily: `${getCurrentLang()}-SemiBold`,
-                  },
-                ]}
-              >
-                {t(categoryListOrder[key])}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        ))}
+                    {
+                      backgroundColor:
+                        categoryListOrder[key] === selectedCategoryKey
+                          ? themeStyle.PRIMARY_COLOR
+                          : themeStyle.WHITE_COLOR,
+                    },
+                  ]}
+                >
+                  <Icon
+                    icon={categoryListIcons[categoryListOrder[key]]}
+                    size={38}
+                    style={{
+                      color:
+                        categoryListOrder[key] === selectedCategoryKey
+                          ? themeStyle.GRAY_700
+                          : themeStyle.GRAY_300,
+                    }}
+                  />
+                </View>
+                <Text
+                  style={[
+                    {
+                      marginTop: 10,
+                      color:
+                        categoryListOrder[key] === selectedCategoryKey
+                          ? themeStyle.GRAY_700
+                          : themeStyle.GRAY_300,
+                      fontFamily: `${getCurrentLang()}-SemiBold`,
+                    },
+                  ]}
+                >
+                  {t(categoryListOrder[key])}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          ))}
+        </ScrollView>
       </View>
       <View style={styles.itemsListConainer}>
         <CategoryItemsList productsList={selectedCategory} />
@@ -144,7 +159,6 @@ const styles = StyleSheet.create({
     alignContent: "space-between",
     paddingHorizontal: 5,
     paddingTop: 20,
-    paddingBottom: 10,
     width: "100%",
     // backgroundColor: "#F1F1F1",
   },
@@ -165,6 +179,7 @@ const styles = StyleSheet.create({
   },
   itemsListConainer: {
     paddingBottom: 120,
+    marginTop: 10,
   },
   background: {
     position: "absolute",

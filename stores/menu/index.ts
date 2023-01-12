@@ -5,6 +5,7 @@ import { fromBase64 } from '../../helpers/convert-base64'
 import { axiosInstance } from "../../utils/http-interceptor";
 import i18n from "../../translations/index-x";
 import { setTranslations, getCurrentLang } from "../../translations/i18n";
+import { orderBy } from "lodash";
 
 class MenuStore {
   menu = null;
@@ -74,7 +75,12 @@ class MenuStore {
       }
       return tagItem;
     })
-    this.meals[key].extras[type] = extrasType;
+    const sortedExtrasType = orderBy(extrasType, ["constant_order_priority"], ["asc"]);
+    this.meals[key].extras[type] = sortedExtrasType;
+    this.meals[key].extras["orderList"]= this.meals[key].extras["orderList"] || {};
+    if(this.meals[key].extras[type][0].available_on_app){
+      this.meals[key].extras["orderList"][type] = this.meals[key].extras[type][0].order_priority;
+    }
     this.meals[key] = { ...this.meals[key], extras: this.meals[key].extras };
   };
 

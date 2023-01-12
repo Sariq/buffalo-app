@@ -42,9 +42,9 @@ const routes = [
   },
   {
     id: 4,
-    name: "termsAndConditions",
-    title: "العروض",
-    icon: "deals_icon",
+    name: "instagram",
+    title: "followus",
+    icon: "instagram",
     component: TermsAndConditionsScreen,
   },
   {
@@ -89,6 +89,10 @@ function MyTabBar({ state, descriptors, navigation }) {
         const onPress = () => {
           if (route.name === "contactUsScreen") {
             Linking.openURL("tel:0509333657");
+            return;
+          }
+          if (route.name === "instagram") {
+            Linking.openURL('instagram://user?username=buffalo_burger_house')
             return;
           }
           onTabSelect(route.name);

@@ -30,6 +30,7 @@ const CategoryItemsList = ({ productsList }) => {
       y: 0,
       animated: true,
     });
+    console.log("productsList",productsList)
   }, [productsList])
   return (
     <ScrollView ref={scrollRef}>

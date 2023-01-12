@@ -57,7 +57,7 @@ export default function Button({
     <Icon
       icon={icon}
       size={iconSize ? iconSize : 20}
-      style={{ color: textColor || theme.GRAY_700, top: -1 }}
+      style={{ color: textColor || theme.GRAY_700 }}
     />
   );
   return (
@@ -71,24 +71,26 @@ export default function Button({
           borderWidth: 1,
           opacity: disabled && 0.3,
           alignItems: "center",
+          
         }}
+        disabled={disabled}
         onPress={() => {
           onBtnClick();
         }}
       >
                 {icon && iconPosition && iconPosition === 'right' && renderIcon()}
-
         <Text
           style={{
             ...styles.buttonText,
             fontSize: fontSize,
             color: textColor,
             fontFamily: fontFamily,
-            padding: textPadding
+            padding: textPadding,
           }}
         >
           {text}
         </Text>
+
         {icon && iconPosition && iconPosition === 'left' && renderIcon()}
         {isLoading && (
           <ActivityIndicator animating={true} color={theme.WHITE_COLOR} />
@@ -100,6 +102,7 @@ export default function Button({
 const styles = StyleSheet.create({
   container: {
     width: "100%",
+
   },
   button: {
     backgroundColor: theme.PRIMARY_COLOR,
@@ -108,11 +111,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 10,
-    
+
   },
   buttonText: {
     marginHorizontal: 20,
-    height: "100%"
 
   },
 });

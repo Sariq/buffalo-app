@@ -21,6 +21,7 @@ import Icon from "../../components/icon";
 import { getCurrentLang } from "../../translations/i18n";
 import { useTranslation } from "react-i18next";
 import { LinearGradient } from "expo-linear-gradient";
+import { orderBy } from "lodash";
 
 const extrasIcons = {
   משקל: require("../../assets/menu/gradiant/burgerSlice.png"),
@@ -41,6 +42,9 @@ const extrasIcons = {
   "סרירצ'ה": require("../../assets/menu/gradiant/sersachi.png"),
   ברביקיו: require("../../assets/menu/gradiant/barbicu.png"),
   חרדל: require("../../assets/menu/gradiant/musterd.png"),
+  "תוספת קריספי": require("../../assets/menu/gradiant/crispy-chicken.png"),
+  "מוצרלה": require("../../assets/menu/gradiant/mozerla.png"),
+  "צ'ילי מתוק": require("../../assets/menu/gradiant/sweet-chilli.png"),
   //"צ'ילי מתוק": require("../../assets/menu/gradiant/barbicu.png"),
   //"מוצרלה": require("../../assets/menu/gradiant/barbicu.png"),
   //"תוספת קריספי": require("../../assets/menu/gradiant/barbicu.png"),
@@ -98,13 +102,10 @@ const MealScreen = ({ route }) => {
                 : extraPrice - tagItem.price * meal.others.count;
             break;
           case "CHOICE":
-            console.log(tag.multiple_choice);
-            console.log(tagItem.value);
             if (!tag.multiple_choice) {
               const currentTag = currentExtraType.find(
                 (tagItem) => tagItem.value === true
               );
-              console.log(currentTag);
               if (currentTag) {
                 const tagDeltaPrice = tagItem.price - currentTag.price;
                 extraPrice = extraPrice + tagDeltaPrice;
@@ -173,6 +174,16 @@ const MealScreen = ({ route }) => {
     };
     return result ? rowStyle : {};
   };
+
+  const orderList = (index: any) =>{
+    //orderBy(list, ["order_priority"], ["asc"]);
+    console.log(meal.extras.orderList)
+    console.log("index",index)
+    const result = Object.keys(meal.extras.orderList).find(key => meal.extras.orderList[key] === index);
+    console.log("result",result)
+
+    return result;
+  }
 
   if (!meal) {
     return null;
@@ -277,12 +288,19 @@ const MealScreen = ({ route }) => {
 
           {meal.extras &&
             Object.keys(meal.extras).map(
-              (key) =>
-                isAvailableOnApp(key) && (
-                  <View key={key} style={[styles.sectionContainer]}>
-                    {meal.extras[key] && (
+              (key, index) => 
+              {
+                let keyOrdered = orderList(index);
+                console.log(keyOrdered)
+                if(keyOrdered){
+                  
+                
+                return (
+                isAvailableOnApp(keyOrdered) && (
+                  <View key={keyOrdered} style={[styles.sectionContainer]}>
+                    {meal.extras[keyOrdered] && (
                       <View style={[styles.gradiantRowContainer]}>
-                        {isOneChoiceTag(meal.extras[key]) && (
+                        {isOneChoiceTag(meal.extras[keyOrdered]) && (
                           <Text
                             style={{
                               fontSize: 20,
@@ -290,18 +308,18 @@ const MealScreen = ({ route }) => {
                               marginBottom: 0,
                             }}
                           >
-                            {key}
+                            {keyOrdered}
                           </Text>
                         )}
                         <View
                           style={[
-                            isOneChoiceTag(meal.extras[key])
-                              ? { ...isOneChoiceTagStyle(meal.extras[key]) }
+                            isOneChoiceTag(meal.extras[keyOrdered])
+                              ? { ...isOneChoiceTagStyle(meal.extras[keyOrdered]) }
                               : {},
                           ]}
                         >
-                          {Object.keys(meal.extras[key]).map((tagId) => {
-                            const tag = meal.extras[key][tagId];
+                          {Object.keys(meal.extras[keyOrdered]).map((tagId) => {
+                            const tag = meal.extras[keyOrdered][tagId];
                             if (tag.available_on_app) {
                               return (
                                 <View
@@ -310,7 +328,7 @@ const MealScreen = ({ route }) => {
                                 >
                                   <GradiantRow
                                     onChangeFn={(value) => {
-                                      updateMeal(value, tag, key);
+                                      updateMeal(value, tag, keyOrdered);
                                     }}
                                     icon={extrasIcons[tag.name]}
                                     type={tag.type}
@@ -330,6 +348,7 @@ const MealScreen = ({ route }) => {
                     )}
                   </View>
                 )
+              )}}
             )}
 
           <View style={styles.sectionContainer}>

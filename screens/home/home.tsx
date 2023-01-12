@@ -99,7 +99,6 @@ const styles = StyleSheet.create({
   },
   bottomView: {
     width: "100%",
-    height: 50,
     justifyContent: "center",
     alignItems: "center",
     position: "absolute", //Here is the trick
@@ -112,6 +111,7 @@ const styles = StyleSheet.create({
     // paddingRight: 15,
     // paddingTop: 5
     marginHorizontal: 40 / 2,
+    
   },
   image: {
     height: "100%",

@@ -200,7 +200,7 @@ const VerifyCodeScreen = ({ route }) => {
             alignItems: "center",
           }}
         >
-          <View style={{ direction: "rtl", }}>
+          <View style={{ direction: "ltr", }}>
             <CodeField
               ref={ref}
               {...props}

@@ -92,10 +92,12 @@ const Header = () => {
   const handleProfileClick = () => {
     if(authStore.isLoggedIn()){
       navigation.navigate("profile");
+      //navigation.navigate("insert-customer-name");
+
     }else{
      //navigation.navigate("insert-customer-name");
-     //navigation.navigate("login");
-        navigation.navigate("verify-code");
+     navigation.navigate("login");
+      //navigation.navigate("verify-code");
     }
     
     //navigation.navigate("order-history");
