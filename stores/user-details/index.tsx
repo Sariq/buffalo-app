@@ -13,7 +13,6 @@ class UserDetailsStore {
   isAcceptedTerms: boolean = false;
   constructor() {
     makeAutoObservable(this);
-    console.log("AAAA", this.userDetails)
   }
 
   setIsAcceptedTerms = (flag: boolean) =>{
@@ -29,7 +28,6 @@ class UserDetailsStore {
       )
       .then(function (response) {
         const res = JSON.parse(fromBase64(response.data));
-        console.log("resUSerServe", res)
         return res;
       });
   };
@@ -40,12 +38,8 @@ class UserDetailsStore {
         name: res.name,
         phone: res.phone
       }
-      console.log("resUSer", res)
-
       runInAction(() => {
         this.userDetails = userDetailsTmp;
-        console.log("AAAAxx", this.userDetails)
-
       });
     })
   };

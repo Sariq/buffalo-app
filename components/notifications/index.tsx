@@ -20,7 +20,6 @@ export default function NotificationManager() {
     });
 
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      console.log("test",response.notification.request.content.data);
     });
 
     return () => {

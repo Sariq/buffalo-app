@@ -43,7 +43,7 @@ const extrasIcons = {
   ברביקיו: require("../../assets/menu/gradiant/barbicu.png"),
   חרדל: require("../../assets/menu/gradiant/musterd.png"),
   "תוספת קריספי": require("../../assets/menu/gradiant/crispy-chicken.png"),
-  "מוצרלה": require("../../assets/menu/gradiant/mozerla.png"),
+  מוצרלה: require("../../assets/menu/gradiant/mozerla.png"),
   "צ'ילי מתוק": require("../../assets/menu/gradiant/sweet-chilli.png"),
   //"צ'ילי מתוק": require("../../assets/menu/gradiant/barbicu.png"),
   //"מוצרלה": require("../../assets/menu/gradiant/barbicu.png"),
@@ -175,15 +175,12 @@ const MealScreen = ({ route }) => {
     return result ? rowStyle : {};
   };
 
-  const orderList = (index: any) =>{
-    //orderBy(list, ["order_priority"], ["asc"]);
-    console.log(meal.extras.orderList)
-    console.log("index",index)
-    const result = Object.keys(meal.extras.orderList).find(key => meal.extras.orderList[key] === index);
-    console.log("result",result)
-
+  const orderList = (index: any) => {
+    const result = Object.keys(meal.extras.orderList).find(
+      (key) => meal.extras.orderList[key] === index
+    );
     return result;
-  }
+  };
 
   if (!meal) {
     return null;
@@ -287,69 +284,71 @@ const MealScreen = ({ route }) => {
           </View>
 
           {meal.extras &&
-            Object.keys(meal.extras).map(
-              (key, index) => 
-              {
-                let keyOrdered = orderList(index);
-                console.log(keyOrdered)
-                if(keyOrdered){
-                  
-                
+            Object.keys(meal.extras).map((key, index) => {
+              let keyOrdered = orderList(index);
+              if (keyOrdered) {
                 return (
-                isAvailableOnApp(keyOrdered) && (
-                  <View key={keyOrdered} style={[styles.sectionContainer]}>
-                    {meal.extras[keyOrdered] && (
-                      <View style={[styles.gradiantRowContainer]}>
-                        {isOneChoiceTag(meal.extras[keyOrdered]) && (
-                          <Text
-                            style={{
-                              fontSize: 20,
-                              textAlign: "center",
-                              marginBottom: 0,
-                            }}
+                  isAvailableOnApp(keyOrdered) && (
+                    <View key={keyOrdered} style={[styles.sectionContainer]}>
+                      {meal.extras[keyOrdered] && (
+                        <View style={[styles.gradiantRowContainer]}>
+                          {isOneChoiceTag(meal.extras[keyOrdered]) && (
+                            <Text
+                              style={{
+                                fontSize: 20,
+                                textAlign: "center",
+                                marginBottom: 0,
+                              }}
+                            >
+                              {keyOrdered}
+                            </Text>
+                          )}
+                          <View
+                            style={[
+                              isOneChoiceTag(meal.extras[keyOrdered])
+                                ? {
+                                    ...isOneChoiceTagStyle(
+                                      meal.extras[keyOrdered]
+                                    ),
+                                  }
+                                : {},
+                            ]}
                           >
-                            {keyOrdered}
-                          </Text>
-                        )}
-                        <View
-                          style={[
-                            isOneChoiceTag(meal.extras[keyOrdered])
-                              ? { ...isOneChoiceTagStyle(meal.extras[keyOrdered]) }
-                              : {},
-                          ]}
-                        >
-                          {Object.keys(meal.extras[keyOrdered]).map((tagId) => {
-                            const tag = meal.extras[keyOrdered][tagId];
-                            if (tag.available_on_app) {
-                              return (
-                                <View
-                                  key={tagId}
-                                  style={{ paddingVertical: 3 }}
-                                >
-                                  <GradiantRow
-                                    onChangeFn={(value) => {
-                                      updateMeal(value, tag, keyOrdered);
-                                    }}
-                                    icon={extrasIcons[tag.name]}
-                                    type={tag.type}
-                                    title={menuStore.translate(tag.name)}
-                                    price={tag.price}
-                                    minValue={tag.counter_min_value}
-                                    stepValue={tag.counter_step_value}
-                                    value={tag.value}
-                                    isMultipleChoice={tag.multiple_choice}
-                                  />
-                                </View>
-                              );
-                            }
-                          })}
+                            {Object.keys(meal.extras[keyOrdered]).map(
+                              (tagId) => {
+                                const tag = meal.extras[keyOrdered][tagId];
+                                if (tag.available_on_app) {
+                                  return (
+                                    <View
+                                      key={tagId}
+                                      style={{ paddingVertical: 3 }}
+                                    >
+                                      <GradiantRow
+                                        onChangeFn={(value) => {
+                                          updateMeal(value, tag, keyOrdered);
+                                        }}
+                                        icon={extrasIcons[tag.name]}
+                                        type={tag.type}
+                                        title={menuStore.translate(tag.name)}
+                                        price={tag.price}
+                                        minValue={tag.counter_min_value}
+                                        stepValue={tag.counter_step_value}
+                                        value={tag.value}
+                                        isMultipleChoice={tag.multiple_choice}
+                                      />
+                                    </View>
+                                  );
+                                }
+                              }
+                            )}
+                          </View>
                         </View>
-                      </View>
-                    )}
-                  </View>
-                )
-              )}}
-            )}
+                      )}
+                    </View>
+                  )
+                );
+              }
+            })}
 
           <View style={styles.sectionContainer}>
             <View style={styles.gradiantRowContainer}>

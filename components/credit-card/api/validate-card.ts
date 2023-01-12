@@ -28,14 +28,12 @@ export type TCCDetails = {
 
 const validateCard = ({ cardNumber, expDate }: TValidateCardProps) => {
   const paymentCredentials = storeDataStore.paymentCredentials;
-  console.log("paymentCredentials",paymentCredentials)
   const body: TPayload = {
     TerminalNumber: paymentCredentials.credentials_terminal_number,
     Password: paymentCredentials.credentials_password,
     CardNumber: cardNumber,
     ExpDate_MMYY: expDate,
   };
-  console.log("validatebody", body)
 
   return axios
     .post(
@@ -43,13 +41,10 @@ const validateCard = ({ cardNumber, expDate }: TValidateCardProps) => {
       body,
     )
     .then(function (res: any) {
-      console.log("ressTokV", res)
       const ccDetails: TCCDetails = {
         last4Digits: cardNumber.substr(cardNumber.length - 4),
         ccToken: res.data.Token
       }
-      console.log("validateres", res)
-      console.log("validatedetails", ccDetails)
       return { isValid: !res.HasError, ccDetails }
     });
 }

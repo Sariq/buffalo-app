@@ -270,17 +270,12 @@ class CartStore {
       phoneNumber,
       ordersList: [order]
     };
-    console.log("ordersHistory", ordersHistory);
     const jsonValue = JSON.stringify(ordersHistory);
     await AsyncStorage.setItem("@storage_orderHistory", jsonValue);
   }
   addOrderToHistory = async (order: any, phoneNumber: string)=>{
     const jsonValue = await AsyncStorage.getItem("@storage_orderHistory");
     const currentOrderdHistory = jsonValue != null ? JSON.parse(jsonValue) : [];
-    console.log("currentHostory", currentOrderdHistory);
-    console.log("order", order);
-    console.log("phoneNumber", phoneNumber);
-
     if(currentOrderdHistory.length == 0){
       this.addNewOrderToHistory(order, phoneNumber);
     }
@@ -302,7 +297,6 @@ class CartStore {
       toBase64(body),
     )
     .then(function (response) {
-      console.log(fromBase64(response.data))
       return JSON.parse(fromBase64(response.data));
     })
     .catch(function (error) {

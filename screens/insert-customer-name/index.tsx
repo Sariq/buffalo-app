@@ -28,7 +28,6 @@ const InsertCustomerNameScreen = () => {
   };
 
   const isValidName = () =>{
-      console.log(customerName?.length)
     return customerName?.length>=2
   }
 
@@ -39,7 +38,6 @@ const InsertCustomerNameScreen = () => {
         name: customerName,
         datetime: new Date(),
       };
-      console.log("BBBOD", body)
       axiosInstance
         .post(
           `${AUTH_API.CONTROLLER}/${AUTH_API.UPDATE_CUSTOMER_NAME_API}`,
@@ -57,7 +55,6 @@ const InsertCustomerNameScreen = () => {
           });
         })
         .catch(function (error) {
-          console.log(error);
         });
     }else{
       setIsValid(false);

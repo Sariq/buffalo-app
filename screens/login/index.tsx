@@ -34,12 +34,9 @@ const LoginScreen = () => {
   const ifUserBlocked = async () => {
     const userB = await AsyncStorage.getItem("@storage_user_b");
     const userBJson = JSON.parse(userB);
-    console.log("userBJson",userBJson)
     if(userBJson){
       return true;
     }
-    console.log("ifUserBlocked-false")
-
     return false;
   }
   const authinticate = async () => {
@@ -47,8 +44,6 @@ const LoginScreen = () => {
       setIsLoading(true);
 
       if(await ifUserBlocked()){
-        console.log("ifUserBlocked")
-
         return;
       }
 

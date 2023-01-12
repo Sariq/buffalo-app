@@ -282,16 +282,12 @@ const CartScreen = () => {
 
   const chargeOrder = (chargeData: TPaymentProps) => {
     chargeCreditCard(chargeData).then((resCharge) => {
-      console.log("chargeCreditCardHasError", resCharge.ReferenceNumber);
-
       const updateCCData: TUpdateCCPaymentRequest = {
         order_id: chargeData.orderId,
         creditcard_ReferenceNumber: resCharge.ReferenceNumber,
         datetime: new Date(),
       };
       cartStore.UpdateCCPayment(updateCCData).then((res) => {
-        console.log("UpdateCCPayment", res);
-
         if (resCharge.HasError) {
           setPaymentErrorMessage(resCharge.ReturnMessage);
           setShowPaymentFailedDialog(true);
@@ -302,8 +298,6 @@ const CartScreen = () => {
           setShowPaymentFailedDialog(true);
           return;
         }
-        console.log("UpdateCCPayment", res.has_err);
-
         postChargeOrderActions();
       });
     });
@@ -325,8 +319,6 @@ const CartScreen = () => {
         totalPrice: totalPrice,
         orderId: orderData.order_id,
       };
-      console.log("chargeOrder", chargeData);
-
       chargeOrder(chargeData);
     } else {
       postChargeOrderActions();
@@ -348,12 +340,10 @@ const CartScreen = () => {
     }
     //cartStore.addOrderToHistory(order,userDetailsStore.userDetails.phone);
     cartStore.submitOrder(order).then((res: TOrderSubmitResponse | any) => {
-      console.log("has_err", res);
       if (res == "sameHashKey") {
         if (paymentMthod === PAYMENT_METHODS.creditCard) {
         }
       }
-
       if (res?.has_err) {
         DeviceEventEmitter.emit(`OPEN_GENERAL_SERVER_ERROR_DIALOG`, {
           show: true,
@@ -368,7 +358,6 @@ const CartScreen = () => {
   };
 
   const handleLocationIsDiabledAnswer = (value: boolean) => {
-    console.log("handleLocationIsDiabledAnswer", value);
     if (value) {
       Platform.OS === "android"
         ? Linking.sendIntent("android.settings.LOCATION_SOURCE_SETTINGS")

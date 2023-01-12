@@ -11,13 +11,6 @@ const ProfileScreen = () => {
   const { userDetailsStore, authStore } = useContext(StoreContext);
   const navigation = useNavigation();
 
-  useEffect(() => {
-    if (!userDetailsStore?.userDetails?.name) {
-      console.log("xx");
-    }
-    console.log(authStore.isLoggedIn())
-  }, []);
-
   const onLogOut = () =>{
     authStore.logOut();
     navigation.navigate("homeScreen");

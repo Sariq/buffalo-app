@@ -67,10 +67,8 @@ const CartScreen = () => {
   }, [cartStore.cartItems]);
 
   const onCheckBoxChange = (isSelected) => {
-    console.log(isSelected);
   };
   const onCounterChange = (value) => {
-    // console.log(value);
   };
 
   const onRemoveProduct = (product, index) => {
@@ -338,7 +336,6 @@ const CartScreen = () => {
               style={styles.submitButton}
               contentStyle={styles.submitContentButton}
               mode="contained"
-              onPress={() => console.log("Pressed")}
             >
               ارسل الظلبية
             </Button>

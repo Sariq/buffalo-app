@@ -14,7 +14,6 @@ export const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
     async function (config) {
         const token = await AsyncStorage.getItem("@storage_userToken");
-        console.log("axiosInstance", token)
         if (token) {
             config.headers['Authorization'] = 'Bearer ' + token
         }
@@ -22,7 +21,6 @@ axiosInstance.interceptors.request.use(
         return config;
     },
     function (error) {
-        console.log("AXIOS-Request-Error", error)
         // Do something with request error
         return Promise.reject(error);
     }
@@ -32,7 +30,6 @@ axiosInstance.interceptors.response.use(
     function (response) {
         const jsonValue:any = JSON.parse(fromBase64(response.data));
         if(jsonValue.has_err && general_errors_codes.indexOf(jsonValue.code) > -1){
-            console.log(jsonValue)
             DeviceEventEmitter.emit(`OPEN_GENERAL_SERVER_ERROR_DIALOG`, { show: true });
         }
         if(jsonValue.has_err && jsonValue.code === TOKEN_NOT_VALID){
@@ -42,8 +39,6 @@ axiosInstance.interceptors.response.use(
         return response;
     },
     function (error) {
-        console.log("AXIOS-response-Error", error)
-
         return Promise.reject(error);
     }
 );

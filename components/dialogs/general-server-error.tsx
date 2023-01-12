@@ -24,7 +24,6 @@ import { useTranslation } from "react-i18next";
     }, []);
 
     const openDialog = () => {
-      console.log("OPPPEN")
       setVisible(true);
     }
   

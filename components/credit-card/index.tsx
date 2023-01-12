@@ -85,7 +85,6 @@ const CreditCard = ({ onSaveCard }) => {
   };
 
   const isFormValid = () => {
-    console.log(formStatus);
     return !(
       formStatus.idIDValid &&
       formStatus.isCVVValid &&
@@ -101,7 +100,6 @@ const CreditCard = ({ onSaveCard }) => {
       expDate: creditCardExpDate.replaceAll("/", ""),
     };
     validateCard(validateCardData).then(async (res) => {
-      console.log("vlaidatecard", res);
       if (res.isValid) {
         const ccData: TCCDetails = {
           ccToken: res.ccDetails.ccToken,

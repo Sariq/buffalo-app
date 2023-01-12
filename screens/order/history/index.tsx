@@ -15,7 +15,6 @@ const OrderHistoryScreen = ({ route }) => {
 
   useEffect(() => {
     const tmp = cartStore.getOrderHistory().then((res) => {
-      console.log(res.ordersList[0].products);
       setOrdersList(res.ordersList);
     });
   }, []);

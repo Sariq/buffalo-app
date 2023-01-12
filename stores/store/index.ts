@@ -21,7 +21,6 @@ class StoreDataStore {
           )
           .then(function (response) {
             const res = JSON.parse(fromBase64(response.data));
-           console.log("storeRes", res)
             return res;
           })
   };
@@ -31,8 +30,6 @@ class StoreDataStore {
       runInAction(()=>{
         this.storeData = res.stores[0];
         this.paymentCredentials = JSON.parse(fromBase64(res.stores[0].credentials));
-        console.log("paymentCredentials",res)
-
       })
       return res.stores[0];
     })

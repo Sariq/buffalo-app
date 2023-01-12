@@ -51,16 +51,6 @@ const VerifyCodeScreen = ({ route }) => {
     setValue: setVerifyCode,
   });
 
-
-  useEffect(() => {
-    console.log(verifyCode);
-  }, [verifyCode]);
-
-  const onChange = (value) => {
-    setIsValid(true);
-    setVerifyCode(value);
-  };
-
   const setTimertInterVal = async () => {
     let timerIntreval;
     clearInterval(timerIntreval);
@@ -213,8 +203,6 @@ const VerifyCodeScreen = ({ route }) => {
               textContentType="oneTimeCode"
               
               renderCell={({ index, symbol, isFocused }) => {
-                console.log(verifyCode)
-
                 return(
                 <View
                   style={{

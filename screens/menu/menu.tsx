@@ -34,7 +34,7 @@ const categoryListIcons = {
   CHICKEN: "crspy-icon",
   SIDES: "box-icon",
   DRINK: "drinks_icon",
-  SALADS: "salad-icon"
+  SALADS: "salad-icon",
 };
 const categoryListOrder = {
   1: "BURGERS",
@@ -61,7 +61,6 @@ const MenuScreen = () => {
 
   const getMenu = () => {
     const categories = menuStore.categories;
-    console.log("CCCATT", categories);
     setCategoryList(categories);
     setSelectedCategory(categories["BURGERS"]);
   };

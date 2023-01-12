@@ -64,14 +64,12 @@ const App = () => {
   }, []);
   
   async function prepare() {
-    console.log("XXXXXWWWPREPARE")
     try {
       // Pre-load fonts, make any API calls you need to do here
       await Font.loadAsync(customARFonts);
       setIsFontReady(true);
       const fetchMenu = menuStore.getMenu();
       Promise.all([fetchMenu]).then(async (responses) => {
-        console.log("isLoggedIn",authStore.isLoggedIn())
         if (authStore.isLoggedIn()) {
           const fetchUserDetails = userDetailsStore.getUserDetails();
           const fetchStoreDataStore = storeDataStore.getStoreData();

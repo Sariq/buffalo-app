@@ -24,63 +24,61 @@ const CategoryItemsList = ({ productsList }) => {
     navigation.navigate("meal", { product: item });
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     // @ts-ignore
     scrollRef.current?.scrollTo({
       y: 0,
       animated: true,
     });
-    console.log("productsList",productsList)
-  }, [productsList])
+  }, [productsList]);
   return (
     <ScrollView ref={scrollRef}>
       <View style={styles.container}>
-        {productsList.map((item) => { 
-          if(item.out_of_stock){
+        {productsList.map((item) => {
+          if (item.out_of_stock) {
             return null;
           }
-          return(
-          <TouchableOpacity
-            style={styles.categoryItem}
-            delayPressIn={0}
-            onPress={() => {
-              onItemSelect(item);
-            }}
-            key={item.id}
-          >
-            <View style={[styles.iconContainer]}>
-              <Image
-                style={{ width:"100%",height:"100%" }}
-                source={{uri:item.image_url}}
-              />
-            </View>
-            <Text
-              style={
-                {
-                  color: themeStyle.GRAY_700,
-                  marginTop:20,
-                  fontSize:18,
-                  fontFamily: `${getCurrentLang()}-SemiBold`,
-                }
-              }
+          return (
+            <TouchableOpacity
+              style={styles.categoryItem}
+              delayPressIn={0}
+              onPress={() => {
+                onItemSelect(item);
+              }}
+              key={item.id}
             >
-              {item[`name_${languageStore.selectedLang}`]}
-              {/* {i18n.t(`products.${item.name}.name`)} */}
-            </Text>
-            <Text
-              style={[
-                {
+              <View style={[styles.iconContainer]}>
+                <Image
+                  style={{ width: "100%", height: "100%" }}
+                  source={{ uri: item.image_url }}
+                />
+              </View>
+              <Text
+                style={{
                   color: themeStyle.GRAY_700,
-                  marginTop:8,
+                  marginTop: 20,
+                  fontSize: 18,
                   fontFamily: `${getCurrentLang()}-SemiBold`,
-                  fontSize:18,
-                },
-              ]}
-            >
-              ₪{item.price}
-            </Text>
-          </TouchableOpacity>
-        )})}
+                }}
+              >
+                {item[`name_${languageStore.selectedLang}`]}
+                {/* {i18n.t(`products.${item.name}.name`)} */}
+              </Text>
+              <Text
+                style={[
+                  {
+                    color: themeStyle.GRAY_700,
+                    marginTop: 8,
+                    fontFamily: `${getCurrentLang()}-SemiBold`,
+                    fontSize: 18,
+                  },
+                ]}
+              >
+                ₪{item.price}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
       </View>
     </ScrollView>
   );
@@ -93,13 +91,13 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     alignItems: "center",
     flex: 1,
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
     paddingHorizontal: 20,
     // backgroundColor:"#F1F1F1",
   },
   categoryItem: {
-    flexBasis: '48%',
-    marginBottom:15,
+    flexBasis: "48%",
+    marginBottom: 15,
 
     height: 220,
     justifyContent: "center",
@@ -115,14 +113,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3.84,
     elevation: 2,
-    
   },
   iconContainer: {
     alignItems: "center",
     justifyContent: "center",
     width: "100%",
     height: "100%",
-    padding: 10
+    padding: 10,
   },
   square: {
     alignSelf: "center",
