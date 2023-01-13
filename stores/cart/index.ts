@@ -10,10 +10,10 @@ import { getCurrentLang } from "../../translations/i18n";
 var hash = require('object-hash');
 
 export type TOrderSubmitResponse = {
-  has_err:boolean;
-  code:number;
-  order_id:number;
-  status:string;
+  has_err: boolean;
+  code: number;
+  order_id: number;
+  status: string;
   salt: string;
 }
 
@@ -59,16 +59,20 @@ type TCart = {
 
 const prodcutExtrasAdapter = (extras) => {
   let productExtras = [];
-  if(!extras){
+  if (!extras) {
     return productExtras;
   }
-  Object.keys(extras).map((key) => (
-    extras[key].map((extra) => {
-      if((extra.type === "CHOICE" && extra.isdefault !== extra.value) || (extra.type === "COUNTER" && extra.counter_init_value !== extra.value)){
-        productExtras.push({ id: extra.id, name: extra.name, value: extra.value });
-      }
-    })
-  ))
+  Object.keys(extras).map((key) => {
+    if (key !== 'orderList') {
+      return (
+        extras[key].map((extra) => {
+          if ((extra.type === "CHOICE" && extra.isdefault !== extra.value) || (extra.type === "COUNTER" && extra.counter_init_value !== extra.value)) {
+            productExtras.push({ id: extra.id, name: extra.name, value: extra.value });
+          }
+        })
+      )
+    }
+  })
   return productExtras;
 }
 
@@ -116,7 +120,7 @@ class CartStore {
   };
 
   addProductToCart = async (product) => {
-    if(this.cartItems.length === 0 ){
+    if (this.cartItems.length === 0) {
       const storage_cartCreatedDate = {
         date: new Date()
       }
@@ -163,14 +167,14 @@ class CartStore {
 
   generateUniqueHash = (value: any) => {
     var hash = 0,
-    i, chr;
-  if (value.length === 0) return hash;
-  for (i = 0; i < value.length; i++) {
-    chr = value.charCodeAt(i);
-    hash = ((hash << 5) - hash) + chr;
-    hash |= 0; // Convert to 32bit integer
-  }
-  return hash;
+      i, chr;
+    if (value.length === 0) return hash;
+    for (i = 0; i < value.length; i++) {
+      chr = value.charCodeAt(i);
+      hash = ((hash << 5) - hash) + chr;
+      hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
   }
 
   getHashKey = async (finalOrder: any) => {
@@ -198,7 +202,7 @@ class CartStore {
       total: order.totalPrice,
       app_language: getCurrentLang() === "ar" ? '1' : '2',
       device_os: Device.osName,
-      app_version:version,
+      app_version: version,
       unique_hash: hashKey,
       datetime: new Date(),
     }
@@ -210,10 +214,10 @@ class CartStore {
     this.updateLocalStorage();
   }
 
-  submitOrder = async(order: any): Promise<TOrderSubmitResponse | string> =>  {
+  submitOrder = async (order: any): Promise<TOrderSubmitResponse | string> => {
     const cartData = await this.getCartData(order);
     const currentHashKey = await AsyncStorage.getItem("@storage_orderHashKey");
-    if(cartData.unique_hash != JSON.parse(currentHashKey)){
+    if (cartData.unique_hash != JSON.parse(currentHashKey)) {
       await AsyncStorage.setItem("@storage_orderHashKey", JSON.stringify(cartData.unique_hash));
       const orderBase64 = toBase64(cartData).toString();
       const body = orderBase64;
@@ -223,9 +227,9 @@ class CartStore {
           body,
         )
         .then(function (response) {
-          const jsonValue:any = JSON.parse(fromBase64(response.data));
-          
-          const data:TOrderSubmitResponse = {
+          const jsonValue: any = JSON.parse(fromBase64(response.data));
+
+          const data: TOrderSubmitResponse = {
             has_err: jsonValue.has_err,
             order_id: jsonValue.order_id,
             salt: jsonValue.salt,
@@ -235,18 +239,18 @@ class CartStore {
           return data;
         })
         .catch(function (error) {
-          const data:TOrderSubmitResponse = { has_err: true, order_id:0, salt:"",status:"", code: 0}
+          const data: TOrderSubmitResponse = { has_err: true, order_id: 0, salt: "", status: "", code: 0 }
           return data;
         });
-    }else{
-      return new Promise((resolve, reject)=>{
+    } else {
+      return new Promise((resolve, reject) => {
         resolve('sameHashKey')
       })
     }
-  
+
   };
 
-  UpdateCCPayment = ({ order_id, creditcard_ReferenceNumber, datetime}: TUpdateCCPaymentRequest)=> {
+  UpdateCCPayment = ({ order_id, creditcard_ReferenceNumber, datetime }: TUpdateCCPaymentRequest) => {
     const body: TUpdateCCPaymentRequest = {
       order_id,
       creditcard_ReferenceNumber,
@@ -265,7 +269,7 @@ class CartStore {
       });
   }
 
-  addNewOrderToHistory = async (order: any, phoneNumber: string)=>{
+  addNewOrderToHistory = async (order: any, phoneNumber: string) => {
     const ordersHistory: TOrderHistory = {
       phoneNumber,
       ordersList: [order]
@@ -273,10 +277,10 @@ class CartStore {
     const jsonValue = JSON.stringify(ordersHistory);
     await AsyncStorage.setItem("@storage_orderHistory", jsonValue);
   }
-  addOrderToHistory = async (order: any, phoneNumber: string)=>{
+  addOrderToHistory = async (order: any, phoneNumber: string) => {
     const jsonValue = await AsyncStorage.getItem("@storage_orderHistory");
     const currentOrderdHistory = jsonValue != null ? JSON.parse(jsonValue) : [];
-    if(currentOrderdHistory.length == 0){
+    if (currentOrderdHistory.length == 0) {
       this.addNewOrderToHistory(order, phoneNumber);
     }
   }
@@ -292,16 +296,16 @@ class CartStore {
       datetime: new Date()
     }
     return axiosInstance
-    .post(
-      `${ORDER_API.CONTROLLER}/${ORDER_API.IS_VALID_GEO_API}`,
-      toBase64(body),
-    )
-    .then(function (response) {
-      return JSON.parse(fromBase64(response.data));
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+      .post(
+        `${ORDER_API.CONTROLLER}/${ORDER_API.IS_VALID_GEO_API}`,
+        toBase64(body),
+      )
+      .then(function (response) {
+        return JSON.parse(fromBase64(response.data));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }
 }
 
