@@ -194,7 +194,7 @@ const VerifyCodeScreen = ({ route }) => {
             alignItems: "center",
           }}
         >
-          <View style={{ direction: "ltr", }}>
+          <View>
             <CodeField
               ref={ref}
               {...props}
@@ -310,7 +310,7 @@ const styles = StyleSheet.create({
   },
   root: { flex: 1, padding: 20 },
   title: { textAlign: "center", fontSize: 30 },
-  codeFieldRoot: { marginTop: 20 },
+  codeFieldRoot: { marginTop: 20, flexDirection:"row-reverse" },
   cell: {
     width: 66,
     height: 66,
