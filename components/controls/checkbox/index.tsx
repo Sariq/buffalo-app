@@ -4,10 +4,10 @@ import themeStyle from "../../../styles/theme.style";
 import Icon from "../../icon";
 import Button from "../button/button";
 
-export default function CheckBox({ onChange, value, title = undefined, variant = 'default' }) {
+export default function CheckBox({ onChange, value, title = undefined, variant = 'default', isOneChoice=false }) {
   const [isSelected, setIsSelected] = useState(value);
   const onBtnClick = () => {
-    if(value){
+    if(isOneChoice && value){
       return;
     }
     setIsSelected(!isSelected);

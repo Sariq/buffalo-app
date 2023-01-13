@@ -5,6 +5,7 @@ import CartScreen from "../screens/cart/cart";
 import TermsAndConditionsScreen from "../screens/terms-and-conditions";
 import MealScreen from "../screens/meal";
 import ProfileScreen from "../screens/profile";
+import OrdersStatusScreen from "../screens/order/status";
 import LoginScreen from "../screens/login";
 import VerifyCodeScreen from "../screens/verify-code";
 import LanguageScreen from "../screens/language";
@@ -25,6 +26,7 @@ export const MainStackNavigator = () => {
       
       <Stack.Screen name="Tab" component={FooterTabs} />
       <Stack.Screen name="terms-and-conditions" component={TermsAndConditionsScreen} />
+      <Stack.Screen name="orders-status" component={OrdersStatusScreen} />
       <Stack.Screen name="cart" component={CartScreen} />
       <Stack.Screen name="profile" component={ProfileScreen} />
       <Stack.Screen name="login" component={LoginScreen} />

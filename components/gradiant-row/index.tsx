@@ -63,6 +63,7 @@ export default function GradiantRow({
           value={value}
           title={title}
           variant={"button"}
+          isOneChoice
         />
       </View>
     );

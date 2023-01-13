@@ -21,3 +21,8 @@ export const STORE_API = {
     CONTROLLER: "Stores",
     GET_STORE_API : "getStores",
 };
+
+export const UTILITIES_API = {
+    CONTROLLER: "Utilities",
+    GET_ORDERS_API : "getOrders",
+}
