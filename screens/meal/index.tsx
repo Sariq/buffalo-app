@@ -275,7 +275,7 @@ const MealScreen = ({ route }) => {
                   updateOthers(value, "count", "others");
                 }}
                 type="COUNTER"
-                title={"countFromSame"}
+                title={t("count-from-same")}
                 value={meal["others"]["count"]}
                 hideIcon
                 fontSize={20}
