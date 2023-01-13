@@ -7,6 +7,9 @@ import Button from "../button/button";
 export default function CheckBox({ onChange, value, title = undefined, variant = 'default' }) {
   const [isSelected, setIsSelected] = useState(value);
   const onBtnClick = () => {
+    if(value){
+      return;
+    }
     setIsSelected(!isSelected);
     onChange && onChange(!isSelected);
   };

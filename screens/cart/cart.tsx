@@ -544,6 +544,9 @@ const CartScreen = () => {
                           <View style={{ marginLeft: 0, marginTop: 5 }}>
                             {product.extras &&
                               Object.keys(product.extras).map((key) => {
+                                if(key === 'orderList'){
+                                  return;
+                                }
                                 const filteredExtras = filterMealExtras(
                                   product.extras[key]
                                 );

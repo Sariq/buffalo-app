@@ -31,6 +31,8 @@ import {
   
 } from "react-native-confirmation-code-field";
 const CELL_COUNT = 4;
+const reg_arNumbers = /^[\u0660-\u0669]{4}$/;
+const arabicNumbers  = [/٠/g, /١/g, /٢/g, /٣/g, /٤/g, /٥/g, /٦/g, /٧/g, /٨/g, /٩/g];
 
 const VerifyCodeScreen = ({ route }) => {
   const { t } = useTranslation();
@@ -68,9 +70,6 @@ const VerifyCodeScreen = ({ route }) => {
       setTimer(seconds);
     }, interval);
   };
-  useEffect(() => {
-    //setTimertInterVal();
-  }, []);
 
   const resendMeTheCode = async () => {
     setIsInvalidCodeRes(false);
@@ -107,16 +106,21 @@ const VerifyCodeScreen = ({ route }) => {
     if (verifyCode === "****") {
       return false;
     }
-    return verifyCode?.match(/\d/g).length === 4;
+    return verifyCode?.match(/\d/g)?.length === 4 || reg_arNumbers.test(verifyCode);;
   };
 
   const onVerifyCode = () => {
     setIsInvalidCodeRes(false);
     if (isValidNunber()) {
       setIsLoading(true);
+      let convertedValue: any = verifyCode.toString();
+      for(var i=0; i<convertedValue.length +1; i++)
+      {
+        convertedValue = convertedValue.replace(arabicNumbers[i], i);
+      }
       const body = {
         token: authStore.verifyCodeToken,
-        secret_code: verifyCode,
+        secret_code: convertedValue,
       };
       axiosInstance
         .post(

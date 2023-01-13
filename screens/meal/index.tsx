@@ -275,10 +275,11 @@ const MealScreen = ({ route }) => {
                   updateOthers(value, "count", "others");
                 }}
                 type="COUNTER"
-                title={"الكمية من نفس الطلب"}
+                title={"countFromSame"}
                 value={meal["others"]["count"]}
                 hideIcon
                 fontSize={20}
+                minValue={1}
               />
             </View>
           </View>

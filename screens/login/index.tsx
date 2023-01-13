@@ -14,6 +14,8 @@ import { axiosInstance } from "../../utils/http-interceptor";
 import { useTranslation } from "react-i18next";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+const reg_arNumbers = /^[\u0660-\u0669]{10}$/;
+const arabicNumbers  = [/٠/g, /١/g, /٢/g, /٣/g, /٤/g, /٥/g, /٦/g, /٧/g, /٨/g, /٩/g];
 
 const LoginScreen = () => {
   const { t } = useTranslation();
@@ -29,7 +31,7 @@ const LoginScreen = () => {
   };
 
   const isValidNunber = () =>{
-    return phoneNumber?.match(/\d/g).length===10
+    return phoneNumber?.match(/\d/g)?.length===10 || reg_arNumbers.test(phoneNumber);
   }
   const ifUserBlocked = async () => {
     const userB = await AsyncStorage.getItem("@storage_user_b");
@@ -44,11 +46,19 @@ const LoginScreen = () => {
       setIsLoading(true);
 
       if(await ifUserBlocked()){
-        return;
+        setTimeout(()=>{
+          navigation.navigate("homeScreen");
+        },5000)
+      }
+
+      let convertedValue = phoneNumber;
+      for(var i=0; i<phoneNumber.length; i++)
+      {
+        convertedValue = convertedValue.replace(arabicNumbers[i], i)
       }
 
       const body = {
-        phone: phoneNumber,
+        phone: convertedValue,
         device_type: Device.osName || "IOS",
         language: languageStore.selectedLang === "ar" ? 0 : 1,
         datetime: new Date(),
@@ -69,7 +79,7 @@ const LoginScreen = () => {
             }
           }
           authStore.setVerifyCodeToken(res.token);
-          navigation.navigate("verify-code", {phoneNumber});
+          navigation.navigate("verify-code", {convertedValue});
         })
         .catch(function (error) {
           console.log(error);
