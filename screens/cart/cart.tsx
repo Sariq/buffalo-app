@@ -161,7 +161,7 @@ const CartScreen = () => {
     cartStore
       .isValidGeo(location.coords.latitude, location.coords.longitude)
       .then((res) => {
-        if(res){
+        if (res) {
           setIsValidAddress(res.result);
           setIsOpenInvalidAddressDialod(!res.result);
         }
@@ -443,6 +443,59 @@ const CartScreen = () => {
     transform: [{ translateX: interpolateRotating2 }],
   };
 
+  const renderExtras = (filteredExtras, extrasLength, extraIndex) => {
+    return (
+      <View>
+        {renderFilteredExtras(filteredExtras, extrasLength, extraIndex)}
+      </View>
+    );
+  };
+
+  const renderFilteredExtras = (filteredExtras, extrasLength, extraIndex) => {
+    return filteredExtras.map((extra, tagIndex) => {
+      if (
+        extra.value &&
+        extra.isdefault != extra.value &&
+        extra.counter_init_value != extra.value
+      ) {
+        return (
+          <View >
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                paddingBottom: 10,
+              }}
+            >
+              <View
+                style={{
+                  height: 8,
+                  width: 8,
+                  backgroundColor: themeStyle.PRIMARY_COLOR,
+                  borderRadius: 100,
+                  marginRight: 5,
+                }}
+              ></View>
+              <View>
+                <Text
+                  style={{
+                    textAlign: "left",
+                    fontFamily: `${getCurrentLang()}-SemiBold`,
+                    fontSize: 14,
+                    color: themeStyle.SUCCESS_COLOR,
+                  }}
+                >
+                  {extra.name} {extra.value}
+                </Text>
+              </View>
+            </View>
+
+          </View>
+        );
+      }
+    });
+  };
+
   return (
     <View
       style={{ position: "relative", backgroundColor: "white", height: "100%" }}
@@ -542,81 +595,23 @@ const CartScreen = () => {
                             />
                           </View>
                           <View style={{ marginLeft: 0, marginTop: 5 }}>
+                            {/* <View style={{borderWidth:1, position: "absolute", top: 7, left:3, borderColor: themeStyle.PRIMARY_COLOR}}></View> */}
                             {product.extras &&
-                              Object.keys(product.extras).map((key) => {
-                                if(key === 'orderList'){
-                                  return;
-                                }
-                                const filteredExtras = filterMealExtras(
-                                  product.extras[key]
-                                );
-                                return filteredExtras.map((extra) => {
-                                  if (
-                                    extra.value &&
-                                    extra.isdefault != extra.value &&
-                                    extra.counter_init_value != extra.value
-                                  ) {
-                                    return (
-                                      <View>
-                                        <View
-                                          style={{
-                                            borderWidth: 1,
-                                            width: 1,
-                                            height: 20,
-                                            position: "absolute",
-                                            top: 10,
-                                            left: 3,
-                                            borderColor:
-                                              themeStyle.PRIMARY_COLOR,
-                                          }}
-                                        ></View>
-                                        <View
-                                          style={{
-                                            flexDirection: "row",
-                                            alignItems: "center",
-                                            paddingBottom: 10,
-                                          }}
-                                        >
-                                          <View
-                                            style={{
-                                              height: 8,
-                                              width: 8,
-                                              backgroundColor:
-                                                themeStyle.PRIMARY_COLOR,
-                                              borderRadius: 100,
-                                              marginRight: 5,
-                                            }}
-                                          ></View>
-                                          <View>
-                                            <Text
-                                              style={{
-                                                textAlign: "left",
-                                                fontFamily: `${getCurrentLang()}-SemiBold`,
-                                                fontSize: 14,
-                                                color: themeStyle.SUCCESS_COLOR,
-                                              }}
-                                            >
-                                              {extra.name} {extra.value}
-                                            </Text>
-                                          </View>
-                                        </View>
-                                      </View>
-                                    );
+                              Object.keys(product.extras).map(
+                                (key, extraIndex) => {
+                                  if (key === "orderList") {
+                                    return;
                                   }
-                                });
-                              })}
-                            <View
-                              style={{
-                                borderWidth: 1,
-                                width: 1,
-                                height: 20,
-                                bottom: 13,
-                                left: 3,
-                                borderColor: themeStyle.WHITE_COLOR,
-                                zIndex: 1,
-                                marginBottom: -30,
-                              }}
-                            ></View>
+                                  const filteredExtras = filterMealExtras(
+                                    product.extras[key]
+                                  );
+                                  return filteredExtras.length > 0 && renderExtras(
+                                    filteredExtras,
+                                    Object.keys(product.extras).length,
+                                    extraIndex
+                                  );
+                                }
+                              )}
                           </View>
                         </View>
                       </View>
