@@ -14,10 +14,12 @@ import ContactUs from "../../../screens/contact-us/contactUs";
 import MenuScreen from "../../../screens/menu/menu";
 import BcoinScreen from "../../../screens/b-coin";
 
-import { useState } from "react";
+import { useState, useContext } from "react";
 import TermsAndConditionsScreen from "../../../screens/terms-and-conditions";
 import { useTranslation } from "react-i18next";
 import { getCurrentLang } from "../../../translations/i18n";
+import themeStyle from "../../../styles/theme.style";
+import { StoreContext } from "../../../stores";
 
 const routes = [
   {
@@ -59,6 +61,7 @@ const routes = [
 
 function MyTabBar({ state, descriptors, navigation }) {
   const { t } = useTranslation();
+  const { userDetailsStore } = useContext(StoreContext);
   const [selectedRoute, setSelectedRoute] = useState(routes[0]);
   const onTabSelect = (name) => {
     const currentRout = routes.find((route) => route.name === name);
@@ -93,7 +96,7 @@ function MyTabBar({ state, descriptors, navigation }) {
             return;
           }
           if (route.name === "instagram") {
-            Linking.openURL('instagram://user?username=buffalo_burger_house')
+            Linking.openURL("instagram://user?username=buffalo_burger_house");
             return;
           }
           onTabSelect(route.name);
@@ -127,20 +130,53 @@ function MyTabBar({ state, descriptors, navigation }) {
             ]}
           >
             <View style={styles.container}>
-              <Icon
-                icon={currentRout.icon}
-                size={isBcoin ? 75 : 30}
-                style={{ color: theme.GRAY_700 }}
-              />
-              <Text
+              <View
                 style={{
-                  marginTop: isBcoin ? 0 : 5,
-                  fontFamily: `${getCurrentLang()}-SemiBold`,
-                  fontSize: 12
+                  justifyContent: "center",
+                  alignItems: "flex-end",
                 }}
               >
-                {t(route.params.title)}
-              </Text>
+                <Icon
+                  icon={currentRout.icon}
+                  size={isBcoin ? 80 : 30}
+                  style={{ color: theme.GRAY_700 }}
+                />
+                {isBcoin && (
+                  <View
+                    style={{
+                      position: "absolute",
+                      top: 10,
+                      right: -12,
+                      backgroundColor: themeStyle.SUCCESS_LIGHT_COLOR,
+                      borderRadius: 50,
+                      padding: 7,
+                      borderWidth: 2,
+                      borderColor: themeStyle.WHITE_COLOR,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 17,
+                        fontWeight: "bold",
+                        color: themeStyle.GRAY_700,
+                      }}
+                    >
+                      {userDetailsStore.userDetails.credit}
+                    </Text>
+                  </View>
+                )}
+              </View>
+              <View style={{ marginTop: isBcoin ? 12 : 0 }}>
+                <Text
+                  style={{
+                    marginTop: isBcoin ? 0 : 5,
+                    fontFamily: `${getCurrentLang()}-SemiBold`,
+                    fontSize: 12,
+                  }}
+                >
+                  {t(route.params.title)}
+                </Text>
+              </View>
             </View>
           </TouchableOpacity>
         );

@@ -40,8 +40,8 @@ const categoryListOrder = {
   1: "BURGERS",
   2: "CHICKEN",
   3: "SIDES",
-  4: "DRINK",
-  5: "SALADS",
+  4: "SALADS",
+  5: "DRINK",
 };
 
 const MenuScreen = () => {

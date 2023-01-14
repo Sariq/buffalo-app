@@ -8,6 +8,7 @@ export default {
     WHITE_COLOR: 'white',
     WHITE_COLOR_300: '#F9F9F9',
     SUCCESS_COLOR: '#00A006',
+    SUCCESS_LIGHT_COLOR: '#6ED341',
     GRAY_300: '#c1c1c1',
     GRAY_600: '#707070',
     GRAY_700: '#442213',

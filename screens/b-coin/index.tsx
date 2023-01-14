@@ -48,12 +48,12 @@ const BcoinScreen = () => {
 
       <View style={styles.subContainer}>
         <Image
-          style={{ width: "90%", height: "38%", marginTop: 40 }}
+          style={{ width: "90%", height: "38%", marginTop: 15 }}
           source={require("../../assets/b-coin.png")}
         />
         <View
           style={{
-            marginTop: 20,
+            marginTop: 5,
             padding: 9,
             justifyContent: "center",
             alignItems: "center",
@@ -70,7 +70,7 @@ const BcoinScreen = () => {
             {userDetailsStore.userDetails.credit}
           </Text>
         </View>
-        <View style={{ marginTop: 20, alignItems: "center" }}>
+        <View style={{ marginTop: 5, alignItems: "center" }}>
           <Text
             style={{
               fontSize: 25,
@@ -80,6 +80,9 @@ const BcoinScreen = () => {
           >
             {t("you-own-now")} {userDetailsStore.userDetails.credit}{" "}
             {t("B-COINS")}
+          </Text>
+          <Text style={{marginTop :15, fontSize:20, textAlign: "center"}}>
+            {t('bcoin-note')}
           </Text>
         </View>
       </View>

@@ -77,7 +77,6 @@ const MealScreen = ({ route }) => {
   }, []);
 
   const onAddToCart = () => {
-    console.log(meal)
     cartStore.addProductToCart(meal);
     navigation.goBack();
   };
