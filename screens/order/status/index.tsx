@@ -7,7 +7,7 @@ import { fromBase64, toBase64 } from "../../../helpers/convert-base64";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { getCurrentLang } from "../../../translations/i18n";
-import { isEmpty } from "lodash";
+import { isEmpty, orderBy } from "lodash";
 import Icon from "../../../components/icon";
 import { axiosInstance } from "../../../utils/http-interceptor";
 import { ORDER_API } from "../../../consts/api";
@@ -29,7 +29,8 @@ const OrdersStatusScreen = ({ route }) => {
       )
       .then(function (response) {
         const res = JSON.parse(fromBase64(response.data));
-        setOrdersList(res.orders);
+        const orderdList = orderBy(res.orders,['created_at'],['desc'])
+        setOrdersList(orderdList);
       })
   };
 
