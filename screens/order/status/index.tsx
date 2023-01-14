@@ -1,13 +1,9 @@
 import { StyleSheet, Text, View, Image, ScrollView } from "react-native";
 import { useContext, useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import { useNavigation } from "@react-navigation/native";
 import { StoreContext } from "../../../stores";
-import Button from "../../../components/controls/button/button";
 import themeStyle from "../../../styles/theme.style";
-import { axiosInstance } from "../../../utils/http-interceptor";
-import { UTILITIES_API } from "../../../consts/api";
-import { toBase64, fromBase64 } from "../../../helpers/convert-base64";
+import { fromBase64 } from "../../../helpers/convert-base64";
 import { ORDER_MOCK } from "./mock";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
@@ -17,9 +13,7 @@ import Icon from "../../../components/icon";
 
 const OrdersStatusScreen = ({ route }) => {
   const { t } = useTranslation();
-
   const { menuStore } = useContext(StoreContext);
-  const navigation = useNavigation();
   const [ordersList, setOrdersList] = useState([]);
 
   const getOrders = () => {

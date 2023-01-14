@@ -445,14 +445,10 @@ const CartScreen = () => {
 
   const [mealsExtras, setMealExtras] = useState({});
 
-  useEffect(()=>{
-    console.log("mealsExtras", mealsExtras)
-  },[mealsExtras])
+
   const renderExtras = (filteredExtras, extrasLength, key) => {
     return (
-      <View>
-        {renderFilteredExtras(filteredExtras, extrasLength, key)}
-      </View>
+      <View>{renderFilteredExtras(filteredExtras, extrasLength, key)}</View>
     );
   };
   let extrasArray = [];
@@ -464,7 +460,7 @@ const CartScreen = () => {
         extra.isdefault != extra.value &&
         extra.counter_init_value != extra.value
       ) {
-        extrasArray.push(extra.id)
+        extrasArray.push(extra.id);
         return (
           <View>
             <View
@@ -631,10 +627,8 @@ const CartScreen = () => {
                                     )
                                   );
                                 }
-                               
-
                               )}
-                              {/* { 
+                            {/* { 
 <Text style={{opacity:0}}>{extrasArrayLast.push(extrasArray[extrasArray.length-1])}</Text>
                               }
                               {console.log(extrasArrayLast)} */}

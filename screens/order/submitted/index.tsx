@@ -1,22 +1,19 @@
 import { StyleSheet, Text, View, Image } from "react-native";
-import { useContext } from "react";
 import { observer } from "mobx-react";
 import { useNavigation } from "@react-navigation/native";
-import { StoreContext } from "../../../stores";
-import i18n from "../../../translations/index-x";
 import Button from "../../../components/controls/button/button";
 import themeStyle from "../../../styles/theme.style";
 import { SHIPPING_METHODS } from "../../cart/cart";
+import { useTranslation } from "react-i18next";
+import { getCurrentLang } from "../../../translations/i18n";
 
 const OrderSubmittedScreen = ({ route }) => {
+  const { t } = useTranslation();
   const { shippingMethod } = route.params;
-
-  const { languageStore } = useContext(StoreContext);
   const navigation = useNavigation();
 
-  const onChangeLanguage = (lng) => {
-    languageStore.changeLang(lng);
-    navigation.goBack();
+  const goToOrderStatus = () => {
+    navigation.navigate("orders-status");
   };
 
   return (
@@ -29,7 +26,7 @@ const OrderSubmittedScreen = ({ route }) => {
               fontFamily: "ar-SemiBold",
             }}
           >
-            تم ارسال الطلبية بنجاح
+            {t("order-succefully-sent")}
           </Text>
           <View style={{ alignItems: "center", height: 300 }}>
             {shippingMethod === SHIPPING_METHODS.shipping && (
@@ -37,7 +34,7 @@ const OrderSubmittedScreen = ({ route }) => {
                 source={require("../../../assets/order/order-delivery.png")}
               />
             )}
-             {shippingMethod === SHIPPING_METHODS.takAway && (
+            {shippingMethod === SHIPPING_METHODS.takAway && (
               <Image
                 source={require("../../../assets/order/order-take-away.png")}
               />
@@ -52,9 +49,15 @@ const OrderSubmittedScreen = ({ route }) => {
                 textAlign: "center",
               }}
             >
-              لقد اخترت بخدمة ارسالية بعد الانتهاء من التجهيز سيتصل بك مندوب
+              {shippingMethod === SHIPPING_METHODS.takAway && (
+                <Text>{t("you-choosed-takeaway-text")}</Text>
+              )}
+              {shippingMethod === SHIPPING_METHODS.shipping && (
+                <Text>{t("you-choosed-delivery-text")}</Text>
+              )}
+              {/* لقد اخترت بخدمة ارسالية بعد الانتهاء من التجهيز سيتصل بك مندوب
               خدمة التوصيل لإكمال عمليه التوصيل للموقع الذي اخترته خلال الطلبية
-              .
+              . */}
             </Text>
           </View>
         </View>
@@ -62,13 +65,13 @@ const OrderSubmittedScreen = ({ route }) => {
           <View>
             <Button
               onClickFn={() => {
-                onChangeLanguage("ar");
+                goToOrderStatus();
               }}
               bgColor={themeStyle.SUCCESS_COLOR}
               textColor={themeStyle.WHITE_COLOR}
               fontSize={20}
-              fontFamily="ar-SemiBold"
-              text="طلبيات حاليه"
+              fontFamily={`${getCurrentLang()}-SemiBold`}
+              text={t('current-orderds')}
             />
           </View>
         </View>
@@ -79,15 +82,14 @@ const OrderSubmittedScreen = ({ route }) => {
 export default observer(OrderSubmittedScreen);
 
 const styles = StyleSheet.create({
-    container: {
-      backgroundColor: "white",
-      justifyContent: "center",
-      width: "100%",
-      height: "100%",
-    },
-    textLang: {
-      //   fontFamily: props.fontFamily + "Bold",
-      fontSize: 25,
-      textAlign: "left",
-    },
-  });
+  container: {
+    backgroundColor: "white",
+    justifyContent: "center",
+    width: "100%",
+    height: "100%",
+  },
+  textLang: {
+    fontSize: 25,
+    textAlign: "left",
+  },
+});
