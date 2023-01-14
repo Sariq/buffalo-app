@@ -6,6 +6,8 @@ import { fromBase64, toBase64 } from "../../helpers/convert-base64";
 type TUserDetails = {
   name: string;
   phone: string;
+  creditMinimum: number;
+  credit: number;
 };
 
 class UserDetailsStore {
@@ -36,7 +38,9 @@ class UserDetailsStore {
     return this.getUserDetailsFromServer().then((res)=>{
       const userDetailsTmp: TUserDetails = {
         name: res.name,
-        phone: res.phone
+        phone: res.phone,
+        credit: res.credit,
+        creditMinimum: res.credit_minimum
       }
       runInAction(() => {
         this.userDetails = userDetailsTmp;

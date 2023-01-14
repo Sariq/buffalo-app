@@ -1,0 +1,105 @@
+import { StyleSheet, Text, View, Image } from "react-native";
+import themeStyle from "../../styles/theme.style";
+import { useContext } from "react";
+import { StoreContext } from "../../stores";
+import { observer } from "mobx-react";
+import { getCurrentLang } from "../../translations/i18n";
+import Icon from "../../components/icon";
+import BackButton from "../../components/back-button";
+import { useTranslation } from "react-i18next";
+import { LinearGradient } from "expo-linear-gradient";
+
+const BcoinScreen = () => {
+  const { t } = useTranslation();
+  const { userDetailsStore } = useContext(StoreContext);
+
+  return (
+    <View style={styles.container}>
+      <LinearGradient
+        colors={["white", "#F9F9F9", "#FCFCFC", "#FCFCFC"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 0.1 }}
+        style={styles.background}
+      />
+      <View
+        style={{
+          marginHorizontal: 30,
+          flexDirection: "row",
+          alignItems: "center",
+        }}
+      >
+        <View style={{}}>
+          <BackButton />
+        </View>
+        <View
+          style={{ width: "100%", alignItems: "center", position: "absolute" }}
+        >
+          <Text
+            style={{
+              fontSize: 25,
+              fontFamily: `${getCurrentLang()}-SemiBold`,
+              color: themeStyle.GRAY_700,
+            }}
+          >
+            B COINS
+          </Text>
+        </View>
+      </View>
+
+      <View style={styles.subContainer}>
+        <Image
+          style={{ width: "90%", height: "38%", marginTop: 40 }}
+          source={require("../../assets/b-coin.png")}
+        />
+        <View
+          style={{
+            marginTop: 20,
+            padding: 9,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Icon icon="coin" size={80} />
+          <Text
+            style={{
+              position: "absolute",
+              fontSize: 35,
+              fontWeight: "bold",
+            }}
+          >
+            {userDetailsStore.userDetails.credit}
+          </Text>
+        </View>
+        <View style={{ marginTop: 20, alignItems: "center" }}>
+          <Text
+            style={{
+              fontSize: 25,
+              fontFamily: `${getCurrentLang()}-SemiBold`,
+              color: themeStyle.GRAY_700,
+            }}
+          >
+            {t("تمتلك الان")} {userDetailsStore.userDetails.credit}{" "}
+            {t("B-COINS")}
+          </Text>
+        </View>
+      </View>
+    </View>
+  );
+};
+export default observer(BcoinScreen);
+
+const styles = StyleSheet.create({
+  container: {},
+  subContainer: {
+    width: "100%",
+    height: "100%",
+    alignItems: "center",
+  },
+  background: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+  },
+});

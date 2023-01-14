@@ -12,6 +12,7 @@ import theme from "../../../styles/theme.style";
 import HomeScreen from "../../../screens/home/home";
 import ContactUs from "../../../screens/contact-us/contactUs";
 import MenuScreen from "../../../screens/menu/menu";
+import BcoinScreen from "../../../screens/b-coin";
 
 import { useState } from "react";
 import TermsAndConditionsScreen from "../../../screens/terms-and-conditions";
@@ -38,7 +39,7 @@ const routes = [
     name: "BCOINSScreen",
     title: "B COINS",
     icon: "bcoin_icon",
-    component: HomeScreen,
+    component: BcoinScreen,
   },
   {
     id: 4,
