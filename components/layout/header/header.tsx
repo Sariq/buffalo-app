@@ -91,8 +91,8 @@ const Header = () => {
 
   const handleProfileClick = () => {
     if(authStore.isLoggedIn()){
-      //navigation.navigate("profile");
-      navigation.navigate("orders-status");
+      navigation.navigate("profile");
+      //navigation.navigate("orders-status");
       //navigation.navigate("insert-customer-name");
 
     }else{
