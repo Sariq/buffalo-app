@@ -302,7 +302,7 @@ const MealScreen = ({ route }) => {
                                 marginBottom: 0,
                               }}
                             >
-                              {keyOrdered}
+                              {t(keyOrdered)}
                             </Text>
                           )}
                           <View

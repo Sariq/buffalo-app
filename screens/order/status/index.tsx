@@ -12,6 +12,9 @@ import Icon from "../../../components/icon";
 import { axiosInstance } from "../../../utils/http-interceptor";
 import { ORDER_API } from "../../../consts/api";
 //2 -ready | if comple
+const inProgressStatuses = ['SENT'];
+const readyStatuses = ['COMPLETED', 'READY'];
+
 const OrdersStatusScreen = ({ route }) => {
   const { t } = useTranslation();
   const { menuStore } = useContext(StoreContext);
@@ -32,7 +35,28 @@ const OrdersStatusScreen = ({ route }) => {
 
   useEffect(() => {
     getOrders();
+    const interval = setInterval(() => {
+      getOrders();
+    }, 60 * 1000);
+    return () => clearInterval(interval);
   }, []);
+
+  const getIconByStatus = (status:string,type: number)=>{
+    if(type === 1){
+      if(inProgressStatuses.indexOf(status) > -1){
+
+        return 'checked-green';
+      }
+      return 'checked-gray'; 
+    }
+    if(type === 2){
+      if(readyStatuses.indexOf(status) > -1){
+        return 'checked-green';
+      }
+      return 'checked-gray'; 
+    }
+    return 'checked-gray'; 
+  }
 
   const renderOrderDateRaw = (order) => {
     return (
@@ -211,7 +235,7 @@ const OrdersStatusScreen = ({ route }) => {
               </Text>
             </View>
             <View style={{ marginTop: 10 }}>
-              <Icon icon="checked-green" size={40} />
+              <Icon icon={getIconByStatus(order.status.replace(/ /g,''), 1)} size={40} />
             </View>
           </View>
           <View style={{ alignItems: "center" }}>
@@ -229,7 +253,7 @@ const OrdersStatusScreen = ({ route }) => {
               </Text>
             </View>
             <View style={{ marginTop: 10 }}>
-              <Icon icon="checked-gray" size={40} />
+              <Icon icon={getIconByStatus(order.status.replace(/ /g,''), 2)} size={40} />
             </View>
           </View>
         </View>
