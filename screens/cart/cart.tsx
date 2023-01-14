@@ -443,23 +443,41 @@ const CartScreen = () => {
     transform: [{ translateX: interpolateRotating2 }],
   };
 
-  const renderExtras = (filteredExtras, extrasLength, extraIndex) => {
+  const [mealsExtras, setMealExtras] = useState({});
+
+  useEffect(()=>{
+    console.log("mealsExtras", mealsExtras)
+  },[mealsExtras])
+  const renderExtras = (filteredExtras, extrasLength, key) => {
     return (
       <View>
-        {renderFilteredExtras(filteredExtras, extrasLength, extraIndex)}
+        {renderFilteredExtras(filteredExtras, extrasLength, key)}
       </View>
     );
   };
-
-  const renderFilteredExtras = (filteredExtras, extrasLength, extraIndex) => {
+  let extrasArray = [];
+  let extrasArrayLast = [];
+  const renderFilteredExtras = (filteredExtras, extrasLength, key) => {
     return filteredExtras.map((extra, tagIndex) => {
       if (
         extra.value &&
         extra.isdefault != extra.value &&
         extra.counter_init_value != extra.value
       ) {
+        extrasArray.push(extra.id)
         return (
-          <View >
+          <View>
+            <View
+              style={{
+                borderWidth: 1,
+                width: 1,
+                height: 20,
+                position: "absolute",
+                top: 10,
+                left: 3,
+                borderColor: themeStyle.PRIMARY_COLOR,
+              }}
+            ></View>
             <View
               style={{
                 flexDirection: "row",
@@ -489,7 +507,6 @@ const CartScreen = () => {
                 </Text>
               </View>
             </View>
-
           </View>
         );
       }
@@ -605,13 +622,22 @@ const CartScreen = () => {
                                   const filteredExtras = filterMealExtras(
                                     product.extras[key]
                                   );
-                                  return filteredExtras.length > 0 && renderExtras(
-                                    filteredExtras,
-                                    Object.keys(product.extras).length,
-                                    extraIndex
+                                  return (
+                                    filteredExtras.length > 0 &&
+                                    renderExtras(
+                                      filteredExtras,
+                                      Object.keys(product.extras).length,
+                                      key
+                                    )
                                   );
                                 }
+                               
+
                               )}
+                              {/* { 
+<Text style={{opacity:0}}>{extrasArrayLast.push(extrasArray[extrasArray.length-1])}</Text>
+                              }
+                              {console.log(extrasArrayLast)} */}
                           </View>
                         </View>
                       </View>
