@@ -78,7 +78,7 @@ const BcoinScreen = () => {
               color: themeStyle.GRAY_700,
             }}
           >
-            {t("تمتلك الان")} {userDetailsStore.userDetails.credit}{" "}
+            {t("you-own-now")} {userDetailsStore.userDetails.credit}{" "}
             {t("B-COINS")}
           </Text>
         </View>
