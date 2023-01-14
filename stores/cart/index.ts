@@ -160,7 +160,9 @@ class CartStore {
   getProductsCount = () => {
     let count = 0;
     this.cartItems.forEach((product) => {
-      count += product.others.count;
+      if(product){
+        count += product?.others?.count;
+      }
     })
     return count;
   };

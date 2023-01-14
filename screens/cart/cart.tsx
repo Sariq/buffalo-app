@@ -45,6 +45,7 @@ import themeStyle from "../../styles/theme.style";
 import InvalidAddressdDialog from "../../components/dialogs/invalid-address";
 import StoreIsCloseDialog from "../../components/dialogs/store-is-close";
 import PaymentFailedDialog from "../../components/dialogs/payment-failed";
+import { menuStore } from "../../stores/menu";
 
 export const SHIPPING_METHODS = {
   shipping: "DELIVERY",
@@ -59,9 +60,11 @@ type TShippingMethod = {
   takAway: string;
 };
 
+const bcoindId = 3027;
+
 const CartScreen = () => {
   const { t } = useTranslation();
-  const { cartStore, authStore, languageStore, storeDataStore } = useContext(
+  const { cartStore, authStore, languageStore, storeDataStore,userDetailsStore } = useContext(
     StoreContext
   );
 
@@ -113,6 +116,14 @@ const CartScreen = () => {
 
   const appState = useRef(AppState.currentState);
 
+  useEffect(() => {
+    const bcoinMeal = {data:menuStore.categories["OTHER"][0], "others": {"count": 1, "note": ""}}
+    const bcoinFound = cartStore.cartItems.find((product)=> product.data.id === bcoindId)
+    if(bcoinFound || userDetailsStore.userDetails.credit <= userDetailsStore.userDetails.creditMinimum){
+      return;
+    }
+    cartStore.addProductToCart(bcoinMeal)
+  }, []);
   useEffect(() => {
     const subscription = AppState.addEventListener(
       "change",
@@ -200,7 +211,9 @@ const CartScreen = () => {
     }
     let tmpOrderPrice = 0;
     cartStore.cartItems.forEach((item) => {
-      tmpOrderPrice += item.data.price;
+      if(item){
+        tmpOrderPrice += item.data.price;
+      }
     });
     setItemsPrice(tmpOrderPrice);
   }, [cartStore.cartItems]);
@@ -216,7 +229,9 @@ const CartScreen = () => {
   }, []);
 
   const getProductIndexId = (product, index) => {
-    return product.data.id.toString() + index;
+    if(product){
+      return product?.data.id.toString() + index;
+    }
   };
 
   const onCounterChange = (product, index, value) => {
@@ -443,16 +458,16 @@ const CartScreen = () => {
     transform: [{ translateX: interpolateRotating2 }],
   };
 
-  const [mealsExtras, setMealExtras] = useState({});
-
-
+  const isBcoinProduct = (product) => {
+      return product.data.id === bcoindId;
+  }
   const renderExtras = (filteredExtras, extrasLength, key) => {
     return (
       <View>{renderFilteredExtras(filteredExtras, extrasLength, key)}</View>
     );
   };
+  
   let extrasArray = [];
-  let extrasArrayLast = [];
   const renderFilteredExtras = (filteredExtras, extrasLength, key) => {
     return filteredExtras.map((extra, tagIndex) => {
       if (
@@ -540,7 +555,7 @@ const CartScreen = () => {
             </View>
 
             <View style={{ marginTop: -20 }}>
-              {cartStore.cartItems.map((product, index) => (
+              {cartStore.cartItems.map((product, index) => product && (
                 <Animated.View
                   style={
                     getProductIndexId(product, index) === itemToRemove
@@ -602,10 +617,10 @@ const CartScreen = () => {
                               padding: 0,
                             }}
                           >
-                            <Image
+                            {!isBcoinProduct(product) && <Image
                               style={{ width: "90%", height: "100%" }}
                               source={{ uri: product.data.image_url }}
-                            />
+                            />}
                           </View>
                           <View style={{ marginLeft: 0, marginTop: 5 }}>
                             {/* <View style={{borderWidth:1, position: "absolute", top: 7, left:3, borderColor: themeStyle.PRIMARY_COLOR}}></View> */}
@@ -635,8 +650,7 @@ const CartScreen = () => {
                           </View>
                         </View>
                       </View>
-
-                      <View style={{ alignItems: "center", marginRight: 20 }}>
+                      {!isBcoinProduct(product) && <View style={{ alignItems: "center", marginRight: 20 }}>
                         <View style={{ width: "35%" }}>
                           <Counter
                             value={product.others.count}
@@ -647,7 +661,7 @@ const CartScreen = () => {
                             isVertical
                           />
                         </View>
-                      </View>
+                      </View>}
                     </View>
 
                     <View
@@ -676,7 +690,7 @@ const CartScreen = () => {
                               marginRight: 15,
                             }}
                           >
-                            <TouchableOpacity
+                            {!isBcoinProduct(product) && <TouchableOpacity
                               style={{
                                 flexDirection: "row",
                                 alignItems: "center",
@@ -701,7 +715,7 @@ const CartScreen = () => {
                                   style={{ color: theme.GRAY_700 }}
                                 />
                               </View>
-                            </TouchableOpacity>
+                            </TouchableOpacity>}
                           </View>
                           <View style={{ flexDirection: "row" }}>
                             <TouchableOpacity

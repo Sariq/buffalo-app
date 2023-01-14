@@ -206,6 +206,7 @@ const OrdersStatusScreen = ({ route }) => {
   };
 
   const renderStatus = (order) => {
+    const oOrder = JSON.parse(fromBase64(order.order));
     return (
       <View style={{ marginTop: 20 }}>
         <View style={{ alignItems: "center", marginBottom: 30 }}>
@@ -216,7 +217,7 @@ const OrdersStatusScreen = ({ route }) => {
               color: themeStyle.GRAY_700,
             }}
           >
-            {order.receipt_method === "TAKEAWAY"
+            {oOrder.receipt_method === "TAKEAWAY"
               ? t("takeway-service")
               : t("delivery-service")}
           </Text>
@@ -247,7 +248,7 @@ const OrdersStatusScreen = ({ route }) => {
                   color: themeStyle.GRAY_700,
                 }}
               >
-                {order.receipt_method === "TAKEAWAY"
+                {oOrder.receipt_method === "TAKEAWAY"
                   ? t("ready-takeaway")
                   : t("on-way")}
               </Text>
