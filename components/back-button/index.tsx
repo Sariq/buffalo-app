@@ -1,10 +1,8 @@
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-import { useState } from "react";
 import theme from "../../styles/theme.style";
 import Icon from "../icon";
-import themeStyle from "../../styles/theme.style";
 
 export default function BackButton() {
   const navigation = useNavigation();

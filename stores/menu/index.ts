@@ -63,6 +63,20 @@ class MenuStore {
     }
     return temp;
   }
+  getFromCategoriesMealByKey = (mealId) => {
+    let foundedMeal = {};
+    Object.keys(this.categories).map((key) => {
+      const result = this.categories[key].find((meal)=> {
+        if(meal.id == mealId){
+          return meal;
+        }
+      })
+      if(result){
+        foundedMeal = result;
+      }
+    });
+    return foundedMeal;
+  }
 
   initMealsTags = (tag, type, key) => {
     const extrasType = this.meals[key].extras[type].map((tagItem) => {

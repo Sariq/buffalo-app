@@ -3,38 +3,35 @@ import { useContext, useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import { StoreContext } from "../../../stores";
 import themeStyle from "../../../styles/theme.style";
-import { fromBase64 } from "../../../helpers/convert-base64";
-import { ORDER_MOCK } from "./mock";
+import { fromBase64, toBase64 } from "../../../helpers/convert-base64";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { getCurrentLang } from "../../../translations/i18n";
 import { isEmpty } from "lodash";
 import Icon from "../../../components/icon";
-
+import { axiosInstance } from "../../../utils/http-interceptor";
+import { ORDER_API } from "../../../consts/api";
+//2 -ready | if comple
 const OrdersStatusScreen = ({ route }) => {
   const { t } = useTranslation();
   const { menuStore } = useContext(StoreContext);
   const [ordersList, setOrdersList] = useState([]);
 
   const getOrders = () => {
-    // const body = {datetime: new Date()};
-    // return axiosInstance
-    //   .post(
-    //     `${UTILITIES_API.CONTROLLER}/${UTILITIES_API.GET_ORDERS_API}`,
-    //    toBase64(body),
-    //   )
-    //   .then(function (response) {
-    //     const res = JSON.parse(fromBase64(response.data));
-    //     console.log("ORDERS", res)
-    //     return res;
-    //   })
-    // console.log(fromBase64(ORDER_MOCK.orders[0].order));
-    // console.log(ORDER_MOCK.orders[0]);
-    return ORDER_MOCK.orders;
+    const body = {datetime: new Date()};
+     axiosInstance
+      .post(
+        `${ORDER_API.CONTROLLER}/${ORDER_API.GET_ORDERS_API}`,
+       toBase64(body),
+      )
+      .then(function (response) {
+        const res = JSON.parse(fromBase64(response.data));
+        setOrdersList(res.orders);
+      })
   };
 
   useEffect(() => {
-    setOrdersList(getOrders());
+    getOrders();
   }, []);
 
   const renderOrderDateRaw = (order) => {
@@ -63,6 +60,7 @@ const OrdersStatusScreen = ({ route }) => {
     );
   };
   const renderOrderTotalRaw = (order) => {
+    const oOrder = JSON.parse(fromBase64(order.order));
     return (
       <View
         style={{
@@ -78,7 +76,7 @@ const OrdersStatusScreen = ({ route }) => {
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <View>
             <Text style={styles.totalPriceText}>
-              {t(order.payment_method)} | {t(order.receipt_method)}
+              {t(oOrder.payment_method)} | {t(oOrder.receipt_method)}
             </Text>
           </View>
         </View>
@@ -104,7 +102,7 @@ const OrdersStatusScreen = ({ route }) => {
     const tmpOrder = fromBase64(order.order);
     const tmpOrderValue = JSON.parse(tmpOrder);
     return tmpOrderValue.items.map((item) => {
-      const meal: any = menuStore.getMealByKey(item.item_id);
+      const meal: any = menuStore.getFromCategoriesMealByKey(item.item_id);
       if (isEmpty(meal)) {
         return;
       }
@@ -133,20 +131,20 @@ const OrdersStatusScreen = ({ route }) => {
                   color: themeStyle.GRAY_700,
                 }}
               >
-                {meal.data[`name_${getCurrentLang()}`]}
+                {meal[`name_${getCurrentLang()}`]}
               </Text>
             </View>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <View style={{flexDirection:"row", justifyContent:"flex-start" }}>
               <View
                 style={{
-                  width: 110,
+                  flexBasis: "40%",
                   height: 80,
-                  padding: 0,
+                  padding:5, marginVertical:10,alignItems: "center",
                 }}
               >
                 <Image
-                  style={{ width: "90%", height: "100%" }}
-                  source={{ uri: meal?.data?.image_url }}
+                  style={{ width: "100%", height: "100%"}}
+                  source={{ uri: meal?.image_url }}
                 />
               </View>
               <View style={{ alignItems: "flex-start" }}>

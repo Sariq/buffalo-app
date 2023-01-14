@@ -15,7 +15,8 @@ export const ORDER_API = {
     SUBMIT_ORDER_API : "submit",
     GET_STATUS_API: "GetStatus",
     UPDATE_CCPAYMENT_API: "UpdateCCPayment",
-    IS_VALID_GEO_API: "IsValidGeo"
+    IS_VALID_GEO_API: "IsValidGeo",
+    GET_ORDERS_API : "getorders",
 };
 export const STORE_API = {
     CONTROLLER: "Stores",

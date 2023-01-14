@@ -63,6 +63,7 @@ const MealScreen = ({ route }) => {
     if (product) {
       setIsEdit(false);
       tmpProduct = menuStore.getMealByKey(product.id);
+      // for products without constants
       if (isEmpty(tmpProduct)) {
         tmpProduct.data = product;
       }

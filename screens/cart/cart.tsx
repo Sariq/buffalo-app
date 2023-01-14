@@ -463,7 +463,7 @@ const CartScreen = () => {
         extrasArray.push(extra.id);
         return (
           <View>
-            <View
+            {/* <View
               style={{
                 borderWidth: 1,
                 width: 1,
@@ -473,7 +473,7 @@ const CartScreen = () => {
                 left: 3,
                 borderColor: themeStyle.PRIMARY_COLOR,
               }}
-            ></View>
+            ></View> */}
             <View
               style={{
                 flexDirection: "row",
