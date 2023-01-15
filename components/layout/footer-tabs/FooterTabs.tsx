@@ -61,7 +61,7 @@ const routes = [
 
 function MyTabBar({ state, descriptors, navigation }) {
   const { t } = useTranslation();
-  const { userDetailsStore } = useContext(StoreContext);
+  const { userDetailsStore, authStore } = useContext(StoreContext);
   const [selectedRoute, setSelectedRoute] = useState(routes[0]);
   const onTabSelect = (name) => {
     const currentRout = routes.find((route) => route.name === name);
@@ -98,6 +98,12 @@ function MyTabBar({ state, descriptors, navigation }) {
           if (route.name === "instagram") {
             Linking.openURL("instagram://user?username=buffalo_burger_house");
             return;
+          }
+          if (route.name === "BCOINSScreen") {
+            if(!authStore.isLoggedIn()){
+              navigation.navigate("login");
+              return;
+            }
           }
           onTabSelect(route.name);
           const event = navigation.emit({
@@ -141,7 +147,7 @@ function MyTabBar({ state, descriptors, navigation }) {
                   size={isBcoin ? 80 : 30}
                   style={{ color: theme.GRAY_700 }}
                 />
-                {isBcoin && (
+                {isBcoin && authStore.isLoggedIn() &&(
                   <View
                     style={{
                       position: "absolute",
@@ -161,7 +167,7 @@ function MyTabBar({ state, descriptors, navigation }) {
                         color: themeStyle.GRAY_700,
                       }}
                     >
-                      {userDetailsStore.userDetails.credit}
+                      {userDetailsStore.userDetails?.credit}
                     </Text>
                   </View>
                 )}

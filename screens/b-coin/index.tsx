@@ -67,7 +67,7 @@ const BcoinScreen = () => {
               fontWeight: "bold",
             }}
           >
-            {userDetailsStore.userDetails.credit}
+            {userDetailsStore.userDetails?.credit}
           </Text>
         </View>
         <View style={{ marginTop: 5, alignItems: "center" }}>
@@ -78,7 +78,7 @@ const BcoinScreen = () => {
               color: themeStyle.GRAY_700,
             }}
           >
-            {t("you-own-now")} {userDetailsStore.userDetails.credit}{" "}
+            {t("you-own-now")} {userDetailsStore.userDetails?.credit}{" "}
             {t("B-COINS")}
           </Text>
           <Text style={{marginTop :15, fontSize:20, textAlign: "center"}}>

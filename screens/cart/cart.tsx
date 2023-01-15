@@ -119,7 +119,7 @@ const CartScreen = () => {
   useEffect(() => {
     const bcoinMeal = {data:menuStore.categories["OTHER"][0], "others": {"count": 1, "note": ""}}
     const bcoinFound = cartStore.cartItems.find((product)=> product.data.id === bcoindId)
-    if(bcoinFound || userDetailsStore.userDetails.credit <= userDetailsStore.userDetails.creditMinimum){
+    if(bcoinFound || userDetailsStore.userDetails?.credit <= userDetailsStore.userDetails.creditMinimum){
       return;
     }
     cartStore.addProductToCart(bcoinMeal)
