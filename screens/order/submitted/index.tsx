@@ -39,6 +39,11 @@ const OrderSubmittedScreen = ({ route }) => {
                 source={require("../../../assets/order/order-take-away.png")}
               />
             )}
+            {shippingMethod === SHIPPING_METHODS.table && (
+              <Image
+                source={require("../../../assets/order/order-take-away.png")}
+              />
+            )}
           </View>
           <View>
             <Text
@@ -55,9 +60,9 @@ const OrderSubmittedScreen = ({ route }) => {
               {shippingMethod === SHIPPING_METHODS.shipping && (
                 <Text>{t("you-choosed-delivery-text")}</Text>
               )}
-              {/* لقد اخترت بخدمة ارسالية بعد الانتهاء من التجهيز سيتصل بك مندوب
-              خدمة التوصيل لإكمال عمليه التوصيل للموقع الذي اخترته خلال الطلبية
-              . */}
+              {shippingMethod === SHIPPING_METHODS.table && (
+                <Text>{t("you-choosed-table-text")}</Text>
+              )}
             </Text>
           </View>
         </View>
@@ -71,7 +76,7 @@ const OrderSubmittedScreen = ({ route }) => {
               textColor={themeStyle.WHITE_COLOR}
               fontSize={20}
               fontFamily={`${getCurrentLang()}-SemiBold`}
-              text={t('current-orderds')}
+              text={t("current-orderds")}
             />
           </View>
         </View>

@@ -46,10 +46,14 @@ import InvalidAddressdDialog from "../../components/dialogs/invalid-address";
 import StoreIsCloseDialog from "../../components/dialogs/store-is-close";
 import PaymentFailedDialog from "../../components/dialogs/payment-failed";
 import { menuStore } from "../../stores/menu";
+import BarcodeScannerCMP from "../../components/barcode-scanner";
+import OpenBarcodeScannerdDialog from "../../components/dialogs/barcode-scanner/open-barcode-scannte";
+import BarcodeScannedDialog from "../../components/dialogs/barcode-scanner/barcode-scanned";
 
 export const SHIPPING_METHODS = {
   shipping: "DELIVERY",
   takAway: "TAKEAWAY",
+  table: "TABLE",
 };
 const PAYMENT_METHODS = {
   creditCard: "CREDITCARD",
@@ -64,9 +68,13 @@ const bcoindId = 3027;
 
 const CartScreen = () => {
   const { t } = useTranslation();
-  const { cartStore, authStore, languageStore, storeDataStore,userDetailsStore } = useContext(
-    StoreContext
-  );
+  const {
+    cartStore,
+    authStore,
+    languageStore,
+    storeDataStore,
+    userDetailsStore,
+  } = useContext(StoreContext);
 
   const navigation = useNavigation();
 
@@ -102,7 +110,14 @@ const CartScreen = () => {
   const [showStoreIsCloseDialog, setShowStoreIsCloseDialog] = useState(false);
   const [showPaymentFailedDialog, setShowPaymentFailedDialog] = useState(false);
   const [paymentErrorMessage, setPaymentErrorMessage] = useState();
-
+  const [isBarcodeOpen, setIsBarcodeOpen] = useState(false);
+  const [isOpenBarcodeSacnnerDialog, stIsOpenBarcodeSacnnerDialog] = useState(
+    false
+  );
+  const [isOpenBarcodeSacnnedDialog, stIsOpenBarcodeSacnnedDialog] = useState(
+    false
+  );
+  const [barcodeSacnnedDialogText, setBarcodeSacnnedDialogText] = useState('');
   const [isLoadingOrderSent, setIsLoadingOrderSent] = useState(null);
   const [isValidAddress, setIsValidAddress] = useState(false);
   const [
@@ -117,12 +132,21 @@ const CartScreen = () => {
   const appState = useRef(AppState.currentState);
 
   useEffect(() => {
-    const bcoinMeal = {data:menuStore.categories["OTHER"][0], "others": {"count": 1, "note": ""}}
-    const bcoinFound = cartStore.cartItems.find((product)=> product.data.id === bcoindId)
-    if(bcoinFound || userDetailsStore.userDetails?.credit <= userDetailsStore.userDetails.creditMinimum){
+    const bcoinMeal = {
+      data: menuStore.categories["OTHER"][0],
+      others: { count: 1, note: "" },
+    };
+    const bcoinFound = cartStore.cartItems.find(
+      (product) => product.data.id === bcoindId
+    );
+    if (
+      bcoinFound ||
+      userDetailsStore.userDetails?.credit <=
+        userDetailsStore.userDetails.creditMinimum
+    ) {
       return;
     }
-    cartStore.addProductToCart(bcoinMeal)
+    cartStore.addProductToCart(bcoinMeal);
   }, []);
   useEffect(() => {
     const subscription = AppState.addEventListener(
@@ -211,7 +235,7 @@ const CartScreen = () => {
     }
     let tmpOrderPrice = 0;
     cartStore.cartItems.forEach((item) => {
-      if(item){
+      if (item) {
         tmpOrderPrice += item.data.price;
       }
     });
@@ -229,7 +253,7 @@ const CartScreen = () => {
   }, []);
 
   const getProductIndexId = (product, index) => {
-    if(product){
+    if (product) {
       return product?.data.id.toString() + index;
     }
   };
@@ -459,14 +483,38 @@ const CartScreen = () => {
   };
 
   const isBcoinProduct = (product) => {
-      return product.data.id === bcoindId;
-  }
+    return product.data.id === bcoindId;
+  };
   const renderExtras = (filteredExtras, extrasLength, key) => {
     return (
       <View>{renderFilteredExtras(filteredExtras, extrasLength, key)}</View>
     );
   };
-  
+
+  const handleBarcodeAnswer = (answer: string) => {
+    console.log(answer);
+    setIsBarcodeOpen(false);
+    if(answer === 'canceled'){
+      setBarcodeSacnnedDialogText('scann-canceled');
+      setShippingMethod(SHIPPING_METHODS.takAway);
+    }else{
+      setBarcodeSacnnedDialogText('scanned-succefully');
+    }
+    stIsOpenBarcodeSacnnedDialog(true);
+  };
+  const handleOpenBarcodeScannerAnswer = (answer: string) => {
+    setIsBarcodeOpen(true);
+    stIsOpenBarcodeSacnnerDialog(false);
+  };
+  const handleOpenBarcodeScannedAnswer = (answer: string) => {
+    stIsOpenBarcodeSacnnedDialog(false);
+  };
+
+  const handleTableSelect = () => {
+    setShippingMethod(SHIPPING_METHODS.table);
+    stIsOpenBarcodeSacnnerDialog(true);
+  };
+
   let extrasArray = [];
   const renderFilteredExtras = (filteredExtras, extrasLength, key) => {
     return filteredExtras.map((extra, tagIndex) => {
@@ -555,218 +603,237 @@ const CartScreen = () => {
             </View>
 
             <View style={{ marginTop: -20 }}>
-              {cartStore.cartItems.map((product, index) => product && (
-                <Animated.View
-                  style={
-                    getProductIndexId(product, index) === itemToRemove
-                      ? animatedStyle
-                      : null
-                  }
-                >
-                  <View
-                    ref={itemRefs[getProductIndexId(product, index)]}
-                    style={{
-                      marginTop: 25,
-                      borderColor: "#707070",
-                      borderRadius: 20,
-                      padding: 10,
-                      backgroundColor: themeStyle.WHITE_COLOR,
-                    }}
-                    key={getProductIndexId(product, index)}
-                  >
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                      }}
+              {cartStore.cartItems.map(
+                (product, index) =>
+                  product && (
+                    <Animated.View
+                      style={
+                        getProductIndexId(product, index) === itemToRemove
+                          ? animatedStyle
+                          : null
+                      }
                     >
                       <View
+                        ref={itemRefs[getProductIndexId(product, index)]}
                         style={{
-                          justifyContent: "center",
+                          marginTop: 25,
+                          borderColor: "#707070",
+                          borderRadius: 20,
+                          padding: 10,
+                          backgroundColor: themeStyle.WHITE_COLOR,
                         }}
+                        key={getProductIndexId(product, index)}
                       >
-                        <Text
-                          style={{
-                            textAlign: "left",
-                            fontFamily: `${getCurrentLang()}-SemiBold`,
-                            fontSize: 20,
-                          }}
-                        >
-                          {product.data[`name_${languageStore.selectedLang}`]}
-                        </Text>
-                      </View>
-                    </View>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <View>
                         <View
                           style={{
-                            flexDirection: "row",
-                            paddingVertical: 10,
-                          }}
-                        >
-                          <View
-                            style={{
-                              width: 130,
-                              height: 80,
-                              padding: 0,
-                            }}
-                          >
-                            {!isBcoinProduct(product) && <Image
-                              style={{ width: "90%", height: "100%" }}
-                              source={{ uri: product.data.image_url }}
-                            />}
-                          </View>
-                          <View style={{ marginLeft: 0, marginTop: 5 }}>
-                            {/* <View style={{borderWidth:1, position: "absolute", top: 7, left:3, borderColor: themeStyle.PRIMARY_COLOR}}></View> */}
-                            {product.extras &&
-                              Object.keys(product.extras).map(
-                                (key, extraIndex) => {
-                                  if (key === "orderList") {
-                                    return;
-                                  }
-                                  const filteredExtras = filterMealExtras(
-                                    product.extras[key]
-                                  );
-                                  return (
-                                    filteredExtras.length > 0 &&
-                                    renderExtras(
-                                      filteredExtras,
-                                      Object.keys(product.extras).length,
-                                      key
-                                    )
-                                  );
-                                }
-                              )}
-                            {/* { 
-<Text style={{opacity:0}}>{extrasArrayLast.push(extrasArray[extrasArray.length-1])}</Text>
-                              }
-                              {console.log(extrasArrayLast)} */}
-                          </View>
-                        </View>
-                      </View>
-                      {!isBcoinProduct(product) && <View style={{ alignItems: "center", marginRight: 20 }}>
-                        <View style={{ width: "35%" }}>
-                          <Counter
-                            value={product.others.count}
-                            minValue={1}
-                            onCounterChange={(value) => {
-                              onCounterChange(product, index, value);
-                            }}
-                            isVertical
-                          />
-                        </View>
-                      </View>}
-                    </View>
-
-                    <View
-                      style={{
-                        paddingHorizontal: 15,
-                        marginTop: 10,
-                      }}
-                    >
-                      <DashedLine
-                        dashLength={5}
-                        dashThickness={1}
-                        dashGap={5}
-                        dashColor={themeStyle.GRAY_300}
-                      />
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          justifyContent: "space-between",
-                          marginTop: 10,
-                        }}
-                      >
-                        <View style={{ flexDirection: "row" }}>
-                          <View
-                            style={{
-                              flexDirection: "row",
-                              marginRight: 15,
-                            }}
-                          >
-                            {!isBcoinProduct(product) && <TouchableOpacity
-                              style={{
-                                flexDirection: "row",
-                                alignItems: "center",
-                                padding: 5,
-                              }}
-                              onPress={() => {
-                                onEditProduct(index);
-                              }}
-                            >
-                              <Text
-                                style={{
-                                  fontSize: 20,
-                                  fontFamily: `${getCurrentLang()}-SemiBold`,
-                                }}
-                              >
-                                {t("edit")}
-                              </Text>
-                              <View>
-                                <Icon
-                                  icon="edit"
-                                  size={20}
-                                  style={{ color: theme.GRAY_700 }}
-                                />
-                              </View>
-                            </TouchableOpacity>}
-                          </View>
-                          <View style={{ flexDirection: "row" }}>
-                            <TouchableOpacity
-                              style={{
-                                flexDirection: "row",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                padding: 5,
-                              }}
-                              onPress={() => {
-                                onRemoveProduct(product, index);
-                              }}
-                            >
-                              <Text
-                                style={{
-                                  fontSize: 20,
-                                  fontFamily: `${getCurrentLang()}-SemiBold`,
-                                  height: "100%",
-                                }}
-                              >
-                                {t("delete")}
-                              </Text>
-
-                              <View style={{ top: -1 }}>
-                                <Icon icon="delete" size={20} />
-                              </View>
-                            </TouchableOpacity>
-                          </View>
-                        </View>
-                        <View
-                          style={{
-                            marginTop: 0,
                             flexDirection: "row",
                             alignItems: "center",
                           }}
                         >
-                          <Text style={{ fontWeight: "bold", fontSize: 17 }}>
-                            {product.data.price}
-                          </Text>
-                          <Text style={{ fontWeight: "bold", fontSize: 17 }}>
-                            ₪
-                          </Text>
+                          <View
+                            style={{
+                              justifyContent: "center",
+                            }}
+                          >
+                            <Text
+                              style={{
+                                textAlign: "left",
+                                fontFamily: `${getCurrentLang()}-SemiBold`,
+                                fontSize: 20,
+                              }}
+                            >
+                              {
+                                product.data[
+                                  `name_${languageStore.selectedLang}`
+                                ]
+                              }
+                            </Text>
+                          </View>
+                        </View>
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <View>
+                            <View
+                              style={{
+                                flexDirection: "row",
+                                paddingVertical: 10,
+                              }}
+                            >
+                              <View
+                                style={{
+                                  width: 130,
+                                  height: 80,
+                                  padding: 0,
+                                }}
+                              >
+                                {!isBcoinProduct(product) && (
+                                  <Image
+                                    style={{ width: "90%", height: "100%" }}
+                                    source={{ uri: product.data.image_url }}
+                                  />
+                                )}
+                              </View>
+                              <View style={{ marginLeft: 0, marginTop: 5 }}>
+                                {/* <View style={{borderWidth:1, position: "absolute", top: 7, left:3, borderColor: themeStyle.PRIMARY_COLOR}}></View> */}
+                                {product.extras &&
+                                  Object.keys(product.extras).map(
+                                    (key, extraIndex) => {
+                                      if (key === "orderList") {
+                                        return;
+                                      }
+                                      const filteredExtras = filterMealExtras(
+                                        product.extras[key]
+                                      );
+                                      return (
+                                        filteredExtras.length > 0 &&
+                                        renderExtras(
+                                          filteredExtras,
+                                          Object.keys(product.extras).length,
+                                          key
+                                        )
+                                      );
+                                    }
+                                  )}
+                                {/* { 
+<Text style={{opacity:0}}>{extrasArrayLast.push(extrasArray[extrasArray.length-1])}</Text>
+                              }
+                              {console.log(extrasArrayLast)} */}
+                              </View>
+                            </View>
+                          </View>
+                          {!isBcoinProduct(product) && (
+                            <View
+                              style={{ alignItems: "center", marginRight: 20 }}
+                            >
+                              <View style={{ width: "35%" }}>
+                                <Counter
+                                  value={product.others.count}
+                                  minValue={1}
+                                  onCounterChange={(value) => {
+                                    onCounterChange(product, index, value);
+                                  }}
+                                  isVertical
+                                />
+                              </View>
+                            </View>
+                          )}
+                        </View>
+
+                        <View
+                          style={{
+                            paddingHorizontal: 15,
+                            marginTop: 10,
+                          }}
+                        >
+                          <DashedLine
+                            dashLength={5}
+                            dashThickness={1}
+                            dashGap={5}
+                            dashColor={themeStyle.GRAY_300}
+                          />
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              justifyContent: "space-between",
+                              marginTop: 10,
+                            }}
+                          >
+                            <View style={{ flexDirection: "row" }}>
+                              <View
+                                style={{
+                                  flexDirection: "row",
+                                  marginRight: 15,
+                                }}
+                              >
+                                {!isBcoinProduct(product) && (
+                                  <TouchableOpacity
+                                    style={{
+                                      flexDirection: "row",
+                                      alignItems: "center",
+                                      padding: 5,
+                                    }}
+                                    onPress={() => {
+                                      onEditProduct(index);
+                                    }}
+                                  >
+                                    <Text
+                                      style={{
+                                        fontSize: 20,
+                                        fontFamily: `${getCurrentLang()}-SemiBold`,
+                                      }}
+                                    >
+                                      {t("edit")}
+                                    </Text>
+                                    <View>
+                                      <Icon
+                                        icon="edit"
+                                        size={20}
+                                        style={{ color: theme.GRAY_700 }}
+                                      />
+                                    </View>
+                                  </TouchableOpacity>
+                                )}
+                              </View>
+                              <View style={{ flexDirection: "row" }}>
+                                <TouchableOpacity
+                                  style={{
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    padding: 5,
+                                  }}
+                                  onPress={() => {
+                                    onRemoveProduct(product, index);
+                                  }}
+                                >
+                                  <Text
+                                    style={{
+                                      fontSize: 20,
+                                      fontFamily: `${getCurrentLang()}-SemiBold`,
+                                      height: "100%",
+                                    }}
+                                  >
+                                    {t("delete")}
+                                  </Text>
+
+                                  <View style={{ top: -1 }}>
+                                    <Icon icon="delete" size={20} />
+                                  </View>
+                                </TouchableOpacity>
+                              </View>
+                            </View>
+                            <View
+                              style={{
+                                marginTop: 0,
+                                flexDirection: "row",
+                                alignItems: "center",
+                              }}
+                            >
+                              <Text
+                                style={{ fontWeight: "bold", fontSize: 17 }}
+                              >
+                                {product.data.price}
+                              </Text>
+                              <Text
+                                style={{ fontWeight: "bold", fontSize: 17 }}
+                              >
+                                ₪
+                              </Text>
+                            </View>
+                          </View>
                         </View>
                       </View>
-                    </View>
-                  </View>
-                </Animated.View>
-              ))}
+                    </Animated.View>
+                  )
+              )}
             </View>
           </View>
-
+         
           <View>
             <LinearGradient
               colors={["#F1F1F1", "white"]}
@@ -814,7 +881,26 @@ const CartScreen = () => {
                 />
               </View>
             </View>
-
+            <View style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginTop: 10,
+                paddingHorizontal: 20,
+              }}>
+            <Button
+              onClickFn={handleTableSelect}
+              text={t("table")}
+              bgColor={
+                shippingMethod === SHIPPING_METHODS.table
+                  ? theme.PRIMARY_COLOR
+                  : "white"
+              }
+              fontFamily={`${getCurrentLang()}-SemiBold`}
+              fontSize={20}
+              iconSize={25}
+              iconPosition={"left"}
+            />
+          </View>
             {shippingMethod === SHIPPING_METHODS.shipping && (
               <View
                 pointerEvents="none"
@@ -1034,6 +1120,23 @@ const CartScreen = () => {
           </View>
         </View>
       </ScrollView>
+      {shippingMethod === SHIPPING_METHODS.table && (
+        <BarcodeScannerCMP
+          onChange={handleBarcodeAnswer}
+          isOpen={isBarcodeOpen}
+        />
+      )}
+
+      <OpenBarcodeScannerdDialog
+        handleAnswer={handleOpenBarcodeScannerAnswer}
+        isOpen={isOpenBarcodeSacnnerDialog}
+      />
+      <BarcodeScannedDialog
+        handleAnswer={handleOpenBarcodeScannedAnswer}
+        isOpen={isOpenBarcodeSacnnedDialog}
+        text={barcodeSacnnedDialogText
+        }
+      />
       <NewPaymentMethodDialog
         handleAnswer={handleNewPMAnswer}
         isOpen={isOpenNewCreditCardDialog}

@@ -5,10 +5,10 @@ import {
   import { Paragraph, Dialog, Portal, Provider } from "react-native-paper";
   
   /* styles */
-  import theme from "../../styles/theme.style";
+  import theme from "../../../styles/theme.style";
   import { useState, useEffect } from "react";
-  import Button from "../../components/controls/button/button";
-  import themeStyle from "../../styles/theme.style";
+  import Button from "../../../components/controls/button/button";
+  import themeStyle from "../../../styles/theme.style";
 import { useTranslation } from "react-i18next";
   
   type TProps = {
@@ -16,7 +16,7 @@ import { useTranslation } from "react-i18next";
     handleAnswer?: any;
   };
   
-  export default function InvalidAddressdDialog({
+  export default function OpenBarcodeScannerdDialog({
     isOpen,
     handleAnswer,
   }: TProps) {
@@ -57,7 +57,7 @@ import { useTranslation } from "react-i18next";
                   fontWeight: "bold",
                 }}
               >
-                {t('invalid-address')}
+                {t('open-scanner')}
               </Paragraph>
             </Dialog.Content>
             <Dialog.Actions>

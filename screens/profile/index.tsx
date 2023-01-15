@@ -6,14 +6,20 @@ import { StoreContext } from "../../stores";
 import { observer } from "mobx-react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
 
 const ProfileScreen = () => {
+  const { t } = useTranslation();
+
   const { userDetailsStore, authStore } = useContext(StoreContext);
   const navigation = useNavigation();
 
   const onLogOut = () =>{
     authStore.logOut();
     navigation.navigate("homeScreen");
+  }
+  const onGoToOrdersList = () =>{
+    navigation.navigate("orders-status");
   }
 
   return (
@@ -68,6 +74,39 @@ const ProfileScreen = () => {
               </Text>
             </View>
           </View>
+          <TouchableOpacity onPress={onGoToOrdersList} style={styles.rowContainer}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <View
+                style={{
+                  marginRight: 10,
+                  backgroundColor: "rgba(254, 203, 5, 0.1)",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: 30,
+                  padding: 10,
+                }}
+              >
+                <Icon
+                  icon="logout"
+                  size={30}
+                  style={{ color: "#fecb05", opacity: 1 }}
+                />
+              </View>
+              <View>
+                <Text style={{ fontSize: 25, color: "#442213" }}>{t('order-list')}</Text>
+              </View>
+            </View>
+
+            <View>
+              <Text style={{ fontSize: 25, color: "#292d32" }}>
+                <Icon
+                  icon="small-arrow-right"
+                  size={15}
+                  style={{ color: "#292D32" }}
+                />
+              </Text>
+            </View>
+          </TouchableOpacity>
           <TouchableOpacity onPress={onLogOut} style={styles.rowContainer}>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <View
@@ -87,7 +126,7 @@ const ProfileScreen = () => {
                 />
               </View>
               <View>
-                <Text style={{ fontSize: 25, color: "#442213" }}>الخروج</Text>
+                <Text style={{ fontSize: 25, color: "#442213" }}>{t('signout')}</Text>
               </View>
             </View>
 

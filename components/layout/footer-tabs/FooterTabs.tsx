@@ -155,7 +155,7 @@ function MyTabBar({ state, descriptors, navigation }) {
                       right: -12,
                       backgroundColor: themeStyle.SUCCESS_LIGHT_COLOR,
                       borderRadius: 50,
-                      padding: 7,
+                      padding: 0,
                       borderWidth: 2,
                       borderColor: themeStyle.WHITE_COLOR,
                     }}
@@ -165,6 +165,9 @@ function MyTabBar({ state, descriptors, navigation }) {
                         fontSize: 17,
                         fontWeight: "bold",
                         color: themeStyle.GRAY_700,
+                        width:30,
+                        height:30,
+                        textAlign:"center", top:5
                       }}
                     >
                       {userDetailsStore.userDetails?.credit}

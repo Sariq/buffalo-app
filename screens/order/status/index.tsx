@@ -12,8 +12,9 @@ import Icon from "../../../components/icon";
 import { axiosInstance } from "../../../utils/http-interceptor";
 import { ORDER_API } from "../../../consts/api";
 //2 -ready | if comple
-const inProgressStatuses = ['SENT'];
-const readyStatuses = ['COMPLETED', 'READY'];
+const inProgressStatuses = ["SENT"];
+const readyStatuses = ["COMPLETED", "READY"];
+const canceledStatuses = ["CANCELLED","REJECTED"];
 
 const OrdersStatusScreen = ({ route }) => {
   const { t } = useTranslation();
@@ -21,17 +22,17 @@ const OrdersStatusScreen = ({ route }) => {
   const [ordersList, setOrdersList] = useState([]);
 
   const getOrders = () => {
-    const body = {datetime: new Date()};
-     axiosInstance
+    const body = { datetime: new Date() };
+    axiosInstance
       .post(
         `${ORDER_API.CONTROLLER}/${ORDER_API.GET_ORDERS_API}`,
-       toBase64(body),
+        toBase64(body)
       )
       .then(function (response) {
         const res = JSON.parse(fromBase64(response.data));
-        const orderdList = orderBy(res.orders,['created_at'],['desc'])
+        const orderdList = orderBy(res.orders, ["created_at"], ["desc"]);
         setOrdersList(orderdList);
-      })
+      });
   };
 
   useEffect(() => {
@@ -42,22 +43,24 @@ const OrdersStatusScreen = ({ route }) => {
     return () => clearInterval(interval);
   }, []);
 
-  const getIconByStatus = (status:string,type: number)=>{
-    if(type === 1){
-      if(inProgressStatuses.indexOf(status) > -1){
-
-        return 'checked-green';
+  const getIconByStatus = (status: string, type: number) => {
+    if (type === 1) {
+      if (inProgressStatuses.indexOf(status) > -1) {
+        return "checked-green";
       }
-      return 'checked-gray'; 
+      return "checked-gray";
     }
-    if(type === 2){
-      if(readyStatuses.indexOf(status) > -1){
-        return 'checked-green';
+    if (type === 2) {
+      if (readyStatuses.indexOf(status) > -1) {
+        return "checked-green";
       }
-      return 'checked-gray'; 
+      if (canceledStatuses.indexOf(status) > -1) {
+        return "cancelled-red";
+      }
+      return "checked-gray";
     }
-    return 'checked-gray'; 
-  }
+    return "checked-gray";
+  };
 
   const renderOrderDateRaw = (order) => {
     return (
@@ -73,7 +76,7 @@ const OrdersStatusScreen = ({ route }) => {
             <Text style={styles.dateRawText}>{t("order-number")}:</Text>
           </View>
           <View>
-            <Text style={styles.dateRawText}>{order.id} </Text>
+            <Text style={styles.dateRawText}>{order.id}-{order.local_id} </Text>
           </View>
         </View>
         <View style={{}}>
@@ -126,9 +129,10 @@ const OrdersStatusScreen = ({ route }) => {
   const renderOrderItems = (order) => {
     const tmpOrder = fromBase64(order.order);
     const tmpOrderValue = JSON.parse(tmpOrder);
+    console.log(tmpOrderValue.items)
     return tmpOrderValue.items.map((item) => {
       const meal: any = menuStore.getFromCategoriesMealByKey(item.item_id);
-      if (isEmpty(meal)) {
+      if (isEmpty(meal) || item.item_id === 3027) {
         return;
       }
       return (
@@ -159,16 +163,20 @@ const OrdersStatusScreen = ({ route }) => {
                 {meal[`name_${getCurrentLang()}`]}
               </Text>
             </View>
-            <View style={{flexDirection:"row", justifyContent:"flex-start" }}>
+            <View
+              style={{ flexDirection: "row", justifyContent: "flex-start" }}
+            >
               <View
                 style={{
                   flexBasis: "40%",
                   height: 80,
-                  padding:5, marginVertical:10,alignItems: "center",
+                  padding: 5,
+                  marginVertical: 10,
+                  alignItems: "center",
                 }}
               >
                 <Image
-                  style={{ width: "100%", height: "100%"}}
+                  style={{ width: "100%", height: "100%" }}
                   source={{ uri: meal?.image_url }}
                 />
               </View>
@@ -177,7 +185,7 @@ const OrdersStatusScreen = ({ route }) => {
               </View>
             </View>
           </View>
-          <View style={{alignItems:"center"}}>
+          <View style={{ alignItems: "center" }}>
             <View>
               <Text
                 style={{
@@ -206,6 +214,30 @@ const OrdersStatusScreen = ({ route }) => {
     });
   };
 
+  const getTextByShippingMethod = (method) => {
+    switch (method) {
+      case "TAKEAWAY":
+        return "takeway-service";
+      case "DELIVERY":
+        return "delivery-service";
+      case "TABLE":
+        return "in-resturant-service";
+    }
+  };
+  const getTextStatusByShippingMethod = (method, status) => {
+    if (canceledStatuses.indexOf(status) > -1) {
+      return "cancelled";
+    }
+    switch (method) {
+      case "TAKEAWAY":
+        return "ready-takeaway";
+      case "DELIVERY":
+        return "on-way";
+      case "TABLE":
+        return "ready-table";
+    }
+  };
+
   const renderStatus = (order) => {
     const oOrder = JSON.parse(fromBase64(order.order));
     return (
@@ -218,9 +250,7 @@ const OrdersStatusScreen = ({ route }) => {
               color: themeStyle.GRAY_700,
             }}
           >
-            {oOrder.receipt_method === "TAKEAWAY"
-              ? t("takeway-service")
-              : t("delivery-service")}
+            {t(getTextByShippingMethod(oOrder.receipt_method))}
           </Text>
         </View>
         <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
@@ -237,7 +267,10 @@ const OrdersStatusScreen = ({ route }) => {
               </Text>
             </View>
             <View style={{ marginTop: 10 }}>
-              <Icon icon={getIconByStatus(order.status.replace(/ /g,''), 1)} size={40} />
+              <Icon
+                icon={getIconByStatus(order.status.replace(/ /g, ""), 1)}
+                size={40}
+              />
             </View>
           </View>
           <View style={{ alignItems: "center" }}>
@@ -249,13 +282,14 @@ const OrdersStatusScreen = ({ route }) => {
                   color: themeStyle.GRAY_700,
                 }}
               >
-                {oOrder.receipt_method === "TAKEAWAY"
-                  ? t("ready-takeaway")
-                  : t("on-way")}
+              {getTextStatusByShippingMethod(oOrder.receipt_method, order.status.replace(/ /g, ""))}
               </Text>
             </View>
             <View style={{ marginTop: 10 }}>
-              <Icon icon={getIconByStatus(order.status.replace(/ /g,''), 2)} size={40} />
+              <Icon
+                icon={getIconByStatus(order.status.replace(/ /g, ""), 2)}
+                size={40}
+              />
             </View>
           </View>
         </View>
@@ -269,7 +303,7 @@ const OrdersStatusScreen = ({ route }) => {
   return (
     <ScrollView style={styles.container}>
       {ordersList.map((order) => (
-        <View style={{marginBottom: 50}}>
+        <View style={{ marginBottom: 50 }}>
           <View style={styles.orderContainer}>
             {renderOrderDateRaw(order)}
             {renderOrderItems(order)}
@@ -297,7 +331,6 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     paddingHorizontal: 10,
     paddingBottom: 20,
-    
   },
   dateRawText: {
     fontSize: 17,
