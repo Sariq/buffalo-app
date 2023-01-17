@@ -20,6 +20,7 @@ const AppContainer = () => {
 
 
   const setTopColor = () => {
+    console.log(navigation?.getCurrentRoute()?.name)
     if (
       navigation?.getCurrentRoute()?.name === undefined ||
       yellowBgTopScreens.indexOf(navigation?.getCurrentRoute()?.name) > -1

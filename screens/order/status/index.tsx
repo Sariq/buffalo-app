@@ -297,7 +297,9 @@ const OrdersStatusScreen = ({ route }) => {
   };
 
   if (ordersList.length < 1) {
-    return;
+    return (<View style={{alignItems:"center",justifyContent:"center", height: "100%"}}>
+      <Text style={{fontSize:20}}>{t('empty-orders')}</Text>
+    </View>);
   }
   return (
     <ScrollView style={styles.container}>
