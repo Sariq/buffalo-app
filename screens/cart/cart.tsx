@@ -127,7 +127,7 @@ const CartScreen = () => {
     false
   );
   const [barcodeSacnnedDialogText, setBarcodeSacnnedDialogText] = useState("");
-  const [recipetSupportText, setRecipetSupportText] = useState("");
+  const [recipetSupportText, setRecipetSupportText] = useState({text: "",icon: null});
   const [storeErrorText, setStoreErrorText] = useState("");
   const [isLoadingOrderSent, setIsLoadingOrderSent] = useState(null);
   const [isValidAddress, setIsValidAddress] = useState(false);
@@ -552,8 +552,8 @@ const CartScreen = () => {
 
   const handleDeliverySelect = async () => {
     const isSupported = await isStoreSupport("delivery_support");
-    if (!isSupported) {
-      setRecipetSupportText("shipping-not-supported");
+    if (isSupported) {
+      setRecipetSupportText({text: "shipping-not-supported", icon: "shipping_icon"});
       setIOpenRecipetNotSupportedDialog(true);
       setShippingMethod(SHIPPING_METHODS.takAway);
       return;
@@ -570,7 +570,7 @@ const CartScreen = () => {
   const handleCreditCardSelected = async () => {
     const isSupported = await isStoreSupport("creditcard_support");
     if (!isSupported) {
-      setRecipetSupportText("creditcard-not-supported");
+      setRecipetSupportText({text: "creditcard-not-supported", icon: "delivery-icon"});
       setIOpenRecipetNotSupportedDialog(true);
       setPaymentMthod(PAYMENT_METHODS.cash);
       return;
@@ -1181,7 +1181,7 @@ const CartScreen = () => {
                 </Text>
               </View>
             </View>
-            <View style={{ marginTop: 30, marginHorizontal: 20 }}>
+            <View style={{ marginTop: 30, marginHorizontal: -10 }}>
               <Button
                 bgColor={theme.SUCCESS_COLOR}
                 onClickFn={onSendCart}
@@ -1217,7 +1217,8 @@ const CartScreen = () => {
       <RecipetNotSupportedDialog
         handleAnswer={handleRecipetNotSupportedAnswer}
         isOpen={isOpenRecipetNotSupportedDialog}
-        text={recipetSupportText}
+        text={recipetSupportText.text}
+        icon={recipetSupportText.icon}
       />
       <OpenBarcodeScannerdDialog
         handleAnswer={handleOpenBarcodeScannerAnswer}

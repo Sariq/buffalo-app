@@ -55,7 +55,7 @@ const OrdersStatusScreen = ({ route }) => {
         return "checked-green";
       }
       if (canceledStatuses.indexOf(status) > -1) {
-        return "cancelled-red";
+        return "red-x";
       }
       return "checked-gray";
     }
