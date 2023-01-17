@@ -77,6 +77,22 @@ class MenuStore {
     });
     return foundedMeal;
   }
+  updateBcoinPrice = () => {
+    Object.keys(this.categories).map((key) => {
+      const founded = this.categories[key].find((meal, index)=> {
+        if(meal.id == 3027){
+          this.categories[key][index] = {...meal, price:22}
+          this.categories[key]
+          this.categories[key] = {...this.categories, [key]: this.categories[key]}
+          // const test= {...this.categories[key]}
+          // this.categories[key] = {...this.categories[key], price: 22}
+          // this.categories = {...this.categories, key : [...this.categories[key]]}
+
+          //console.log(meal)
+        }
+      })
+    });
+  }
 
   initMealsTags = (tag, type, key) => {
     const extrasType = this.meals[key].extras[type].map((tagItem) => {

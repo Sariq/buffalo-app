@@ -129,7 +129,6 @@ const OrdersStatusScreen = ({ route }) => {
   const renderOrderItems = (order) => {
     const tmpOrder = fromBase64(order.order);
     const tmpOrderValue = JSON.parse(tmpOrder);
-    console.log(tmpOrderValue.items)
     return tmpOrderValue.items.map((item) => {
       const meal: any = menuStore.getFromCategoriesMealByKey(item.item_id);
       if (isEmpty(meal) || item.item_id === 3027) {

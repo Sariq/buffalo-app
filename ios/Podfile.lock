@@ -6,6 +6,11 @@ PODS:
     - ExpoModulesCore
   - EXApplication (4.2.2):
     - ExpoModulesCore
+  - EXBarCodeScanner (11.4.0):
+    - EXImageLoader
+    - ExpoModulesCore
+    - ZXingObjC/OneD
+    - ZXingObjC/PDF417
   - EXConstants (13.2.4):
     - ExpoModulesCore
   - EXDevice (4.3.0):
@@ -14,6 +19,9 @@ PODS:
     - ExpoModulesCore
   - EXFont (10.2.1):
     - ExpoModulesCore
+  - EXImageLoader (3.2.0):
+    - ExpoModulesCore
+    - React-Core
   - EXJSONUtils (0.3.0)
   - EXLocation (14.3.0):
     - ExpoModulesCore
@@ -461,16 +469,23 @@ PODS:
     - React-Core
   - UMAppLoader (3.1.0)
   - Yoga (1.14.0)
+  - ZXingObjC/Core (3.6.5)
+  - ZXingObjC/OneD (3.6.5):
+    - ZXingObjC/Core
+  - ZXingObjC/PDF417 (3.6.5):
+    - ZXingObjC/Core
 
 DEPENDENCIES:
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - EASClient (from `../node_modules/expo-eas-client/ios`)
   - EXApplication (from `../node_modules/expo-application/ios`)
+  - EXBarCodeScanner (from `../node_modules/expo-barcode-scanner/ios`)
   - EXConstants (from `../node_modules/expo-constants/ios`)
   - EXDevice (from `../node_modules/expo-device/ios`)
   - EXFileSystem (from `../node_modules/expo-file-system/ios`)
   - EXFont (from `../node_modules/expo-font/ios`)
+  - EXImageLoader (from `../node_modules/expo-image-loader/ios`)
   - EXJSONUtils (from `../node_modules/expo-json-utils/ios`)
   - EXLocation (from `../node_modules/expo-location/ios`)
   - EXManifests (from `../node_modules/expo-manifests/ios`)
@@ -538,6 +553,7 @@ SPEC REPOS:
   trunk:
     - ASN1Decoder
     - fmt
+    - ZXingObjC
 
 EXTERNAL SOURCES:
   boost:
@@ -548,6 +564,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-eas-client/ios"
   EXApplication:
     :path: "../node_modules/expo-application/ios"
+  EXBarCodeScanner:
+    :path: "../node_modules/expo-barcode-scanner/ios"
   EXConstants:
     :path: "../node_modules/expo-constants/ios"
   EXDevice:
@@ -556,6 +574,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-file-system/ios"
   EXFont:
     :path: "../node_modules/expo-font/ios"
+  EXImageLoader:
+    :path: "../node_modules/expo-image-loader/ios"
   EXJSONUtils:
     :path: "../node_modules/expo-json-utils/ios"
   EXLocation:
@@ -685,10 +705,12 @@ SPEC CHECKSUMS:
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   EASClient: a2581835cf9b97d0defd5d630fc6eb1bf77045e7
   EXApplication: e418d737a036e788510f2c4ad6c10a7d54d18586
+  EXBarCodeScanner: 8e13bad5d197b4b9a58d16af41f8690875a5f736
   EXConstants: 7c44785d41d8e959d527d23d29444277a4d1ee73
   EXDevice: 7647ca9b1fd8b269dfd896a7643d659343358054
   EXFileSystem: 927e0a8885aa9c49e50fc38eaba2c2389f2f1019
   EXFont: 06df627203afcb8a3b3152ec06eb2f11f46f0cff
+  EXImageLoader: b88e053d760f85a82405b1db2de4abf11978fc9f
   EXJSONUtils: 2a74b8f40f1523cc3f92af99c91aa78201737a77
   EXLocation: b8cba3cb354bee6abb181c1dd245abe5aef22955
   EXManifests: b38dc61303f5eede990b4c8ecbfac32f82160e65
@@ -751,6 +773,7 @@ SPEC CHECKSUMS:
   RNSVG: 6adc5c52d2488a476248413064b7f2832e639057
   UMAppLoader: 6185e8c45922f187002b85afae097961c4781df4
   Yoga: 75bf4b0131cfb46a659cd0c13309b79a6fcff66d
+  ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
 PODFILE CHECKSUM: cf995c08da38d669f5ef840ad4bb04330f438562
 

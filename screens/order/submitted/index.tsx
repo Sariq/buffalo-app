@@ -41,7 +41,7 @@ const OrderSubmittedScreen = ({ route }) => {
             )}
             {shippingMethod === SHIPPING_METHODS.table && (
               <Image
-                source={require("../../../assets/order/order-take-away.png")}
+                source={require("../../../assets/order/order-table.png")}
               />
             )}
           </View>

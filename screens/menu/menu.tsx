@@ -31,7 +31,7 @@ export function fromBase64(encoded) {
 
 const categoryListIcons = {
   BURGERS: "burger_icon",
-  CHICKEN: "crspy-icon",
+  CHICKEN: "checken",
   SIDES: "box-icon",
   DRINK: "drinks_icon",
   SALADS: "salad-icon",

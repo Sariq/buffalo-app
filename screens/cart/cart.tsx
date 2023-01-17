@@ -49,6 +49,8 @@ import { menuStore } from "../../stores/menu";
 import BarcodeScannerCMP from "../../components/barcode-scanner";
 import OpenBarcodeScannerdDialog from "../../components/dialogs/barcode-scanner/open-barcode-scannte";
 import BarcodeScannedDialog from "../../components/dialogs/barcode-scanner/barcode-scanned";
+import RecipetNotSupportedDialog from "../../components/dialogs/recipet-service/recipet-not-supported";
+import StoreErrorMsgDialog from "../../components/dialogs/store-errot-msg";
 
 export const SHIPPING_METHODS = {
   shipping: "DELIVERY",
@@ -117,7 +119,16 @@ const CartScreen = () => {
   const [isOpenBarcodeSacnnedDialog, stIsOpenBarcodeSacnnedDialog] = useState(
     false
   );
-  const [barcodeSacnnedDialogText, setBarcodeSacnnedDialogText] = useState('');
+  const [
+    isOpenRecipetNotSupportedDialog,
+    setIOpenRecipetNotSupportedDialog,
+  ] = useState(false);
+  const [isOpenStoreErrorMsgDialog, setIsOpenStoreErrorMsgDialog] = useState(
+    false
+  );
+  const [barcodeSacnnedDialogText, setBarcodeSacnnedDialogText] = useState("");
+  const [recipetSupportText, setRecipetSupportText] = useState("");
+  const [storeErrorText, setStoreErrorText] = useState("");
   const [isLoadingOrderSent, setIsLoadingOrderSent] = useState(null);
   const [isValidAddress, setIsValidAddress] = useState(false);
   const [
@@ -132,22 +143,26 @@ const CartScreen = () => {
   const appState = useRef(AppState.currentState);
 
   useEffect(() => {
-    const bcoinMeal = {
-      data: menuStore.categories["OTHER"][0],
-      others: { count: 1, note: "" },
-    };
-    const bcoinFound = cartStore.cartItems.find(
-      (product) => product.data.id === bcoindId
-    );
-    if (
-      bcoinFound ||
-      userDetailsStore.userDetails?.credit <=
-        userDetailsStore.userDetails.creditMinimum
-    ) {
-      return;
+    if (menuStore.categories["OTHER"]) {
+      const bcoinMeal = {
+        data: menuStore.categories["OTHER"][0],
+        others: { count: 1, note: "" },
+      };
+      const bcoinFound = cartStore.cartItems.find(
+        (product) => product.data.id === bcoindId
+      );
+      if (
+        bcoinFound ||
+        userDetailsStore.userDetails?.credit <=
+          userDetailsStore.userDetails.creditMinimum
+      ) {
+        return;
+      }
+      bcoinMeal.data.price = userDetailsStore.userDetails?.credit;
+      cartStore.addProductToCart(bcoinMeal);
     }
-    cartStore.addProductToCart(bcoinMeal);
   }, []);
+
   useEffect(() => {
     const subscription = AppState.addEventListener(
       "change",
@@ -283,36 +298,62 @@ const CartScreen = () => {
     }, 600);
   };
 
+  // const isStoreAvailable = () => {
+  //   return storeDataStore.getStoreData().then((res) => {
+  //     return {
+  //       isOpen: res.alwaysOpen || res.isOpen,
+  //       isBusy: false,
+  //     };
+  //   });
+  // };
+  const isStoreSupport = (key: string) => {
+    return storeDataStore.getStoreData().then((res) => {
+      return res[key];
+    });
+  };
+
   const isStoreAvailable = () => {
     return storeDataStore.getStoreData().then((res) => {
       return {
-        isOpen: res.isOpen,
+        ar: res["invalid_message_ar"],
+        he: res["invalid_message_he"],
+        isOpen: res.alwaysOpen || res.isOpen,
         isBusy: false,
       };
     });
   };
 
+  const isErrMessage = async () => {
+    let data = await isStoreAvailable();
+    if (data.ar || data.he) {
+      setStoreErrorText(data[getCurrentLang()]);
+      setIsOpenStoreErrorMsgDialog(true);
+    }
+    return data;
+  };
   const onSendCart = async () => {
     const isLoggedIn = authStore.isLoggedIn();
     if (isLoggedIn) {
-      const storeStatus = await isStoreAvailable();
-      if (storeStatus.isOpen) {
-        if (shippingMethod === SHIPPING_METHODS.shipping) {
-          if (isValidAddress) {
-            if (!isShippingMethodAgrred) {
-              setIsOpenShippingMethodDialog(true);
-              return;
+      const data = await isErrMessage();
+      if (!(data.ar || data.he)) {
+        if (data.isOpen) {
+          if (shippingMethod === SHIPPING_METHODS.shipping) {
+            if (isValidAddress) {
+              if (!isShippingMethodAgrred) {
+                setIsOpenShippingMethodDialog(true);
+                return;
+              } else {
+                submitCart();
+              }
             } else {
-              submitCart();
+              setIsOpenInvalidAddressDialod(true);
             }
           } else {
-            setIsOpenInvalidAddressDialod(true);
+            submitCart();
           }
         } else {
-          submitCart();
+          setShowStoreIsCloseDialog(true);
         }
-      } else {
-        setShowStoreIsCloseDialog(true);
       }
     } else {
       navigation.navigate("login");
@@ -492,13 +533,12 @@ const CartScreen = () => {
   };
 
   const handleBarcodeAnswer = (answer: string) => {
-    console.log(answer);
     setIsBarcodeOpen(false);
-    if(answer === 'canceled'){
-      setBarcodeSacnnedDialogText('scann-canceled');
+    if (answer === "canceled") {
+      setBarcodeSacnnedDialogText("scann-canceled");
       setShippingMethod(SHIPPING_METHODS.takAway);
-    }else{
-      setBarcodeSacnnedDialogText('scanned-succefully');
+    } else {
+      setBarcodeSacnnedDialogText("scanned-succefully");
     }
     stIsOpenBarcodeSacnnedDialog(true);
   };
@@ -510,9 +550,39 @@ const CartScreen = () => {
     stIsOpenBarcodeSacnnedDialog(false);
   };
 
-  const handleTableSelect = () => {
+  const handleDeliverySelect = async () => {
+    const isSupported = await isStoreSupport("delivery_support");
+    if (!isSupported) {
+      setRecipetSupportText("shipping-not-supported");
+      setIOpenRecipetNotSupportedDialog(true);
+      setShippingMethod(SHIPPING_METHODS.takAway);
+      return;
+    }
+    setShippingMethod(SHIPPING_METHODS.shipping);
+  };
+  const handleTableSelect = async () => {
     setShippingMethod(SHIPPING_METHODS.table);
-    stIsOpenBarcodeSacnnerDialog(true);
+    const isSupported = await isStoreSupport("table_support");
+    if (!isSupported) {
+      stIsOpenBarcodeSacnnerDialog(true);
+    }
+  };
+  const handleCreditCardSelected = async () => {
+    const isSupported = await isStoreSupport("creditcard_support");
+    if (!isSupported) {
+      setRecipetSupportText("creditcard-not-supported");
+      setIOpenRecipetNotSupportedDialog(true);
+      setPaymentMthod(PAYMENT_METHODS.cash);
+      return;
+    }
+    setPaymentMthod(PAYMENT_METHODS.creditCard);
+  };
+
+  const handleRecipetNotSupportedAnswer = () => {
+    setIOpenRecipetNotSupportedDialog(false);
+  };
+  const handleStoreErrorMsgAnswer = () => {
+    setIsOpenStoreErrorMsgDialog(false);
   };
 
   let extrasArray = [];
@@ -620,7 +690,9 @@ const CartScreen = () => {
                           borderColor: "#707070",
                           borderRadius: 20,
                           padding: 10,
-                          backgroundColor: themeStyle.WHITE_COLOR,
+                          backgroundColor: isBcoinProduct(product)
+                            ? themeStyle.PRIMARY_COLOR
+                            : themeStyle.WHITE_COLOR,
                         }}
                         key={getProductIndexId(product, index)}
                       >
@@ -640,6 +712,7 @@ const CartScreen = () => {
                                 textAlign: "left",
                                 fontFamily: `${getCurrentLang()}-SemiBold`,
                                 fontSize: 20,
+                                marginLeft: isBcoinProduct(product) ? 10 : 0,
                               }}
                             >
                               {
@@ -671,12 +744,18 @@ const CartScreen = () => {
                                   padding: 0,
                                 }}
                               >
-                                {!isBcoinProduct(product) && (
-                                  <Image
-                                    style={{ width: "90%", height: "100%" }}
-                                    source={{ uri: product.data.image_url }}
-                                  />
-                                )}
+                                <Image
+                                  style={{
+                                    width: isBcoinProduct(product)
+                                      ? "61%"
+                                      : "90%",
+                                    height: "100%",
+                                    marginLeft: isBcoinProduct(product)
+                                      ? 15
+                                      : 0,
+                                  }}
+                                  source={{ uri: product.data.image_url }}
+                                />
                               </View>
                               <View style={{ marginLeft: 0, marginTop: 5 }}>
                                 {/* <View style={{borderWidth:1, position: "absolute", top: 7, left:3, borderColor: themeStyle.PRIMARY_COLOR}}></View> */}
@@ -817,6 +896,7 @@ const CartScreen = () => {
                               <Text
                                 style={{ fontWeight: "bold", fontSize: 17 }}
                               >
+                                {isBcoinProduct(product) && "-"}
                                 {product.data.price}
                               </Text>
                               <Text
@@ -833,7 +913,7 @@ const CartScreen = () => {
               )}
             </View>
           </View>
-         
+
           <View>
             <LinearGradient
               colors={["#F1F1F1", "white"]}
@@ -847,11 +927,12 @@ const CartScreen = () => {
                 justifyContent: "space-between",
                 marginTop: 30,
                 paddingHorizontal: 20,
+                height: 125,
               }}
             >
-              <View style={{ flexBasis: "49%" }}>
+              <View style={{ flexBasis: "32%", flexDirection: "column" }}>
                 <Button
-                  onClickFn={() => setShippingMethod(SHIPPING_METHODS.shipping)}
+                  onClickFn={handleDeliverySelect}
                   text={t("delivery")}
                   bgColor={
                     shippingMethod === SHIPPING_METHODS.shipping
@@ -861,10 +942,12 @@ const CartScreen = () => {
                   fontFamily={`${getCurrentLang()}-SemiBold`}
                   fontSize={20}
                   icon="shipping_icon"
-                  iconSize={25}
+                  iconSize={40}
+                  isFlexCol
+                  borderRadious={15}
                 />
               </View>
-              <View style={{ flexBasis: "49%" }}>
+              <View style={{ flexBasis: "32%" }}>
                 <Button
                   onClickFn={() => setShippingMethod(SHIPPING_METHODS.takAway)}
                   text={t("take-away")}
@@ -875,32 +958,30 @@ const CartScreen = () => {
                   }
                   fontFamily={`${getCurrentLang()}-SemiBold`}
                   fontSize={20}
-                  icon="cart_burger_icon"
-                  iconSize={25}
-                  iconPosition={"left"}
+                  icon="takeaway-icon"
+                  iconSize={50}
+                  isFlexCol
+                  borderRadious={15}
+                />
+              </View>
+              <View style={{ flexBasis: "32%" }}>
+                <Button
+                  onClickFn={handleTableSelect}
+                  text={t("table")}
+                  bgColor={
+                    shippingMethod === SHIPPING_METHODS.table
+                      ? theme.PRIMARY_COLOR
+                      : "white"
+                  }
+                  fontFamily={`${getCurrentLang()}-SemiBold`}
+                  fontSize={20}
+                  icon="table"
+                  iconSize={50}
+                  isFlexCol
+                  borderRadious={15}
                 />
               </View>
             </View>
-            <View style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                marginTop: 10,
-                paddingHorizontal: 20,
-              }}>
-            <Button
-              onClickFn={handleTableSelect}
-              text={t("table")}
-              bgColor={
-                shippingMethod === SHIPPING_METHODS.table
-                  ? theme.PRIMARY_COLOR
-                  : "white"
-              }
-              fontFamily={`${getCurrentLang()}-SemiBold`}
-              fontSize={20}
-              iconSize={25}
-              iconPosition={"left"}
-            />
-          </View>
             {shippingMethod === SHIPPING_METHODS.shipping && (
               <View
                 pointerEvents="none"
@@ -957,7 +1038,7 @@ const CartScreen = () => {
               </View>
               <View style={{ flexBasis: "49%" }}>
                 <Button
-                  onClickFn={() => setPaymentMthod(PAYMENT_METHODS.creditCard)}
+                  onClickFn={handleCreditCardSelected}
                   text={t("credit-card")}
                   bgColor={
                     paymentMthod === PAYMENT_METHODS.creditCard
@@ -1127,6 +1208,17 @@ const CartScreen = () => {
         />
       )}
 
+      <StoreErrorMsgDialog
+        handleAnswer={handleStoreErrorMsgAnswer}
+        isOpen={isOpenStoreErrorMsgDialog}
+        text={storeErrorText}
+      />
+
+      <RecipetNotSupportedDialog
+        handleAnswer={handleRecipetNotSupportedAnswer}
+        isOpen={isOpenRecipetNotSupportedDialog}
+        text={recipetSupportText}
+      />
       <OpenBarcodeScannerdDialog
         handleAnswer={handleOpenBarcodeScannerAnswer}
         isOpen={isOpenBarcodeSacnnerDialog}
@@ -1134,8 +1226,7 @@ const CartScreen = () => {
       <BarcodeScannedDialog
         handleAnswer={handleOpenBarcodeScannedAnswer}
         isOpen={isOpenBarcodeSacnnedDialog}
-        text={barcodeSacnnedDialogText
-        }
+        text={barcodeSacnnedDialogText}
       />
       <NewPaymentMethodDialog
         handleAnswer={handleNewPMAnswer}

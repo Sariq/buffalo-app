@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, Image } from "react-native";
 import themeStyle from "../../styles/theme.style";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { StoreContext } from "../../stores";
 import { observer } from "mobx-react";
 import { getCurrentLang } from "../../translations/i18n";
@@ -12,6 +12,12 @@ import { LinearGradient } from "expo-linear-gradient";
 const BcoinScreen = () => {
   const { t } = useTranslation();
   const { userDetailsStore } = useContext(StoreContext);
+
+  useEffect(()=>{
+    userDetailsStore.getUserDetails();
+  },[]);
+
+
 
   return (
     <View style={styles.container}>
@@ -28,7 +34,7 @@ const BcoinScreen = () => {
           alignItems: "center",
         }}
       >
-        <View style={{}}>
+        <View style={{zIndex:10}}>
           <BackButton />
         </View>
         <View

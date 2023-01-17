@@ -2,6 +2,7 @@ import { makeAutoObservable, runInAction } from "mobx";
 import { axiosInstance } from "../../utils/http-interceptor";
 import { AUTH_API } from "../../consts/api";
 import { fromBase64, toBase64 } from "../../helpers/convert-base64";
+import { menuStore } from "../menu";
 
 type TUserDetails = {
   name: string;
@@ -44,6 +45,7 @@ class UserDetailsStore {
       }
       runInAction(() => {
         this.userDetails = userDetailsTmp;
+        //menuStore.updateBcoinPrice();
       });
     })
   };

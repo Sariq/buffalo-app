@@ -18,6 +18,7 @@ type TProps = {
   isLoading?: boolean;
   borderRadious?: number;
   textPadding?: number;
+  isFlexCol?: boolean;
 };
 export default function Button({
   onClickFn,
@@ -32,7 +33,9 @@ export default function Button({
   disabled,
   isLoading,
   borderRadious,
-  textPadding
+  textPadding,
+  isFlexCol,
+  
 }: TProps) {
   const onBtnClick = () => {
     onClickFn();
@@ -57,7 +60,7 @@ export default function Button({
     <Icon
       icon={icon}
       size={iconSize ? iconSize : 20}
-      style={{ color: textColor || theme.GRAY_700 }}
+      style={{ color: textColor || theme.GRAY_700, marginBottom : isFlexCol ? 10 : 0 }}
     />
   );
   return (
@@ -71,7 +74,9 @@ export default function Button({
           borderWidth: 1,
           opacity: disabled && 0.3,
           alignItems: "center",
-          
+          flexDirection: isFlexCol ? 'column' : 'row',
+          padding: isFlexCol ? 0 : 10,
+          height: isFlexCol ? "100%" : "auto",
         }}
         disabled={disabled}
         onPress={() => {
@@ -106,11 +111,8 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: theme.PRIMARY_COLOR,
-    display: "flex",
-    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    padding: 10,
 
   },
   buttonText: {

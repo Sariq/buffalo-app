@@ -10,7 +10,7 @@ import TermsAndConditionsScreen from "../../../screens/terms-and-conditions";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const yellowBgTopScreens = ["homeScreen", "terms-and-conditions"];
-const yellowBgBottomScreens = ["homeScreen", "menuScreen"];
+const yellowBgBottomScreens = ["homeScreen", "menuScreen", "BCOINSScreen"];
 
 const AppContainer = () => {
   const navigation = useNavigation();
