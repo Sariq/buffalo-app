@@ -58,7 +58,7 @@ export default BarcodeScannerCMP;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "red",
+    backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center",
     position:"absolute",

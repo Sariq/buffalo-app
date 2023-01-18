@@ -9,7 +9,7 @@ type TProps = {
   text: any;
   icon?: any;
   iconSize?: any;
-  iconPosition?: 'right' | 'left';
+  iconPosition?: "right" | "left";
   fontSize?: any;
   bgColor?: any;
   textColor?: any;
@@ -26,7 +26,7 @@ export default function Button({
   icon,
   iconSize,
   fontSize,
-  iconPosition = 'right',
+  iconPosition = "right",
   bgColor,
   textColor,
   fontFamily,
@@ -35,32 +35,32 @@ export default function Button({
   borderRadious,
   textPadding,
   isFlexCol,
-  
 }: TProps) {
   const onBtnClick = () => {
     onClickFn();
   };
 
-
   const getBorderColor = () => {
-    
-    if(disabled){
+    if (disabled) {
       return themeStyle.GRAY_600;
     }
-   
-    if(bgColor == "white" || bgColor == themeStyle.PRIMARY_COLOR){
-      return themeStyle.PRIMARY_COLOR
+
+    if (bgColor == "white" || bgColor == themeStyle.PRIMARY_COLOR) {
+      return themeStyle.PRIMARY_COLOR;
     }
 
-    if(bgColor){
+    if (bgColor) {
       return "transparent";
     }
-  }
+  };
   const renderIcon = () => (
     <Icon
       icon={icon}
       size={iconSize ? iconSize : 20}
-      style={{ color: textColor || theme.GRAY_700, marginBottom : isFlexCol ? 10 : 0 }}
+      style={{
+        color: textColor || theme.GRAY_700,
+        marginBottom: isFlexCol ? 10 : 0,
+      }}
     />
   );
   return (
@@ -74,7 +74,7 @@ export default function Button({
           borderWidth: 1,
           opacity: disabled && 0.3,
           alignItems: "center",
-          flexDirection: isFlexCol ? 'column' : 'row',
+          flexDirection: isFlexCol ? "column" : "row",
           padding: isFlexCol ? 0 : 10,
           height: isFlexCol ? "100%" : "auto",
         }}
@@ -83,7 +83,7 @@ export default function Button({
           onBtnClick();
         }}
       >
-                {icon && iconPosition && iconPosition === 'right' && renderIcon()}
+        {icon && iconPosition && iconPosition === "right" && renderIcon()}
         <Text
           style={{
             ...styles.buttonText,
@@ -91,12 +91,13 @@ export default function Button({
             color: textColor,
             fontFamily: fontFamily,
             padding: textPadding,
+            textAlign: "center",
           }}
         >
           {text}
         </Text>
 
-        {icon && iconPosition && iconPosition === 'left' && renderIcon()}
+        {icon && iconPosition && iconPosition === "left" && renderIcon()}
         {isLoading && (
           <ActivityIndicator animating={true} color={theme.WHITE_COLOR} />
         )}
@@ -107,16 +108,13 @@ export default function Button({
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-
   },
   button: {
     backgroundColor: theme.PRIMARY_COLOR,
     alignItems: "center",
     justifyContent: "center",
-
   },
   buttonText: {
-    marginHorizontal: 20,
-
+    marginHorizontal: 15,
   },
 });

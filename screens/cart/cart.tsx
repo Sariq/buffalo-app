@@ -13,6 +13,7 @@ import {
   Animated,
   LayoutAnimation,
   DeviceEventEmitter,
+  ActivityIndicator,
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import DashedLine from "react-native-dashed-line";
@@ -127,7 +128,10 @@ const CartScreen = () => {
     false
   );
   const [barcodeSacnnedDialogText, setBarcodeSacnnedDialogText] = useState("");
-  const [recipetSupportText, setRecipetSupportText] = useState({text: "",icon: null});
+  const [recipetSupportText, setRecipetSupportText] = useState({
+    text: "",
+    icon: null,
+  });
   const [storeErrorText, setStoreErrorText] = useState("");
   const [isLoadingOrderSent, setIsLoadingOrderSent] = useState(null);
   const [isValidAddress, setIsValidAddress] = useState(false);
@@ -204,8 +208,8 @@ const CartScreen = () => {
     let location = await Location.getCurrentPositionAsync({
       accuracy:
         Platform.OS === "android"
-          ? Location.Accuracy.Low
-          : Location.Accuracy.Lowest,
+          ? Location.Accuracy.Highest
+          : Location.Accuracy.Highest,
     });
     setLocation(location);
     cartStore
@@ -552,8 +556,11 @@ const CartScreen = () => {
 
   const handleDeliverySelect = async () => {
     const isSupported = await isStoreSupport("delivery_support");
-    if (isSupported) {
-      setRecipetSupportText({text: "shipping-not-supported", icon: "shipping_icon"});
+    if (!isSupported) {
+      setRecipetSupportText({
+        text: "shipping-not-supported",
+        icon: "shipping_icon",
+      });
       setIOpenRecipetNotSupportedDialog(true);
       setShippingMethod(SHIPPING_METHODS.takAway);
       return;
@@ -570,7 +577,10 @@ const CartScreen = () => {
   const handleCreditCardSelected = async () => {
     const isSupported = await isStoreSupport("creditcard_support");
     if (!isSupported) {
-      setRecipetSupportText({text: "creditcard-not-supported", icon: "delivery-icon"});
+      setRecipetSupportText({
+        text: "creditcard-not-supported",
+        icon: "delivery-icon",
+      });
       setIOpenRecipetNotSupportedDialog(true);
       setPaymentMthod(PAYMENT_METHODS.cash);
       return;
@@ -1009,7 +1019,18 @@ const CartScreen = () => {
                     />
                   </MapView>
                 ) : (
-                  <Text>טוען מיקום...</Text>
+                  <View style={{alignItems: "center", flexDirection: "row"}}>
+                    <View>
+                      <Text>{t("loading-location")}</Text>
+                    </View>
+                    <View style={{marginLeft: 5}}>
+                      <ActivityIndicator
+                        animating={true}
+                        color={theme.GRAY_700}
+                        size={12}
+                      />
+                    </View>
+                  </View>
                 )}
               </View>
             )}
@@ -1201,7 +1222,7 @@ const CartScreen = () => {
           </View>
         </View>
       </ScrollView>
-      {shippingMethod === SHIPPING_METHODS.table && (
+      {isBarcodeOpen && (
         <BarcodeScannerCMP
           onChange={handleBarcodeAnswer}
           isOpen={isBarcodeOpen}
