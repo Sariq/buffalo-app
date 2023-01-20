@@ -84,6 +84,7 @@ const MealScreen = ({ route }) => {
   };
 
   const onUpdateCartProduct = () => {
+    console.log(meal)
     cartStore.updateCartProduct(index, meal);
     navigation.goBack();
   };
@@ -398,6 +399,7 @@ const MealScreen = ({ route }) => {
                       onChange={(e) => {
                         updateOthers(e.nativeEvent.text, "note", "others");
                       }}
+                      value={meal["others"]["note"]}
                       placeholder={t("inser-notes-here")}
                       multiline={true}
                       selectionColor="black"

@@ -162,7 +162,7 @@ const CartScreen = () => {
       ) {
         return;
       }
-      bcoinMeal.data.price = userDetailsStore.userDetails?.credit;
+      bcoinMeal.data.price = userDetailsStore.userDetails?.credit * - 1;
       cartStore.addProductToCart(bcoinMeal);
     }
   }, []);
@@ -833,6 +833,30 @@ const CartScreen = () => {
                             </View>
                           )}
                         </View>
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            paddingHorizontal: 15,
+                            paddingTop: 5,
+                            alignItems: "center"
+                          }}
+                        >
+                          <Text
+                            style={{
+                              paddingRight: 2,
+                              fontFamily: `${getCurrentLang()}-SemiBold`,
+                            }}
+                          >
+                            {t("שש")}:
+                          </Text>
+                          <Text
+                            style={{
+                              fontFamily: `${getCurrentLang()}-SemiBold`,
+                            }}
+                          >
+                            {product.others.note}
+                          </Text>
+                        </View>
 
                         <View
                           style={{
@@ -927,7 +951,6 @@ const CartScreen = () => {
                               <Text
                                 style={{ fontWeight: "bold", fontSize: 17 }}
                               >
-                                {isBcoinProduct(product) && "-"}
                                 {product.data.price}
                               </Text>
                               <Text
