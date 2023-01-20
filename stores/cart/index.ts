@@ -67,8 +67,20 @@ const prodcutExtrasAdapter = (extras) => {
     if (key !== 'orderList') {
       return (
         extras[key].map((extra) => {
-          if ((extra.type === "CHOICE" && extra.isdefault !== extra.value) || (extra.type === "COUNTER" && extra.counter_init_value !== extra.value)) {
-            productExtras.push({ id: extra.id, name: extra.name, value: extra.value });
+          if(extra.type === "CHOICE" && !extra.multiple_choice){
+            if(extra.value !== false){
+              productExtras.push({ id: extra.id, name: extra.name, value: extra.value });
+            }
+          }
+          if(extra.type === "COUNTER"){
+            if(extra.counter_init_value !== extra.value){
+              productExtras.push({ id: extra.id, name: extra.name, value: extra.value });
+            }
+          }
+          if(extra.type === "CHOICE" && extra.multiple_choice){
+            if(extra.isdefault !== extra.value){
+              productExtras.push({ id: extra.id, name: extra.name, value: extra.value });
+            }
           }
         })
       )

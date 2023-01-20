@@ -11,6 +11,13 @@ export default function BackButton() {
     navigation.goBack();
   };
 
+  const routes = navigation.getState()?.routes;
+  const currentRoute = routes[routes.length - 1]; // -2 because -1 is the current route
+  const prevRoute = routes[routes.length - 2]; // -2 because -1 is the current route
+  if (currentRoute.name === "cart" && prevRoute.name === "verify-code") {
+    return null;
+  }
+
   return (
     <View style={styles.container}>
       <TouchableOpacity

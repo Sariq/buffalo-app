@@ -492,15 +492,32 @@ const CartScreen = () => {
   };
 
   const filterMealExtras = (extras) => {
-    const filteredExtras = extras.filter(
-      (extra) =>
-        extra.value &&
-        extra.isdefault != extra.value &&
-        extra.counter_init_value != extra.value
-    );
+    const filteredExtras = extras.filter((extra) => {
+      if (extra.type === "CHOICE" && !extra.multiple_choice) {
+        if (extra.value !== false) {
+          return extra;
+        }
+        return false;
+      }
+      if (extra.type === "COUNTER") {
+        if (extra.counter_init_value !== extra.value) {
+          return extra;
+        }
+        return false;
+      }
+      if (extra.type === "CHOICE" && extra.multiple_choice) {
+        if (extra.isdefault !== extra.value) {
+          return extra;
+        }
+        return false;
+      }
+    });
     return filteredExtras;
   };
 
+  // extra.value &&
+  // extra.isdefault != extra.value &&
+  // extra.counter_init_value != extra.value
   const [rotateAnimation, setRotateAnimation] = useState(new Animated.Value(0));
   const handleAnimation = () => {
     // @ts-ignore
@@ -598,15 +615,10 @@ const CartScreen = () => {
   let extrasArray = [];
   const renderFilteredExtras = (filteredExtras, extrasLength, key) => {
     return filteredExtras.map((extra, tagIndex) => {
-      if (
-        extra.value &&
-        extra.isdefault != extra.value &&
-        extra.counter_init_value != extra.value
-      ) {
-        extrasArray.push(extra.id);
-        return (
-          <View>
-            {/* <View
+      extrasArray.push(extra.id);
+      return (
+        <View>
+          {/* <View
               style={{
                 borderWidth: 1,
                 width: 1,
@@ -617,38 +629,49 @@ const CartScreen = () => {
                 borderColor: themeStyle.PRIMARY_COLOR,
               }}
             ></View> */}
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              paddingBottom: 10,
+            }}
+          >
             <View
               style={{
-                flexDirection: "row",
-                alignItems: "center",
-                paddingBottom: 10,
+                height: 8,
+                width: 8,
+                backgroundColor: themeStyle.PRIMARY_COLOR,
+                borderRadius: 100,
+                marginRight: 5,
               }}
-            >
-              <View
-                style={{
-                  height: 8,
-                  width: 8,
-                  backgroundColor: themeStyle.PRIMARY_COLOR,
-                  borderRadius: 100,
-                  marginRight: 5,
-                }}
-              ></View>
-              <View>
+            ></View>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              {extra.value === false && (
                 <Text
                   style={{
-                    textAlign: "left",
                     fontFamily: `${getCurrentLang()}-SemiBold`,
                     fontSize: 14,
                     color: themeStyle.SUCCESS_COLOR,
+                    marginRight: 2,
                   }}
                 >
-                  {extra.name} {extra.value}
+                  {t("without")}
                 </Text>
-              </View>
+              )}
+              <Text
+                style={{
+                  textAlign: "left",
+                  fontFamily: `${getCurrentLang()}-SemiBold`,
+                  fontSize: 14,
+                  color: themeStyle.SUCCESS_COLOR,
+                }}
+              >
+                {extra.name} {extra.value}
+              </Text>
             </View>
           </View>
-        );
-      }
+        </View>
+      );
     });
   };
 
@@ -662,9 +685,6 @@ const CartScreen = () => {
             <View style={styles.backContainer}>
               <View
                 style={{
-                  borderWidth: 1,
-                  borderColor: "rgba(112,112,112,0.1)",
-                  borderRadius: 30,
                   width: 35,
                   height: 35,
                   alignItems: "center",
@@ -677,7 +697,7 @@ const CartScreen = () => {
               </View>
               <View>
                 <Text style={{ fontWeight: "bold", fontSize: 20 }}>
-                  {cartStore.getProductsCount()} وجبات
+                  {cartStore.getProductsCount()} {t("meals")}
                 </Text>
               </View>
             </View>
@@ -1020,11 +1040,11 @@ const CartScreen = () => {
                     />
                   </MapView>
                 ) : (
-                  <View style={{alignItems: "center", flexDirection: "row"}}>
+                  <View style={{ alignItems: "center", flexDirection: "row" }}>
                     <View>
                       <Text>{t("loading-location")}</Text>
                     </View>
-                    <View style={{marginLeft: 5}}>
+                    <View style={{ marginLeft: 5 }}>
                       <ActivityIndicator
                         animating={true}
                         color={theme.GRAY_700}
