@@ -51,6 +51,7 @@ const CategoryItemsList = ({ productsList }) => {
                 <Image
                   style={{ width: "100%", height: "100%" }}
                   source={{ uri: item.image_url }}
+                  resizeMode="contain"
                 />
               </View>
               <Text

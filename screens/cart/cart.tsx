@@ -765,6 +765,7 @@ const CartScreen = () => {
                                       : 0,
                                   }}
                                   source={{ uri: product.data.image_url }}
+                                  resizeMode="contain"
                                 />
                               </View>
                               <View style={{ marginLeft: 0, marginTop: 5 }}>

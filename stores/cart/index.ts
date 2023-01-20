@@ -7,6 +7,7 @@ import * as Device from 'expo-device';
 import i18n from "../../translations/index-x";
 import { axiosInstance } from "../../utils/http-interceptor";
 import { getCurrentLang } from "../../translations/i18n";
+import { Platform } from "react-native";
 var hash = require('object-hash');
 
 export type TOrderSubmitResponse = {
@@ -49,7 +50,7 @@ type TOrder = {
 type TCart = {
   order: TOrder;
   total: number;
-  app_language: '1' | '2',
+  app_language: '0' | '1',
   device_os: string,
   app_version: string,
   unique_hash?: string;
@@ -202,8 +203,8 @@ class CartStore {
     const cartData: TCart = {
       order: finalOrder,
       total: order.totalPrice,
-      app_language: getCurrentLang() === "ar" ? '1' : '2',
-      device_os: Device.osName,
+      app_language: getCurrentLang() === "ar" ? '0' : '1',
+      device_os: Platform.OS === "android" ? "Android" : "iOS",
       app_version: version,
       unique_hash: hashKey,
       datetime: new Date(),

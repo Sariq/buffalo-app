@@ -1,6 +1,6 @@
 import Header from "../header/header";
 import { MainStackNavigator } from "../../../navigation/MainStackNavigator";
-import { View } from "react-native";
+import { View, Animated, DeviceEventEmitter, Image, Dimensions } from "react-native";
 import ExpiryDate from "../../expiry-date";
 import themeStyle from "../../../styles/theme.style";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
@@ -17,7 +17,24 @@ const AppContainer = () => {
   const routeState = useNavigationState((state) => state);
   const [topBgColor, setTopBgColor] = useState(themeStyle.PRIMARY_COLOR);
   const [bottomBgColor, setBottomBgColor] = useState(themeStyle.PRIMARY_COLOR);
+  const [isSendToCart, setIsSendToCart] = useState(false);
+  const [productImgUrl, setProductMealUrl] = useState("");
 
+  useEffect(() => {
+    const animateAddToCart = DeviceEventEmitter.addListener(
+      `add-to-cart-animate`,
+      addToCartAnimate
+    );
+    return () => {
+      animateAddToCart.remove();
+    };
+  }, []);
+
+  const addToCartAnimate = (data) => {
+    setProductMealUrl(data.imgUrl);
+    setIsSendToCart(false);
+    handleAnimation();
+  };
 
   const setTopColor = () => {
     if (
@@ -31,8 +48,8 @@ const AppContainer = () => {
   };
   const setBottomColor = () => {
     if (
-      (navigation?.getCurrentRoute()?.name === undefined ||
-        yellowBgBottomScreens.indexOf(navigation?.getCurrentRoute()?.name) > -1)
+      navigation?.getCurrentRoute()?.name === undefined ||
+      yellowBgBottomScreens.indexOf(navigation?.getCurrentRoute()?.name) > -1
     ) {
       setBottomBgColor(themeStyle.PRIMARY_COLOR);
     } else {
@@ -45,7 +62,35 @@ const AppContainer = () => {
     setBottomColor();
   }, [routeState]);
 
+  const [rotateAnimation, setRotateAnimation] = useState(new Animated.Value(0));
+  const handleAnimation = () => {
+    // @ts-ignore
+    setIsSendToCart(true);
 
+    Animated.timing(rotateAnimation, {
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: false,
+    }).start(() => {
+      rotateAnimation.setValue(0);
+      setIsSendToCart(false);
+    });
+  };
+  const interpolateRotatingY = rotateAnimation.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, -Dimensions.get("window").height +140],
+  });
+  const interpolateRotatingX = rotateAnimation.interpolate({
+    inputRange: [0, 1],
+    outputRange: [-150, -10],
+  });
+
+  const animatedStyle = {
+    transform: [
+      { translateX: interpolateRotatingX },
+      { translateY: interpolateRotatingY },
+    ],
+  };
 
   return (
     <SafeAreaProvider>
@@ -69,7 +114,28 @@ const AppContainer = () => {
       >
         <View style={{ flex: 1 }}>
           <Header />
-          <MainStackNavigator/>
+          <MainStackNavigator />
+          {isSendToCart && (
+            <Animated.View style={[isSendToCart && animatedStyle]}>
+              <View
+                style={{
+                  zIndex: 999,
+                  position: 'absolute',
+                  bottom: 0,
+                  width: 50, height: 50,
+                  // borderWidth:5,
+                  // borderRadius: 50,
+                  // borderColor: themeStyle.PRIMARY_COLOR
+                }}
+              >
+                <Image
+                  style={{ width: "100%", height: "100%", }}
+                  resizeMode="contain"
+                  source={{ uri: productImgUrl }}
+                />
+              </View>
+            </Animated.View>
+          )}
         </View>
       </SafeAreaView>
     </SafeAreaProvider>

@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
+  DeviceEventEmitter,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { observer } from "mobx-react";
@@ -77,6 +78,7 @@ const MealScreen = ({ route }) => {
   }, []);
 
   const onAddToCart = () => {
+    DeviceEventEmitter.emit(`add-to-cart-animate`, {imgUrl : meal.data.image_url});
     cartStore.addProductToCart(meal);
     navigation.goBack();
   };
@@ -226,10 +228,11 @@ const MealScreen = ({ route }) => {
                   X
                 </Text>
               </TouchableOpacity>
-              <View style={{ width: 310, height: 230, padding: 20 }}>
+              <View style={{ width: 310, height: 230, padding: 10 }}>
                 <Image
                   style={{ width: "100%", height: "100%" }}
                   source={{ uri: meal.data.image_url }}
+                  resizeMode="contain"
                 />
               </View>
             </View>
@@ -299,7 +302,7 @@ const MealScreen = ({ route }) => {
                               style={{
                                 fontSize: 20,
                                 textAlign: "center",
-                                marginBottom: 0,
+                                marginBottom: 8,
                               }}
                             >
                               {t(keyOrdered)}
@@ -312,6 +315,8 @@ const MealScreen = ({ route }) => {
                                     ...isOneChoiceTagStyle(
                                       meal.extras[keyOrdered]
                                     ),
+                                    maxWidth: "80%",
+                                    alignSelf: "center"
                                   }
                                 : {},
                             ]}

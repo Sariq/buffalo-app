@@ -3,6 +3,7 @@ import theme from "../../../styles/theme.style";
 import Icon from "../../icon";
 import themeStyle from "../../../styles/theme.style";
 import { ActivityIndicator } from "react-native-paper";
+import * as Haptics from 'expo-haptics';
 
 type TProps = {
   onClickFn: any;
@@ -37,6 +38,9 @@ export default function Button({
   isFlexCol,
 }: TProps) {
   const onBtnClick = () => {
+    Haptics.notificationAsync(
+      Haptics.NotificationFeedbackType.Success
+    )
     onClickFn();
   };
 
