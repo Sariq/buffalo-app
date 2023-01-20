@@ -14,7 +14,7 @@ import { ORDER_API } from "../../../consts/api";
 //2 -ready | if comple
 const inProgressStatuses = ["SENT"];
 const readyStatuses = ["COMPLETED", "READY"];
-const canceledStatuses = ["CANCELLED","REJECTED"];
+const canceledStatuses = ["CANCELLED", "REJECTED"];
 
 const OrdersStatusScreen = ({ route }) => {
   const { t } = useTranslation();
@@ -37,6 +37,9 @@ const OrdersStatusScreen = ({ route }) => {
 
   useEffect(() => {
     getOrders();
+    setTimeout(() => {
+      getOrders();
+    }, 15 * 1000);
     const interval = setInterval(() => {
       getOrders();
     }, 60 * 1000);
@@ -76,7 +79,9 @@ const OrdersStatusScreen = ({ route }) => {
             <Text style={styles.dateRawText}>{t("order-number")}:</Text>
           </View>
           <View>
-            <Text style={styles.dateRawText}>{order.id}-{order.local_id} </Text>
+            <Text style={styles.dateRawText}>
+              {order.id}-{order.local_id}{" "}
+            </Text>
           </View>
         </View>
         <View style={{}}>
@@ -122,7 +127,12 @@ const OrdersStatusScreen = ({ route }) => {
 
   const renderOrderItemsExtras = (extras) => {
     return extras.map((extra) => {
-      return <Text>+ {extra.name}</Text>;
+      return (
+        <View style={{ flexDirection: "row" }}>
+          <Text style={{ marginRight: 2 }}>+</Text>
+          <Text>{extra.name}</Text>
+        </View>
+      );
     });
   };
 
@@ -281,7 +291,10 @@ const OrdersStatusScreen = ({ route }) => {
                   color: themeStyle.GRAY_700,
                 }}
               >
-              {getTextStatusByShippingMethod(oOrder.receipt_method, order.status.replace(/ /g, ""))}
+                {getTextStatusByShippingMethod(
+                  oOrder.receipt_method,
+                  order.status.replace(/ /g, "")
+                )}
               </Text>
             </View>
             <View style={{ marginTop: 10 }}>
@@ -297,9 +310,17 @@ const OrdersStatusScreen = ({ route }) => {
   };
 
   if (ordersList.length < 1) {
-    return (<View style={{alignItems:"center",justifyContent:"center", height: "100%"}}>
-      <Text style={{fontSize:20}}>{t('empty-orders')}</Text>
-    </View>);
+    return (
+      <View
+        style={{
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100%",
+        }}
+      >
+        <Text style={{ fontSize: 20 }}>{t("empty-orders")}</Text>
+      </View>
+    );
   }
   return (
     <ScrollView style={styles.container}>

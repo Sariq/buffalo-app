@@ -18,8 +18,8 @@ const OrderSubmittedScreen = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      <View style={{ alignItems: "center" }}>
-        <View style={{ alignItems: "center", paddingHorizontal: 40 }}>
+      <View style={{ alignItems: "center", width: "100%" }}>
+        <View style={{ alignItems: "center", paddingHorizontal: 0 , width: "100%"}}>
           <Text
             style={{
               ...styles.textLang,
@@ -28,20 +28,23 @@ const OrderSubmittedScreen = ({ route }) => {
           >
             {t("order-succefully-sent")}
           </Text>
-          <View style={{ alignItems: "center", height: 300 }}>
+          <View style={{ alignItems: "center", height: 275, width: "100%", marginBottom: 20 }}>
             {shippingMethod === SHIPPING_METHODS.shipping && (
               <Image
                 source={require("../../../assets/order/order-delivery.png")}
+                style={{width: "100%",height: "100%",marginTop:10}}
               />
             )}
             {shippingMethod === SHIPPING_METHODS.takAway && (
               <Image
                 source={require("../../../assets/order/order-take-away.png")}
+                style={{width: "100%",height: "100%",marginTop:20}}
               />
             )}
             {shippingMethod === SHIPPING_METHODS.table && (
               <Image
                 source={require("../../../assets/order/order-table.png")}
+                style={{width: "100%",height: "100%",marginTop:10}}
               />
             )}
           </View>
