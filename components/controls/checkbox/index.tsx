@@ -3,10 +3,12 @@ import { useState, useEffect } from "react";
 import themeStyle from "../../../styles/theme.style";
 import Icon from "../../icon";
 import Button from "../button/button";
+import * as Haptics from "expo-haptics";
 
 export default function CheckBox({ onChange, value, title = undefined, variant = 'default', isOneChoice=false }) {
   const [isSelected, setIsSelected] = useState(value);
   const onBtnClick = () => {
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     if(isOneChoice && value){
       return;
     }

@@ -9,6 +9,7 @@ export const AUTH_API = {
 export const MENU_API = {
     CONTROLLER: "config",
     GET_MENU_API : "GetRestaurantMenu",
+    GET_SLIDER_API : "getAppSliderGallery",
 };
 export const ORDER_API = {
     CONTROLLER: "order",

@@ -3,11 +3,13 @@ import { useNavigation } from "@react-navigation/native";
 
 import theme from "../../styles/theme.style";
 import Icon from "../icon";
+import * as Haptics from "expo-haptics";
 
 export default function BackButton() {
   const navigation = useNavigation();
 
   const onBtnClick = () => {
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     navigation.goBack();
   };
 

@@ -20,6 +20,7 @@ const OrdersStatusScreen = ({ route }) => {
   const { t } = useTranslation();
   const { menuStore } = useContext(StoreContext);
   const [ordersList, setOrdersList] = useState([]);
+  const [isLoading, setIsloading] = useState(false);
 
   const getOrders = () => {
     const body = { datetime: new Date() };
@@ -32,10 +33,12 @@ const OrdersStatusScreen = ({ route }) => {
         const res = JSON.parse(fromBase64(response.data));
         const orderdList = orderBy(res.orders, ["created_at"], ["desc"]);
         setOrdersList(orderdList);
+        setIsloading(false);
       });
   };
 
   useEffect(() => {
+    setIsloading(true);
     getOrders();
     setTimeout(() => {
       getOrders();
@@ -308,6 +311,20 @@ const OrdersStatusScreen = ({ route }) => {
       </View>
     );
   };
+
+  if(isLoading){
+    return (
+      <View
+        style={{
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100%",
+        }}
+      >
+        <Text style={{ fontSize: 20 }}>{t("loading-orders")}</Text>
+      </View>
+    );
+  }
 
   if (ordersList.length < 1) {
     return (

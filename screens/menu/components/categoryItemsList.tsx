@@ -9,6 +9,7 @@ import { ScrollView } from "react-native-gesture-handler";
 
 import themeStyle from "../../../styles/theme.style";
 import { getCurrentLang } from "../../../translations/i18n";
+import * as Haptics from "expo-haptics";
 
 // const productsList = CONSTS_PRODUCTS;
 
@@ -20,6 +21,7 @@ const CategoryItemsList = ({ productsList }) => {
 
   const [selectedItem, setSelectedItem] = useState();
   const onItemSelect = (item) => {
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     setSelectedItem(item);
     navigation.navigate("meal", { product: item });
   };

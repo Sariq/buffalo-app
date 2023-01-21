@@ -20,6 +20,7 @@ import { Buffer } from "buffer";
 import i18n from "../../translations/index-x";
 import { getCurrentLang } from "../../translations/i18n";
 import { useTranslation } from "react-i18next";
+import * as Haptics from "expo-haptics";
 
 export function toBase64(input) {
   return Buffer.from(input, "utf-8").toString("base64");
@@ -55,6 +56,7 @@ const MenuScreen = () => {
   const [selectedCategoryKey, setSelectedCategoryKey] = useState("BURGERS");
 
   const onCategorySelect = (category, key) => {
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     setSelectedCategory(category);
     setSelectedCategoryKey(key);
   };

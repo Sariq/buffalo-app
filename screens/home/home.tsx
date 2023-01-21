@@ -1,21 +1,21 @@
-import {
-  Text,
-  View,
-  TouchableOpacity,
-  StyleSheet,
-  ImageBackground,
-} from "react-native";
+import { View, StyleSheet, ImageBackground, Dimensions } from "react-native";
 import { observer } from "mobx-react";
 import { useTranslation } from "react-i18next";
 import Button from "../../components/controls/button/button";
+import Carousel from "react-native-reanimated-carousel";
 
 /* styles */
-import theme from "../../styles/theme.style";
-import Icon from "../../components/icon";
-import { getCurrentLang } from "../../translations/i18n";
-import { useEffect, useState, useContext } from "react";
+
+import { useEffect, useState, useContext, useRef } from "react";
 import { StoreContext } from "../../stores";
 import themeStyle from "../../styles/theme.style";
+import { axiosInstance } from "../../utils/http-interceptor";
+
+const slides = [
+  "https://img.freepik.com/free-vector/mobile-wallpaper-with-fluid-shapes_79603-599.jpg",
+  "https://img.freepik.com/free-photo/multicolored-psychedelic-paper-shapes_23-2149378302.jpg",
+];
+const defaultImage = require("../../assets/burj.png");
 const HomeScreen = ({ navigation }) => {
   const { t } = useTranslation();
   const [isAppReady, setIsAppReady] = useState(false);
@@ -30,9 +30,23 @@ const HomeScreen = ({ navigation }) => {
     }
     setIsAppReady(true);
   };
+
   useEffect(() => {
     displayTemrsAndConditions();
   }, []);
+
+  const getMenuFromServer = () => {
+    // const body = {};
+    // return axiosInstance
+    //   .post(
+    //     `${C.CONTROLLER}/${MENU_API.GET_MENU_API}`,
+    //     body,
+    //   )
+    //   .then(function (response) {
+    //     const res = JSON.parse(fromBase64(response.data));
+    //     return res;
+    //   });
+  }
 
   const goToNewOrder = () => {
     navigation.navigate("menuScreen");
@@ -41,43 +55,37 @@ const HomeScreen = ({ navigation }) => {
   if (!isAppReady) {
     return;
   }
-
   return (
     <View style={{ height: "100%" }}>
-      <ImageBackground
-        source={require("../../assets/burj.png")}
-        resizeMode="stretch"
-        style={styles.image}
-      >
-        <View style={[styles.button, styles.bottomView]}>
-          <View style={{ width: "90%" }}>
-            <Button
-              bgColor={themeStyle.PRIMARY_COLOR}
-              text={t("new-order")}
-              onClickFn={goToNewOrder}
-              fontSize={40}
-              icon={'new_order_icon'}
-              borderRadious={0}
-              iconSize={30}
-            />
-          </View>
+      <Carousel
+        loop
+        width={Dimensions.get("window").width}
+        height={Dimensions.get("window").height}
+        autoPlay={true}
+        data={slides}
+        scrollAnimationDuration={1500}
+        autoPlayInterval={3000}
+        renderItem={({ index }) => (
+          <ImageBackground
+            source={{ uri: slides[index] }}
+            resizeMode="stretch"
+            style={styles.image}
+          />
+        )}
+      />
+      <View style={[styles.button, styles.bottomView]}>
+        <View style={{ width: "90%" }}>
+          <Button
+            bgColor={themeStyle.PRIMARY_COLOR}
+            text={t("new-order")}
+            onClickFn={goToNewOrder}
+            fontSize={40}
+            icon={"new_order_icon"}
+            borderRadious={0}
+            iconSize={30}
+          />
         </View>
-        {/* <View style={styles.container}>
-          <TouchableOpacity
-            onPress={goToNewOrder}
-            style={[styles.button, styles.bottomView]}
-          >
-            <Icon
-              icon="new_order_icon"
-              size={20}
-              style={{ color: theme.GRAY_700 }}
-            />
-            <Text style={{ ...styles.buttonText, fontFamily: `${getCurrentLang()}-SemiBold`, fontSize: 40 }}>
-            {t('new-order')}
-            </Text>
-          </TouchableOpacity>
-        </View> */}
-      </ImageBackground>
+      </View>
     </View>
   );
 };
@@ -111,7 +119,6 @@ const styles = StyleSheet.create({
     // paddingRight: 15,
     // paddingTop: 5
     marginHorizontal: 40 / 2,
-    
   },
   image: {
     height: "100%",

@@ -22,7 +22,7 @@ import Icon from "../../components/icon";
 import { getCurrentLang } from "../../translations/i18n";
 import { useTranslation } from "react-i18next";
 import { LinearGradient } from "expo-linear-gradient";
-import { orderBy } from "lodash";
+import * as Haptics from "expo-haptics";
 
 const extrasIcons = {
   משקל: require("../../assets/menu/gradiant/burgerSlice.png"),
@@ -84,12 +84,12 @@ const MealScreen = ({ route }) => {
   };
 
   const onUpdateCartProduct = () => {
-    console.log(meal)
     cartStore.updateCartProduct(index, meal);
     navigation.goBack();
   };
 
   const onClose = () => {
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     navigation.goBack();
   };
 

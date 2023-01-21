@@ -1,10 +1,12 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { useState, useEffect } from "react";
 import themeStyle from "../../../styles/theme.style";
+import * as Haptics from "expo-haptics";
 
 export default function Counter({ onCounterChange, value, stepValue = 1, minValue = 0, isVertical = false }) {
   const [couter, setCounter] = useState(value || 0);
   const onBtnClick = (value) => {
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     if ((couter === 0 && value === -1) || (couter + value < minValue )) {
       return;
     }

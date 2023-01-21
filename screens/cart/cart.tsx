@@ -14,6 +14,7 @@ import {
   LayoutAnimation,
   DeviceEventEmitter,
   ActivityIndicator,
+  ImageBackground,
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import DashedLine from "react-native-dashed-line";
@@ -162,7 +163,7 @@ const CartScreen = () => {
       ) {
         return;
       }
-      bcoinMeal.data.price = userDetailsStore.userDetails?.credit * - 1;
+      bcoinMeal.data.price = userDetailsStore.userDetails?.credit * -1;
       cartStore.addProductToCart(bcoinMeal);
     }
   }, []);
@@ -719,40 +720,119 @@ const CartScreen = () => {
                           marginTop: 25,
                           borderColor: "#707070",
                           borderRadius: 20,
-                          padding: 10,
-                          backgroundColor: isBcoinProduct(product)
-                            ? themeStyle.PRIMARY_COLOR
-                            : themeStyle.WHITE_COLOR,
+                          padding: isBcoinProduct(product) ? 0 : 10,
+                          backgroundColor: themeStyle.WHITE_COLOR,
                         }}
                         key={getProductIndexId(product, index)}
                       >
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                          }}
-                        >
-                          <View
-                            style={{
-                              justifyContent: "center",
-                            }}
-                          >
-                            <Text
+                        {isBcoinProduct(product) && (
+                          <ImageBackground
+                            source={require("../../assets/bcoin/bcoin-bg.png")}
+                            resizeMode="stretch"
+                            style={styles.image}
+                          />
+                        )}
+                        {isBcoinProduct(product) && (
+                          <View style={{ height: 50, alignItems: "flex-end" }}>
+                            <View
                               style={{
-                                textAlign: "left",
-                                fontFamily: `${getCurrentLang()}-SemiBold`,
-                                fontSize: 20,
-                                marginLeft: isBcoinProduct(product) ? 10 : 0,
+                                marginRight: 30,
+                                marginTop: 15,
+                                alignItems: "center",
+                                maxWidth: "48%",
                               }}
                             >
-                              {
-                                product.data[
-                                  `name_${languageStore.selectedLang}`
-                                ]
-                              }
-                            </Text>
+                              <Text
+                                style={{
+                                  fontSize: 17,
+                                  fontFamily: `${getCurrentLang()}-SemiBold`,
+                                  fontWeight: "bold",
+                                }}
+                              >
+                                {t('you-have-bcoin')} {product.data.price * -1}
+                              </Text>
+                              <Text
+                                style={{
+                                  fontSize: 17,
+                                  fontFamily: `${getCurrentLang()}-SemiBold`,
+                                  fontWeight: "bold",
+                                }}
+                              >
+                                {t('you-have-discount')}
+                              </Text>
+                              <View
+                                style={{
+                                  marginTop: 0,
+                                  flexDirection: "row",
+                                  alignItems: "flex-end",
+                                }}
+                              >
+                                <Text
+                                  style={{
+                                    fontWeight: "bold",
+                                    fontSize: 20,
+                                    paddingBottom: 5,
+                                  }}
+                                >
+                                  ₪
+                                </Text>
+                                <Text
+                                  style={{ fontWeight: "bold", fontSize: 40 }}
+                                >
+                                  {product.data.price}
+                                </Text>
+                              </View>
+                              <Text
+                                style={{
+                                  fontSize: 13,
+                                  fontFamily: `${getCurrentLang()}-Light`,
+                                  textAlign:"center"
+                                }}
+                              >
+                                {t('you-get-discount')} ₪{product.data.price * -1}
+                              </Text>
+                              <Text
+                                style={{
+                                  fontSize: 13,
+                                  fontFamily: `${getCurrentLang()}-Light`,
+                                  fontWeight: "bold",
+                                  textAlign:"center"
+                                }}
+                              >
+                                {t('from-total-price')}
+                              </Text>
+                            </View>
                           </View>
-                        </View>
+                        )}
+                        {!isBcoinProduct(product) && (
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              alignItems: "center",
+                            }}
+                          >
+                            <View
+                              style={{
+                                justifyContent: "center",
+                              }}
+                            >
+                              <Text
+                                style={{
+                                  textAlign: "left",
+                                  fontFamily: `${getCurrentLang()}-SemiBold`,
+                                  fontSize: 20,
+                                  marginLeft: isBcoinProduct(product) ? 10 : 0,
+                                }}
+                              >
+                                {
+                                  product.data[
+                                    `name_${languageStore.selectedLang}`
+                                  ]
+                                }
+                              </Text>
+                            </View>
+                          </View>
+                        )}
                         <View
                           style={{
                             flexDirection: "row",
@@ -774,19 +854,17 @@ const CartScreen = () => {
                                   padding: 0,
                                 }}
                               >
-                                <Image
-                                  style={{
-                                    width: isBcoinProduct(product)
-                                      ? "61%"
-                                      : "90%",
-                                    height: "100%",
-                                    marginLeft: isBcoinProduct(product)
-                                      ? 15
-                                      : 0,
-                                  }}
-                                  source={{ uri: product.data.image_url }}
-                                  resizeMode="contain"
-                                />
+                                {!isBcoinProduct(product) && (
+                                  <Image
+                                    style={{
+                                      width: "90%",
+                                      height: "100%",
+                                      marginLeft: 0,
+                                    }}
+                                    source={{ uri: product.data.image_url }}
+                                    resizeMode="contain"
+                                  />
+                                )}
                               </View>
                               <View style={{ marginLeft: 0, marginTop: 5 }}>
                                 {/* <View style={{borderWidth:1, position: "absolute", top: 7, left:3, borderColor: themeStyle.PRIMARY_COLOR}}></View> */}
@@ -833,58 +911,60 @@ const CartScreen = () => {
                             </View>
                           )}
                         </View>
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            paddingHorizontal: 15,
-                            paddingTop: 5,
-                            alignItems: "center"
-                          }}
-                        >
-                          <Text
-                            style={{
-                              paddingRight: 2,
-                              fontFamily: `${getCurrentLang()}-SemiBold`,
-                            }}
-                          >
-                            {t("שש")}:
-                          </Text>
-                          <Text
-                            style={{
-                              fontFamily: `${getCurrentLang()}-SemiBold`,
-                            }}
-                          >
-                            {product.others.note}
-                          </Text>
-                        </View>
-
-                        <View
-                          style={{
-                            paddingHorizontal: 15,
-                            marginTop: 10,
-                          }}
-                        >
-                          <DashedLine
-                            dashLength={5}
-                            dashThickness={1}
-                            dashGap={5}
-                            dashColor={themeStyle.GRAY_300}
-                          />
+                        {!isBcoinProduct(product) && product.others.note && (
                           <View
                             style={{
                               flexDirection: "row",
-                              justifyContent: "space-between",
+                              paddingHorizontal: 15,
+                              paddingTop: 5,
+                              alignItems: "center",
+                            }}
+                          >
+                            <Text
+                              style={{
+                                paddingRight: 2,
+                                fontFamily: `${getCurrentLang()}-SemiBold`,
+                              }}
+                            >
+                              {t("note")}:
+                            </Text>
+                            <Text
+                              style={{
+                                fontFamily: `${getCurrentLang()}-SemiBold`,
+                              }}
+                            >
+                              {product.others.note}
+                            </Text>
+                          </View>
+                        )}
+
+                        {!isBcoinProduct(product) && (
+                          <View
+                            style={{
+                              paddingHorizontal: 15,
                               marginTop: 10,
                             }}
                           >
-                            <View style={{ flexDirection: "row" }}>
-                              <View
-                                style={{
-                                  flexDirection: "row",
-                                  marginRight: 15,
-                                }}
-                              >
-                                {!isBcoinProduct(product) && (
+                            <DashedLine
+                              dashLength={5}
+                              dashThickness={1}
+                              dashGap={5}
+                              dashColor={themeStyle.GRAY_300}
+                            />
+                            <View
+                              style={{
+                                flexDirection: "row",
+                                justifyContent: "space-between",
+                                marginTop: 10,
+                              }}
+                            >
+                              <View style={{ flexDirection: "row" }}>
+                                <View
+                                  style={{
+                                    flexDirection: "row",
+                                    marginRight: 15,
+                                  }}
+                                >
                                   <TouchableOpacity
                                     style={{
                                       flexDirection: "row",
@@ -911,56 +991,56 @@ const CartScreen = () => {
                                       />
                                     </View>
                                   </TouchableOpacity>
-                                )}
-                              </View>
-                              <View style={{ flexDirection: "row" }}>
-                                <TouchableOpacity
-                                  style={{
-                                    flexDirection: "row",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    padding: 5,
-                                  }}
-                                  onPress={() => {
-                                    onRemoveProduct(product, index);
-                                  }}
-                                >
-                                  <Text
+                                </View>
+                                <View style={{ flexDirection: "row" }}>
+                                  <TouchableOpacity
                                     style={{
-                                      fontSize: 20,
-                                      fontFamily: `${getCurrentLang()}-SemiBold`,
-                                      height: "100%",
+                                      flexDirection: "row",
+                                      alignItems: "center",
+                                      justifyContent: "center",
+                                      padding: 5,
+                                    }}
+                                    onPress={() => {
+                                      onRemoveProduct(product, index);
                                     }}
                                   >
-                                    {t("delete")}
-                                  </Text>
+                                    <Text
+                                      style={{
+                                        fontSize: 20,
+                                        fontFamily: `${getCurrentLang()}-SemiBold`,
+                                        height: "100%",
+                                      }}
+                                    >
+                                      {t("delete")}
+                                    </Text>
 
-                                  <View style={{ top: -1 }}>
-                                    <Icon icon="delete" size={20} />
-                                  </View>
-                                </TouchableOpacity>
+                                    <View style={{ top: -1 }}>
+                                      <Icon icon="delete" size={20} />
+                                    </View>
+                                  </TouchableOpacity>
+                                </View>
+                              </View>
+                              <View
+                                style={{
+                                  marginTop: 0,
+                                  flexDirection: "row",
+                                  alignItems: "center",
+                                }}
+                              >
+                                <Text
+                                  style={{ fontWeight: "bold", fontSize: 17 }}
+                                >
+                                  {product.data.price}
+                                </Text>
+                                <Text
+                                  style={{ fontWeight: "bold", fontSize: 17 }}
+                                >
+                                  ₪
+                                </Text>
                               </View>
                             </View>
-                            <View
-                              style={{
-                                marginTop: 0,
-                                flexDirection: "row",
-                                alignItems: "center",
-                              }}
-                            >
-                              <Text
-                                style={{ fontWeight: "bold", fontSize: 17 }}
-                              >
-                                {product.data.price}
-                              </Text>
-                              <Text
-                                style={{ fontWeight: "bold", fontSize: 17 }}
-                              >
-                                ₪
-                              </Text>
-                            </View>
                           </View>
-                        </View>
+                        )}
                       </View>
                     </Animated.View>
                   )
@@ -1393,5 +1473,10 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     bottom: 0,
+  },
+  image: {
+    height: "100%",
+    width: "100%",
+    position: "absolute",
   },
 });
