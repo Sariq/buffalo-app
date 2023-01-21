@@ -32,10 +32,10 @@ export function fromBase64(encoded) {
 
 const categoryListIcons = {
   BURGERS: "burger_icon",
-  CHICKEN: "checken",
+  CHICKEN: "chicken",
   SIDES: "box-icon",
   DRINK: "drinks_icon",
-  SALADS: "salad-icon",
+  SALADS: "salad",
 };
 const categoryListOrder = {
   1: "BURGERS",
@@ -115,10 +115,8 @@ const MenuScreen = () => {
                     icon={categoryListIcons[categoryListOrder[key]]}
                     size={38}
                     style={{
-                      color:
-                        categoryListOrder[key] === selectedCategoryKey
-                          ? themeStyle.GRAY_700
-                          : themeStyle.GRAY_300,
+                      color: themeStyle.GRAY_700
+                        
                     }}
                   />
                 </View>
@@ -126,10 +124,8 @@ const MenuScreen = () => {
                   style={[
                     {
                       marginTop: 10,
-                      color:
-                        categoryListOrder[key] === selectedCategoryKey
-                          ? themeStyle.GRAY_700
-                          : themeStyle.GRAY_300,
+                      color: themeStyle.GRAY_700,
+                        
                       fontFamily: `${getCurrentLang()}-SemiBold`,
                     },
                   ]}

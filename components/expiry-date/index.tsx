@@ -3,8 +3,10 @@ import { useState, useCallback, useEffect } from "react";
 import theme from "../../styles/theme.style";
 import MonthPicker from "react-native-month-year-picker";
 import moment from "moment";
+import { useTranslation } from "react-i18next";
 
 const ExpiryDate = () => {
+  const { t } = useTranslation();
   const [date, setDate] = useState(new Date());
   const [show, setShow] = useState(false);
 
@@ -42,7 +44,7 @@ const ExpiryDate = () => {
     },
     [date, showPicker]
   );
-
+    const currentYear = new Date().getFullYear();
   if (show) {
     return (
       <MonthPicker
@@ -50,8 +52,9 @@ const ExpiryDate = () => {
         value={date}
         mode="number"
         minimumDate={new Date()}
-        maximumDate={new Date(2030, 11)}
-        okButton="אוקיי"
+        maximumDate={new Date(currentYear + 10, 11)}
+        okButton={t('approve')}
+        cancelButton={t('cancel')}
         autoTheme
       />
     );

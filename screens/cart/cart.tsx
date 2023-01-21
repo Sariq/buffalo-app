@@ -698,7 +698,7 @@ const CartScreen = () => {
               </View>
               <View>
                 <Text style={{ fontWeight: "bold", fontSize: 20 }}>
-                  {cartStore.getProductsCount()} {t("meals")}
+                {t("meals")} {cartStore.getProductsCount()}
                 </Text>
               </View>
             </View>
@@ -924,6 +924,7 @@ const CartScreen = () => {
                               style={{
                                 paddingRight: 2,
                                 fontFamily: `${getCurrentLang()}-SemiBold`,
+                                color: themeStyle.SUCCESS_COLOR
                               }}
                             >
                               {t("note")}:

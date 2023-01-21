@@ -253,7 +253,7 @@ const OrdersStatusScreen = ({ route }) => {
   const renderStatus = (order) => {
     const oOrder = JSON.parse(fromBase64(order.order));
     return (
-      <View style={{ marginTop: 20 }}>
+      <View style={{ marginTop: 40 }}>
         <View style={{ alignItems: "center", marginBottom: 30 }}>
           <Text
             style={{
@@ -347,8 +347,9 @@ const OrdersStatusScreen = ({ route }) => {
             {renderOrderDateRaw(order)}
             {renderOrderItems(order)}
             {renderOrderTotalRaw(order)}
+            {renderStatus(order)}
+
           </View>
-          {renderStatus(order)}
         </View>
       ))}
     </ScrollView>

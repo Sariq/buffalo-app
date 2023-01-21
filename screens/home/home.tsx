@@ -81,8 +81,9 @@ const HomeScreen = ({ navigation }) => {
             onClickFn={goToNewOrder}
             fontSize={40}
             icon={"new_order_icon"}
-            borderRadious={0}
+            borderRadious={50}
             iconSize={30}
+            textPadding={0}
           />
         </View>
       </View>

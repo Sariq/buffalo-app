@@ -46,6 +46,8 @@ const extrasIcons = {
   "תוספת קריספי": require("../../assets/menu/gradiant/crispy-chicken.png"),
   מוצרלה: require("../../assets/menu/gradiant/mozerla.png"),
   "צ'ילי מתוק": require("../../assets/menu/gradiant/sweet-chilli.png"),
+  "רוטב בופלו": require("../../assets/menu/gradiant/buffalo-souce.png"),
+  "גבינת גאודה": require("../../assets/menu/gradiant/gaouda.png"),
   //"צ'ילי מתוק": require("../../assets/menu/gradiant/barbicu.png"),
   //"מוצרלה": require("../../assets/menu/gradiant/barbicu.png"),
   //"תוספת קריספי": require("../../assets/menu/gradiant/barbicu.png"),
@@ -94,6 +96,9 @@ const MealScreen = ({ route }) => {
   };
 
   const updateMeal = (value, tag, type) => {
+    console.log("value", value);
+    console.log("tag", tag);
+    console.log("type", type);
     let extraPrice = 0;
     const currentExtraType = JSON.parse(JSON.stringify(meal.extras[type]));
     const extrasType = meal.extras[type].map((tagItem) => {
@@ -131,6 +136,8 @@ const MealScreen = ({ route }) => {
       }
       return tagItem;
     });
+    console.log("extraPrice", extraPrice);
+    if(extraPrice !== 0 ){
 
     meal.extras[type] = extrasType;
     setMeal({
@@ -138,6 +145,7 @@ const MealScreen = ({ route }) => {
       data: { ...meal.data, price: meal.data.price + extraPrice },
       extras: meal.extras,
     });
+  }
   };
 
   const updateOthers = (value, key, type) => {

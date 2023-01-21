@@ -5,6 +5,7 @@ import {
   Keyboard,
   DeviceEventEmitter,
   KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import InputText from "../controls/input";
 import { useState, useEffect, useRef } from "react";
@@ -143,7 +144,9 @@ const CreditCard = ({ onSaveCard }) => {
             label={t("expiry-date")}
             onChange={() => {}}
             value={creditCardExpDate}
-            isEditable={false}
+            isEditable={Platform.OS === "android"
+            ? true
+            : false}
             onClick={() => {
               Keyboard.dismiss();
               showPicker();
