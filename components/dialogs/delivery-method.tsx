@@ -13,7 +13,7 @@ import Icon from "../../components/icon";
 import { useState, useEffect } from "react";
 import Button from "../../components/controls/button/button";
 import themeStyle from "../../styles/theme.style";
-import { SHIPPING_METHODS } from "../../screens/cart/cart"
+import { SHIPPING_METHODS } from "../../screens/cart/cart";
 import { useTranslation } from "react-i18next";
 
 type TProps = {
@@ -22,7 +22,11 @@ type TProps = {
   handleAnswer?: any;
 };
 
-export default function DeliveryMethodDialog({ isOpen, handleAnswer, type }: TProps) {
+export default function DeliveryMethodDialog({
+  isOpen,
+  handleAnswer,
+  type,
+}: TProps) {
   const { t } = useTranslation();
 
   const [visible, setVisible] = useState(isOpen);
@@ -53,6 +57,13 @@ export default function DeliveryMethodDialog({ isOpen, handleAnswer, type }: TPr
           visible={visible}
           dismissable={false}
         >
+          <Dialog.Title>
+            <Icon
+              icon="exclamation-mark"
+              size={50}
+              style={{ color: theme.GRAY_700 }}
+            />
+          </Dialog.Title>
           <Dialog.Content>
             <Paragraph
               style={{
@@ -61,31 +72,33 @@ export default function DeliveryMethodDialog({ isOpen, handleAnswer, type }: TPr
                 fontWeight: "bold",
               }}
             >
-              {type === SHIPPING_METHODS.shipping && t('approve-delivery-method')}
-              {type === SHIPPING_METHODS.takAway && t('approve-takeaway-method')}
+              {type === SHIPPING_METHODS.shipping &&
+                t("approve-delivery-method")}
+              {type === SHIPPING_METHODS.takAway &&
+                t("approve-takeaway-method")}
             </Paragraph>
           </Dialog.Content>
           <Dialog.Actions>
             <View
               style={{
                 flexDirection: "row",
-                width: "100%",
+                width: "95%",
                 justifyContent: "space-between",
               }}
             >
-              <View style={{ flexBasis: "47%" }}>
+              <View style={{ flexBasis: "49%" }}>
                 <Button
-                  onClickFn={()=>hideDialog(true)}
-                  text={t('agree')}
+                  onClickFn={() => hideDialog(true)}
+                  text={t("agree")}
                   bgColor={themeStyle.SUCCESS_COLOR}
                   textColor={themeStyle.WHITE_COLOR}
                   fontSize={16}
                 />
               </View>
-              <View style={{ flexBasis: "47%" }}>
+              <View style={{ flexBasis: "49%" }}>
                 <Button
-                  onClickFn={()=>hideDialog(false)}
-                  text={t('edit-order')}
+                  onClickFn={() => hideDialog(false)}
+                  text={t("edit-order")}
                   bgColor={themeStyle.GRAY_600}
                   textColor={themeStyle.WHITE_COLOR}
                   fontSize={16}

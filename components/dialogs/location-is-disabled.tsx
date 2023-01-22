@@ -54,6 +54,13 @@ export default function LocationIsDisabledDialog({
           dismissable={false}
         >
           <Dialog.Content>
+          <Dialog.Title>
+            <Icon
+              icon="exclamation-mark"
+              size={50}
+              style={{ color: theme.GRAY_700 }}
+            />
+          </Dialog.Title>
             <Paragraph
               style={{
                 fontSize: 16,
@@ -68,11 +75,11 @@ export default function LocationIsDisabledDialog({
             <View
               style={{
                 flexDirection: "row",
-                width: "100%",
+                width: "95%",
                 justifyContent: "space-between",
               }}
             >
-              <View style={{ flexBasis: "47%" }}>
+              <View style={{ flexBasis: "49%" }}>
                 <Button
                   onClickFn={() => hideDialog(true)}
                   text={t('settings')}
@@ -81,7 +88,7 @@ export default function LocationIsDisabledDialog({
                   fontSize={16}
                 />
               </View>
-              <View style={{ flexBasis: "47%" }}>
+              <View style={{ flexBasis: "49%" }}>
                 <Button
                   onClickFn={() => hideDialog(false)}
                   text={t('no-thanks')}
