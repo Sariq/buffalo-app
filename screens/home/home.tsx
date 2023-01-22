@@ -64,22 +64,23 @@ const HomeScreen = ({ navigation }) => {
       <View style={[styles.button, styles.bottomView]}>
         <View
           style={{
-            width: "90%",
+            width: "100%",
             flexDirection: "row",
             justifyContent: "space-around",
             alignItems: "center",
           }}
         >
-          <View style={{ flexBasis: "48%" }}>
+          <View style={{ flexBasis: isActiveOrder ? "48%" : "90%" }}>
             <Button
               bgColor={themeStyle.PRIMARY_COLOR}
               text={t("new-order")}
               onClickFn={goToNewOrder}
-              fontSize={isActiveOrder ? 21 : 40}
+              fontSize={isActiveOrder ? 27 : 40}
               icon={"new_order_icon"}
               borderRadious={50}
               iconSize={isActiveOrder ? 20 : 30}
               textPadding={0}
+              marginH={5}
             />
           </View>
           {isActiveOrder && (
@@ -88,11 +89,13 @@ const HomeScreen = ({ navigation }) => {
                 bgColor={themeStyle.SUCCESS_COLOR}
                 text={t("current-orders")}
                 onClickFn={goToOrdersStatus}
-                fontSize={isActiveOrder ? 21 : 40}
+                fontSize={isActiveOrder ? 27 : 40}
                 icon={"new_order_icon"}
+                iconPosition="left"
                 borderRadious={50}
                 iconSize={isActiveOrder ? 20 : 30}
                 textPadding={0}
+                marginH={5}
               />
             </View>
           )}

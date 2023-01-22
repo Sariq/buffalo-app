@@ -20,6 +20,7 @@ type TProps = {
   borderRadious?: number;
   textPadding?: number;
   isFlexCol?: boolean;
+  marginH?: number;
 };
 export default function Button({
   onClickFn,
@@ -36,6 +37,7 @@ export default function Button({
   borderRadious,
   textPadding,
   isFlexCol,
+  marginH,
 }: TProps) {
   const onBtnClick = () => {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
@@ -88,7 +90,7 @@ export default function Button({
         {icon && iconPosition && iconPosition === "right" && renderIcon()}
         <Text
           style={{
-            ...styles.buttonText,
+            marginHorizontal: marginH ? marginH : 15,
             fontSize: fontSize,
             color: textColor,
             fontFamily: fontFamily,
