@@ -1,9 +1,5 @@
 import {
-  Text,
   View,
-  TouchableOpacity,
-  StyleSheet,
-  ImageBackground,
 } from "react-native";
 import { Paragraph, Dialog, Portal, Provider } from "react-native-paper";
 
@@ -104,40 +100,3 @@ export default function LocationIsDisabledDialog({
     </Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  button: {
-    backgroundColor: theme.PRIMARY_COLOR,
-    borderRadius: 5,
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 20 / -2,
-  },
-  bottomView: {
-    width: "90%",
-    height: 50,
-    justifyContent: "center",
-    alignItems: "center",
-    position: "absolute", //Here is the trick
-    bottom: 0, //Here is the trick
-    marginBottom: 40,
-  },
-  buttonText: {
-    fontSize: 20,
-    color: "black",
-    // paddingRight: 15,
-    // paddingTop: 5
-    marginHorizontal: 40 / 2,
-  },
-  image: {
-    height: "100%",
-    borderWidth: 4,
-  },
-});

@@ -24,18 +24,6 @@ const OrdersStatusScreen = ({ route }) => {
 
   const getOrders = () => {
     ordersStore.getOrders();
-    // const body = { datetime: new Date() };
-    // axiosInstance
-    //   .post(
-    //     `${ORDER_API.CONTROLLER}/${ORDER_API.GET_ORDERS_API}`,
-    //     toBase64(body)
-    //   )
-    //   .then(function (response) {
-    //     const res = JSON.parse(fromBase64(response.data));
-    //     const orderdList = orderBy(res.orders, ["created_at"], ["desc"]);
-    //     setOrdersList(orderdList);
-    //     setIsloading(false);
-    //   });
   };
 
   useEffect(() => {
@@ -332,7 +320,7 @@ const OrdersStatusScreen = ({ route }) => {
     );
   }
 
-  if (ordersList.length < 1) {
+  if (ordersList?.length < 1) {
     return (
       <View
         style={{

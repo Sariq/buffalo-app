@@ -3,7 +3,7 @@ import { axiosInstance } from "../../utils/http-interceptor";
 import { ORDER_API } from "../../consts/api";
 import { fromBase64, toBase64 } from "../../helpers/convert-base64";
 import { orderBy } from "lodash";
-import { inProgressStatuses } from "../../screens/order/status";
+export const inProgressStatuses = ["SENT", "APPROVED"];
 
 class OrdersStore {
   ordersList = null;
@@ -36,12 +36,16 @@ class OrdersStore {
   };
 
   isActiveOrders = () =>{
-    const founded = this.ordersList.find((order)=>{
+    const founded = this.ordersList?.find((order)=>{
       if (inProgressStatuses.indexOf(order.status.replace(/ /g, "")) > -1) {
         return true;
       }
     });
     return !!founded;
+  }
+
+  resetOrdersList = () =>{
+    this.ordersList = [];
   }
 }
 

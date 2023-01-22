@@ -6,11 +6,18 @@ import themeStyle from "../../../styles/theme.style";
 import { SHIPPING_METHODS } from "../../cart/cart";
 import { useTranslation } from "react-i18next";
 import { getCurrentLang } from "../../../translations/i18n";
+import { useEffect, useContext } from "react";
+import { StoreContext } from "../../../stores";
 
 const OrderSubmittedScreen = ({ route }) => {
   const { t } = useTranslation();
+  const { ordersStore } = useContext(StoreContext);
   const { shippingMethod } = route.params;
   const navigation = useNavigation();
+
+  useEffect(()=>{
+    ordersStore.getOrders();
+  },[])
 
   const goToOrderStatus = () => {
     navigation.navigate("orders-status");

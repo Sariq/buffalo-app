@@ -6,7 +6,7 @@ import Carousel from "react-native-reanimated-carousel";
 
 /* styles */
 
-import { useEffect, useState, useContext, useRef } from "react";
+import { useEffect, useState, useContext } from "react";
 import { StoreContext } from "../../stores";
 import themeStyle from "../../styles/theme.style";
 import { SITE_URL } from "../../consts/api";
@@ -30,8 +30,13 @@ const HomeScreen = ({ navigation }) => {
   useEffect(() => {
     displayTemrsAndConditions();
     setHomeSlides(menuStore.homeSlides);
-    setIsActiveOrder(ordersStore.isActiveOrders());
   }, []);
+
+  useEffect(()=>{
+    if(ordersStore.ordersList){
+      setIsActiveOrder(ordersStore.isActiveOrders());
+    }
+  },[ordersStore.ordersList])
 
   const goToNewOrder = () => {
     navigation.navigate("menuScreen");
@@ -39,7 +44,6 @@ const HomeScreen = ({ navigation }) => {
   const goToOrdersStatus = () => {
     navigation.navigate("orders-status");
   };
-
   if (!isAppReady || !homeSlides) {
     return;
   }
@@ -90,10 +94,7 @@ const HomeScreen = ({ navigation }) => {
                 text={t("current-orders")}
                 onClickFn={goToOrdersStatus}
                 fontSize={isActiveOrder ? 27 : 40}
-                icon={"new_order_icon"}
-                iconPosition="left"
                 borderRadious={50}
-                iconSize={isActiveOrder ? 20 : 30}
                 textPadding={0}
                 marginH={5}
               />

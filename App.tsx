@@ -13,6 +13,8 @@ import {
   DeviceEventEmitter,
 } from "react-native";
 import RootNavigator from "./navigation";
+import NetInfo from '@react-native-community/netinfo';
+
 I18nManager.forceRTL(true);
 I18nManager.allowRTL(true);
 /* stores*/
@@ -102,7 +104,14 @@ const App = () => {
     }
   }
   useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener(state => {
+      console.log('Is connected?', state.isConnected);
+      prepare();
+    });
     prepare();
+    return () => {
+      unsubscribe();
+    };
   }, []);
   useEffect(() => {
     const ExpDatePicjkerChange = DeviceEventEmitter.addListener(

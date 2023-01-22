@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { makeAutoObservable } from "mobx";
+import { ordersStore } from "../orders";
 
 class AuthStore {
   userToken = null;
@@ -34,6 +35,7 @@ class AuthStore {
   };
 
   logOut = async () => {
+    ordersStore.resetOrdersList();
     await AsyncStorage.removeItem("@storage_userToken");
     this.setUserToken(null)
   }
