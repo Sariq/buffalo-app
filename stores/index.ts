@@ -5,6 +5,7 @@ import { menuStore } from "./menu";
 import { languageStore } from "./language";
 import { storeDataStore } from "./store";
 import { userDetailsStore } from "./user-details";
+import { ordersStore } from "./orders";
 
 export const StoreContext = createContext({ 
     cartStore: cartStore, 
@@ -13,4 +14,5 @@ export const StoreContext = createContext({
     userDetailsStore: userDetailsStore,
     languageStore: languageStore, 
     storeDataStore: storeDataStore,
+    ordersStore: ordersStore,
 });

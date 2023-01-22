@@ -12,29 +12,30 @@ import Icon from "../../../components/icon";
 import { axiosInstance } from "../../../utils/http-interceptor";
 import { ORDER_API } from "../../../consts/api";
 //2 -ready | if comple
-const inProgressStatuses = ["SENT"];
-const readyStatuses = ["COMPLETED", "READY"];
-const canceledStatuses = ["CANCELLED", "REJECTED"];
+export const inProgressStatuses = ["SENT"];
+export const readyStatuses = ["COMPLETED", "READY"];
+export const canceledStatuses = ["CANCELLED", "REJECTED"];
 
 const OrdersStatusScreen = ({ route }) => {
   const { t } = useTranslation();
-  const { menuStore } = useContext(StoreContext);
+  const { menuStore, ordersStore } = useContext(StoreContext);
   const [ordersList, setOrdersList] = useState([]);
   const [isLoading, setIsloading] = useState(false);
 
   const getOrders = () => {
-    const body = { datetime: new Date() };
-    axiosInstance
-      .post(
-        `${ORDER_API.CONTROLLER}/${ORDER_API.GET_ORDERS_API}`,
-        toBase64(body)
-      )
-      .then(function (response) {
-        const res = JSON.parse(fromBase64(response.data));
-        const orderdList = orderBy(res.orders, ["created_at"], ["desc"]);
-        setOrdersList(orderdList);
-        setIsloading(false);
-      });
+    ordersStore.getOrders();
+    // const body = { datetime: new Date() };
+    // axiosInstance
+    //   .post(
+    //     `${ORDER_API.CONTROLLER}/${ORDER_API.GET_ORDERS_API}`,
+    //     toBase64(body)
+    //   )
+    //   .then(function (response) {
+    //     const res = JSON.parse(fromBase64(response.data));
+    //     const orderdList = orderBy(res.orders, ["created_at"], ["desc"]);
+    //     setOrdersList(orderdList);
+    //     setIsloading(false);
+    //   });
   };
 
   useEffect(() => {
@@ -48,6 +49,11 @@ const OrdersStatusScreen = ({ route }) => {
     }, 60 * 1000);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(()=>{
+    setOrdersList(ordersStore.ordersList);
+    setIsloading(false);
+  }, [ordersStore.ordersList])
 
   const getIconByStatus = (status: string, type: number) => {
     if (type === 1) {
@@ -131,8 +137,8 @@ const OrdersStatusScreen = ({ route }) => {
   const renderOrderItemsExtras = (extras) => {
     return extras.map((extra) => {
       return (
-        <View style={{ flexDirection: "row" }}>
-          <Text style={{ marginRight: 2 }}>+</Text>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Text style={{ marginRight: 2, paddingBottom:4 }}>+</Text>
           <Text>{extra.name}</Text>
         </View>
       );

@@ -25,6 +25,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { observer } from "mobx-react";
 import { StoreContext } from "./stores";
 import i18n from "./translations/i18n";
+import { ordersStore } from "./stores/orders";
 // Keep the splash screen visible while we fetch resources
 //SplashScreen.preventAutoHideAsync();
 let customARFonts = {
@@ -76,8 +77,9 @@ const App = () => {
         if (authStore.isLoggedIn()) {
           const fetchUserDetails = userDetailsStore.getUserDetails();
           const fetchStoreDataStore = storeDataStore.getStoreData();
+          const fetchOrders = ordersStore.getOrders();
           userDetailsStore.setIsAcceptedTerms(true);
-          Promise.all([fetchStoreDataStore, fetchUserDetails]).then((res) => {
+          Promise.all([fetchStoreDataStore, fetchUserDetails, fetchOrders]).then((res) => {
               setAppIsReady(true);
           });
         } else {
@@ -225,6 +227,7 @@ const App = () => {
         languageStore: languageStore,
         userDetailsStore: userDetailsStore,
         storeDataStore: storeDataStore,
+        ordersStore: ordersStore
       }}
     >
       <View style={{ height: "100%" }}>

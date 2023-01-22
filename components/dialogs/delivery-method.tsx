@@ -13,13 +13,18 @@ import Icon from "../../components/icon";
 import { useState, useEffect } from "react";
 import Button from "../../components/controls/button/button";
 import themeStyle from "../../styles/theme.style";
+import { SHIPPING_METHODS } from "../../screens/cart/cart"
+import { useTranslation } from "react-i18next";
 
 type TProps = {
   isOpen: boolean;
+  type: string;
   handleAnswer?: any;
 };
 
-export default function PaymentMethodDialog({ isOpen, handleAnswer }: TProps) {
+export default function DeliveryMethodDialog({ isOpen, handleAnswer, type }: TProps) {
+  const { t } = useTranslation();
+
   const [visible, setVisible] = useState(isOpen);
 
   useEffect(() => {
@@ -56,9 +61,8 @@ export default function PaymentMethodDialog({ isOpen, handleAnswer }: TProps) {
                 fontWeight: "bold",
               }}
             >
-              لقد اخترت بخدمة ارسالية بعد الانتهاء من التجهيز سيتصل بك مندوب
-              خدمة التوصيل لإكمال عمليه التوصيل للموقع الذي اخترته خلال الطلبية
-              .
+              {type === SHIPPING_METHODS.shipping && t('approve-delivery-method')}
+              {type === SHIPPING_METHODS.takAway && t('approve-takeaway-method')}
             </Paragraph>
           </Dialog.Content>
           <Dialog.Actions>
@@ -72,7 +76,7 @@ export default function PaymentMethodDialog({ isOpen, handleAnswer }: TProps) {
               <View style={{ flexBasis: "47%" }}>
                 <Button
                   onClickFn={()=>hideDialog(true)}
-                  text="موافق"
+                  text={t('agree')}
                   bgColor={themeStyle.SUCCESS_COLOR}
                   textColor={themeStyle.WHITE_COLOR}
                   fontSize={16}
@@ -81,7 +85,7 @@ export default function PaymentMethodDialog({ isOpen, handleAnswer }: TProps) {
               <View style={{ flexBasis: "47%" }}>
                 <Button
                   onClickFn={()=>hideDialog(false)}
-                  text="تعديل الطلب"
+                  text={t('edit-order')}
                   bgColor={themeStyle.GRAY_600}
                   textColor={themeStyle.WHITE_COLOR}
                   fontSize={16}

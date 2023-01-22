@@ -53,6 +53,7 @@ import OpenBarcodeScannerdDialog from "../../components/dialogs/barcode-scanner/
 import BarcodeScannedDialog from "../../components/dialogs/barcode-scanner/barcode-scanned";
 import RecipetNotSupportedDialog from "../../components/dialogs/recipet-service/recipet-not-supported";
 import StoreErrorMsgDialog from "../../components/dialogs/store-errot-msg";
+import DeliveryMethodDialog from "../../components/dialogs/delivery-method";
 
 export const SHIPPING_METHODS = {
   shipping: "DELIVERY",
@@ -356,7 +357,11 @@ const CartScreen = () => {
               setIsOpenInvalidAddressDialod(true);
             }
           } else {
-            submitCart();
+            if (shippingMethod === SHIPPING_METHODS.takAway) {
+              setIsOpenShippingMethodDialog(true);
+            }else{
+              submitCart();
+            }
           }
         } else {
           setShowStoreIsCloseDialog(true);
@@ -1428,9 +1433,10 @@ const CartScreen = () => {
         handleAnswer={handleNewPMAnswer}
         isOpen={isOpenNewCreditCardDialog}
       />
-      <PaymentMethodDialog
+      <DeliveryMethodDialog
         handleAnswer={handleShippingMethoAnswer}
         isOpen={isOpenShippingMethodDialog}
+        type={shippingMethod}
       />
       <LocationIsDisabledDialog
         handleAnswer={handleLocationIsDiabledAnswer}

@@ -92,19 +92,9 @@ const Header = () => {
   const handleProfileClick = () => {
     if(authStore.isLoggedIn()){
       navigation.navigate("profile");
-      //navigation.navigate("orders-status");
-      //navigation.navigate("insert-customer-name");
-
     }else{
-     //navigation.navigate("insert-customer-name");
      navigation.navigate("login");
-      //navigation.navigate("verify-code");
     }
-    
-    //navigation.navigate("order-history");
-    //navigation.navigate("order-submitted",{shippingMethod: SHIPPING_METHODS.shipping});
-    //navigation.navigate("login");
-    // navigation.navigate("verify-code");
   };
 
   const onLogoClick = () => {

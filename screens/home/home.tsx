@@ -11,16 +11,12 @@ import { StoreContext } from "../../stores";
 import themeStyle from "../../styles/theme.style";
 import { SITE_URL } from "../../consts/api";
 
-const slides = [
-  "https://img.freepik.com/free-vector/mobile-wallpaper-with-fluid-shapes_79603-599.jpg",
-  "https://img.freepik.com/free-photo/multicolored-psychedelic-paper-shapes_23-2149378302.jpg",
-];
-const defaultImage = require("../../assets/burj.png");
 const HomeScreen = ({ navigation }) => {
   const { t } = useTranslation();
   const [isAppReady, setIsAppReady] = useState(false);
   const [homeSlides, setHomeSlides] = useState();
-  let { userDetailsStore, menuStore } = useContext(StoreContext);
+  const [isActiveOrder, setIsActiveOrder] = useState(false);
+  let { userDetailsStore, menuStore, ordersStore } = useContext(StoreContext);
 
   const displayTemrsAndConditions = async () => {
     if (!userDetailsStore.isAcceptedTerms) {
@@ -33,24 +29,15 @@ const HomeScreen = ({ navigation }) => {
 
   useEffect(() => {
     displayTemrsAndConditions();
-    setHomeSlides(menuStore.homeSlides)
+    setHomeSlides(menuStore.homeSlides);
+    setIsActiveOrder(ordersStore.isActiveOrders());
   }, []);
-
-  const getMenuFromServer = () => {
-    // const body = {};
-    // return axiosInstance
-    //   .post(
-    //     `${C.CONTROLLER}/${MENU_API.GET_MENU_API}`,
-    //     body,
-    //   )
-    //   .then(function (response) {
-    //     const res = JSON.parse(fromBase64(response.data));
-    //     return res;
-    //   });
-  }
 
   const goToNewOrder = () => {
     navigation.navigate("menuScreen");
+  };
+  const goToOrdersStatus = () => {
+    navigation.navigate("orders-status");
   };
 
   if (!isAppReady || !homeSlides) {
@@ -75,17 +62,40 @@ const HomeScreen = ({ navigation }) => {
         )}
       />
       <View style={[styles.button, styles.bottomView]}>
-        <View style={{ width: "90%" }}>
-          <Button
-            bgColor={themeStyle.PRIMARY_COLOR}
-            text={t("new-order")}
-            onClickFn={goToNewOrder}
-            fontSize={40}
-            icon={"new_order_icon"}
-            borderRadious={50}
-            iconSize={30}
-            textPadding={0}
-          />
+        <View
+          style={{
+            width: "90%",
+            flexDirection: "row",
+            justifyContent: "space-around",
+            alignItems: "center",
+          }}
+        >
+          <View style={{ flexBasis: "48%" }}>
+            <Button
+              bgColor={themeStyle.PRIMARY_COLOR}
+              text={t("new-order")}
+              onClickFn={goToNewOrder}
+              fontSize={isActiveOrder ? 21 : 40}
+              icon={"new_order_icon"}
+              borderRadious={50}
+              iconSize={isActiveOrder ? 20 : 30}
+              textPadding={0}
+            />
+          </View>
+          {isActiveOrder && (
+            <View style={{ flexBasis: "48%" }}>
+              <Button
+                bgColor={themeStyle.SUCCESS_COLOR}
+                text={t("current-orders")}
+                onClickFn={goToOrdersStatus}
+                fontSize={isActiveOrder ? 21 : 40}
+                icon={"new_order_icon"}
+                borderRadious={50}
+                iconSize={isActiveOrder ? 20 : 30}
+                textPadding={0}
+              />
+            </View>
+          )}
         </View>
       </View>
     </View>
