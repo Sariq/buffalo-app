@@ -46,6 +46,8 @@ let customARFonts = {
 
   "Poppins-Regular": require(`./assets/fonts/shared/Poppins-Regular.ttf`),
   "Rubik-Regular": require(`./assets/fonts/shared/Rubik-Regular.ttf`),
+  "Rubik-Medium": require(`./assets/fonts/shared/Rubik-Medium.ttf`),
+  "Rubik-Bold": require(`./assets/fonts/shared/Rubik-Bold.ttf`),
 };
 
 const App = () => {
@@ -69,7 +71,8 @@ const App = () => {
       await Font.loadAsync(customARFonts);
       setIsFontReady(true);
       const fetchMenu = menuStore.getMenu();
-      Promise.all([fetchMenu]).then(async (responses) => {
+      const fetchHomeSlides = menuStore.getSlides();
+      Promise.all([fetchMenu, fetchHomeSlides]).then(async (responses) => {
         if (authStore.isLoggedIn()) {
           const fetchUserDetails = userDetailsStore.getUserDetails();
           const fetchStoreDataStore = storeDataStore.getStoreData();

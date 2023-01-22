@@ -67,19 +67,21 @@ const prodcutExtrasAdapter = (extras) => {
     if (key !== 'orderList') {
       return (
         extras[key].map((extra) => {
-          if(extra.type === "CHOICE" && !extra.multiple_choice){
-            if(extra.value !== false){
-              productExtras.push({ id: extra.id, name: extra.name, value: extra.value });
+          if (extra.available_on_app) {
+            if (extra.type === "CHOICE" && !extra.multiple_choice) {
+              if (extra.value !== false) {
+                productExtras.push({ id: extra.id, name: extra.name, value: extra.value });
+              }
             }
-          }
-          if(extra.type === "COUNTER"){
-            if(extra.counter_init_value !== extra.value){
-              productExtras.push({ id: extra.id, name: extra.name, value: extra.value });
+            if (extra.type === "COUNTER") {
+              if (extra.counter_init_value !== extra.value) {
+                productExtras.push({ id: extra.id, name: extra.name, value: extra.value });
+              }
             }
-          }
-          if(extra.type === "CHOICE" && extra.multiple_choice){
-            if(extra.isdefault !== extra.value){
-              productExtras.push({ id: extra.id, name: extra.name, value: extra.value });
+            if (extra.type === "CHOICE" && extra.multiple_choice) {
+              if (extra.isdefault !== extra.value) {
+                productExtras.push({ id: extra.id, name: extra.name, value: extra.value });
+              }
             }
           }
         })
@@ -132,14 +134,19 @@ class CartStore {
     }
   };
 
-  addProductToCart = async (product) => {
+  addProductToCart = async (product, isBcoin = false) => {
     if (this.cartItems.length === 0) {
       const storage_cartCreatedDate = {
         date: new Date()
       }
       await AsyncStorage.setItem("@storage_cartCreatedDate", JSON.stringify(storage_cartCreatedDate));
     }
-    this.cartItems.push(product);
+    if (isBcoin) {
+      this.cartItems.unshift(product);
+
+    } else {
+      this.cartItems.push(product);
+    }
     this.updateLocalStorage();
   };
 
@@ -173,7 +180,7 @@ class CartStore {
   getProductsCount = () => {
     let count = 0;
     this.cartItems.forEach((product) => {
-      if(product){
+      if (product) {
         count += product?.others?.count;
       }
     })

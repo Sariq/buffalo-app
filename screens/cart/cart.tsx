@@ -164,7 +164,9 @@ const CartScreen = () => {
         return;
       }
       bcoinMeal.data.price = userDetailsStore.userDetails?.credit * -1;
-      cartStore.addProductToCart(bcoinMeal);
+      // setTotalPrice(itemsPrice + bcoinMeal.data.price);
+
+      cartStore.addProductToCart(bcoinMeal, true);
     }
   }, []);
 
@@ -494,25 +496,28 @@ const CartScreen = () => {
 
   const filterMealExtras = (extras) => {
     const filteredExtras = extras.filter((extra) => {
-      if (extra.type === "CHOICE" && !extra.multiple_choice) {
-        if (extra.value !== false) {
-          return extra;
+      if (extra.available_on_app) {
+        if (extra.type === "CHOICE" && !extra.multiple_choice) {
+          if (extra.value !== false) {
+            return extra;
+          }
+          return false;
         }
-        return false;
-      }
-      if (extra.type === "COUNTER") {
-        if (extra.counter_init_value !== extra.value) {
-          return extra;
+        if (extra.type === "COUNTER") {
+          if (extra.counter_init_value !== extra.value) {
+            return extra;
+          }
+          return false;
         }
-        return false;
-      }
-      if (extra.type === "CHOICE" && extra.multiple_choice) {
-        if (extra.isdefault !== extra.value) {
-          return extra;
+        if (extra.type === "CHOICE" && extra.multiple_choice) {
+          if (extra.isdefault !== extra.value) {
+            return extra;
+          }
+          return false;
         }
-        return false;
       }
     });
+
     return filteredExtras;
   };
 
@@ -548,6 +553,14 @@ const CartScreen = () => {
   const isBcoinProduct = (product) => {
     return product.data.id === bcoindId;
   };
+
+  const isBcoinInCart = () => {
+    const bcoinFound = cartStore.cartItems.find(
+      (product) => product.data.id === bcoindId
+    );
+    return bcoinFound;
+  };
+
   const renderExtras = (filteredExtras, extrasLength, key) => {
     return (
       <View>{renderFilteredExtras(filteredExtras, extrasLength, key)}</View>
@@ -667,7 +680,7 @@ const CartScreen = () => {
                   color: themeStyle.SUCCESS_COLOR,
                 }}
               >
-                {extra.name} {extra.value}
+                {menuStore.translate(extra.name)} {extra.value}
               </Text>
             </View>
           </View>
@@ -698,7 +711,7 @@ const CartScreen = () => {
               </View>
               <View>
                 <Text style={{ fontWeight: "bold", fontSize: 20 }}>
-                {t("meals")} {cartStore.getProductsCount()}
+                  {t("meals")} {cartStore.getProductsCount()}
                 </Text>
               </View>
             </View>
@@ -733,11 +746,11 @@ const CartScreen = () => {
                           />
                         )}
                         {isBcoinProduct(product) && (
-                          <View style={{ height: 50, alignItems: "flex-end" }}>
+                          <View style={{ height: 40, alignItems: "flex-end" }}>
                             <View
                               style={{
                                 marginRight: 30,
-                                marginTop: 15,
+                                marginTop: 12,
                                 alignItems: "center",
                                 maxWidth: "48%",
                               }}
@@ -745,20 +758,20 @@ const CartScreen = () => {
                               <Text
                                 style={{
                                   fontSize: 17,
-                                  fontFamily: `${getCurrentLang()}-SemiBold`,
+                                  fontFamily: `${getCurrentLang()}-Bold`,
                                   fontWeight: "bold",
                                 }}
                               >
-                                {t('you-have-bcoin')} {product.data.price * -1}
+                                {t("you-have-bcoin")} {product.data.price * -1}
                               </Text>
                               <Text
                                 style={{
                                   fontSize: 17,
-                                  fontFamily: `${getCurrentLang()}-SemiBold`,
-                                  fontWeight: "bold",
+                                  fontFamily: `${getCurrentLang()}-Bold`,
+                                  marginTop: getCurrentLang() === "he" ? -5 : 0,
                                 }}
                               >
-                                {t('you-have-discount')}
+                                {t("you-have-discount")}
                               </Text>
                               <View
                                 style={{
@@ -770,37 +783,51 @@ const CartScreen = () => {
                                 <Text
                                   style={{
                                     fontWeight: "bold",
-                                    fontSize: 20,
+                                    fontSize: 30,
                                     paddingBottom: 5,
                                   }}
                                 >
                                   ₪
                                 </Text>
                                 <Text
-                                  style={{ fontWeight: "bold", fontSize: 40 }}
+                                  style={{
+                                    fontWeight: "bold",
+                                    fontSize: 50,
+                                    fontFamily: "Rubik-Bold",
+                                  }}
                                 >
                                   {product.data.price}
                                 </Text>
                               </View>
-                              <Text
+                              <View
                                 style={{
-                                  fontSize: 13,
-                                  fontFamily: `${getCurrentLang()}-Light`,
-                                  textAlign:"center"
+                                  paddingTop: 3,
+                                  marginTop:
+                                    getCurrentLang() === "he" ? -5 : -4,
                                 }}
                               >
-                                {t('you-get-discount')} ₪{product.data.price * -1}
-                              </Text>
-                              <Text
-                                style={{
-                                  fontSize: 13,
-                                  fontFamily: `${getCurrentLang()}-Light`,
-                                  fontWeight: "bold",
-                                  textAlign:"center"
-                                }}
-                              >
-                                {t('from-total-price')}
-                              </Text>
+                                <Text
+                                  style={{
+                                    fontSize: 13,
+                                    fontFamily: `${getCurrentLang()}-Light`,
+                                    textAlign: "center",
+                                  }}
+                                >
+                                  {t("you-get-discount")} ₪
+                                  {product.data.price * -1}
+                                </Text>
+                                <Text
+                                  style={{
+                                    fontSize: 13,
+                                    fontFamily: `${getCurrentLang()}-Light`,
+                                    textAlign: "center",
+                                    marginTop:
+                                      getCurrentLang() === "he" ? -4 : 0,
+                                  }}
+                                >
+                                  {t("from-total-price")}
+                                </Text>
+                              </View>
                             </View>
                           </View>
                         )}
@@ -867,7 +894,6 @@ const CartScreen = () => {
                                 )}
                               </View>
                               <View style={{ marginLeft: 0, marginTop: 5 }}>
-                                {/* <View style={{borderWidth:1, position: "absolute", top: 7, left:3, borderColor: themeStyle.PRIMARY_COLOR}}></View> */}
                                 {product.extras &&
                                   Object.keys(product.extras).map(
                                     (key, extraIndex) => {
@@ -887,10 +913,6 @@ const CartScreen = () => {
                                       );
                                     }
                                   )}
-                                {/* { 
-<Text style={{opacity:0}}>{extrasArrayLast.push(extrasArray[extrasArray.length-1])}</Text>
-                              }
-                              {console.log(extrasArrayLast)} */}
                               </View>
                             </View>
                           </View>
@@ -924,7 +946,7 @@ const CartScreen = () => {
                               style={{
                                 paddingRight: 2,
                                 fontFamily: `${getCurrentLang()}-SemiBold`,
-                                color: themeStyle.SUCCESS_COLOR
+                                color: themeStyle.SUCCESS_COLOR,
                               }}
                             >
                               {t("note")}:
@@ -1241,7 +1263,8 @@ const CartScreen = () => {
               )}
           </View>
           <View style={styles.totalPrictContainer}>
-            {shippingMethod === SHIPPING_METHODS.shipping && (
+            {(shippingMethod === SHIPPING_METHODS.shipping ||
+              isBcoinInCart()) && (
               <View>
                 <View style={{ alignItems: "center" }}>
                   <Text style={{ fontWeight: "bold" }}>{t("total")}</Text>
@@ -1265,33 +1288,59 @@ const CartScreen = () => {
                           fontSize: 17,
                         }}
                       >
-                        ₪{itemsPrice}
+                        ₪{itemsPrice + userDetailsStore?.userDetails.credit}
                       </Text>
                     </View>
                   </View>
 
-                  <View style={styles.priceRowContainer}>
-                    <View>
-                      <Text
-                        style={{
-                          fontFamily: `${getCurrentLang()}-Light`,
-                          fontSize: 20,
-                        }}
-                      >
-                        {t("delivery")}
-                      </Text>
+                  {shippingMethod === SHIPPING_METHODS.shipping && (
+                    <View style={styles.priceRowContainer}>
+                      <View>
+                        <Text
+                          style={{
+                            fontFamily: `${getCurrentLang()}-Light`,
+                            fontSize: 20,
+                          }}
+                        >
+                          {t("delivery")}
+                        </Text>
+                      </View>
+                      <View>
+                        <Text
+                          style={{
+                            fontFamily: `${getCurrentLang()}-Light`,
+                            fontSize: 17,
+                          }}
+                        >
+                          ₪15
+                        </Text>
+                      </View>
                     </View>
-                    <View>
-                      <Text
-                        style={{
-                          fontFamily: `${getCurrentLang()}-Light`,
-                          fontSize: 17,
-                        }}
-                      >
-                        ₪15
-                      </Text>
+                  )}
+                  {isBcoinInCart() && (
+                    <View style={styles.priceRowContainer}>
+                      <View>
+                        <Text
+                          style={{
+                            fontFamily: `${getCurrentLang()}-Light`,
+                            fontSize: 20,
+                          }}
+                        >
+                          {t("bcoin-discount-price")}
+                        </Text>
+                      </View>
+                      <View>
+                        <Text
+                          style={{
+                            fontFamily: `${getCurrentLang()}-Light`,
+                            fontSize: 17,
+                          }}
+                        >
+                          ₪{userDetailsStore.userDetails?.credit * -1}
+                        </Text>
+                      </View>
                     </View>
-                  </View>
+                  )}
                 </View>
               </View>
             )}

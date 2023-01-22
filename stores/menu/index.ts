@@ -12,6 +12,7 @@ class MenuStore {
   categories = null;
   meals = null;
   dictionary = null;
+  homeSlides = null;
 
   constructor() {
     makeAutoObservable(this);
@@ -53,8 +54,31 @@ class MenuStore {
         });
       })
     })
-
   };
+
+  getSlidesFromServer = () => {
+    const body = {};
+    return axiosInstance
+      .post(
+        `${MENU_API.CONTROLLER}/${MENU_API.GET_SLIDER_API}`,
+        body,
+      )
+      .then(function (response) {
+        const res = JSON.parse(fromBase64(response.data));
+        return res;
+      });
+  }
+
+  getSlides = () => {
+    return new Promise((resolve)=>{
+       this.getSlidesFromServer().then((res) => {
+         runInAction(() => {
+           this.homeSlides = res.slider_gallery;
+           resolve(true)
+         });
+       })
+     })
+   };
 
   getMealByKey = (key) => {
     let temp = {};
@@ -84,11 +108,6 @@ class MenuStore {
           this.categories[key][index] = {...meal, price:22}
           this.categories[key]
           this.categories[key] = {...this.categories, [key]: this.categories[key]}
-          // const test= {...this.categories[key]}
-          // this.categories[key] = {...this.categories[key], price: 22}
-          // this.categories = {...this.categories, key : [...this.categories[key]]}
-
-          //console.log(meal)
         }
       })
     });

@@ -1,3 +1,4 @@
+export const SITE_URL = "https://api.buffaloburger.co.il/";
 export const BASE_URL = "https://api.buffaloburger.co.il/api";
 export const AUTH_API = {
     CONTROLLER: "Authenticator",

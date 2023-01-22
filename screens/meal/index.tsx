@@ -96,9 +96,6 @@ const MealScreen = ({ route }) => {
   };
 
   const updateMeal = (value, tag, type) => {
-    console.log("value", value);
-    console.log("tag", tag);
-    console.log("type", type);
     let extraPrice = 0;
     const currentExtraType = JSON.parse(JSON.stringify(meal.extras[type]));
     const extrasType = meal.extras[type].map((tagItem) => {
@@ -136,7 +133,6 @@ const MealScreen = ({ route }) => {
       }
       return tagItem;
     });
-    console.log("extraPrice", extraPrice);
     if(extraPrice !== 0 ){
 
     meal.extras[type] = extrasType;

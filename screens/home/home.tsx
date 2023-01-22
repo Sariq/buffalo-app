@@ -9,7 +9,7 @@ import Carousel from "react-native-reanimated-carousel";
 import { useEffect, useState, useContext, useRef } from "react";
 import { StoreContext } from "../../stores";
 import themeStyle from "../../styles/theme.style";
-import { axiosInstance } from "../../utils/http-interceptor";
+import { SITE_URL } from "../../consts/api";
 
 const slides = [
   "https://img.freepik.com/free-vector/mobile-wallpaper-with-fluid-shapes_79603-599.jpg",
@@ -19,8 +19,8 @@ const defaultImage = require("../../assets/burj.png");
 const HomeScreen = ({ navigation }) => {
   const { t } = useTranslation();
   const [isAppReady, setIsAppReady] = useState(false);
-
-  let { userDetailsStore } = useContext(StoreContext);
+  const [homeSlides, setHomeSlides] = useState();
+  let { userDetailsStore, menuStore } = useContext(StoreContext);
 
   const displayTemrsAndConditions = async () => {
     if (!userDetailsStore.isAcceptedTerms) {
@@ -33,6 +33,7 @@ const HomeScreen = ({ navigation }) => {
 
   useEffect(() => {
     displayTemrsAndConditions();
+    setHomeSlides(menuStore.homeSlides)
   }, []);
 
   const getMenuFromServer = () => {
@@ -52,7 +53,7 @@ const HomeScreen = ({ navigation }) => {
     navigation.navigate("menuScreen");
   };
 
-  if (!isAppReady) {
+  if (!isAppReady || !homeSlides) {
     return;
   }
   return (
@@ -60,14 +61,14 @@ const HomeScreen = ({ navigation }) => {
       <Carousel
         loop
         width={Dimensions.get("window").width}
-        height={Dimensions.get("window").height}
+        height="100%"
         autoPlay={true}
-        data={slides}
+        data={homeSlides}
         scrollAnimationDuration={1500}
         autoPlayInterval={3000}
         renderItem={({ index }) => (
           <ImageBackground
-            source={{ uri: slides[index] }}
+            source={{ uri: `${SITE_URL}${homeSlides[index].file_url}` }}
             resizeMode="stretch"
             style={styles.image}
           />
