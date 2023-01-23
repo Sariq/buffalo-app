@@ -5,13 +5,16 @@ import RNRestart from "react-native-restart";
 /* styles */
 import theme from "../../styles/theme.style";
 import Icon from "../icon";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Button from "../controls/button/button";
 import themeStyle from "../../styles/theme.style";
 import { useTranslation } from "react-i18next";
+import { StoreContext } from "../../stores";
 
 export default function GeneralServerErrorDialog() {
   const { t } = useTranslation();
+  const { authStore } = useContext(StoreContext);
+
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -21,7 +24,10 @@ export default function GeneralServerErrorDialog() {
     );
   }, []);
 
-  const openDialog = () => {
+  const openDialog = (data) => {
+    if(data.isSignOut){
+      authStore.logOut();
+    }
     setVisible(true);
   };
 

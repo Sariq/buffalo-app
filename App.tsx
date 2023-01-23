@@ -28,6 +28,7 @@ import { observer } from "mobx-react";
 import { StoreContext } from "./stores";
 import i18n from "./translations/i18n";
 import { ordersStore } from "./stores/orders";
+import InterntConnectionDialog from "./components/dialogs/internet-connection";
 // Keep the splash screen visible while we fetch resources
 //SplashScreen.preventAutoHideAsync();
 let customARFonts = {
@@ -59,7 +60,7 @@ const App = () => {
   const [assetsIsReady, setAssetsIsReady] = useState(false);
   const [appIsReady, setAppIsReady] = useState(false);
   const [isFontReady, setIsFontReady] = useState(false);
-  const [globalStyles, setGlobalStyles] = useState({});
+  const [isOpenInternetConnectionDialog, setIsOpenInternetConnectionDialog] = useState(false);
 
   useEffect(() => {
     if (!I18nManager.isRTL) {
@@ -85,10 +86,6 @@ const App = () => {
               setAppIsReady(true);
           });
         } else {
-          //           await AsyncStorage.setItem(
-          //   "@storage_terms_accepted",
-          //   JSON.stringify(false)
-          // );
           const data = await AsyncStorage.getItem("@storage_terms_accepted");
           userDetailsStore.setIsAcceptedTerms(JSON.parse(data));
             setAppIsReady(true);
@@ -105,8 +102,10 @@ const App = () => {
   }
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
-      console.log('Is connected?', state.isConnected);
-      prepare();
+      setIsOpenInternetConnectionDialog(!state.isConnected);
+      if(!state.isConnected){
+        prepare();
+      }
     });
     prepare();
     return () => {
@@ -223,6 +222,7 @@ const App = () => {
           </View>
         </View>
         <GeneralServerErrorDialog />
+        <InterntConnectionDialog isOpen={isOpenInternetConnectionDialog}/>
       </ImageBackground>
     );
   }
@@ -244,6 +244,7 @@ const App = () => {
       </View>
       <ExpiryDate />
       <GeneralServerErrorDialog />
+      <InterntConnectionDialog isOpen={isOpenInternetConnectionDialog}/>
     </StoreContext.Provider>
   );
 }

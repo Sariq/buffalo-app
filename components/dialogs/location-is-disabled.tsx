@@ -64,7 +64,7 @@ export default function LocationIsDisabledDialog({
                 fontWeight: "bold",
               }}
             >
-              {t('location-is-disabled	')}
+              {t('location-is-disabled')}
             </Paragraph>
           </Dialog.Content>
           <Dialog.Actions>

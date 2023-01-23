@@ -3,7 +3,6 @@ import { BASE_URL } from "../../consts/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { fromBase64 } from "../../helpers/convert-base64";
 import { DeviceEventEmitter } from "react-native";
-import { authStore } from "../../stores/auth";
 
 const general_errors_codes = ['-400','-6','-7','-10','-11','-401'];
 const TOKEN_NOT_VALID = -12;
@@ -33,8 +32,7 @@ axiosInstance.interceptors.response.use(
             DeviceEventEmitter.emit(`OPEN_GENERAL_SERVER_ERROR_DIALOG`, { show: true });
         }
         if(jsonValue.has_err && jsonValue.code === TOKEN_NOT_VALID){
-            authStore.logOut();
-            DeviceEventEmitter.emit(`OPEN_GENERAL_SERVER_ERROR_DIALOG`, { show: true });
+            DeviceEventEmitter.emit(`OPEN_GENERAL_SERVER_ERROR_DIALOG`, { show: true, isSignOut: true });
         }            
         return response;
     },

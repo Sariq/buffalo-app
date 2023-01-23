@@ -209,6 +209,13 @@ const CartScreen = () => {
   }, [locationPermissionStatus]);
 
   const askForLocation = async () => {
+    let lastLocation = await Location.getCurrentPositionAsync({
+      accuracy:
+        Platform.OS === "android"
+          ? Location.Accuracy.Low
+          : Location.Accuracy.Low,
+    });
+    setLocation(lastLocation);
     let location = await Location.getCurrentPositionAsync({
       accuracy:
         Platform.OS === "android"
