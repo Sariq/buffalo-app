@@ -181,6 +181,7 @@ function MyTabBar({ state, descriptors, navigation }) {
                     marginTop: isBcoin ? 0 : 5,
                     fontFamily: `${getCurrentLang()}-SemiBold`,
                     fontSize: 12,
+                    color: themeStyle.BROWN_700
                   }}
                 >
                   {t(route.params.title)}

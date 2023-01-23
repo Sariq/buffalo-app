@@ -772,6 +772,8 @@ const CartScreen = () => {
                                   fontSize: 17,
                                   fontFamily: `${getCurrentLang()}-Bold`,
                                   fontWeight: "bold",
+                                  lineHeight:16,
+                                  color:themeStyle.BROWN_700
                                 }}
                               >
                                 {t("you-have-bcoin")} {product.data.price * -1}
@@ -781,6 +783,8 @@ const CartScreen = () => {
                                   fontSize: 17,
                                   fontFamily: `${getCurrentLang()}-Bold`,
                                   marginTop: getCurrentLang() === "he" ? -5 : 0,
+                                  lineHeight:16,
+                                  color:themeStyle.BROWN_700
                                 }}
                               >
                                 {t("you-have-discount")}
@@ -797,6 +801,8 @@ const CartScreen = () => {
                                     fontWeight: "bold",
                                     fontSize: 30,
                                     paddingBottom: 5,
+                                    color:themeStyle.BROWN_700
+
                                   }}
                                 >
                                   ₪
@@ -806,6 +812,9 @@ const CartScreen = () => {
                                     fontWeight: "bold",
                                     fontSize: 50,
                                     fontFamily: "Rubik-Bold",
+                                    lineHeight:60,
+                                    color:themeStyle.BROWN_700
+
                                   }}
                                 >
                                   {product.data.price}
@@ -823,6 +832,8 @@ const CartScreen = () => {
                                     fontSize: 13,
                                     fontFamily: `${getCurrentLang()}-Light`,
                                     textAlign: "center",
+                                    color:themeStyle.BROWN_700
+
                                   }}
                                 >
                                   {t("you-get-discount")} ₪
@@ -835,6 +846,8 @@ const CartScreen = () => {
                                     textAlign: "center",
                                     marginTop:
                                       getCurrentLang() === "he" ? -4 : 0,
+                                      color:themeStyle.BROWN_700
+
                                   }}
                                 >
                                   {t("from-total-price")}
@@ -861,6 +874,8 @@ const CartScreen = () => {
                                   fontFamily: `${getCurrentLang()}-SemiBold`,
                                   fontSize: 20,
                                   marginLeft: isBcoinProduct(product) ? 10 : 0,
+                                  color:themeStyle.BROWN_700
+
                                 }}
                               >
                                 {
@@ -966,6 +981,7 @@ const CartScreen = () => {
                             <Text
                               style={{
                                 fontFamily: `${getCurrentLang()}-SemiBold`,
+                                color:themeStyle.BROWN_700
                               }}
                             >
                               {product.others.note}
@@ -1014,6 +1030,7 @@ const CartScreen = () => {
                                       style={{
                                         fontSize: 20,
                                         fontFamily: `${getCurrentLang()}-SemiBold`,
+                                        color:themeStyle.BROWN_700
                                       }}
                                     >
                                       {t("edit")}
@@ -1044,6 +1061,7 @@ const CartScreen = () => {
                                         fontSize: 20,
                                         fontFamily: `${getCurrentLang()}-SemiBold`,
                                         height: "100%",
+                                        color:themeStyle.BROWN_700
                                       }}
                                     >
                                       {t("delete")}
@@ -1063,12 +1081,12 @@ const CartScreen = () => {
                                 }}
                               >
                                 <Text
-                                  style={{ fontWeight: "bold", fontSize: 17 }}
+                                  style={{ fontWeight: "bold", fontSize: 17,color:themeStyle.BROWN_700, fontFamily: "Rubik-Bold", }}
                                 >
                                   {product.data.price}
                                 </Text>
                                 <Text
-                                  style={{ fontWeight: "bold", fontSize: 17 }}
+                                  style={{ fontWeight: "bold", fontSize: 17,color:themeStyle.BROWN_700 }}
                                 >
                                   ₪
                                 </Text>
@@ -1180,7 +1198,7 @@ const CartScreen = () => {
                 ) : (
                   <View style={{ alignItems: "center", flexDirection: "row" }}>
                     <View>
-                      <Text>{t("loading-location")}</Text>
+                      <Text style={{color:themeStyle.BROWN_700}}>{t("loading-location")}</Text>
                     </View>
                     <View style={{ marginLeft: 5 }}>
                       <ActivityIndicator
@@ -1262,14 +1280,14 @@ const CartScreen = () => {
                       style={{ color: theme.GRAY_700 }}
                     />
                     <Text
-                      style={{ fontSize: 20, paddingTop: 3, paddingLeft: 5 }}
+                      style={{ fontSize: 20, paddingTop: 3, paddingLeft: 5,color:themeStyle.BROWN_700 }}
                     >
-                      {"החלפה"}
+                      {"change"}
                     </Text>
                   </TouchableOpacity>
 
                   <Text
-                    style={{ fontSize: 20 }}
+                    style={{ fontSize: 20,color:themeStyle.BROWN_700 }}
                   >{`****_****_****_${ccData?.last4Digits}`}</Text>
                 </View>
               )}
@@ -1279,7 +1297,7 @@ const CartScreen = () => {
               isBcoinInCart()) && (
               <View>
                 <View style={{ alignItems: "center" }}>
-                  <Text style={{ fontWeight: "bold" }}>{t("total")}</Text>
+                  <Text style={{ fontWeight: "bold",color:themeStyle.BROWN_700 }}>{t("total")}</Text>
                 </View>
                 <View style={{ marginTop: 30 }}>
                   <View style={styles.priceRowContainer}>
@@ -1288,6 +1306,7 @@ const CartScreen = () => {
                         style={{
                           fontFamily: `${getCurrentLang()}-Light`,
                           fontSize: 20,
+                          color:themeStyle.BROWN_700
                         }}
                       >
                         {t("order-price")}
@@ -1296,8 +1315,9 @@ const CartScreen = () => {
                     <View>
                       <Text
                         style={{
-                          fontFamily: `${getCurrentLang()}-Light`,
+                          fontFamily: "Rubik-Light",
                           fontSize: 17,
+                          color:themeStyle.BROWN_700
                         }}
                       >
                         ₪{itemsPrice + userDetailsStore?.userDetails.credit}
@@ -1312,6 +1332,7 @@ const CartScreen = () => {
                           style={{
                             fontFamily: `${getCurrentLang()}-Light`,
                             fontSize: 20,
+                            color:themeStyle.BROWN_700
                           }}
                         >
                           {t("delivery")}
@@ -1320,8 +1341,9 @@ const CartScreen = () => {
                       <View>
                         <Text
                           style={{
-                            fontFamily: `${getCurrentLang()}-Light`,
+                            fontFamily: "Rubik-Light",
                             fontSize: 17,
+                            color:themeStyle.BROWN_700
                           }}
                         >
                           ₪15
@@ -1336,6 +1358,7 @@ const CartScreen = () => {
                           style={{
                             fontFamily: `${getCurrentLang()}-Light`,
                             fontSize: 20,
+                            color:themeStyle.BROWN_700
                           }}
                         >
                           {t("bcoin-discount-price")}
@@ -1344,8 +1367,8 @@ const CartScreen = () => {
                       <View>
                         <Text
                           style={{
-                            fontFamily: `${getCurrentLang()}-Light`,
                             fontSize: 17,
+                            color:themeStyle.BROWN_700, fontFamily: "Rubik-Light",
                           }}
                         >
                           ₪{userDetailsStore.userDetails?.credit * -1}
@@ -1364,6 +1387,7 @@ const CartScreen = () => {
                   style={{
                     fontFamily: `${getCurrentLang()}-SemiBold`,
                     fontSize: 20,
+                    color:themeStyle.BROWN_700
                   }}
                 >
                   {t("final-price")}
@@ -1374,6 +1398,7 @@ const CartScreen = () => {
                   style={{
                     fontSize: 17,
                     fontWeight: "bold",
+                    color:themeStyle.BROWN_700
                   }}
                 >
                   {totalPrice}
@@ -1382,6 +1407,7 @@ const CartScreen = () => {
                   style={{
                     fontWeight: "bold",
                     fontSize: 17,
+                    color:themeStyle.BROWN_700
                   }}
                 >
                   ₪

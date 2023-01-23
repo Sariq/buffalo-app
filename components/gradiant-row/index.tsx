@@ -3,6 +3,7 @@ import Counter from "../controls/counter";
 import CheckBox from "../controls/checkbox";
 import i18n from "../../translations/index-x";
 import { getCurrentLang } from "../../translations/i18n";
+import themeStyle from "../../styles/theme.style";
 
 type TProps = {
   onChangeFn: any;
@@ -86,6 +87,7 @@ export default function GradiantRow({
             style={{
               fontSize: fontSize || 15,
               fontFamily: `${getCurrentLang()}-SemiBold`,
+              color:themeStyle.BROWN_700
             }}
           >
             {title}
@@ -99,7 +101,7 @@ export default function GradiantRow({
           }}
         >
           {price ? (
-            <Text style={{ fontSize: 14, fontFamily: "Rubik-Regular" }}>
+            <Text style={{ fontSize: 14, fontFamily: "Rubik-Regular",color:themeStyle.BROWN_700 }}>
               {price}+
             </Text>
           ) : null}

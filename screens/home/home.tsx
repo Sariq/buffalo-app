@@ -10,6 +10,7 @@ import { useEffect, useState, useContext } from "react";
 import { StoreContext } from "../../stores";
 import themeStyle from "../../styles/theme.style";
 import { SITE_URL } from "../../consts/api";
+import { getCurrentLang } from "../../translations/i18n";
 
 const HomeScreen = ({ navigation }) => {
   const { t } = useTranslation();
@@ -85,6 +86,8 @@ const HomeScreen = ({ navigation }) => {
               iconSize={isActiveOrder ? 20 : 30}
               textPadding={0}
               marginH={5}
+              textColor={themeStyle.BROWN_700}
+              fontFamily={`${getCurrentLang()}-SemiBold`}
             />
           </View>
           {isActiveOrder && (

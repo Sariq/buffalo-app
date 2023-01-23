@@ -1,6 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { useState, useEffect, useCallback, useContext } from "react";
 import "./translations/i18n";
+import * as SplashScreen from 'expo-splash-screen';
 
 import * as Font from "expo-font";
 import Constants from "expo-constants";
@@ -13,7 +14,7 @@ import {
   DeviceEventEmitter,
 } from "react-native";
 import RootNavigator from "./navigation";
-import NetInfo from '@react-native-community/netinfo';
+import NetInfo from "@react-native-community/netinfo";
 
 I18nManager.forceRTL(true);
 I18nManager.allowRTL(true);
@@ -22,11 +23,9 @@ I18nManager.allowRTL(true);
 import ExpiryDate from "./components/expiry-date";
 import Icon from "./components/icon";
 import GeneralServerErrorDialog from "./components/dialogs/general-server-error";
-import TermsAndConditionsScreen from "./screens/terms-and-conditions";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { observer } from "mobx-react";
 import { StoreContext } from "./stores";
-import i18n from "./translations/i18n";
 import { ordersStore } from "./stores/orders";
 import InterntConnectionDialog from "./components/dialogs/internet-connection";
 // Keep the splash screen visible while we fetch resources
@@ -52,15 +51,26 @@ let customARFonts = {
   "Rubik-Regular": require(`./assets/fonts/shared/Rubik-Regular.ttf`),
   "Rubik-Medium": require(`./assets/fonts/shared/Rubik-Medium.ttf`),
   "Rubik-Bold": require(`./assets/fonts/shared/Rubik-Bold.ttf`),
+  "Rubik-Light": require(`./assets/fonts/shared/Rubik-Light.ttf`),
 };
 
 const App = () => {
-  const { authStore, cartStore, userDetailsStore, menuStore, storeDataStore,languageStore } = useContext(StoreContext);
+  const {
+    authStore,
+    cartStore,
+    userDetailsStore,
+    menuStore,
+    storeDataStore,
+    languageStore,
+  } = useContext(StoreContext);
 
   const [assetsIsReady, setAssetsIsReady] = useState(false);
   const [appIsReady, setAppIsReady] = useState(false);
   const [isFontReady, setIsFontReady] = useState(false);
-  const [isOpenInternetConnectionDialog, setIsOpenInternetConnectionDialog] = useState(false);
+  const [
+    isOpenInternetConnectionDialog,
+    setIsOpenInternetConnectionDialog,
+  ] = useState(false);
 
   useEffect(() => {
     if (!I18nManager.isRTL) {
@@ -68,7 +78,7 @@ const App = () => {
       RNRestart.Restart();
     }
   }, []);
-  
+
   async function prepare() {
     try {
       // Pre-load fonts, make any API calls you need to do here
@@ -82,13 +92,17 @@ const App = () => {
           const fetchStoreDataStore = storeDataStore.getStoreData();
           const fetchOrders = ordersStore.getOrders();
           userDetailsStore.setIsAcceptedTerms(true);
-          Promise.all([fetchStoreDataStore, fetchUserDetails, fetchOrders]).then((res) => {
-              setAppIsReady(true);
+          Promise.all([
+            fetchStoreDataStore,
+            fetchUserDetails,
+            fetchOrders,
+          ]).then((res) => {
+            setAppIsReady(true);
           });
         } else {
           const data = await AsyncStorage.getItem("@storage_terms_accepted");
           userDetailsStore.setIsAcceptedTerms(JSON.parse(data));
-            setAppIsReady(true);
+          setAppIsReady(true);
         }
       });
       // Artificially delay for two seconds to simulate a slow loading
@@ -101,9 +115,9 @@ const App = () => {
     }
   }
   useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener(state => {
+    const unsubscribe = NetInfo.addEventListener((state) => {
       setIsOpenInternetConnectionDialog(!state.isConnected);
-      if(!state.isConnected){
+      if (!state.isConnected) {
         prepare();
       }
     });
@@ -138,7 +152,7 @@ const App = () => {
 
     return (
       <ImageBackground
-        source={require("./assets/splash-screen-1.png")}
+        source={require("./assets/splash-screen-2.png")}
         resizeMode="stretch"
         style={{ height: "100%", backgroundColor: "#FFCB05" }}
       >
@@ -167,31 +181,6 @@ const App = () => {
               fontSize: 20,
             }}
           >
-     
-            <Icon
-              style={{ color: "black" }}
-              icon="created-by"
-              size={20}
-            />
-          </Text>
-
-          <View
-            style={{
-              position: "absolute",
-              bottom: 10,
-              marginBottom: 15,
-              flexDirection: "row-reverse",
-              paddingLeft: 10
-            }}
-          >
-            <Text
-              style={{
-                fontWeight: "bold",
-                fontSize: 15
-              }}
-            >
-              Sari Qashuw |
-            </Text>
             <View
               style={{
                 flexDirection: "row-reverse",
@@ -201,28 +190,46 @@ const App = () => {
             >
               <Icon style={{ width: 80, height: 21 }} icon="moveit" />
             </View>
+          </Text>
+
+          <View
+            style={{
+              position: "absolute",
+              bottom: 10,
+              marginBottom: 15,
+              flexDirection: "row-reverse",
+              paddingLeft: 10,
+            }}
+          >
             <Text
               style={{
                 fontWeight: "bold",
-                fontSize: 15
-
+                fontSize: 15,
               }}
             >
-             | Sabri Qashuw 
+              Sari Qashuw{' '}
+            </Text>
+            <Text
+              style={{
+                fontWeight: "bold",
+                fontSize: 15,
+              }}
+            >
+            |{' '}Sabri Qashuw
             </Text>
           </View>
           <View
-              style={{
-                position: "absolute",
-                bottom: 0,
-                marginBottom: 0,
-              }}
+            style={{
+              position: "absolute",
+              bottom: 0,
+              marginBottom: 0,
+            }}
           >
-          <Text style={{textAlign: "center"}}>{version}</Text>
+            <Text style={{ textAlign: "center" }}>{version}</Text>
           </View>
         </View>
         <GeneralServerErrorDialog />
-        <InterntConnectionDialog isOpen={isOpenInternetConnectionDialog}/>
+        <InterntConnectionDialog isOpen={isOpenInternetConnectionDialog} />
       </ImageBackground>
     );
   }
@@ -236,7 +243,7 @@ const App = () => {
         languageStore: languageStore,
         userDetailsStore: userDetailsStore,
         storeDataStore: storeDataStore,
-        ordersStore: ordersStore
+        ordersStore: ordersStore,
       }}
     >
       <View style={{ height: "100%" }}>
@@ -244,9 +251,8 @@ const App = () => {
       </View>
       <ExpiryDate />
       <GeneralServerErrorDialog />
-      <InterntConnectionDialog isOpen={isOpenInternetConnectionDialog}/>
+      <InterntConnectionDialog isOpen={isOpenInternetConnectionDialog} />
     </StoreContext.Provider>
   );
-}
+};
 export default observer(App);
-

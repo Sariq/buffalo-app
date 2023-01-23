@@ -31,7 +31,7 @@ export default function Counter({ onCounterChange, value, stepValue = 1, minValu
         </TouchableOpacity>
       </View>
       <View style={styles.counterValue}>
-        <Text style={{fontFamily: "Poppins-Regular", fontSize:16}}>{couter}</Text>
+        <Text style={{fontFamily: "Poppins-Regular", fontSize:16,color:themeStyle.BROWN_700}}>{couter}</Text>
       </View>
       <View>
         <TouchableOpacity
@@ -66,6 +66,7 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    
   },
   btnText: {
     fontSize: 20,
