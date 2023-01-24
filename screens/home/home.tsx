@@ -17,7 +17,7 @@ const HomeScreen = ({ navigation }) => {
   const [isAppReady, setIsAppReady] = useState(false);
   const [homeSlides, setHomeSlides] = useState();
   const [isActiveOrder, setIsActiveOrder] = useState(false);
-  let { userDetailsStore, menuStore, ordersStore } = useContext(StoreContext);
+  let { userDetailsStore, menuStore, ordersStore, authStore } = useContext(StoreContext);
 
   const displayTemrsAndConditions = async () => {
     if (!userDetailsStore.isAcceptedTerms) {
@@ -31,6 +31,24 @@ const HomeScreen = ({ navigation }) => {
   useEffect(() => {
     displayTemrsAndConditions();
     setHomeSlides(menuStore.homeSlides);
+  }, []);
+
+
+  const getOrders = () => {
+    ordersStore.getOrders();
+  };
+
+  useEffect(() => {
+    if(authStore.isLoggedIn()){
+      getOrders();
+      setTimeout(() => {
+        getOrders();
+      }, 15 * 1000);
+      const interval = setInterval(() => {
+        getOrders();
+      }, 60 * 1000);
+      return () => clearInterval(interval);
+    }
   }, []);
 
   useEffect(()=>{

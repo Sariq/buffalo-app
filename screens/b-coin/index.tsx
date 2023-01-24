@@ -11,10 +11,26 @@ import { LinearGradient } from "expo-linear-gradient";
 
 const BcoinScreen = () => {
   const { t } = useTranslation();
-  const { userDetailsStore } = useContext(StoreContext);
+  const { userDetailsStore, authStore } = useContext(StoreContext);
 
-  useEffect(()=>{
+
+  const getUserDetails = () => {
     userDetailsStore.getUserDetails();
+  };
+
+  useEffect(() => {
+    if(authStore.isLoggedIn()){
+      getUserDetails();
+      setTimeout(() => {
+        getUserDetails();
+      }, 15 * 1000);
+      const interval = setInterval(() => {
+        getUserDetails();
+      }, 60 * 1000);
+      return () => clearInterval(interval);
+    }
+  }, []);
+  useEffect(()=>{
   },[]);
 
 
