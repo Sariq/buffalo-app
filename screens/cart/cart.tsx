@@ -54,12 +54,8 @@ import BarcodeScannedDialog from "../../components/dialogs/barcode-scanner/barco
 import RecipetNotSupportedDialog from "../../components/dialogs/recipet-service/recipet-not-supported";
 import StoreErrorMsgDialog from "../../components/dialogs/store-errot-msg";
 import DeliveryMethodDialog from "../../components/dialogs/delivery-method";
+import { SHIPPING_METHODS } from "../../consts/shared";
 
-export const SHIPPING_METHODS = {
-  shipping: "DELIVERY",
-  takAway: "TAKEAWAY",
-  table: "TABLE",
-};
 const PAYMENT_METHODS = {
   creditCard: "CREDITCARD",
   cash: "CASH",

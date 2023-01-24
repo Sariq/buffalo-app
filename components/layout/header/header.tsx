@@ -7,7 +7,6 @@ import { useNavigation, useNavigationState } from "@react-navigation/native";
 import theme from "../../../styles/theme.style";
 import Icon from "../../icon";
 import { StoreContext } from "../../../stores";
-import { SHIPPING_METHODS } from "../../../screens/cart/cart";
 import * as Haptics from 'expo-haptics';
 
 const yellowBgScreens = ["homeScreen", "terms-and-conditions"];

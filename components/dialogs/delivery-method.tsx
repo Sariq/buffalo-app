@@ -13,8 +13,8 @@ import Icon from "../../components/icon";
 import { useState, useEffect } from "react";
 import Button from "../../components/controls/button/button";
 import themeStyle from "../../styles/theme.style";
-import { SHIPPING_METHODS } from "../../screens/cart/cart";
 import { useTranslation } from "react-i18next";
+import { SHIPPING_METHODS } from "../../consts/shared";
 
 type TProps = {
   isOpen: boolean;

@@ -5,7 +5,8 @@ export const AUTH_API = {
     AUTHINTICATE_API : "Authenticate",
     VERIFY_API : "Verify",
     UPDATE_CUSTOMER_NAME_API : "UpdateCustomerName",
-    GET_USER_DETAILS: "GetCustomerInfo"
+    GET_USER_DETAILS: "GetCustomerInfo",
+    LOGOUT_API: "Logout"
 };
 export const MENU_API = {
     CONTROLLER: "config",
