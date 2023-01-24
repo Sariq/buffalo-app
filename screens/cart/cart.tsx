@@ -148,7 +148,7 @@ const CartScreen = () => {
     if (menuStore.categories["OTHER"]) {
       const bcoinMeal = {
         data: menuStore.categories["OTHER"][0],
-        others: { count: 1, note: "" },
+        others: { count: 0, note: "" },
       };
       const bcoinFound = cartStore.cartItems.find(
         (product) => product.data.id === bcoindId
@@ -259,6 +259,16 @@ const CartScreen = () => {
       navigation.navigate("homeScreen");
       return;
     }
+    // if (cartStore.cartItems.length === 1 && isBcoinInCart()) {
+    //   const bcoinMeal = {
+    //     data: menuStore.categories["OTHER"][0],
+    //     others: { count: 1, note: "" },
+    //   };
+    //   cartStore.removeProduct(getProductIndexId(bcoinMeal, 0));
+
+    //   navigation.navigate("homeScreen");
+    //   return;
+    // }
     let tmpOrderPrice = 0;
     cartStore.cartItems.forEach((item) => {
       if (item) {
