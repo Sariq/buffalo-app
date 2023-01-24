@@ -13,6 +13,7 @@ import { useNavigation } from "@react-navigation/native";
 import CreditCard from "../../components/credit-card";
 import { axiosInstance } from "../../utils/http-interceptor";
 import { useTranslation } from "react-i18next";
+import { toBase64 } from "../../helpers/convert-base64";
 
 const InsertCustomerNameScreen = () => {
   const { t } = useTranslation();
@@ -41,7 +42,7 @@ const InsertCustomerNameScreen = () => {
       axiosInstance
         .post(
           `${AUTH_API.CONTROLLER}/${AUTH_API.UPDATE_CUSTOMER_NAME_API}`,
-          base64.encode(JSON.stringify(body))
+          toBase64(body)
         )
         .then(function (response) {
           DeviceEventEmitter.emit(`PREPARE_APP`);

@@ -30,6 +30,7 @@ import {
   useClearByFocusCell,
   
 } from "react-native-confirmation-code-field";
+import { toBase64 } from "../../helpers/convert-base64";
 const CELL_COUNT = 4;
 const reg_arNumbers = /^[\u0660-\u0669]{4}$/;
 const arabicNumbers  = [/٠/g, /١/g, /٢/g, /٣/g, /٤/g, /٥/g, /٦/g, /٧/g, /٨/g, /٩/g];
@@ -125,7 +126,7 @@ const VerifyCodeScreen = ({ route }) => {
       axiosInstance
         .post(
           `${AUTH_API.CONTROLLER}/${AUTH_API.VERIFY_API}`,
-          base64.encode(JSON.stringify(body)),
+          toBase64(body),
           { headers: { "Content-Type": "application/json" } }
         )
         .then(async function (response) {

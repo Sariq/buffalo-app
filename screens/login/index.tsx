@@ -13,6 +13,7 @@ import { useNavigation } from "@react-navigation/native";
 import { axiosInstance } from "../../utils/http-interceptor";
 import { useTranslation } from "react-i18next";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { toBase64 } from "../../helpers/convert-base64";
 
 const reg_arNumbers = /^[\u0660-\u0669]{10}$/;
 const arabicNumbers  = [/٠/g, /١/g, /٢/g, /٣/g, /٤/g, /٥/g, /٦/g, /٧/g, /٨/g, /٩/g];
@@ -66,7 +67,7 @@ const LoginScreen = () => {
       axiosInstance
         .post(
           `${AUTH_API.CONTROLLER}/${AUTH_API.AUTHINTICATE_API}`,
-          base64.encode(JSON.stringify(body)),{ headers: { "Content-Type": "application/json" } }
+          toBase64(body),{ headers: { "Content-Type": "application/json" } }
         )
         .then(async function (response) {
           setIsLoading(false);

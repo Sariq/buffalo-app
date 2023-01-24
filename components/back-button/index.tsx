@@ -13,7 +13,7 @@ export default function BackButton() {
     const routes = navigation.getState()?.routes;
     const currentRoute = routes[routes.length - 1]; // -2 because -1 is the current route
     const prevRoute = routes[routes.length - 2]; // -2 because -1 is the current route
-    if (currentRoute.name === "cart" && prevRoute.name === "verify-code") {
+    if ((currentRoute.name === "cart" || currentRoute.name === "profile") && (prevRoute.name === "verify-code" || prevRoute.name === "insert-customer-name")) {
       navigation.navigate("homeScreen");
       return;
     }
