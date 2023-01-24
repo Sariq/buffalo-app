@@ -184,6 +184,9 @@ const CartScreen = () => {
               askForLocation();
             }
           }
+          if (shippingMethod === SHIPPING_METHODS.table) {
+            setShippingMethod(SHIPPING_METHODS.takAway)
+          }
         }
 
         appState.current = nextAppState;
@@ -617,6 +620,7 @@ const CartScreen = () => {
     setShippingMethod(SHIPPING_METHODS.shipping);
   };
   const handleTableSelect = async () => {
+    setIsBarcodeOpen(false);
     setShippingMethod(SHIPPING_METHODS.table);
     const isSupported = await isStoreSupport("table_support");
     if (!isSupported) {

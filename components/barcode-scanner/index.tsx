@@ -1,14 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Button } from 'react-native';
-import { BarCodeScanner } from 'expo-barcode-scanner';
-import { useTranslation } from 'react-i18next';
-import themeStyle from '../../styles/theme.style';
+import React, { useState, useEffect } from "react";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Button,
+  Linking,
+  NativeModules,
+  Platform,
+} from "react-native";
+import { BarCodeScanner } from "expo-barcode-scanner";
+import { useTranslation } from "react-i18next";
+import themeStyle from "../../styles/theme.style";
+import BarcodeNoAccessDialog from "../../components/dialogs/barcode-scanner/barcode-no-access";
+const { RNAndroidOpenSettings } = NativeModules;
 
 export type TBacrcodeScanner = {
   onChange: any;
   isOpen: boolean;
-}
-const BarcodeScannerCMP = ({onChange, isOpen}: TBacrcodeScanner) => {
+};
+const BarcodeScannerCMP = ({ onChange, isOpen }: TBacrcodeScanner) => {
   const { t } = useTranslation();
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
@@ -16,25 +26,47 @@ const BarcodeScannerCMP = ({onChange, isOpen}: TBacrcodeScanner) => {
   useEffect(() => {
     const getBarCodeScannerPermissions = async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
-      setHasPermission(status === 'granted');
+      if (status !== "granted") {
+      } else {
+        setHasPermission(true);
+      }
     };
 
     getBarCodeScannerPermissions();
-  }, []);
+  }, [isOpen]);
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
-    
-    onChange(data)
+
+    onChange(data);
+  };
+
+  const handleNoAccessAnswer = (answer: boolean) => {
+    if (answer) {
+      onChange('canceled')
+    } else {
+      if (Platform.OS === "ios") {
+        Linking.openURL("app-settings:");
+      } else {
+        RNAndroidOpenSettings.appDetailsSettings();
+      }
+    }
   };
 
   if (hasPermission === null) {
-    return <Text>Requesting for camera permission</Text>;
+    return (
+      <BarcodeNoAccessDialog
+        isOpen={true}
+        handleAnswer={handleNoAccessAnswer}
+      />
+    );
+
+    // return <Text>Requesting for camera permission</Text>;
   }
-  if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
-  }
-  if(!isOpen){
+  // if (hasPermission === false) {
+  //   return <Text>No access to camera</Text>;
+  // }
+  if (!isOpen) {
     return;
   }
   return (
@@ -43,12 +75,17 @@ const BarcodeScannerCMP = ({onChange, isOpen}: TBacrcodeScanner) => {
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
         style={StyleSheet.absoluteFillObject}
       />
-      <View style={{
-        position: "absolute",
-        bottom: 25
-      }}>
-      <Button color={themeStyle.ERROR_COLOR} title={t('cancel-scaning')} onPress={() => onChange('canceled')} />
-
+      <View
+        style={{
+          position: "absolute",
+          bottom: 25,
+        }}
+      >
+        <Button
+          color={themeStyle.ERROR_COLOR}
+          title={t("cancel-scaning")}
+          onPress={() => onChange("canceled")}
+        />
       </View>
     </View>
   );
@@ -61,8 +98,8 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center",
-    position:"absolute",
+    position: "absolute",
     height: "100%",
-    width: "100%"
+    width: "100%",
   },
 });
