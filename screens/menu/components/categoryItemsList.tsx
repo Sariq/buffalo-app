@@ -62,6 +62,7 @@ const CategoryItemsList = ({ productsList }) => {
                   marginTop: 20,
                   fontSize: 18,
                   fontFamily: `${getCurrentLang()}-SemiBold`,
+                  textAlign:"center"
                 }}
               >
                 {item[`name_${languageStore.selectedLang}`]}

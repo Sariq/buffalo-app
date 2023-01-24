@@ -32,12 +32,12 @@ import InterntConnectionDialog from "./components/dialogs/internet-connection";
 //SplashScreen.preventAutoHideAsync();
 let customARFonts = {
   "ar-Black": require(`./assets/fonts/ar/Black.ttf`),
-  "ar-Bold": require(`./assets/fonts/ar/Bold.ttf`),
+  "ar-Bold": require(`./assets/fonts/ar/Bold.otf`),
   "ar-ExtraBold": require(`./assets/fonts/ar/ExtraBold.ttf`),
-  "ar-Light": require(`./assets/fonts/ar/Light.ttf`),
+  "ar-Light": require(`./assets/fonts/ar/Light.otf`),
   "ar-Medium": require(`./assets/fonts/ar/Medium.ttf`),
-  "ar-Regular": require(`./assets/fonts/ar/Regular.ttf`),
-  "ar-SemiBold": require(`./assets/fonts/ar/SemiBold.ttf`),
+  "ar-Regular": require(`./assets/fonts/ar/Regular.otf`),
+  "ar-SemiBold": require(`./assets/fonts/ar/Bold.otf`),
 
   "he-Black": require(`./assets/fonts/he/Black.ttf`),
   "he-Bold": require(`./assets/fonts/he/Bold.ttf`),
