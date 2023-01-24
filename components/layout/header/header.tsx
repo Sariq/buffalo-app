@@ -90,7 +90,7 @@ const Header = () => {
 
   const handleProfileClick = () => {
     if(authStore.isLoggedIn()){
-      navigation.navigate("insert-customer-name");
+      navigation.navigate("profile");
     }else{
      navigation.navigate("login");
     }
