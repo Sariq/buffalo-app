@@ -3,14 +3,13 @@ import { useContext, useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import { StoreContext } from "../../../stores";
 import themeStyle from "../../../styles/theme.style";
-import { fromBase64, toBase64 } from "../../../helpers/convert-base64";
+import { fromBase64 } from "../../../helpers/convert-base64";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { getCurrentLang } from "../../../translations/i18n";
-import { isEmpty, orderBy } from "lodash";
+import { isEmpty } from "lodash";
 import Icon from "../../../components/icon";
-import { axiosInstance } from "../../../utils/http-interceptor";
-import { ORDER_API } from "../../../consts/api";
+import BackButton from "../../../components/back-button";
 //2 -ready | if comple
 export const inProgressStatuses = ["SENT"];
 export const readyStatuses = ["COMPLETED", "READY"];
@@ -38,10 +37,10 @@ const OrdersStatusScreen = ({ route }) => {
     return () => clearInterval(interval);
   }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     setOrdersList(ordersStore.ordersList);
     setIsloading(false);
-  }, [ordersStore.ordersList])
+  }, [ordersStore.ordersList]);
 
   const getIconByStatus = (status: string, type: number) => {
     if (type === 1) {
@@ -126,7 +125,7 @@ const OrdersStatusScreen = ({ route }) => {
     return extras.map((extra) => {
       return (
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Text style={{ marginRight: 2, paddingBottom:4 }}>+</Text>
+          <Text style={{ marginRight: 2, paddingBottom: 4 }}>+</Text>
           <Text>{extra.name}</Text>
         </View>
       );
@@ -306,7 +305,7 @@ const OrdersStatusScreen = ({ route }) => {
     );
   };
 
-  if(isLoading){
+  if (isLoading) {
     return (
       <View
         style={{
@@ -335,17 +334,43 @@ const OrdersStatusScreen = ({ route }) => {
   }
   return (
     <ScrollView style={styles.container}>
-      {ordersList.map((order) => (
-        <View style={{ marginBottom: 50 }}>
-          <View style={styles.orderContainer}>
-            {renderOrderDateRaw(order)}
-            {renderOrderItems(order)}
-            {renderOrderTotalRaw(order)}
-            {renderStatus(order)}
-
-          </View>
+      <View style={{ flexDirection: "row" }}>
+        <View style={{marginLeft:15,zIndex:1}}>
+          <BackButton goTo={'homeScreen'}/>
         </View>
-      ))}
+        <View
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            alignItems: "center",
+            top: 19,
+            zIndex:0
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 20,
+              fontFamily: `${getCurrentLang()}-SemiBold`,
+              color: themeStyle.GRAY_700,
+            }}
+          >
+            {t("order-in-progress")}
+          </Text>
+        </View>
+      </View>
+      <View style={{ marginTop: 40 }}>
+        {ordersList.map((order) => (
+          <View style={{ marginBottom: 50 }}>
+            <View style={styles.orderContainer}>
+              {renderOrderDateRaw(order)}
+              {renderOrderItems(order)}
+              {renderOrderTotalRaw(order)}
+              {renderStatus(order)}
+            </View>
+          </View>
+        ))}
+      </View>
     </ScrollView>
   );
 };
@@ -355,7 +380,6 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     height: "100%",
-    marginTop: 40,
   },
   orderContainer: {
     backgroundColor: themeStyle.WHITE_COLOR,

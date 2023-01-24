@@ -3,11 +3,11 @@ import { observer } from "mobx-react";
 import { useNavigation } from "@react-navigation/native";
 import Button from "../../../components/controls/button/button";
 import themeStyle from "../../../styles/theme.style";
-import { SHIPPING_METHODS } from "../../cart/cart";
 import { useTranslation } from "react-i18next";
 import { getCurrentLang } from "../../../translations/i18n";
 import { useEffect, useContext } from "react";
 import { StoreContext } from "../../../stores";
+import { SHIPPING_METHODS } from "../../../consts/shared";
 
 const OrderSubmittedScreen = ({ route }) => {
   const { t } = useTranslation();

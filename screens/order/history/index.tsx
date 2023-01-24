@@ -3,10 +3,6 @@ import { useContext, useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import { useNavigation } from "@react-navigation/native";
 import { StoreContext } from "../../../stores";
-import i18n from "../../../translations/index-x";
-import Button from "../../../components/controls/button/button";
-import themeStyle from "../../../styles/theme.style";
-import { SHIPPING_METHODS } from "../../cart/cart";
 
 const OrderHistoryScreen = ({ route }) => {
   const { cartStore } = useContext(StoreContext);

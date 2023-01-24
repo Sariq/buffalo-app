@@ -5,7 +5,10 @@ import theme from "../../styles/theme.style";
 import Icon from "../icon";
 import * as Haptics from "expo-haptics";
 
-export default function BackButton() {
+export type TProps = {
+  goTo?: string;
+}
+export default function BackButton({goTo}: TProps) {
   const navigation = useNavigation();
 
   const onBtnClick = () => {
@@ -15,6 +18,10 @@ export default function BackButton() {
     const prevRoute = routes[routes.length - 2]; // -2 because -1 is the current route
     if ((currentRoute.name === "cart" || currentRoute.name === "profile") && (prevRoute.name === "verify-code" || prevRoute.name === "insert-customer-name")) {
       navigation.navigate("homeScreen");
+      return;
+    }
+    if(goTo){
+      navigation.navigate(goTo);
       return;
     }
     navigation.goBack();
