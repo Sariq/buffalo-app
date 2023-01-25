@@ -779,10 +779,9 @@ const CartScreen = () => {
                             >
                               <Text
                                 style={{
-                                  fontSize: 17,
+                                  fontSize: 15,
                                   fontFamily: `${getCurrentLang()}-Bold`,
                                   fontWeight: "bold",
-                                  lineHeight:16,
                                   color:themeStyle.BROWN_700
                                 }}
                               >
@@ -790,10 +789,9 @@ const CartScreen = () => {
                               </Text>
                               <Text
                                 style={{
-                                  fontSize: 17,
+                                  fontSize: 15,
                                   fontFamily: `${getCurrentLang()}-Bold`,
                                   marginTop: getCurrentLang() === "he" ? -5 : 0,
-                                  lineHeight:16,
                                   color:themeStyle.BROWN_700
                                 }}
                               >
@@ -809,7 +807,7 @@ const CartScreen = () => {
                                 <Text
                                   style={{
                                     fontWeight: "bold",
-                                    fontSize: 30,
+                                    fontSize: 28,
                                     paddingBottom: 5,
                                     color:themeStyle.BROWN_700
 
@@ -820,11 +818,9 @@ const CartScreen = () => {
                                 <Text
                                   style={{
                                     fontWeight: "bold",
-                                    fontSize: 50,
+                                    fontSize: 47,
                                     fontFamily: "Rubik-Bold",
-                                    lineHeight:60,
                                     color:themeStyle.BROWN_700
-
                                   }}
                                 >
                                   {product.data.price}
@@ -840,7 +836,7 @@ const CartScreen = () => {
                                 <Text
                                   style={{
                                     fontSize: 13,
-                                    fontFamily: `${getCurrentLang()}-Light`,
+                                    fontFamily: `${getCurrentLang()}-SemiBold`,
                                     textAlign: "center",
                                     color:themeStyle.BROWN_700
 
@@ -852,7 +848,7 @@ const CartScreen = () => {
                                 <Text
                                   style={{
                                     fontSize: 13,
-                                    fontFamily: `${getCurrentLang()}-Light`,
+                                    fontFamily: `${getCurrentLang()}-SemiBold`,
                                     textAlign: "center",
                                     marginTop:
                                       getCurrentLang() === "he" ? -4 : 0,
@@ -1139,7 +1135,7 @@ const CartScreen = () => {
                   fontFamily={`${getCurrentLang()}-SemiBold`}
                   fontSize={20}
                   icon="shipping_icon"
-                  iconSize={40}
+                  iconSize={50}
                   isFlexCol
                   borderRadious={15}
                 />

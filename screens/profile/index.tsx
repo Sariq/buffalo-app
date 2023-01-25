@@ -8,6 +8,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 import themeStyle from "../../styles/theme.style";
+import { getCurrentLang } from "../../translations/i18n";
 
 const ProfileScreen = () => {
   const { t } = useTranslation();
@@ -123,28 +124,34 @@ const ProfileScreen = () => {
 
       <View style={styles.container}>
         <View style={{ alignItems: "center", width: "100%" }}>
-          <Text style={{ fontSize: 25 }}>
+          <Text
+            style={{
+              fontSize: 25,
+              fontFamily: `${getCurrentLang()}-Bold`,
+              color: themeStyle.GRAY_700,
+            }}
+          >
             {t("hello")}، {userDetailsStore?.userDetails?.name}
           </Text>
         </View>
         <View style={{ marginTop: 0 }}>{renderItems()}</View>
       </View>
-      <View  style={{
+      <View
+        style={{
           alignItems: "center",
           position: "absolute",
           bottom: 5,
           margin: "auto",
           left: 0,
           right: 0,
-        }}>
-      <TouchableOpacity
-        onPress={() => actionHandler('deleteAccount')}
-       
+        }}
       >
-        <Text style={{color: themeStyle.GRAY_300}}>{t("delete-account")}</Text>
-      </TouchableOpacity>
+        <TouchableOpacity onPress={() => actionHandler("deleteAccount")}>
+          <Text style={{ color: themeStyle.GRAY_300 }}>
+            {t("delete-account")}
+          </Text>
+        </TouchableOpacity>
       </View>
-
     </View>
   );
 };

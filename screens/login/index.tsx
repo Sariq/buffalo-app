@@ -94,8 +94,8 @@ const LoginScreen = () => {
 
     <View style={styles.container}>
       <View style={styles.inputsContainer}>
-        <Text style={{ marginTop: 50, fontSize: 25 }}>{t('insert-phone-number')}</Text>
-        <Text style={{ marginTop: 20, fontSize: 17 }}>
+        <Text style={{ marginTop: 50, fontSize: 25, color: themeStyle.GRAY_700 }}>{t('insert-phone-number')}</Text>
+        <Text style={{ marginTop: 20, fontSize: 17, color: themeStyle.GRAY_700 }}>
         {t('will-send-sms-with-code')}
         </Text>
 
@@ -112,6 +112,7 @@ const LoginScreen = () => {
             onClickFn={authinticate}
             isLoading={isLoading}
             disabled={isLoading}
+            textColor={themeStyle.GRAY_700}
           />
         </View>
       </View>

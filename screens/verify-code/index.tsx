@@ -169,13 +169,13 @@ const VerifyCodeScreen = ({ route }) => {
         />
       </View>
       <View style={styles.inputsContainer}>
-        <Text style={{ marginTop: 0, fontSize: 25 }}>{t("inser-code")}</Text>
+        <Text style={{ marginTop: 0, fontSize: 25, color:themeStyle.GRAY_700 }}>{t("inser-code")}</Text>
         <Text
           style={{
             marginTop: 20,
             fontSize: 17,
             paddingHorizontal: 30,
-            textAlign: "center",
+            textAlign: "center", color:themeStyle.GRAY_700
           }}
         >
           {t("inser-recived-number")} {phoneNumber}
@@ -249,7 +249,7 @@ const VerifyCodeScreen = ({ route }) => {
             <Text
               style={{
                 fontSize: 17,
-                fontFamily: `${getCurrentLang()}-SemiBold`,
+                fontFamily: `${getCurrentLang()}-SemiBold`, color:themeStyle.GRAY_700
               }}
             >
               {t("didnt-recive-sms")} ?
@@ -266,7 +266,7 @@ const VerifyCodeScreen = ({ route }) => {
                   timer > 0 ? themeStyle.GRAY_300 : themeStyle.SUCCESS_COLOR,
                 textDecorationLine: "underline",
                 padding: 5,
-                opacity: 0.5,
+                opacity: 0.5
               }}
             >
               {t("resend-sms")}
@@ -282,6 +282,7 @@ const VerifyCodeScreen = ({ route }) => {
             onClickFn={onVerifyCode}
             isLoading={isLoading}
             disabled={isLoading}
+            textColor={themeStyle.GRAY_700}
           />
         </View>
       </View>
@@ -318,6 +319,7 @@ const styles = StyleSheet.create({
     lineHeight: 65,
     fontSize: 30,
     textAlign: "center",
+    color: themeStyle.GRAY_700
   },
   focusCell: {
     borderColor: "#000",
