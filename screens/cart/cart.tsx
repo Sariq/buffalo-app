@@ -732,7 +732,7 @@ const CartScreen = () => {
                 <BackButton />
               </View>
               <View>
-                <Text style={{ fontWeight: "bold", fontSize: 20 }}>
+                <Text style={{ fontWeight: "bold", fontSize: 20, color: themeStyle.GRAY_700 }}>
                   {t("meals")} {cartStore.getProductsCount()}
                 </Text>
               </View>

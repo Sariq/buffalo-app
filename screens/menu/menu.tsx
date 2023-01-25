@@ -125,7 +125,6 @@ const MenuScreen = () => {
                     {
                       marginTop: 10,
                       color: themeStyle.GRAY_700,
-                        
                       fontFamily: `${getCurrentLang()}-SemiBold`,
                     },
                   ]}

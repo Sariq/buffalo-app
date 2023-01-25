@@ -8,6 +8,7 @@ import { useNavigation, useNavigationState } from "@react-navigation/native";
 import { useState, useEffect } from "react";
 import TermsAndConditionsScreen from "../../../screens/terms-and-conditions";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Platform } from "expo-modules-core";
 
 const yellowBgTopScreens = ["homeScreen", "terms-and-conditions"];
 const yellowBgBottomScreens = ["homeScreen", "menuScreen", "BCOINSScreen"];
@@ -62,6 +63,10 @@ const AppContainer = () => {
     setBottomColor();
   }, [routeState]);
 
+  const getScreenOrWindow = () => {
+    return Platform.OS === 'ios' ? 'window' : 'screen';
+  }
+  
   const [rotateAnimation, setRotateAnimation] = useState(new Animated.Value(0));
   const handleAnimation = () => {
     // @ts-ignore
@@ -78,7 +83,7 @@ const AppContainer = () => {
   };
   const interpolateRotatingY = rotateAnimation.interpolate({
     inputRange: [0, 1],
-    outputRange: [0, -Dimensions.get("window").height +140],
+    outputRange: [0, -Dimensions.get(getScreenOrWindow()).height + 140],
   });
   const interpolateRotatingX = rotateAnimation.interpolate({
     inputRange: [0, 1],

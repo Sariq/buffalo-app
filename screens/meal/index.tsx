@@ -256,6 +256,7 @@ const MealScreen = ({ route }) => {
                     fontSize: 25,
                     textAlign: "left",
                     fontFamily: `${getCurrentLang()}-SemiBold`,
+                    color: themeStyle.GRAY_700
                   }}
                 >
                   {meal.data[`name_${languageStore.selectedLang}`]}
@@ -269,6 +270,8 @@ const MealScreen = ({ route }) => {
                     fontFamily: `${getCurrentLang()}-SemiBold`,
                     marginTop: 10,
                     lineHeight: 17.5,
+                    color: themeStyle.GRAY_700
+
                   }}
                 >
                   {meal.data[`description_${languageStore.selectedLang}`]}
@@ -308,6 +311,7 @@ const MealScreen = ({ route }) => {
                                 fontSize: 20,
                                 textAlign: "center",
                                 marginBottom: 8,
+                                color: themeStyle.GRAY_700
                               }}
                             >
                               {t(keyOrdered)}
