@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, ScrollView } from "react-native";
+import { StyleSheet, View, Image, ScrollView } from "react-native";
 import { useContext, useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import { StoreContext } from "../../../stores";
@@ -10,6 +10,7 @@ import { getCurrentLang } from "../../../translations/i18n";
 import { isEmpty } from "lodash";
 import Icon from "../../../components/icon";
 import BackButton from "../../../components/back-button";
+import Text from "../../../components/controls/Text";
 //2 -ready | if comple
 export const inProgressStatuses = ["SENT"];
 export const readyStatuses = ["COMPLETED", "READY"];
@@ -121,12 +122,20 @@ const OrdersStatusScreen = ({ route }) => {
     );
   };
 
+  const renderOrderNote = (note: string) => {
+    console.log(note);
+    return note ? (
+      <View style={{ marginLeft: 10 }}>
+        <Text style={{ marginRight: 2, paddingBottom: 4 }}>* {note}</Text>
+      </View>
+    ) : null;
+  };
   const renderOrderItemsExtras = (extras) => {
     return extras.map((extra) => {
       return (
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Text style={{ marginRight: 2, paddingBottom: 4 }}>+</Text>
-          <Text>{extra.name}</Text>
+          <Text>{menuStore.translate(extra.name)}</Text>
         </View>
       );
     });
@@ -141,79 +150,82 @@ const OrdersStatusScreen = ({ route }) => {
         return;
       }
       return (
-        <View
-          style={{
-            flexDirection: "row",
-            marginTop: 15,
-            justifyContent: "space-between",
-            alignItems: "center",
-            paddingHorizontal: 5,
-          }}
-        >
-          <View>
-            <View
-              style={{
-                flexDirection: "row",
-                alignContent: "center",
-                marginLeft: 10,
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 15,
-                  fontFamily: `${getCurrentLang()}-SemiBold`,
-                  color: themeStyle.GRAY_700,
-                }}
-              >
-                {meal[`name_${getCurrentLang()}`]}
-              </Text>
-            </View>
-            <View
-              style={{ flexDirection: "row", justifyContent: "flex-start" }}
-            >
+        <View>
+          <View
+            style={{
+              flexDirection: "row",
+              marginTop: 15,
+              justifyContent: "space-between",
+              alignItems: "center",
+              paddingHorizontal: 5,
+            }}
+          >
+            <View>
               <View
                 style={{
-                  flexBasis: "40%",
-                  height: 80,
-                  padding: 5,
-                  marginVertical: 10,
-                  alignItems: "center",
+                  flexDirection: "row",
+                  alignContent: "center",
+                  marginLeft: 10,
                 }}
               >
-                <Image
-                  style={{ width: "100%", height: "100%" }}
-                  source={{ uri: meal?.image_url }}
-                />
+                <Text
+                  style={{
+                    fontSize: 15,
+                    fontFamily: `${getCurrentLang()}-SemiBold`,
+                    color: themeStyle.GRAY_700,
+                  }}
+                >
+                  {meal[`name_${getCurrentLang()}`]}
+                </Text>
               </View>
-              <View style={{ alignItems: "flex-start" }}>
-                {renderOrderItemsExtras(item.data)}
+              <View
+                style={{ flexDirection: "row", justifyContent: "flex-start" }}
+              >
+                <View
+                  style={{
+                    flexBasis: "40%",
+                    height: 80,
+                    padding: 5,
+                    marginVertical: 10,
+                    alignItems: "center",
+                  }}
+                >
+                  <Image
+                    style={{ width: "100%", height: "100%" }}
+                    source={{ uri: meal?.image_url }}
+                  />
+                </View>
+                <View style={{ alignItems: "flex-start" }}>
+                  {renderOrderItemsExtras(item.data)}
+                </View>
+              </View>
+            </View>
+            <View style={{ alignItems: "center" }}>
+              <View>
+                <Text
+                  style={{
+                    fontSize: 15,
+                    fontFamily: `${getCurrentLang()}-SemiBold`,
+                    color: themeStyle.GRAY_700,
+                  }}
+                >
+                  {t("count")}: {item.qty}
+                </Text>
+              </View>
+              <View style={{ marginTop: 2, alignItems: "center" }}>
+                <Text
+                  style={{
+                    fontSize: 15,
+                    fontFamily: `${getCurrentLang()}-SemiBold`,
+                    color: themeStyle.GRAY_700,
+                  }}
+                >
+                  ₪{item.price * item.qty}
+                </Text>
               </View>
             </View>
           </View>
-          <View style={{ alignItems: "center" }}>
-            <View>
-              <Text
-                style={{
-                  fontSize: 15,
-                  fontFamily: `${getCurrentLang()}-SemiBold`,
-                  color: themeStyle.GRAY_700,
-                }}
-              >
-                {t("count")}: {item.qty}
-              </Text>
-            </View>
-            <View style={{ marginTop: 2, alignItems: "center" }}>
-              <Text
-                style={{
-                  fontSize: 15,
-                  fontFamily: `${getCurrentLang()}-SemiBold`,
-                  color: themeStyle.GRAY_700,
-                }}
-              >
-                ₪{item.price * item.qty}
-              </Text>
-            </View>
-          </View>
+          <View>{renderOrderNote(item?.notes)}</View>
         </View>
       );
     });
@@ -335,8 +347,8 @@ const OrdersStatusScreen = ({ route }) => {
   return (
     <ScrollView style={styles.container}>
       <View style={{ flexDirection: "row" }}>
-        <View style={{marginLeft:15,zIndex:1}}>
-          <BackButton goTo={'homeScreen'}/>
+        <View style={{ marginLeft: 15, zIndex: 1 }}>
+          <BackButton goTo={"homeScreen"} />
         </View>
         <View
           style={{
@@ -345,7 +357,7 @@ const OrdersStatusScreen = ({ route }) => {
             right: 0,
             alignItems: "center",
             top: 19,
-            zIndex:0
+            zIndex: 0,
           }}
         >
           <Text

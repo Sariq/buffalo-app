@@ -9,25 +9,27 @@ class StoreDataStore {
 
   constructor() {
     makeAutoObservable(this);
-    
+
   }
-  
+
   getStoreDataFromServer = async () => {
-        const body = {datetime: new Date()};
-        return axiosInstance
-          .post(
-            `${STORE_API.CONTROLLER}/${STORE_API.GET_STORE_API}`,
-           toBase64(body),
-          )
-          .then(function (response) {
-            const res = JSON.parse(fromBase64(response.data));
-            return res;
-          })
+    const body = { datetime: new Date() };
+    return axiosInstance
+      .post(
+        `${STORE_API.CONTROLLER}/${STORE_API.GET_STORE_API}`,
+        toBase64(body),
+      )
+      .then(function (response) {
+        const res = JSON.parse(fromBase64(response.data));
+        return res;
+      }).catch((error) => {
+        console.log(error);
+      })
   };
 
   getStoreData = () => {
     return this.getStoreDataFromServer().then((res) => {
-      runInAction(()=>{
+      runInAction(() => {
         this.storeData = res.stores[0];
         this.paymentCredentials = JSON.parse(fromBase64(res.stores[0].credentials));
       })

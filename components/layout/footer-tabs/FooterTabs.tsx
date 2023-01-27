@@ -14,7 +14,7 @@ import ContactUs from "../../../screens/contact-us/contactUs";
 import MenuScreen from "../../../screens/menu/menu";
 import BcoinScreen from "../../../screens/b-coin";
 
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import TermsAndConditionsScreen from "../../../screens/terms-and-conditions";
 import { useTranslation } from "react-i18next";
 import { getCurrentLang } from "../../../translations/i18n";
@@ -63,6 +63,24 @@ function MyTabBar({ state, descriptors, navigation }) {
   const { t } = useTranslation();
   const { userDetailsStore, authStore } = useContext(StoreContext);
   const [selectedRoute, setSelectedRoute] = useState(routes[0]);
+
+  const getUserDetails = () => {
+    userDetailsStore.getUserDetails();
+  };
+
+  useEffect(() => {
+    if(authStore.isLoggedIn()){
+      getUserDetails();
+      setTimeout(() => {
+        getUserDetails();
+      }, 15 * 1000);
+      const interval = setInterval(() => {
+        getUserDetails();
+      }, 30 * 1000);
+      return () => clearInterval(interval);
+    }
+  }, []);
+  
   const onTabSelect = (name) => {
     const currentRout = routes.find((route) => route.name === name);
     setSelectedRoute(currentRout);

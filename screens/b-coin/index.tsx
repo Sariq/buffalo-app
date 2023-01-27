@@ -14,24 +14,8 @@ const BcoinScreen = () => {
   const { userDetailsStore, authStore } = useContext(StoreContext);
 
 
-  const getUserDetails = () => {
-    userDetailsStore.getUserDetails();
-  };
 
-  useEffect(() => {
-    if(authStore.isLoggedIn()){
-      getUserDetails();
-      setTimeout(() => {
-        getUserDetails();
-      }, 15 * 1000);
-      const interval = setInterval(() => {
-        getUserDetails();
-      }, 60 * 1000);
-      return () => clearInterval(interval);
-    }
-  }, []);
-  useEffect(()=>{
-  },[]);
+
 
 
 
