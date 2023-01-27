@@ -258,24 +258,25 @@ const CartScreen = () => {
   }, [paymentMthod]);
 
   useEffect(() => {
-    if (cartStore.cartItems.length === 0) {
+    // if (cartStore.cartItems.length === 0) {
+    //   navigation.navigate("homeScreen");
+
+    //   return;
+    // }
+    if (cartStore.cartItems.length === 1 && isBcoinInCart()) {
+      const bcoinMeal = {
+        data: menuStore.categories["OTHER"][0],
+        others: { count: 1, note: "" },
+      };
+      cartStore.removeProduct(getProductIndexId(bcoinMeal, 0));
+
       navigation.navigate("homeScreen");
       return;
     }
-    // if (cartStore.cartItems.length === 1 && isBcoinInCart()) {
-    //   const bcoinMeal = {
-    //     data: menuStore.categories["OTHER"][0],
-    //     others: { count: 1, note: "" },
-    //   };
-    //   cartStore.removeProduct(getProductIndexId(bcoinMeal, 0));
-
-    //   navigation.navigate("homeScreen");
-    //   return;
-    // }
     let tmpOrderPrice = 0;
     cartStore.cartItems.forEach((item) => {
       if (item) {
-        tmpOrderPrice += item.data.price;
+        tmpOrderPrice += item.data.price * item.others.count;
       }
     });
     setItemsPrice(tmpOrderPrice);
@@ -519,7 +520,7 @@ const CartScreen = () => {
     const filteredExtras = extras.filter((extra) => {
       if (extra.available_on_app) {
         if (extra.type === "CHOICE" && !extra.multiple_choice) {
-          if (extra.value !== false) {
+          if (extra.value !== false && extra.value !== extra.isdefault) {
             return extra;
           }
           return false;
@@ -531,7 +532,7 @@ const CartScreen = () => {
           return false;
         }
         if (extra.type === "CHOICE" && extra.multiple_choice) {
-          if (extra.isdefault !== extra.value) {
+          if (extra.isdefault !== extra.value && extra.value !== extra.isdefault) {
             return extra;
           }
           return false;
@@ -1089,7 +1090,7 @@ const CartScreen = () => {
                                 <Text
                                   style={{ fontWeight: "bold", fontSize: 17,color:themeStyle.BROWN_700, fontFamily: "Rubik-Bold", }}
                                 >
-                                  {product.data.price}
+                                  {product.data.price * product.others.count} 
                                 </Text>
                                 <Text
                                   style={{ fontWeight: "bold", fontSize: 17,color:themeStyle.BROWN_700 }}
@@ -1138,6 +1139,7 @@ const CartScreen = () => {
                   iconSize={50}
                   isFlexCol
                   borderRadious={15}
+                  textColor={themeStyle.GRAY_700}
                 />
               </View>
               <View style={{ flexBasis: "32%" }}>
@@ -1155,6 +1157,8 @@ const CartScreen = () => {
                   iconSize={50}
                   isFlexCol
                   borderRadious={15}
+                  textColor={themeStyle.GRAY_700}
+
                 />
               </View>
               <View style={{ flexBasis: "32%" }}>
@@ -1172,6 +1176,7 @@ const CartScreen = () => {
                   iconSize={50}
                   isFlexCol
                   borderRadious={15}
+                  textColor={themeStyle.GRAY_700}
                 />
               </View>
             </View>
@@ -1238,6 +1243,8 @@ const CartScreen = () => {
                   fontSize={20}
                   icon="shekel"
                   iconSize={25}
+                  textColor={themeStyle.GRAY_700}
+
                 />
               </View>
               <View style={{ flexBasis: "49%" }}>
@@ -1254,6 +1261,8 @@ const CartScreen = () => {
                   icon="credit_card_icom"
                   iconSize={25}
                   iconPosition={"left"}
+                  textColor={themeStyle.GRAY_700}
+
                 />
               </View>
             </View>

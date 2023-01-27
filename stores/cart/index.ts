@@ -169,7 +169,7 @@ class CartStore {
 
     this.cartItems = this.cartItems.map((item, index) => {
       if (item.data.id.toString() + index === productId) {
-        item.data.price = item.data.price + ((count - item.others.count) * (item.data.price / item.others.count));
+        // item.data.price = item.data.price + ((count - item.others.count) * (item.data.price / item.others.count));
         item.others.count = count;
       }
       return item;

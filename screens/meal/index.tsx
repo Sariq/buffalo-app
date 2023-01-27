@@ -152,7 +152,7 @@ const MealScreen = ({ route }) => {
       setMeal({
         ...meal,
         [type]: { ...meal[type], [key]: value },
-        data: { ...meal.data, price: updatedPrice },
+        data: { ...meal.data },
       });
     } else {
       setMeal({ ...meal, [type]: { ...meal[type], [key]: value } });
@@ -444,7 +444,7 @@ const MealScreen = ({ route }) => {
             <Text
               style={{ fontSize: 20, fontWeight: "bold", color: "#442213" }}
             >
-              ₪{meal.data.price}
+              ₪{meal.data.price * meal.others.count}
             </Text>
           </View>
           <Button
