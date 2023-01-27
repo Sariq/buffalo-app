@@ -6,7 +6,8 @@ export const AUTH_API = {
     VERIFY_API : "Verify",
     UPDATE_CUSTOMER_NAME_API : "UpdateCustomerName",
     GET_USER_DETAILS: "GetCustomerInfo",
-    LOGOUT_API: "Logout"
+    LOGOUT_API: "Logout",
+    DELETE_ACOOUNT_API: "DeleteAccount"
 };
 export const MENU_API = {
     CONTROLLER: "config",

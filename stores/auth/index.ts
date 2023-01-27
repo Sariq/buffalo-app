@@ -50,6 +50,18 @@ class AuthStore {
         return res;
       });
   }
+  deleteAccountFromServer = () => {
+    const body = { datetime: new Date() };
+    return axiosInstance
+      .post(
+        `${AUTH_API.CONTROLLER}/${AUTH_API.DELETE_ACOOUNT_API}`,
+        body,
+      )
+      .then(function (response) {
+        const res = JSON.parse(fromBase64(response.data));
+        return res;
+      });
+  }
 
   logOut = async () => {
     return new Promise((resolve) => {
@@ -65,7 +77,17 @@ class AuthStore {
     })
   }
   deleteAccount = () => {
-    this.logOut();
+    return new Promise((resolve) => {
+      this.deleteAccountFromServer().then((res) => {
+        runInAction(async () => {
+          ordersStore.resetOrdersList();
+          await AsyncStorage.removeItem("@storage_userToken");
+          this.userToken = null
+          cartStore.resetCart();
+          resolve(true);
+        })
+      })
+    });
   }
 }
 

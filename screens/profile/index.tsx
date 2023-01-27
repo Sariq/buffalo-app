@@ -146,8 +146,8 @@ const ProfileScreen = () => {
           right: 0,
         }}
       >
-        <TouchableOpacity onPress={() => actionHandler("deleteAccount")}>
-          <Text style={{ color: themeStyle.GRAY_300 }}>
+        <TouchableOpacity onPress={() => actionHandler("deleteAccount")} style={{alignItems:"center", marginBottom: 20}}>
+          <Text style={{ color: themeStyle.GRAY_700 }}>
             {t("delete-account")}
           </Text>
         </TouchableOpacity>

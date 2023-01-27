@@ -210,7 +210,7 @@ const OrdersStatusScreen = ({ route }) => {
                   color: themeStyle.GRAY_700,
                 }}
               >
-                ₪{item.price}
+                ₪{item.price * item.qty}
               </Text>
             </View>
           </View>

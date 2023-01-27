@@ -258,11 +258,10 @@ const CartScreen = () => {
   }, [paymentMthod]);
 
   useEffect(() => {
-    // if (cartStore.cartItems.length === 0) {
-    //   navigation.navigate("homeScreen");
-
-    //   return;
-    // }
+    if (cartStore.cartItems.length === 0) {
+      navigation.navigate("homeScreen");
+      return;
+    }
     if (cartStore.cartItems.length === 1 && isBcoinInCart()) {
       const bcoinMeal = {
         data: menuStore.categories["OTHER"][0],
