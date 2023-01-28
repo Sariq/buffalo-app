@@ -54,7 +54,7 @@ import BarcodeScannedDialog from "../../components/dialogs/barcode-scanner/barco
 import RecipetNotSupportedDialog from "../../components/dialogs/recipet-service/recipet-not-supported";
 import StoreErrorMsgDialog from "../../components/dialogs/store-errot-msg";
 import DeliveryMethodDialog from "../../components/dialogs/delivery-method";
-import { SHIPPING_METHODS } from "../../consts/shared";
+import { SHIPPING_METHODS, bcoindId } from "../../consts/shared";
 
 const PAYMENT_METHODS = {
   creditCard: "CREDITCARD",
@@ -65,7 +65,6 @@ type TShippingMethod = {
   takAway: string;
 };
 
-const bcoindId = 3027;
 
 const CartScreen = () => {
   const { t } = useTranslation();
@@ -160,7 +159,7 @@ const CartScreen = () => {
       ) {
         return;
       }
-      bcoinMeal.data.price = userDetailsStore.userDetails?.credit * -1;
+      bcoinMeal.data.price = userDetailsStore.userDetails?.credit;
       // setTotalPrice(itemsPrice + bcoinMeal.data.price);
 
       cartStore.addProductToCart(bcoinMeal, true);
@@ -248,7 +247,8 @@ const CartScreen = () => {
 
   useEffect(() => {
     const shippingPrice = shippingMethod === SHIPPING_METHODS.shipping ? 15 : 0;
-    setTotalPrice(shippingPrice + itemsPrice);
+    const bcoinPrice = isBcoinInCart ? userDetailsStore?.userDetails.credit * -1: 0
+    setTotalPrice(shippingPrice + itemsPrice + bcoinPrice);
   }, [shippingMethod, itemsPrice]);
 
   useEffect(() => {
@@ -274,7 +274,7 @@ const CartScreen = () => {
     }
     let tmpOrderPrice = 0;
     cartStore.cartItems.forEach((item) => {
-      if (item) {
+      if (item && item.data.id !== bcoindId) {
         tmpOrderPrice += item.data.price * item.others.count;
       }
     });
@@ -785,7 +785,7 @@ const CartScreen = () => {
                                   color:themeStyle.BROWN_700
                                 }}
                               >
-                                {t("you-have-bcoin")} {product.data.price * -1}
+                                {t("you-have-bcoin")} {product.data.price}
                               </Text>
                               <Text
                                 style={{
@@ -843,7 +843,7 @@ const CartScreen = () => {
                                   }}
                                 >
                                   {t("you-get-discount")} ₪
-                                  {product.data.price * -1}
+                                  {product.data.price}
                                 </Text>
                                 <Text
                                   style={{
@@ -1334,7 +1334,7 @@ const CartScreen = () => {
                           color:themeStyle.BROWN_700
                         }}
                       >
-                        ₪{itemsPrice + userDetailsStore?.userDetails.credit}
+                        ₪{itemsPrice}
                       </Text>
                     </View>
                   </View>

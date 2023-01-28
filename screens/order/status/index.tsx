@@ -123,7 +123,6 @@ const OrdersStatusScreen = ({ route }) => {
   };
 
   const renderOrderNote = (note: string) => {
-    console.log(note);
     return note ? (
       <View style={{ marginLeft: 10 }}>
         <Text style={{ marginRight: 2, paddingBottom: 4 }}>* {note}</Text>
@@ -146,7 +145,7 @@ const OrdersStatusScreen = ({ route }) => {
     const tmpOrderValue = JSON.parse(tmpOrder);
     return tmpOrderValue.items.map((item) => {
       const meal: any = menuStore.getFromCategoriesMealByKey(item.item_id);
-      if (isEmpty(meal) || item.item_id === 3027) {
+      if (isEmpty(meal)) {
         return;
       }
       return (
@@ -193,6 +192,7 @@ const OrdersStatusScreen = ({ route }) => {
                   <Image
                     style={{ width: "100%", height: "100%" }}
                     source={{ uri: meal?.image_url }}
+                    resizeMode="contain"
                   />
                 </View>
                 <View style={{ alignItems: "flex-start" }}>
@@ -220,7 +220,9 @@ const OrdersStatusScreen = ({ route }) => {
                     color: themeStyle.GRAY_700,
                   }}
                 >
-                  ₪{item.price * item.qty}
+                  ₪
+                  {(item.item_id === 3027 ? item.price * -1 : item.price) *
+                    item.qty}
                 </Text>
               </View>
             </View>

@@ -41,7 +41,7 @@ class UserDetailsStore {
         name: res.name,
         phone: res.phone,
         credit: res.credit,
-        creditMinimum: res.credit_minimum
+        creditMinimum: res.credit_minimum,
       }
       runInAction(() => {
         this.userDetails = userDetailsTmp;

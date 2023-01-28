@@ -38,9 +38,10 @@ export default function CheckBox({ onChange, value, title = undefined, variant =
   }
 
   return (
-    <View style={styles.container}>
-      <View
-        onTouchEnd={() => {
+    
+      <TouchableOpacity
+      style={{ padding:5}}
+        onPress={() => {
           onBtnClick();
         }}
       >
@@ -49,8 +50,7 @@ export default function CheckBox({ onChange, value, title = undefined, variant =
         ) : (
           <View style={styles.unchecked}></View>
         )}
-      </View>
-    </View>
+      </TouchableOpacity>
   );
 }
 const styles = StyleSheet.create({

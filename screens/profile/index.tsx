@@ -28,9 +28,19 @@ const ProfileScreen = () => {
           key: "phone",
         },
         {
+          title: 'B-COINS',
+          icon: "bcoin_icon",
+          key: "bcoin",
+        },
+        {
           title: t("order-list"),
           icon: "orders-list",
           key: "orders",
+        },
+        {
+          title: t("change-language"),
+          icon: "yellow-language",
+          key: "language",
         },
         {
           title: t("signout"),
@@ -52,6 +62,9 @@ const ProfileScreen = () => {
         break;
       case "deleteAccount":
         deletAccount();
+        break;
+      case "bcoin":
+        navigation.navigate("becoin");
         break;
     }
   };
@@ -174,6 +187,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     width: "100%",
     alignItems: "center",
-    marginTop: 20,
+    marginTop: 15,
   },
 });

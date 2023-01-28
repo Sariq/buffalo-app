@@ -3,3 +3,4 @@ export const SHIPPING_METHODS = {
     takAway: "TAKEAWAY",
     table: "TABLE",
   };
+  export const bcoindId = 3027;

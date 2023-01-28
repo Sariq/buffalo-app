@@ -5,13 +5,11 @@ import {
   DeviceEventEmitter,
   TouchableOpacity,
   Image,
-  Keyboard,
 } from "react-native";
-import InputText from "../../components/controls/input";
 import Button from "../../components/controls/button/button";
 import themeStyle from "../../styles/theme.style";
-import { BASE_URL, AUTH_API } from "../../consts/api";
-import { useState, useEffect } from "react";
+import { AUTH_API } from "../../consts/api";
+import { useState } from "react";
 import { useContext } from "react";
 import { StoreContext } from "../../stores";
 import base64 from "react-native-base64";

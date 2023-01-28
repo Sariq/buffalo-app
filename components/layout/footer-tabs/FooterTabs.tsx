@@ -20,6 +20,7 @@ import { useTranslation } from "react-i18next";
 import { getCurrentLang } from "../../../translations/i18n";
 import themeStyle from "../../../styles/theme.style";
 import { StoreContext } from "../../../stores";
+import { observer } from "mobx-react";
 
 const routes = [
   {
@@ -59,28 +60,11 @@ const routes = [
   },
 ];
 
-function MyTabBar({ state, descriptors, navigation }) {
+function MyTabBar({ state, descriptors, navigation, bcoin }) {
   const { t } = useTranslation();
-  const { userDetailsStore, authStore } = useContext(StoreContext);
   const [selectedRoute, setSelectedRoute] = useState(routes[0]);
+  const { authStore } = useContext(StoreContext);
 
-  const getUserDetails = () => {
-    userDetailsStore.getUserDetails();
-  };
-
-  useEffect(() => {
-    if(authStore.isLoggedIn()){
-      getUserDetails();
-      setTimeout(() => {
-        getUserDetails();
-      }, 15 * 1000);
-      const interval = setInterval(() => {
-        getUserDetails();
-      }, 30 * 1000);
-      return () => clearInterval(interval);
-    }
-  }, []);
-  
   const onTabSelect = (name) => {
     const currentRout = routes.find((route) => route.name === name);
     setSelectedRoute(currentRout);
@@ -188,7 +172,7 @@ function MyTabBar({ state, descriptors, navigation }) {
                         textAlign:"center", top:5
                       }}
                     >
-                      {userDetailsStore.userDetails?.credit}
+                      {bcoin}
                     </Text>
                   </View>
                 )}
@@ -215,13 +199,37 @@ function MyTabBar({ state, descriptors, navigation }) {
 
 const Tab = createBottomTabNavigator();
 
-export default function FooterTabs() {
+const FooterTabs = () => {
+  const { userDetailsStore, authStore } = useContext(StoreContext);
+  const [bcoin, setBcoin] = useState();
+  const getUserDetails = () => {
+    userDetailsStore.getUserDetails();
+  };
+
+  useEffect(() => {
+    if(authStore.isLoggedIn()){
+      getUserDetails();
+      setTimeout(() => {
+        getUserDetails();
+      }, 15 * 1000);
+      const interval = setInterval(() => {
+        getUserDetails();
+      }, 30 * 1000);
+      return () => clearInterval(interval);
+    }
+  }, []);
+
+ 
+  useEffect(()=>{
+    setBcoin(userDetailsStore.userDetails?.credit)
+  },[userDetailsStore.userDetails])
+
   return (
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
       }}
-      tabBar={(props) => <MyTabBar {...props} />}
+      tabBar={(props) => <MyTabBar {...props} bcoin={bcoin} />}
     >
       {routes.map((route, index) => (
         <Tab.Screen
@@ -234,6 +242,8 @@ export default function FooterTabs() {
     </Tab.Navigator>
   );
 }
+
+export default observer(FooterTabs)
 
 const styles = StyleSheet.create({
   container: {

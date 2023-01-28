@@ -8,6 +8,7 @@ import i18n from "../../translations/index-x";
 import { axiosInstance } from "../../utils/http-interceptor";
 import { getCurrentLang } from "../../translations/i18n";
 import { Platform } from "react-native";
+import { bcoindId } from "../../consts/shared";
 var hash = require('object-hash');
 
 export type TOrderSubmitResponse = {
@@ -96,7 +97,7 @@ const produtsAdapter = (products) => {
   products.map((product) => {
     const finalProduct = {
       item_id: product.data.id,
-      qty: product.others.count,
+      qty: product.data.id === bcoindId ? 1 : product.others.count,
       price: product.data.price,
       notes: product.others.note,
       data: prodcutExtrasAdapter(product.extras)
@@ -291,26 +292,6 @@ class CartStore {
       });
   }
 
-  addNewOrderToHistory = async (order: any, phoneNumber: string) => {
-    const ordersHistory: TOrderHistory = {
-      phoneNumber,
-      ordersList: [order]
-    };
-    const jsonValue = JSON.stringify(ordersHistory);
-    await AsyncStorage.setItem("@storage_orderHistory", jsonValue);
-  }
-  addOrderToHistory = async (order: any, phoneNumber: string) => {
-    const jsonValue = await AsyncStorage.getItem("@storage_orderHistory");
-    const currentOrderdHistory = jsonValue != null ? JSON.parse(jsonValue) : [];
-    if (currentOrderdHistory.length == 0) {
-      this.addNewOrderToHistory(order, phoneNumber);
-    }
-  }
-  getOrderHistory = async () => {
-    const jsonValue = await AsyncStorage.getItem("@storage_orderHistory");
-    const currentOrderdHistory = jsonValue != null ? JSON.parse(jsonValue) : [];
-    return currentOrderdHistory;
-  }
   isValidGeo = (latitude: number, longitude: number) => {
     const body = {
       latitude,

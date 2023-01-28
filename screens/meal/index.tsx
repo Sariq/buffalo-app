@@ -49,10 +49,6 @@ const extrasIcons = {
   "צ'ילי מתוק": require("../../assets/menu/gradiant/sweet-chilli.png"),
   "רוטב בופלו": require("../../assets/menu/gradiant/buffalo-souce.png"),
   "גבינת גאודה": require("../../assets/menu/gradiant/gaouda.png"),
-  //"צ'ילי מתוק": require("../../assets/menu/gradiant/barbicu.png"),
-  //"מוצרלה": require("../../assets/menu/gradiant/barbicu.png"),
-  //"תוספת קריספי": require("../../assets/menu/gradiant/barbicu.png"),
-  //"לחתוך באמצע": require("../../assets/menu/gradiant/barbicu.png"),
 };
 const MealScreen = ({ route }) => {
   const { t } = useTranslation();
