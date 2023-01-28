@@ -1,9 +1,10 @@
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, View, TouchableOpacity } from "react-native";
 import theme from "../../../styles/theme.style";
 import Icon from "../../icon";
 import themeStyle from "../../../styles/theme.style";
 import { ActivityIndicator } from "react-native-paper";
 import * as Haptics from "expo-haptics";
+import Text from "../Text"
 
 type TProps = {
   onClickFn: any;

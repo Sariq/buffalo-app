@@ -1,6 +1,5 @@
 import {
   StyleSheet,
-  Text,
   View,
   Image,
   TextInput,
@@ -8,6 +7,8 @@ import {
   KeyboardAvoidingView,
   DeviceEventEmitter,
 } from "react-native";
+import Text from "../../components/controls/Text";
+
 import { useNavigation } from "@react-navigation/native";
 import { observer } from "mobx-react";
 import { isEmpty } from "lodash";
@@ -80,7 +81,9 @@ const MealScreen = ({ route }) => {
   }, []);
 
   const onAddToCart = () => {
-    DeviceEventEmitter.emit(`add-to-cart-animate`, {imgUrl : meal.data.image_url});
+    DeviceEventEmitter.emit(`add-to-cart-animate`, {
+      imgUrl: meal.data.image_url,
+    });
     cartStore.addProductToCart(meal);
     navigation.goBack();
   };
@@ -133,15 +136,14 @@ const MealScreen = ({ route }) => {
       }
       return tagItem;
     });
-    if(extraPrice !== 0 ){
-
-    meal.extras[type] = extrasType;
-    setMeal({
-      ...meal,
-      data: { ...meal.data, price: meal.data.price + extraPrice },
-      extras: meal.extras,
-    });
-  }
+    if (extraPrice !== 0) {
+      meal.extras[type] = extrasType;
+      setMeal({
+        ...meal,
+        data: { ...meal.data, price: meal.data.price + extraPrice },
+        extras: meal.extras,
+      });
+    }
   };
 
   const updateOthers = (value, key, type) => {
@@ -218,16 +220,19 @@ const MealScreen = ({ route }) => {
             }}
           >
             <View>
-              <TouchableOpacity style={{ zIndex: 1 }}>
+              <TouchableOpacity
+                onPress={onClose}
+                style={{
+                  zIndex: 1,
+                  position: "absolute",
+                  right: -10,
+                  width: "10%",
+                  padding: 5,
+                }}
+              >
                 <Text
-                  onPress={onClose}
                   style={{
-                    zIndex: 1,
-                    position: "absolute",
-                    right: -10,
-                    width: "10%",
                     fontSize: 30,
-                    padding: 5,
                   }}
                 >
                   X
@@ -256,7 +261,7 @@ const MealScreen = ({ route }) => {
                     fontSize: 25,
                     textAlign: "left",
                     fontFamily: `${getCurrentLang()}-SemiBold`,
-                    color: themeStyle.GRAY_700
+                    color: themeStyle.GRAY_700,
                   }}
                 >
                   {meal.data[`name_${languageStore.selectedLang}`]}
@@ -270,8 +275,7 @@ const MealScreen = ({ route }) => {
                     fontFamily: `${getCurrentLang()}-SemiBold`,
                     marginTop: 10,
                     lineHeight: 17.5,
-                    color: themeStyle.GRAY_700
-
+                    color: themeStyle.GRAY_700,
                   }}
                 >
                   {meal.data[`description_${languageStore.selectedLang}`]}
@@ -311,7 +315,7 @@ const MealScreen = ({ route }) => {
                                 fontSize: 20,
                                 textAlign: "center",
                                 marginBottom: 8,
-                                color: themeStyle.GRAY_700
+                                color: themeStyle.GRAY_700,
                               }}
                             >
                               {t(keyOrdered)}
@@ -325,7 +329,7 @@ const MealScreen = ({ route }) => {
                                       meal.extras[keyOrdered]
                                     ),
                                     maxWidth: "80%",
-                                    alignSelf: "center"
+                                    alignSelf: "center",
                                   }
                                 : {},
                             ]}

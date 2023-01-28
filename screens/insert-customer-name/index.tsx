@@ -1,19 +1,17 @@
-import { StyleSheet, Text, View, DeviceEventEmitter } from "react-native";
+import { StyleSheet, View, DeviceEventEmitter } from "react-native";
 import InputText from "../../components/controls/input";
 import Button from "../../components/controls/button/button";
 import themeStyle from "../../styles/theme.style";
-import { BASE_URL, AUTH_API } from "../../consts/api";
+import {  AUTH_API } from "../../consts/api";
 import { useState } from "react";
-import * as Device from "expo-device";
 import { useContext } from "react";
 import { StoreContext } from "../../stores";
-import base64 from 'react-native-base64'
 import { observer } from "mobx-react";
 import { useNavigation } from "@react-navigation/native";
-import CreditCard from "../../components/credit-card";
 import { axiosInstance } from "../../utils/http-interceptor";
 import { useTranslation } from "react-i18next";
 import { toBase64 } from "../../helpers/convert-base64";
+import Text from "../../components/controls/Text";
 
 const InsertCustomerNameScreen = () => {
   const { t } = useTranslation();

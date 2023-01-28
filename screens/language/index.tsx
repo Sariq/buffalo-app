@@ -1,12 +1,12 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, View, Image } from "react-native";
 import Button from "../../components/controls/button/button";
 import themeStyle from "../../styles/theme.style";
 import { useContext } from "react";
 import { StoreContext } from "../../stores";
 import { observer } from "mobx-react";
-import i18n from "../../translations/index-x";
 import { useNavigation } from "@react-navigation/native";
 import { getCurrentLang } from "../../translations/i18n";
+import Text from "../../components/controls/Text";
 
 const LanguageScreen = () => {
   const { languageStore } = useContext(StoreContext);

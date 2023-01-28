@@ -4,7 +4,6 @@ import { useContext } from "react";
 import { observer } from "mobx-react";
 import {
   Image,
-  Text,
   View,
   StyleSheet,
   Linking,
@@ -25,6 +24,7 @@ import theme from "../../styles/theme.style";
 import * as Location from "expo-location";
 import { StoreContext } from "../../stores";
 import Counter from "../../components/controls/counter";
+import Text from "../../components/controls/Text";
 import Icon from "../../components/icon";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import BackButton from "../../components/back-button";

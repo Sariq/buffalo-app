@@ -55,6 +55,7 @@ export default function InputText({
           editable={isEditable}
           onChange={handleOnChange}
           placeholder={placeHolder}
+          placeholderTextColor={themeStyle.BROWN_700}
           selectionColor={"black"}
           keyboardType={keyboardType}
           onFocus={onFocus}
@@ -68,7 +69,7 @@ export default function InputText({
               : themeStyle.PRIMARY_COLOR,
             borderRadius: 30,
             fontSize: 20,
-            color: "black",
+            color: themeStyle.BROWN_700,
           }}
         />
       </View>
@@ -84,14 +85,14 @@ export default function InputText({
         onChange={handleOnChange}
         mode="outlined"
         label={label}
-        theme={{ roundness: 30 }}
+        theme={{ roundness: 30, colors:{text:themeStyle.BROWN_700, placeholder: themeStyle.BROWN_700} }}
         outlineColor={
           isError ? themeStyle.ERROR_COLOR : themeStyle.PRIMARY_COLOR
         }
         activeOutlineColor={
           isError ? themeStyle.ERROR_COLOR : themeStyle.PRIMARY_COLOR
         }
-        style={{ fontSize: 20, backgroundColor: "white", borderRadius: 100 }}
+        style={{ fontSize: 20, backgroundColor: "white", borderRadius: 100, color: 'red' }}
       />
     </View>
   );

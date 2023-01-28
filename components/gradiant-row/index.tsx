@@ -1,10 +1,10 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, View, Image } from "react-native";
 import Counter from "../controls/counter";
 import CheckBox from "../controls/checkbox";
 import i18n from "../../translations/index-x";
 import { getCurrentLang } from "../../translations/i18n";
 import themeStyle from "../../styles/theme.style";
-
+import Text from "../controls/Text";
 type TProps = {
   onChangeFn: any;
   icon?: any;
@@ -98,6 +98,7 @@ export default function GradiantRow({
             marginHorizontal: -10,
             flexDirection: "row",
             alignItems: "center",
+            marginLeft:5
           }}
         >
           {price ? (
@@ -126,7 +127,6 @@ const styles = StyleSheet.create({
   },
   textAndPriceContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
   },
 });

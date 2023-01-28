@@ -1,6 +1,6 @@
 import {
   StyleSheet,
-  Text,
+  Text as TextReact,
   View,
   DeviceEventEmitter,
   TouchableOpacity,
@@ -22,6 +22,7 @@ import { useTranslation } from "react-i18next";
 import { getCurrentLang } from "../../translations/i18n";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";
+import Text from "../../components/controls/Text";
 
 import {
   CodeField,
@@ -216,13 +217,13 @@ const VerifyCodeScreen = ({ route }) => {
                     borderColor: themeStyle.PRIMARY_COLOR,
                   }}
                 >
-                  <Text
+                  <TextReact
                     key={index}
                     style={[styles.cell, isFocused && styles.focusCell]}
                     onLayout={getCellOnLayoutHandler(index)}
                   >
                     {symbol || (isFocused ? <Cursor /> : (verifyCode[index]!=='')  && '*')}
-                  </Text>
+                  </TextReact>
                 </View>
               )}}
             />

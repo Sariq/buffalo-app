@@ -1,11 +1,9 @@
 import {
-  Text,
   View,
-  TouchableOpacity,
   StyleSheet,
-  ImageBackground,
 } from "react-native";
 import { Paragraph, Dialog, Portal, Provider } from "react-native-paper";
+import Text from "../../components/controls/Text";
 
 /* styles */
 import theme from "../../styles/theme.style";

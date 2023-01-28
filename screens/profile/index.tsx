@@ -1,6 +1,7 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import Icon from "../../components/icon";
 import BackButton from "../../components/back-button";
+import Text from "../../components/controls/Text";
 import { useContext, useEffect, useState } from "react";
 import { StoreContext } from "../../stores";
 import { observer } from "mobx-react";
@@ -123,7 +124,7 @@ const ProfileScreen = () => {
       <BackButton />
 
       <View style={styles.container}>
-        <View style={{ alignItems: "center", width: "100%" }}>
+        <View style={{ alignItems: "center", width: "100%",marginTop:5 }}>
           <Text
             style={{
               fontSize: 25,

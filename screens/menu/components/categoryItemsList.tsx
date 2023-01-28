@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import { StyleSheet, View, TouchableOpacity, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useState, useRef, useEffect } from "react";
 import { observer } from "mobx-react";
@@ -6,12 +6,10 @@ import { useContext } from "react";
 import { StoreContext } from "../../../stores";
 import i18n from "../../../translations/index-x";
 import { ScrollView } from "react-native-gesture-handler";
-
+import Text from "../../../components/controls/Text";
 import themeStyle from "../../../styles/theme.style";
 import { getCurrentLang } from "../../../translations/i18n";
 import * as Haptics from "expo-haptics";
-
-// const productsList = CONSTS_PRODUCTS;
 
 const CategoryItemsList = ({ productsList }) => {
   const navigation = useNavigation();
@@ -62,21 +60,18 @@ const CategoryItemsList = ({ productsList }) => {
                   marginTop: 20,
                   fontSize: 18,
                   fontFamily: `${getCurrentLang()}-SemiBold`,
-                  textAlign:"center"
+                  textAlign: "center",
                 }}
               >
                 {item[`name_${languageStore.selectedLang}`]}
-                {/* {i18n.t(`products.${item.name}.name`)} */}
               </Text>
               <Text
-                style={[
-                  {
-                    color: themeStyle.GRAY_700,
-                    marginTop: 8,
-                    fontFamily: `${getCurrentLang()}-SemiBold`,
-                    fontSize: 18,
-                  },
-                ]}
+                style={{
+                  color: themeStyle.GRAY_700,
+                  marginTop: 8,
+                  fontFamily: `${getCurrentLang()}-SemiBold`,
+                  fontSize: 18,
+                }}
               >
                 ₪{item.price}
               </Text>

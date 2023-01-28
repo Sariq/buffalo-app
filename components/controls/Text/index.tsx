@@ -5,27 +5,16 @@ import { getCurrentLang } from "../../../translations/i18n";
 export type TProps = {
   children: any;
   style?: any;
-  fontFamily?: any;
-  fontSize?: number;
-  fontWeight?: number;
-  color?: any;
 };
 
-const Text = ({
-  children,
-  style,
-  fontFamily,
-  fontSize,
-  fontWeight,
-  color,
-}: TProps) => {
-  if (!color) {
-    color = themeStyle.BROWN_700;
+const Text = ({ children, style }: TProps) => {
+  if (!style?.color) {
+    style = { ...style, color: themeStyle.BROWN_700 };
   }
-  if (!style?.fontFamily && !fontFamily) {
-    fontFamily = `${getCurrentLang()}-SemiBold`;
+  if (!style?.fontFamily) {
+    style = { ...style, fontFamily: `${getCurrentLang()}-SemiBold` };
   }
-  const customStyles = { ...style, fontFamily, fontSize, fontWeight, color };
+  const customStyles = { ...style };
   return <ReactText style={customStyles}>{children}</ReactText>;
 };
 

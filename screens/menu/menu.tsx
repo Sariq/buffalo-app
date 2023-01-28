@@ -1,11 +1,12 @@
 import {
   StyleSheet,
-  Text,
   View,
   TouchableOpacity,
   Image,
   ScrollView,
 } from "react-native";
+import Text from "../../components/controls/Text";
+
 import { useState, useEffect } from "react";
 import { observer } from "mobx-react";
 import { useContext } from "react";

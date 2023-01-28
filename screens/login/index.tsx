@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import InputText from "../../components/controls/input";
 import Button from "../../components/controls/button/button";
 import themeStyle from "../../styles/theme.style";
@@ -14,6 +14,7 @@ import { axiosInstance } from "../../utils/http-interceptor";
 import { useTranslation } from "react-i18next";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { toBase64 } from "../../helpers/convert-base64";
+import Text from "../../components/controls/Text";
 
 const reg_arNumbers = /^[\u0660-\u0669]{10}$/;
 const arabicNumbers  = [/٠/g, /١/g, /٢/g, /٣/g, /٤/g, /٥/g, /٦/g, /٧/g, /٨/g, /٩/g];
@@ -100,7 +101,7 @@ const LoginScreen = () => {
         </Text>
 
         <View style={{ width: "100%", paddingHorizontal: 50, marginTop: 15, alignItems: "flex-start" }}>
-          <InputText keyboardType="numeric" onChange={onChange} label={t('phone')} />
+          <InputText keyboardType="numeric" onChange={onChange} label={t('phone')}/>
           {!isValid && <Text style={{color: themeStyle.ERROR_COLOR, paddingLeft:15 }}>{t('invalid-phone')}</Text>}
         </View>
 

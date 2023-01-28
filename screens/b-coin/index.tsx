@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, View, Image } from "react-native";
 import themeStyle from "../../styles/theme.style";
 import { useContext, useEffect } from "react";
 import { StoreContext } from "../../stores";
@@ -8,6 +8,7 @@ import Icon from "../../components/icon";
 import BackButton from "../../components/back-button";
 import { useTranslation } from "react-i18next";
 import { LinearGradient } from "expo-linear-gradient";
+import Text from "../../components/controls/Text";
 
 const BcoinScreen = () => {
   const { t } = useTranslation();
