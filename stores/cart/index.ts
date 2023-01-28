@@ -92,16 +92,17 @@ const prodcutExtrasAdapter = (extras) => {
   return productExtras;
 }
 
-const produtsAdapter = (products) => {
+const produtsAdapter = (order) => {
   let finalProducts = [];
-  products.map((product) => {
+  order.products.map((product) => {
     const finalProduct = {
       item_id: product.data.id,
       qty: product.data.id === bcoindId ? 1 : product.others.count,
-      price: product.data.price,
+      price: product.data.id === bcoindId ? order?.bcoinUpdatePrice * -1 : product.data.price,
       notes: product.others.note,
       data: prodcutExtrasAdapter(product.extras)
     }
+    console.log(finalProduct)
     finalProducts.push(finalProduct);
   })
   return finalProducts;
@@ -215,7 +216,7 @@ class CartStore {
       payment_method: order.paymentMthod,
       receipt_method: order.shippingMethod,
       geo_positioning: order.geo_positioning,
-      items: produtsAdapter(order.products)
+      items: produtsAdapter(order)
     }
     const version = Constants.nativeAppVersion;
     const hashKey = await this.getHashKey(finalOrder);

@@ -221,7 +221,7 @@ const OrdersStatusScreen = ({ route }) => {
                   }}
                 >
                   ₪
-                  {(item.item_id === 3027 ? item.price * -1 : item.price) *
+                  {(item.item_id === 3027 ? item.price  : item.price) *
                     item.qty}
                 </Text>
               </View>

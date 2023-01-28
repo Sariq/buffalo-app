@@ -104,6 +104,7 @@ const CartScreen = () => {
 
   const [itemsPrice, setItemsPrice] = React.useState(0);
   const [totalPrice, setTotalPrice] = React.useState(0);
+  const [bcoinUpdatePrice, setBcoinUpdatePrice] = React.useState(0);
 
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
@@ -155,13 +156,12 @@ const CartScreen = () => {
       if (
         bcoinFound ||
         userDetailsStore.userDetails?.credit <=
-          userDetailsStore.userDetails.creditMinimum
+          userDetailsStore.userDetails?.creditMinimum
       ) {
         return;
       }
       bcoinMeal.data.price = userDetailsStore.userDetails?.credit;
       // setTotalPrice(itemsPrice + bcoinMeal.data.price);
-
       cartStore.addProductToCart(bcoinMeal, true);
     }
   }, []);
@@ -246,9 +246,17 @@ const CartScreen = () => {
   }, [shippingMethod]);
 
   useEffect(() => {
+    let bcoinPrice = 0;
     const shippingPrice = shippingMethod === SHIPPING_METHODS.shipping ? 15 : 0;
-    const bcoinPrice = isBcoinInCart ? userDetailsStore?.userDetails.credit * -1: 0
-    setTotalPrice(shippingPrice + itemsPrice + bcoinPrice);
+    if(isBcoinInCart()){
+      if(itemsPrice < userDetailsStore?.userDetails?.credit){
+        bcoinPrice = itemsPrice ;
+      }else{
+        bcoinPrice = userDetailsStore?.userDetails?.credit;
+      }
+    }
+    setBcoinUpdatePrice(bcoinPrice);
+    setTotalPrice(shippingPrice + itemsPrice + bcoinPrice * -1);
   }, [shippingMethod, itemsPrice]);
 
   useEffect(() => {
@@ -439,6 +447,7 @@ const CartScreen = () => {
       shippingMethod,
       totalPrice,
       products: cartStore.cartItems,
+      bcoinUpdatePrice
     };
     if (shippingMethod === SHIPPING_METHODS.shipping) {
       order.geo_positioning = {
@@ -823,7 +832,7 @@ const CartScreen = () => {
                                     color:themeStyle.BROWN_700
                                   }}
                                 >
-                                  {product.data.price}
+                                  {bcoinUpdatePrice}
                                 </Text>
                               </View>
                               <View
@@ -843,7 +852,7 @@ const CartScreen = () => {
                                   }}
                                 >
                                   {t("you-get-discount")} ₪
-                                  {product.data.price}
+                                  {bcoinUpdatePrice}
                                 </Text>
                                 <Text
                                   style={{
@@ -1385,7 +1394,7 @@ const CartScreen = () => {
                             color:themeStyle.BROWN_700, fontFamily: "Rubik-Light",
                           }}
                         >
-                          ₪{userDetailsStore.userDetails?.credit * -1}
+                          ₪{bcoinUpdatePrice * -1}
                         </Text>
                       </View>
                     </View>

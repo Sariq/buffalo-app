@@ -101,11 +101,11 @@ class MenuStore {
     });
     return foundedMeal;
   }
-  updateBcoinPrice = () => {
+  updateBcoinPrice = (price: number) => {
     Object.keys(this.categories).map((key) => {
       const founded = this.categories[key].find((meal, index)=> {
         if(meal.id == 3027){
-          this.categories[key][index] = {...meal, price:22}
+          this.categories[key][index] = {...meal, price}
           this.categories[key]
           this.categories[key] = {...this.categories, [key]: this.categories[key]}
         }
