@@ -886,7 +886,7 @@ const CartScreen = () => {
                               <Text
                                 style={{
                                   textAlign: "left",
-                                  fontFamily: `${getCurrentLang()}-SemiBold`,
+                                  fontFamily: `${getCurrentLang()}-Bold`,
                                   fontSize: 20,
                                   marginLeft: isBcoinProduct(product) ? 10 : 0,
                                   color:themeStyle.BROWN_700
@@ -1250,7 +1250,7 @@ const CartScreen = () => {
                   fontFamily={`${getCurrentLang()}-SemiBold`}
                   fontSize={20}
                   icon="shekel"
-                  iconSize={25}
+                  iconSize={20}
                   textColor={themeStyle.GRAY_700}
 
                 />

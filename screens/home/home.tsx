@@ -105,7 +105,7 @@ const HomeScreen = ({ navigation }) => {
               textPadding={0}
               marginH={5}
               textColor={themeStyle.BROWN_700}
-              fontFamily={`${getCurrentLang()}-SemiBold`}
+              fontFamily={`${getCurrentLang()}-Bold`}
             />
           </View>
           {isActiveOrder && (
@@ -118,6 +118,7 @@ const HomeScreen = ({ navigation }) => {
                 borderRadious={50}
                 textPadding={0}
                 marginH={5}
+                fontFamily={`${getCurrentLang()}-Bold`}
               />
             </View>
           )}

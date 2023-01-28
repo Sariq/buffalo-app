@@ -48,6 +48,7 @@ const extrasIcons = {
   מוצרלה: require("../../assets/menu/gradiant/mozerla.png"),
   "צ'ילי מתוק": require("../../assets/menu/gradiant/sweet-chilli.png"),
   "רוטב בופלו": require("../../assets/menu/gradiant/buffalo-souce.png"),
+  "רוטב נאגטס": require("../../assets/menu/gradiant/sweet-chilli.png"),
   "גבינת גאודה": require("../../assets/menu/gradiant/gaouda.png"),
 };
 const MealScreen = ({ route }) => {
@@ -256,7 +257,7 @@ const MealScreen = ({ route }) => {
                   style={{
                     fontSize: 25,
                     textAlign: "left",
-                    fontFamily: `${getCurrentLang()}-SemiBold`,
+                    fontFamily: `${getCurrentLang()}-Bold`,
                     color: themeStyle.GRAY_700,
                   }}
                 >
