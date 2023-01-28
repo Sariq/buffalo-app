@@ -54,6 +54,9 @@ const ProfileScreen = () => {
 
   const actionHandler = (key: string) => {
     switch (key) {
+      case "phone":
+        navigation.navigate("insert-customer-name");
+        break;
       case "orders":
         onGoToOrdersList();
         break;
@@ -65,6 +68,9 @@ const ProfileScreen = () => {
         break;
       case "bcoin":
         navigation.navigate("becoin");
+        break;
+      case "language":
+        navigation.navigate("language");
         break;
     }
   };

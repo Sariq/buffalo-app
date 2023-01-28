@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   DeviceEventEmitter,
+  Platform,
 } from "react-native";
 import Text from "../../components/controls/Text";
 
@@ -375,7 +376,7 @@ const MealScreen = ({ route }) => {
                     style={{
                       textAlign: "left",
                       fontFamily: `${getCurrentLang()}-SemiBold`,
-                      paddingLeft: 40,
+                      marginLeft: 40,
                       fontSize: 15,
                     }}
                   >
@@ -389,6 +390,7 @@ const MealScreen = ({ route }) => {
                     marginTop: 10,
                     alignItems: "center",
                     justifyContent: "space-between",
+                    
                   }}
                 >
                   <View
@@ -410,6 +412,7 @@ const MealScreen = ({ route }) => {
                       }}
                       value={meal["others"]["note"]}
                       placeholder={t("inser-notes-here")}
+                      placeholderTextColor={themeStyle.GRAY_600}
                       multiline={true}
                       selectionColor="black"
                       underlineColorAndroid="transparent"
@@ -421,6 +424,7 @@ const MealScreen = ({ route }) => {
                         textAlign: "right",
                         padding: 10,
                         height: 70,
+                        fontFamily: `${getCurrentLang()}-SemiBold`,
                       }}
                     />
                   </View>
@@ -455,7 +459,7 @@ const MealScreen = ({ route }) => {
             onClickFn={isEdit ? onUpdateCartProduct : onAddToCart}
             bgColor={themeStyle.PRIMARY_COLOR}
             textColor={"#442213"}
-            fontFamily={`${getCurrentLang()}-SemiBold`}
+            fontFamily={`${getCurrentLang()}-Bold`}
             borderRadious={19}
           />
         </View>
@@ -474,6 +478,7 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingTop: 5,
     backgroundColor: themeStyle.WHITE_COLOR,
+    paddingBottom: Platform.OS === 'ios' ? 0 : 10
   },
   titleContainer: {
     alignSelf: "center",

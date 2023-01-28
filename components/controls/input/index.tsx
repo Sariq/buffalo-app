@@ -1,11 +1,7 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-} from "react-native";
+import { StyleSheet, Text, View, TextInput } from "react-native";
 import { TextInput as TextInputPaper } from "react-native-paper";
 import themeStyle from "../../../styles/theme.style";
+import { getCurrentLang } from "../../../translations/i18n";
 
 type TProps = {
   onChange: any;
@@ -31,7 +27,7 @@ export default function InputText({
   variant,
   placeHolder,
   onFocus,
-  onBlur
+  onBlur,
 }: TProps) {
   const handleOnChange = (e) => {
     onChange && onChange(e.nativeEvent.text);
@@ -70,6 +66,7 @@ export default function InputText({
             borderRadius: 30,
             fontSize: 20,
             color: themeStyle.BROWN_700,
+            fontFamily: `${getCurrentLang()}-SemiBold`,
           }}
         />
       </View>
@@ -85,14 +82,25 @@ export default function InputText({
         onChange={handleOnChange}
         mode="outlined"
         label={label}
-        theme={{ roundness: 30, colors:{text:themeStyle.BROWN_700, placeholder: themeStyle.BROWN_700} }}
+        theme={{
+          roundness: 30,
+          colors: {
+            text: themeStyle.BROWN_700,
+            placeholder: themeStyle.BROWN_700,
+          },
+        }}
         outlineColor={
           isError ? themeStyle.ERROR_COLOR : themeStyle.PRIMARY_COLOR
         }
         activeOutlineColor={
           isError ? themeStyle.ERROR_COLOR : themeStyle.PRIMARY_COLOR
         }
-        style={{ fontSize: 20, backgroundColor: "white", borderRadius: 100, color: 'red' }}
+        style={{
+          fontSize: 20,
+          backgroundColor: "white",
+          borderRadius: 100,
+          fontFamily: `${getCurrentLang()}-SemiBold`,
+        }}
       />
     </View>
   );

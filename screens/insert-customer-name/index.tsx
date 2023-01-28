@@ -15,9 +15,11 @@ import Text from "../../components/controls/Text";
 
 const InsertCustomerNameScreen = () => {
   const { t } = useTranslation();
-  const { cartStore, userDetailsStore } = useContext(StoreContext);
-
   const navigation = useNavigation();
+
+  const { cartStore, userDetailsStore } = useContext(StoreContext);
+ const routes = navigation.getState()?.routes;
+    const prevRoute = routes[routes.length - 2]; // -2 because -1 is the current route
   const [isLoading, setIsLoading] = useState(false);
   const [customerName, setCustomerName] = useState();
   const [isValid, setIsValid] = useState(true);
@@ -46,7 +48,8 @@ const InsertCustomerNameScreen = () => {
           DeviceEventEmitter.emit(`PREPARE_APP`);
           userDetailsStore.getUserDetails().then((res) => {
             setIsLoading(false);
-            if (cartStore.getProductsCount() > 0) {
+            console.log(prevRoute)
+            if (cartStore.getProductsCount() > 0 && prevRoute?.name !== "profile") {
               navigation.navigate("cart");
             } else {
               navigation.navigate("profile");
