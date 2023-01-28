@@ -1,6 +1,6 @@
-import { View, StyleSheet } from "react-native";
-import { Paragraph, Dialog, Portal, Provider } from "react-native-paper";
-
+import { View } from "react-native";
+import {  Dialog, Portal, Provider } from "react-native-paper";
+import Text from "../../controls/Text";
 /* styles */
 import theme from "../../../styles/theme.style";
 import Icon from "../../../components/icon";
@@ -56,7 +56,7 @@ export default function BarcodeNoAccessDialog({
             />
           </Dialog.Title>
           <Dialog.Content>
-            <Paragraph
+            <Text
               style={{
                 fontSize: 16,
                 textAlign: "center",
@@ -64,7 +64,7 @@ export default function BarcodeNoAccessDialog({
               }}
             >
               {t("no-access-message")}
-            </Paragraph>
+            </Text>
           </Dialog.Content>
           <Dialog.Actions>
             <View

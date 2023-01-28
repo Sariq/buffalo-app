@@ -1,24 +1,17 @@
-import { View } from "react-native";
-import { Dialog, Portal, Provider } from "react-native-paper";
-import Text from "../controls/Text";
-
-/* styles */
-import theme from "../../styles/theme.style";
-import { useState, useEffect } from "react";
-import Button from "../../components/controls/button/button";
-import themeStyle from "../../styles/theme.style";
-import { useTranslation } from "react-i18next";
+import { Paragraph, Dialog, Portal, Provider } from "react-native-paper";
 import Icon from "../icon";
-
+import themeStyle from "../../styles/theme.style";
+import { View } from "react-native";
+import Button from "../controls/button/button";
+import { useTranslation } from "react-i18next";
+import { useState, useEffect } from "react";
+import Text from "../../components/controls/Text"
 type TProps = {
   isOpen: boolean;
   handleAnswer?: any;
 };
 
-export default function InvalidAddressdDialog({
-  isOpen,
-  handleAnswer,
-}: TProps) {
+export default function TremsDialog({ isOpen, handleAnswer }: TProps) {
   const { t } = useTranslation();
   const [visible, setVisible] = useState(isOpen);
 
@@ -30,6 +23,7 @@ export default function InvalidAddressdDialog({
     handleAnswer && handleAnswer(value);
     setVisible(false);
   };
+
   return (
     <Provider>
       <Portal>
@@ -42,8 +36,8 @@ export default function InvalidAddressdDialog({
           style={{
             alignItems: "center",
             justifyContent: "center",
-            paddingVertical: 30,
-            borderRadius: 10,
+            backgroundColor: "rgba(254, 203, 5, 0.9)",
+            padding:20
           }}
           visible={visible}
           dismissable={false}
@@ -52,34 +46,27 @@ export default function InvalidAddressdDialog({
             <Icon
               icon="exclamation-mark"
               size={50}
-              style={{ color: theme.GRAY_700 }}
+              style={{ color: themeStyle.GRAY_700 }}
             />
           </Dialog.Title>
           <Dialog.Content>
             <Text
               style={{
-                fontSize: 16,
+                fontSize: 20,
                 textAlign: "center",
                 fontWeight: "bold",
               }}
             >
-              {t("invalid-address")}
+             {t('terms-not-accepted-text')}
             </Text>
           </Dialog.Content>
           <Dialog.Actions>
-            <View
-              style={{
-                flexDirection: "row",
-                width: "50%",
-                justifyContent: "space-between",
-              }}
-            >
+            <View style={{ width: "50%" }}>
               <Button
-                onClickFn={() => hideDialog(true)}
-                text={t("ok")}
-                bgColor={themeStyle.SUCCESS_COLOR}
-                textColor={themeStyle.WHITE_COLOR}
-                fontSize={16}
+                onClickFn={hideDialog}
+                text={t('agree')}
+                bgColor={themeStyle.WHITE_COLOR}
+                fontSize={20}
               />
             </View>
           </Dialog.Actions>

@@ -1,5 +1,6 @@
 import { View, StyleSheet } from "react-native";
-import { Paragraph, Dialog, Portal, Provider } from "react-native-paper";
+import { Dialog, Portal, Provider } from "react-native-paper";
+import Text from "../../controls/Text";
 
 /* styles */
 import theme from "../../../styles/theme.style";
@@ -55,7 +56,7 @@ export default function OpenBarcodeScannerdDialog({
             />
           </Dialog.Title>
           <Dialog.Content>
-            <Paragraph
+            <Text
               style={{
                 fontSize: 16,
                 textAlign: "center",
@@ -63,7 +64,7 @@ export default function OpenBarcodeScannerdDialog({
               }}
             >
               {t("open-scanner")}
-            </Paragraph>
+            </Text>
           </Dialog.Content>
           <Dialog.Actions>
             <View

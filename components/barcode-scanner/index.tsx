@@ -43,12 +43,12 @@ const BarcodeScannerCMP = ({ onChange, isOpen }: TBacrcodeScanner) => {
 
   const handleNoAccessAnswer = (answer: boolean) => {
     if (answer) {
-      onChange('canceled')
+      onChange("canceled");
     } else {
       if (Platform.OS === "ios") {
         Linking.openURL("app-settings:");
       } else {
-        RNAndroidOpenSettings.appDetailsSettings();
+        Linking.openSettings();
       }
     }
   };

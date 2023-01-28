@@ -1,5 +1,6 @@
-import { View, StyleSheet } from "react-native";
-import { Paragraph, Dialog, Portal, Provider } from "react-native-paper";
+import { View } from "react-native";
+import { Dialog, Portal, Provider } from "react-native-paper";
+import Text from "../controls/Text";
 
 /* styles */
 import theme from "../../styles/theme.style";
@@ -57,7 +58,7 @@ export default function PaymentFailedDialog({
             />
           </Dialog.Title>
           <Dialog.Content>
-            <Paragraph
+            <Text
               style={{
                 fontSize: 20,
                 textAlign: "center",
@@ -65,8 +66,8 @@ export default function PaymentFailedDialog({
               }}
             >
               {t("payment-failed")}
-            </Paragraph>
-            <Paragraph
+            </Text>
+            <Text
               style={{
                 fontSize: 16,
                 textAlign: "center",
@@ -75,7 +76,7 @@ export default function PaymentFailedDialog({
               }}
             >
               {errorMessage}
-            </Paragraph>
+            </Text>
           </Dialog.Content>
           <Dialog.Actions>
             <View
@@ -99,38 +100,3 @@ export default function PaymentFailedDialog({
     </Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  button: {
-    backgroundColor: theme.PRIMARY_COLOR,
-    borderRadius: 5,
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 20 / -2,
-  },
-  bottomView: {
-    width: "90%",
-    height: 50,
-    justifyContent: "center",
-    alignItems: "center",
-    position: "absolute", //Here is the trick
-    bottom: 0, //Here is the trick
-    marginBottom: 40,
-  },
-  buttonText: {
-    fontSize: 20,
-    color: "black",
-    marginHorizontal: 40 / 2,
-  },
-  image: {
-    height: "100%",
-    borderWidth: 4,
-  },
-});

@@ -1,13 +1,11 @@
 import Header from "../header/header";
 import { MainStackNavigator } from "../../../navigation/MainStackNavigator";
 import { View, Animated, DeviceEventEmitter, Image, Dimensions } from "react-native";
-import ExpiryDate from "../../expiry-date";
 import themeStyle from "../../../styles/theme.style";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { useNavigation, useNavigationState } from "@react-navigation/native";
 import { useState, useEffect } from "react";
-import TermsAndConditionsScreen from "../../../screens/terms-and-conditions";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import { Platform } from "expo-modules-core";
 
 const yellowBgTopScreens = ["homeScreen", "terms-and-conditions"];

@@ -1,7 +1,8 @@
 import {
   View,
 } from "react-native";
-import { Paragraph, Dialog, Portal, Provider } from "react-native-paper";
+import { Dialog, Portal, Provider } from "react-native-paper";
+import Text from "../controls/Text";
 
 /* styles */
 import theme from "../../styles/theme.style";
@@ -57,7 +58,7 @@ export default function LocationIsDisabledDialog({
               style={{ color: theme.GRAY_700 }}
             />
           </Dialog.Title>
-            <Paragraph
+            <Text
               style={{
                 fontSize: 16,
                 textAlign: "center",
@@ -65,7 +66,7 @@ export default function LocationIsDisabledDialog({
               }}
             >
               {t('location-is-disabled')}
-            </Paragraph>
+            </Text>
           </Dialog.Content>
           <Dialog.Actions>
             <View

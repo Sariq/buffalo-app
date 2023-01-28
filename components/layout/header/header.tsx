@@ -97,6 +97,9 @@ const Header = () => {
   };
 
   const onLogoClick = () => {
+    if(navigation?.getCurrentRoute()?.name === "terms-and-conditions"){
+      return;
+    }
     navigation.navigate("homeScreen");
   };
 

@@ -1,8 +1,9 @@
 import {
     View,
   } from "react-native";
-  import { Paragraph, Dialog, Portal, Provider } from "react-native-paper";
-  
+  import { Dialog, Portal, Provider } from "react-native-paper";
+  import Text from "../controls/Text";
+
   /* styles */
   import theme from "../../styles/theme.style";
   import Icon from "../../components/icon";
@@ -57,7 +58,7 @@ import {
               />
             </Dialog.Title>
             <Dialog.Content>
-              <Paragraph
+              <Text
                 style={{
                   fontSize: 16,
                   textAlign: "center",
@@ -65,7 +66,7 @@ import {
                 }}
               >
                 {t("no-internet-connection")}
-              </Paragraph>
+              </Text>
             </Dialog.Content>
             <Dialog.Actions>
               <View

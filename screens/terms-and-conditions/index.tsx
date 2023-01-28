@@ -1,25 +1,20 @@
-import {
-  View,
-  StyleSheet,
-} from "react-native";
-import { Paragraph, Dialog, Portal, Provider } from "react-native-paper";
-import Text from "../../components/controls/Text";
+import { View, StyleSheet } from "react-native";
 
 /* styles */
 import theme from "../../styles/theme.style";
-import Icon from "../../components/icon";
 import { useState, useContext } from "react";
 import Button from "../../components/controls/button/button";
 import themeStyle from "../../styles/theme.style";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ScrollView } from "react-native-gesture-handler";
 import { StoreContext } from "../../stores";
-
-const bodyText =
-  "בניגוד לטענה הרווחת, Lorem Ipsum אינו סתם טקסט רנדומלי. יש לו שורשים וחלקים מתוך הספרות הלטינית הקלאסית מאז 45 לפני הספירה. מה שהופך אותו לעתיק מעל 2000 שנה. ריצ’רד מקלינטוק, פרופסור לטיני בקולג’ של המפדן-סידני בורג’יניה, חיפש את אחת המילים המעורפלות ביותר";
+import { WebView } from "react-native-webview";
+import TremsDialog from "../../components/dialogs/terms";
+import { useTranslation } from "react-i18next";
 
 export default function TermsAndConditionsScreen() {
+  const { t } = useTranslation();
+
   let { userDetailsStore } = useContext(StoreContext);
 
   const [visible, setVisible] = useState(false);
@@ -34,49 +29,19 @@ export default function TermsAndConditionsScreen() {
     userDetailsStore.setIsAcceptedTerms(true);
     navigation.navigate("homeScreen");
   };
+
   return (
     <View>
-      <View style={{ backgroundColor: themeStyle.WHITE_COLOR, height: "100%" }}>
-        <ScrollView>
-          <View
-            style={{
-              paddingHorizontal: 40,
-              alignItems: "center",
-              paddingTop: 20,
-            }}
-          >
-            <Text
-              style={{ fontSize: 25, fontWeight: "bold", textAlign: "center" }}
-            >
-              תנאי שימוש ומדיניות פרטיות בשירותי אפליקציית בופלו
-            </Text>
-          </View>
-          <View style={{ marginTop: 40, paddingHorizontal: 15 }}>
-            <Text style={{ fontSize: 15, textAlign: "center" }}>
-              {bodyText}
-              {bodyText}
-              {bodyText}
-              {bodyText}
-              {bodyText}
-              {bodyText}
-              {bodyText}
-              {bodyText}
-              {bodyText}
-              {bodyText}
-              {bodyText}
-              {bodyText}
-              {bodyText}
-              {bodyText}
-              {bodyText}
-              {bodyText}
-              {bodyText}
-              {bodyText}
-              {bodyText}
-              {bodyText}
-            </Text>
-          </View>
-        </ScrollView>
-        <View
+
+    <View style={{ backgroundColor: themeStyle.WHITE_COLOR, height: "100%" }}>
+      
+      <WebView
+        source={{
+          uri: "https://sites.google.com/view/buffalo-pri/%D7%91%D7%99%D7%AA",
+        }}
+        style={{ height: "100%", width: "100%" }}
+      />
+              <View
           style={{
             width: "100%",
             paddingHorizontal: 15,
@@ -89,7 +54,7 @@ export default function TermsAndConditionsScreen() {
           <View style={{ width: 160 }}>
             <Button
               onClickFn={showDialog}
-              text="غير موافق"
+              text={t('not-agree')}
               bgColor={themeStyle.PRIMARY_COLOR}
               fontSize={20}
             />
@@ -97,61 +62,18 @@ export default function TermsAndConditionsScreen() {
           <View style={{ width: 160 }}>
             <Button
               onClickFn={acceptTerms}
-              text="موافق"
+              text={t('agree')}
               bgColor={themeStyle.PRIMARY_COLOR}
               fontSize={20}
             />
           </View>
         </View>
-      </View>
-      <Provider>
-        <Portal>
-          <Dialog
-            theme={{
-              colors: {
-                backdrop: "transparent",
-              },
-            }}
-            style={{
-              alignItems: "center",
-              justifyContent: "center",
-              backgroundColor: "rgba(254, 203, 5, 0.9)",
-            }}
-            visible={visible}
-            onDismiss={hideDialog}
-          >
-            <Dialog.Title>
-              <Icon
-                icon="exclamation-mark"
-                size={50}
-                style={{ color: theme.GRAY_700 }}
-              />
-            </Dialog.Title>
-            <Dialog.Content>
-              <Paragraph
-                style={{
-                  fontSize: 20,
-                  textAlign: "center",
-                  fontWeight: "bold",
-                }}
-              >
-                زبوننا العزيز، اخترت عدم قبول شروط الاستخدام. لتتمكن من استخدام
-                التطبيق يرجا الموافقه على الشروط{" "}
-              </Paragraph>
-            </Dialog.Content>
-            <Dialog.Actions>
-              <View style={{ width: "50%" }}>
-                <Button
-                  onClickFn={hideDialog}
-                  text="موافق"
-                  bgColor={themeStyle.WHITE_COLOR}
-                  fontSize={20}
-                />
-              </View>
-            </Dialog.Actions>
-          </Dialog>
-        </Portal>
-      </Provider>
+
+    </View>
+    <TremsDialog
+        handleAnswer={acceptTerms}
+        isOpen={visible}
+      />
     </View>
   );
 }
