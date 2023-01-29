@@ -102,7 +102,6 @@ const produtsAdapter = (order) => {
       notes: product.others.note,
       data: prodcutExtrasAdapter(product.extras)
     }
-    console.log(finalProduct)
     finalProducts.push(finalProduct);
   })
   return finalProducts;

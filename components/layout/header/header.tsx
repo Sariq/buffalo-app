@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, View, Text, Image, Animated } from "react-native";
+import { StyleSheet, TouchableOpacity, View, Text, Image, Animated, Platform } from "react-native";
 import { useContext, useEffect, useState } from "react";
 import { observer } from "mobx-react";
 
@@ -195,7 +195,10 @@ const styles = StyleSheet.create({
   },
   cartCount: {
     position: "absolute",
-    top: 19,
+    top: Platform.OS === 'ios' ? 19 : 20,
+    fontFamily: "Rubik-Bold",
+    color: themeStyle.BROWN_700,
+    fontSize:15
   },
   buttonContainer: {
     padding: 9,

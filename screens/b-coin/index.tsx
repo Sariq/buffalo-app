@@ -44,7 +44,7 @@ const BcoinScreen = () => {
           <Text
             style={{
               fontSize: 25,
-              fontFamily: `${getCurrentLang()}-SemiBold`,
+              fontFamily: `${getCurrentLang()}-Bold`,
               color: themeStyle.GRAY_700,
             }}
           >

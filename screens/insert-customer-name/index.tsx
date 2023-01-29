@@ -48,7 +48,6 @@ const InsertCustomerNameScreen = () => {
           DeviceEventEmitter.emit(`PREPARE_APP`);
           userDetailsStore.getUserDetails().then((res) => {
             setIsLoading(false);
-            console.log(prevRoute)
             if (cartStore.getProductsCount() > 0 && prevRoute?.name !== "profile") {
               navigation.navigate("cart");
             } else {

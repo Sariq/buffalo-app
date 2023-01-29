@@ -29,7 +29,7 @@ axiosInstance.interceptors.response.use(
     function (response) {
         const jsonValue:any = JSON.parse(fromBase64(response.data));
         if(jsonValue.has_err && general_errors_codes.indexOf(jsonValue.code) > -1){
-            DeviceEventEmitter.emit(`OPEN_GENERAL_SERVER_ERROR_DIALOG`, { show: true });
+            DeviceEventEmitter.emit(`OPEN_GENERAL_SERVER_ERROR_DIALOG`, { show: true, isSignOut: true });
         }
         if(jsonValue.has_err && jsonValue.code === TOKEN_NOT_VALID){
             DeviceEventEmitter.emit(`OPEN_GENERAL_SERVER_ERROR_DIALOG`, { show: true, isSignOut: true });

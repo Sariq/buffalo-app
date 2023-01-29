@@ -31,6 +31,7 @@ const CreditCard = ({ onSaveCard }) => {
   const [creditCardExpDate, setCreditCardExpDate] = useState();
   const [creditCardCVV, setCreditCardCVV] = useState();
   const [cardHolderID, setCardHolderID] = useState();
+  const [ccType, setCCType] = useState();
   const [isLoading, setIsLoading] = useState(false);
 
   const [formStatus, setFormStatus] = useState({
@@ -61,9 +62,10 @@ const CreditCard = ({ onSaveCard }) => {
   };
 
   const onNumberChange = (value) => {
-    const { isValid }: any = cardValidator.number(value);
+    const { isValid, card }: any = cardValidator.number(value);
     if(isValid){
       Keyboard.dismiss();
+      setCCType(card?.type)
     }
     setCreditCardNumber(value);
     setFormStatus({ ...formStatus, isNumberValid: isValid });
@@ -98,16 +100,18 @@ const CreditCard = ({ onSaveCard }) => {
     setIsLoading(true);
     const validateCardData: TValidateCardProps = {
       cardNumber: creditCardNumber,
-      expDate: creditCardExpDate.replaceAll("/", ""),
+      expDate: creditCardExpDate.replace("/", ""),
     };
+
     validateCard(validateCardData).then(async (res) => {
       if (res.isValid) {
         const ccData: TCCDetails = {
           ccToken: res.ccDetails.ccToken,
           last4Digits: res.ccDetails.last4Digits,
           cvv: creditCardCVV,
-          expDate: creditCardExpDate.replaceAll("/", ""),
+          expDate: creditCardExpDate.replace("/", ""),
           id: cardHolderID,
+          ccType: ccType
         };
         const ccDetailsString = JSON.stringify(ccData);
         await AsyncStorage.setItem("@storage_CCData", ccDetailsString);

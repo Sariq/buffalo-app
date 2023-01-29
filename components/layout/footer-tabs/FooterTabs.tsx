@@ -217,7 +217,7 @@ const FooterTabs = () => {
       }, 30 * 1000);
       return () => clearInterval(interval);
     }
-  }, []);
+  }, [authStore.userToken]);
 
  
   useEffect(()=>{

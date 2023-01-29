@@ -22,7 +22,7 @@ const chargeCreditCard = ({ token, totalPrice, orderId }: TPaymentProps) => {
         Password: paymentCredentials.credentials_password,
         CardNumber: token,
         TransactionSum: totalPrice,
-        ExtraData: orderId.toString()
+        ExtraData: orderId?.toString()
     };
     return axios
         .post(
@@ -32,8 +32,6 @@ const chargeCreditCard = ({ token, totalPrice, orderId }: TPaymentProps) => {
         .then(function (res: any) {
             return res.data;
         });
-
-
 }
 
 export default chargeCreditCard;

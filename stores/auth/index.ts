@@ -89,6 +89,13 @@ class AuthStore {
       })
     });
   }
+
+  resetAppState = async () => {
+    ordersStore.resetOrdersList();
+    await AsyncStorage.removeItem("@storage_userToken");
+    this.userToken = null
+    cartStore.resetCart();
+  }
 }
 
 export const authStore = new AuthStore();

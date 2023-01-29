@@ -24,6 +24,7 @@ export type TCCDetails = {
   cvv?: string;
   id?: number;
   expDate?: string;
+  ccType?: string;
 }
 
 const validateCard = ({ cardNumber, expDate }: TValidateCardProps) => {

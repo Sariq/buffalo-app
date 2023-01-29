@@ -49,7 +49,7 @@ const HomeScreen = ({ navigation }) => {
       }, 60 * 1000);
       return () => clearInterval(interval);
     }
-  }, []);
+  }, [authStore.userToken]);
 
   useEffect(()=>{
     if(ordersStore.ordersList){

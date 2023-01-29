@@ -124,8 +124,8 @@ const OrdersStatusScreen = ({ route }) => {
 
   const renderOrderNote = (note: string) => {
     return note ? (
-      <View style={{ marginLeft: 10 }}>
-        <Text style={{ marginRight: 2, paddingBottom: 4 }}>* {note}</Text>
+      <View style={{ marginLeft: 10, alignItems: "flex-end", flexDirection: "row" }}>
+        <Text style={{ marginRight: 2, paddingBottom: 4, color: themeStyle.SUCCESS_COLOR}}>* {note}</Text>
       </View>
     ) : null;
   };
@@ -134,7 +134,17 @@ const OrdersStatusScreen = ({ route }) => {
       return (
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Text style={{ marginRight: 2, paddingBottom: 4 }}>+</Text>
-          <Text>{menuStore.translate(extra.name)}</Text>
+          {extra.value === false && (
+                <Text
+                  style={{
+                    fontFamily: `${getCurrentLang()}-SemiBold`,
+                    marginRight: 2,
+                  }}
+                >
+                  {t("without")}
+                </Text>
+              )}
+          <Text>{menuStore.translate(extra.name)} {extra.value}</Text>
         </View>
       );
     });

@@ -27,7 +27,7 @@ export default function GeneralServerErrorDialog() {
 
   const openDialog = (data) => {
     if(data.isSignOut){
-      authStore.logOut();
+      authStore.resetAppState();
     }
     setVisible(true);
   };
