@@ -11,6 +11,7 @@ import { isEmpty } from "lodash";
 import Icon from "../../../components/icon";
 import BackButton from "../../../components/back-button";
 import Text from "../../../components/controls/Text";
+import DashedLine from "react-native-dashed-line";
 //2 -ready | if comple
 export const inProgressStatuses = ["SENT"];
 export const readyStatuses = ["COMPLETED", "READY"];
@@ -153,13 +154,19 @@ const OrdersStatusScreen = ({ route }) => {
   const renderOrderItems = (order) => {
     const tmpOrder = fromBase64(order.order);
     const tmpOrderValue = JSON.parse(tmpOrder);
-    return tmpOrderValue.items.map((item) => {
+    return tmpOrderValue.items.map((item, index) => {
       const meal: any = menuStore.getFromCategoriesMealByKey(item.item_id);
       if (isEmpty(meal)) {
         return;
       }
       return (
         <View>
+                       {index !== 0 && <DashedLine
+                              dashLength={5}
+                              dashThickness={1}
+                              dashGap={5}
+                              dashColor={themeStyle.GRAY_300}
+                            />}
           <View
             style={{
               flexDirection: "row",

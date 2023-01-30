@@ -31,7 +31,7 @@ const extrasIcons = {
   "צ׳דר": require("../../assets/menu/gradiant/cheese.png"),
   "1116": require("../../assets/menu/gradiant/baecon.png"),
   "בייקון טלה": require("../../assets/menu/gradiant/baecon.png"),
-  "בייקון עגל": require("../../assets/menu/gradiant/baecon.png"),
+  "בייקון עגל": require("../../assets/menu/gradiant/baecon-buffalo.png"),
   חלפיניו: require("../../assets/menu/gradiant/jalapeno.png"),
   "ביצת עין": require("../../assets/menu/gradiant/egg.png"),
   "פטריות פורטבלו": require("../../assets/menu/gradiant/truffle.png"),
@@ -223,7 +223,7 @@ const MealScreen = ({ route }) => {
                 style={{
                   zIndex: 1,
                   position: "absolute",
-                  right: -10,
+                  right: 15,
                   width: "10%",
                   padding: 5,
                 }}
@@ -236,7 +236,7 @@ const MealScreen = ({ route }) => {
                   X
                 </Text>
               </TouchableOpacity>
-              <View style={{ width: 310, height: 230, padding: 10 }}>
+              <View style={{ width: 380, height: 240, padding: 10 }}>
                 <Image
                   style={{ width: "100%", height: "100%" }}
                   source={{ uri: meal.data.image_url }}
@@ -251,9 +251,10 @@ const MealScreen = ({ route }) => {
                 alignSelf: "flex-start",
                 paddingHorizontal: 40,
                 paddingBottom: 15,
+                width:"100%"
               }}
             >
-              <View>
+              <View style={{width:"100%"}}>
                 <Text
                   style={{
                     fontSize: 25,

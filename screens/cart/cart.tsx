@@ -65,7 +65,6 @@ type TShippingMethod = {
   takAway: string;
 };
 
-
 const CartScreen = () => {
   const { t } = useTranslation();
   const {
@@ -184,7 +183,7 @@ const CartScreen = () => {
             }
           }
           if (shippingMethod === SHIPPING_METHODS.table) {
-            setShippingMethod(SHIPPING_METHODS.takAway)
+            setShippingMethod(SHIPPING_METHODS.takAway);
           }
         }
 
@@ -248,10 +247,10 @@ const CartScreen = () => {
   useEffect(() => {
     let bcoinPrice = 0;
     const shippingPrice = shippingMethod === SHIPPING_METHODS.shipping ? 15 : 0;
-    if(isBcoinInCart()){
-      if(itemsPrice < userDetailsStore?.userDetails?.credit){
-        bcoinPrice = itemsPrice ;
-      }else{
+    if (isBcoinInCart()) {
+      if (itemsPrice < userDetailsStore?.userDetails?.credit) {
+        bcoinPrice = itemsPrice;
+      } else {
         bcoinPrice = userDetailsStore?.userDetails?.credit;
       }
     }
@@ -383,7 +382,7 @@ const CartScreen = () => {
           } else {
             if (shippingMethod === SHIPPING_METHODS.takAway) {
               setIsOpenShippingMethodDialog(true);
-            }else{
+            } else {
               submitCart();
             }
           }
@@ -447,8 +446,9 @@ const CartScreen = () => {
       shippingMethod,
       totalPrice,
       products: cartStore.cartItems,
-      bcoinUpdatePrice
+      bcoinUpdatePrice,
     };
+
     if (shippingMethod === SHIPPING_METHODS.shipping) {
       order.geo_positioning = {
         latitude: location.coords.latitude,
@@ -543,7 +543,10 @@ const CartScreen = () => {
           return false;
         }
         if (extra.type === "CHOICE" && extra.multiple_choice) {
-          if (extra.isdefault !== extra.value && extra.value !== extra.isdefault) {
+          if (
+            extra.isdefault !== extra.value &&
+            extra.value !== extra.isdefault
+          ) {
             return extra;
           }
           return false;
@@ -660,6 +663,12 @@ const CartScreen = () => {
     setIsOpenStoreErrorMsgDialog(false);
   };
 
+  const removeCreditCard = async () => {
+    await AsyncStorage.removeItem("@storage_CCData");
+    setCCData(null);
+    setPaymentMthod(PAYMENT_METHODS.cash);
+  };
+
   let extrasArray = [];
   const renderFilteredExtras = (filteredExtras, extrasLength, key) => {
     return filteredExtras.map((extra, tagIndex) => {
@@ -723,12 +732,11 @@ const CartScreen = () => {
     });
   };
 
-  const getCardIcon = (type: string) =>{
-
+  const getCardIcon = (type: string) => {
     //mastercard
     // american-express
     // visa
-  }
+  };
 
   return (
     <View
@@ -751,7 +759,13 @@ const CartScreen = () => {
                 <BackButton />
               </View>
               <View>
-                <Text style={{ fontWeight: "bold", fontSize: 20, color: themeStyle.GRAY_700 }}>
+                <Text
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: 20,
+                    color: themeStyle.GRAY_700,
+                  }}
+                >
                   {t("meals")} {cartStore.getProductsCount()}
                 </Text>
               </View>
@@ -801,7 +815,7 @@ const CartScreen = () => {
                                   fontSize: 15,
                                   fontFamily: `${getCurrentLang()}-Bold`,
                                   fontWeight: "bold",
-                                  color:themeStyle.BROWN_700
+                                  color: themeStyle.BROWN_700,
                                 }}
                               >
                                 {t("you-have-bcoin")} {product.data.price}
@@ -811,7 +825,7 @@ const CartScreen = () => {
                                   fontSize: 15,
                                   fontFamily: `${getCurrentLang()}-Bold`,
                                   marginTop: getCurrentLang() === "he" ? -5 : 0,
-                                  color:themeStyle.BROWN_700
+                                  color: themeStyle.BROWN_700,
                                 }}
                               >
                                 {t("you-have-discount")}
@@ -828,8 +842,7 @@ const CartScreen = () => {
                                     fontWeight: "bold",
                                     fontSize: 28,
                                     paddingBottom: 5,
-                                    color:themeStyle.BROWN_700
-
+                                    color: themeStyle.BROWN_700,
                                   }}
                                 >
                                   ₪
@@ -839,7 +852,7 @@ const CartScreen = () => {
                                     fontWeight: "bold",
                                     fontSize: 47,
                                     fontFamily: "Rubik-Bold",
-                                    color:themeStyle.BROWN_700
+                                    color: themeStyle.BROWN_700,
                                   }}
                                 >
                                   {bcoinUpdatePrice}
@@ -857,12 +870,10 @@ const CartScreen = () => {
                                     fontSize: 13,
                                     fontFamily: `${getCurrentLang()}-SemiBold`,
                                     textAlign: "center",
-                                    color:themeStyle.BROWN_700
-
+                                    color: themeStyle.BROWN_700,
                                   }}
                                 >
-                                  {t("you-get-discount")} ₪
-                                  {bcoinUpdatePrice}
+                                  {t("you-get-discount")} ₪{bcoinUpdatePrice}
                                 </Text>
                                 <Text
                                   style={{
@@ -871,8 +882,7 @@ const CartScreen = () => {
                                     textAlign: "center",
                                     marginTop:
                                       getCurrentLang() === "he" ? -4 : 0,
-                                      color:themeStyle.BROWN_700
-
+                                    color: themeStyle.BROWN_700,
                                   }}
                                 >
                                   {t("from-total-price")}
@@ -899,8 +909,7 @@ const CartScreen = () => {
                                   fontFamily: `${getCurrentLang()}-Bold`,
                                   fontSize: 20,
                                   marginLeft: isBcoinProduct(product) ? 10 : 0,
-                                  color:themeStyle.BROWN_700
-
+                                  color: themeStyle.BROWN_700,
                                 }}
                               >
                                 {
@@ -1006,7 +1015,7 @@ const CartScreen = () => {
                             <Text
                               style={{
                                 fontFamily: `${getCurrentLang()}-SemiBold`,
-                                color:themeStyle.BROWN_700
+                                color: themeStyle.BROWN_700,
                               }}
                             >
                               {product.others.note}
@@ -1055,7 +1064,7 @@ const CartScreen = () => {
                                       style={{
                                         fontSize: 20,
                                         fontFamily: `${getCurrentLang()}-SemiBold`,
-                                        color:themeStyle.BROWN_700
+                                        color: themeStyle.BROWN_700,
                                       }}
                                     >
                                       {t("edit")}
@@ -1086,7 +1095,7 @@ const CartScreen = () => {
                                         fontSize: 20,
                                         fontFamily: `${getCurrentLang()}-SemiBold`,
                                         height: "100%",
-                                        color:themeStyle.BROWN_700
+                                        color: themeStyle.BROWN_700,
                                       }}
                                     >
                                       {t("delete")}
@@ -1106,12 +1115,21 @@ const CartScreen = () => {
                                 }}
                               >
                                 <Text
-                                  style={{ fontWeight: "bold", fontSize: 17,color:themeStyle.BROWN_700, fontFamily: "Rubik-Bold", }}
+                                  style={{
+                                    fontWeight: "bold",
+                                    fontSize: 17,
+                                    color: themeStyle.BROWN_700,
+                                    fontFamily: "Rubik-Bold",
+                                  }}
                                 >
-                                  {product.data.price * product.others.count} 
+                                  {product.data.price * product.others.count}
                                 </Text>
                                 <Text
-                                  style={{ fontWeight: "bold", fontSize: 17,color:themeStyle.BROWN_700 }}
+                                  style={{
+                                    fontWeight: "bold",
+                                    fontSize: 17,
+                                    color: themeStyle.BROWN_700,
+                                  }}
                                 >
                                   ₪
                                 </Text>
@@ -1176,7 +1194,6 @@ const CartScreen = () => {
                   isFlexCol
                   borderRadious={15}
                   textColor={themeStyle.GRAY_700}
-
                 />
               </View>
               <View style={{ flexBasis: "32%" }}>
@@ -1227,7 +1244,9 @@ const CartScreen = () => {
                 ) : (
                   <View style={{ alignItems: "center", flexDirection: "row" }}>
                     <View>
-                      <Text style={{color:themeStyle.BROWN_700}}>{t("loading-location")}</Text>
+                      <Text style={{ color: themeStyle.BROWN_700 }}>
+                        {t("loading-location")}
+                      </Text>
                     </View>
                     <View style={{ marginLeft: 5 }}>
                       <ActivityIndicator
@@ -1262,7 +1281,6 @@ const CartScreen = () => {
                   icon="shekel"
                   iconSize={20}
                   textColor={themeStyle.GRAY_700}
-
                 />
               </View>
               <View style={{ flexBasis: "49%" }}>
@@ -1280,7 +1298,6 @@ const CartScreen = () => {
                   iconSize={25}
                   iconPosition={"left"}
                   textColor={themeStyle.GRAY_700}
-
                 />
               </View>
             </View>
@@ -1289,45 +1306,47 @@ const CartScreen = () => {
               ccData?.last4Digits && (
                 <View
                   style={{
+                    flexDirection: "row",
+                    marginTop: 5,
+                    marginHorizontal: 25,
                     alignItems: "center",
+                    justifyContent: "space-between",
+
                     backgroundColor: "#F5F5F5",
                     borderRadius: 15,
-                    paddingHorizontal:15,
-                    marginTop: 5,
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    marginHorizontal: 20,
+                    paddingHorizontal: 10,
                   }}
                 >
-                  <TouchableOpacity
-                    onPress={replaceCreditCard}
+                  <View
                     style={{
                       alignItems: "center",
                       flexDirection: "row",
-                      flexBasis: "10%",
                     }}
                   >
-                    <Icon
-                      icon="circle-down-arrow"
-                      size={20}
-                      style={{ color: theme.GRAY_700 }}
-                    />
-                    <Text
-                      style={{ fontSize: 20, paddingTop: 3, paddingLeft:0,color:themeStyle.BROWN_700, marginLeft:2 }}
+                    <TouchableOpacity onPress={replaceCreditCard}>
+                      <Icon icon="edit" size={20} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={removeCreditCard}
+                      style={{ marginLeft: 20 }}
                     >
-                      {"change"}
-                    </Text>
-                  </TouchableOpacity>
-                  <View style={{flexDirection: "row", alignItems: "center"}}>
-                  <Text
-                    style={{ fontSize: 17,color:themeStyle.BROWN_700,fontFamily: 'Rubik-Light' }}
-                  >{`****_****_****_${ccData?.last4Digits}`}</Text>
-                  <Icon
+                      <Icon icon="delete" size={20} />
+                    </TouchableOpacity>
+                  </View>
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <Text
+                      style={{
+                        fontSize: 17,
+                        color: themeStyle.BROWN_700,
+                        fontFamily: "Rubik-Light",
+                      }}
+                    >{`****_****_****_${ccData?.last4Digits}`}</Text>
+                    <Icon
                       icon={ccData?.ccType}
                       size={50}
                       style={{ color: theme.GRAY_700, marginLeft: 5 }}
                     />
-                    </View>
+                  </View>
                 </View>
               )}
           </View>
@@ -1336,7 +1355,15 @@ const CartScreen = () => {
               isBcoinInCart()) && (
               <View>
                 <View style={{ alignItems: "center" }}>
-                  <Text style={{ fontWeight: "bold",color:themeStyle.GRAY_700,fontSize: 20 }}>{t("total")}</Text>
+                  <Text
+                    style={{
+                      fontWeight: "bold",
+                      color: themeStyle.GRAY_700,
+                      fontSize: 20,
+                    }}
+                  >
+                    {t("total")}
+                  </Text>
                 </View>
                 <View style={{ marginTop: 30 }}>
                   <View style={styles.priceRowContainer}>
@@ -1345,7 +1372,7 @@ const CartScreen = () => {
                         style={{
                           fontFamily: `${getCurrentLang()}-Light`,
                           fontSize: 20,
-                          color:themeStyle.GRAY_700
+                          color: themeStyle.GRAY_700,
                         }}
                       >
                         {t("order-price")}
@@ -1356,7 +1383,7 @@ const CartScreen = () => {
                         style={{
                           fontFamily: "Rubik-Light",
                           fontSize: 17,
-                          color:themeStyle.GRAY_700
+                          color: themeStyle.GRAY_700,
                         }}
                       >
                         ₪{itemsPrice}
@@ -1371,7 +1398,7 @@ const CartScreen = () => {
                           style={{
                             fontFamily: `${getCurrentLang()}-Light`,
                             fontSize: 20,
-                            color:themeStyle.GRAY_700
+                            color: themeStyle.GRAY_700,
                           }}
                         >
                           {t("delivery")}
@@ -1382,7 +1409,7 @@ const CartScreen = () => {
                           style={{
                             fontFamily: "Rubik-Light",
                             fontSize: 17,
-                            color:themeStyle.GRAY_700
+                            color: themeStyle.GRAY_700,
                           }}
                         >
                           ₪15
@@ -1397,7 +1424,7 @@ const CartScreen = () => {
                           style={{
                             fontFamily: `${getCurrentLang()}-Light`,
                             fontSize: 20,
-                            color:themeStyle.GRAY_700
+                            color: themeStyle.GRAY_700,
                           }}
                         >
                           {t("bcoin-discount-price")}
@@ -1407,7 +1434,8 @@ const CartScreen = () => {
                         <Text
                           style={{
                             fontSize: 17,
-                            color:themeStyle.GRAY_700, fontFamily: "Rubik-Light",
+                            color: themeStyle.GRAY_700,
+                            fontFamily: "Rubik-Light",
                           }}
                         >
                           ₪{bcoinUpdatePrice * -1}
@@ -1426,7 +1454,7 @@ const CartScreen = () => {
                   style={{
                     fontFamily: `${getCurrentLang()}-SemiBold`,
                     fontSize: 20,
-                    color:themeStyle.BROWN_700
+                    color: themeStyle.BROWN_700,
                   }}
                 >
                   {t("final-price")}
@@ -1437,7 +1465,7 @@ const CartScreen = () => {
                   style={{
                     fontSize: 17,
                     fontWeight: "bold",
-                    color:themeStyle.BROWN_700
+                    color: themeStyle.BROWN_700,
                   }}
                 >
                   {totalPrice}
@@ -1446,7 +1474,7 @@ const CartScreen = () => {
                   style={{
                     fontWeight: "bold",
                     fontSize: 17,
-                    color:themeStyle.BROWN_700
+                    color: themeStyle.BROWN_700,
                   }}
                 >
                   ₪

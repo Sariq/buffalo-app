@@ -32,7 +32,7 @@ import InterntConnectionDialog from "./components/dialogs/internet-connection";
 //SplashScreen.preventAutoHideAsync();
 let customARFonts = {
   "ar-Black": require(`./assets/fonts/ar/Black.ttf`),
-  "ar-Bold": require(`./assets/fonts/ar/Bold.otf`),
+  "ar-Bold": require(`./assets/fonts/ar/Bold.ttf`),
   "ar-ExtraBold": require(`./assets/fonts/ar/ExtraBold.ttf`),
   "ar-Light": require(`./assets/fonts/ar/Light.ttf`),
   "ar-Medium": require(`./assets/fonts/ar/Medium.ttf`),
@@ -149,7 +149,6 @@ const App = () => {
 
   if (!appIsReady) {
     const version = Constants.nativeAppVersion;
-
     return (
       <ImageBackground
         source={require("./assets/splash-screen-2.png")}

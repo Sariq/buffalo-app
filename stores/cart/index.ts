@@ -240,7 +240,6 @@ class CartStore {
   submitOrder = async (order: any): Promise<TOrderSubmitResponse | string> => {
     const cartData = await this.getCartData(order);
     const currentHashKey = await AsyncStorage.getItem("@storage_orderHashKey");
-    if (cartData.unique_hash != JSON.parse(currentHashKey)) {
       await AsyncStorage.setItem("@storage_orderHashKey", JSON.stringify(cartData.unique_hash));
       const orderBase64 = toBase64(cartData).toString();
       const body = orderBase64;
@@ -265,11 +264,6 @@ class CartStore {
           const data: TOrderSubmitResponse = { has_err: true, order_id: 0, salt: "", status: "", code: 0 }
           return data;
         });
-    } else {
-      return new Promise((resolve, reject) => {
-        resolve('sameHashKey')
-      })
-    }
 
   };
 
