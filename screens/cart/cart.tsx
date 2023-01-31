@@ -429,8 +429,7 @@ const CartScreen = () => {
 
       const chargeData: TPaymentProps = {
         token: ccData.ccToken,
-        expDate: ccData.expDate,
-        cvv: ccData.cvv,
+        id: ccData.id,
         totalPrice: totalPrice,
         orderId: orderData.order_id,
       };

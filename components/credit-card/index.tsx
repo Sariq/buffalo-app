@@ -108,8 +108,6 @@ const CreditCard = ({ onSaveCard }) => {
         const ccData: TCCDetails = {
           ccToken: res.ccDetails.ccToken,
           last4Digits: res.ccDetails.last4Digits,
-          cvv: creditCardCVV,
-          expDate: creditCardExpDate.replace("/", ""),
           id: cardHolderID,
           ccType: ccType
         };
