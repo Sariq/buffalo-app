@@ -72,6 +72,9 @@ const ProfileScreen = () => {
       case "language":
         navigation.navigate("language");
         break;
+      case "openTerms":
+        navigation.navigate("terms-and-conditions");
+        break;
     }
   };
 
@@ -155,6 +158,22 @@ const ProfileScreen = () => {
           </Text>
         </View>
         <View style={{ marginTop: 0 }}>{renderItems()}</View>
+      </View>
+      <View
+        style={{
+          alignItems: "center",
+          position: "absolute",
+          bottom: 35,
+          margin: "auto",
+          left: 0,
+          right: 0,
+        }}
+      >
+        <TouchableOpacity onPress={() => actionHandler("openTerms")} style={{alignItems:"center", marginBottom: 20}}>
+          <Text style={{ color: themeStyle.GRAY_700 }}>
+            {t("open-terms")}
+          </Text>
+        </TouchableOpacity>
       </View>
       <View
         style={{

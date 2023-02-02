@@ -11,7 +11,9 @@ import { StoreContext } from "../../stores";
 import { WebView } from "react-native-webview";
 import TremsDialog from "../../components/dialogs/terms";
 import { useTranslation } from "react-i18next";
-
+import Text from "../../components/controls/Text";
+import { temrsText } from "./texts";
+import { ScrollView } from "react-native-gesture-handler";
 export default function TermsAndConditionsScreen() {
   const { t } = useTranslation();
 
@@ -32,16 +34,30 @@ export default function TermsAndConditionsScreen() {
 
   return (
     <View>
-
-    <View style={{ backgroundColor: themeStyle.WHITE_COLOR, height: "100%" }}>
-      
-      <WebView
-        source={{
-          uri: "https://sites.google.com/view/buffalo-pri/%D7%91%D7%99%D7%AA",
-        }}
-        style={{ height: "100%", width: "100%" }}
-      />
-              <View
+      <View style={{ backgroundColor: themeStyle.WHITE_COLOR, height: "100%" }}>
+        <View style={{alignItems:"center", marginTop:20}}>
+          <Text style={{fontSize:20,fontWeight:"bold"}}>תנאי שימוש / מדיניות פרטיות</Text>
+          <Text style={{fontSize:20,fontWeight:"bold"}}>בשירותי אפליקציה בופלו</Text>
+        </View>
+        <ScrollView
+          style={{
+            flexDirection: "column",
+            paddingHorizontal: 20,
+            paddingTop: 20,
+          }}
+        >
+          {temrsText.map((section) => (
+            <View>
+              <Text style={styles.sectionTitle}>{section.title}</Text>
+              <View>
+                {section.rows.map((row) => (
+                  <Text style={styles.sectionRow}>{row}</Text>
+                ))}
+              </View>
+            </View>
+          ))}
+        </ScrollView>
+        <View
           style={{
             width: "100%",
             paddingHorizontal: 15,
@@ -54,7 +70,7 @@ export default function TermsAndConditionsScreen() {
           <View style={{ width: 160 }}>
             <Button
               onClickFn={showDialog}
-              text={t('not-agree')}
+              text={t("not-agree")}
               bgColor={themeStyle.PRIMARY_COLOR}
               fontSize={20}
             />
@@ -62,18 +78,14 @@ export default function TermsAndConditionsScreen() {
           <View style={{ width: 160 }}>
             <Button
               onClickFn={acceptTerms}
-              text={t('agree')}
+              text={t("agree")}
               bgColor={themeStyle.PRIMARY_COLOR}
               fontSize={20}
             />
           </View>
         </View>
-
-    </View>
-    <TremsDialog
-        handleAnswer={acceptTerms}
-        isOpen={visible}
-      />
+      </View>
+      <TremsDialog handleAnswer={acceptTerms} isOpen={visible} />
     </View>
   );
 }
@@ -112,5 +124,14 @@ const styles = StyleSheet.create({
   image: {
     height: "100%",
     borderWidth: 4,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  sectionRow: {
+    fontSize: 14,
+    marginBottom: 10,
   },
 });
