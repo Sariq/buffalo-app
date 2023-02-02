@@ -251,10 +251,10 @@ const MealScreen = ({ route }) => {
                 alignSelf: "flex-start",
                 paddingHorizontal: 40,
                 paddingBottom: 15,
-                width:"100%"
+                width: "100%",
               }}
             >
-              <View style={{width:"100%"}}>
+              <View style={{ width: "100%" }}>
                 <Text
                   style={{
                     fontSize: 25,
@@ -336,28 +336,32 @@ const MealScreen = ({ route }) => {
                             {Object.keys(meal.extras[keyOrdered]).map(
                               (tagId) => {
                                 const tag = meal.extras[keyOrdered][tagId];
-                                if (tag.available_on_app) {
-                                  return (
-                                    <View
-                                      key={tagId}
-                                      style={{ paddingVertical: 3 }}
-                                    >
-                                      <GradiantRow
-                                        onChangeFn={(value) => {
-                                          updateMeal(value, tag, keyOrdered);
-                                        }}
-                                        icon={extrasIcons[tag.name]}
-                                        type={tag.type}
-                                        title={menuStore.translate(tag.name)}
-                                        price={tag.price}
-                                        minValue={tag.counter_min_value}
-                                        stepValue={tag.counter_step_value}
-                                        value={tag.value}
-                                        isMultipleChoice={tag.multiple_choice}
-                                      />
-                                    </View>
-                                  );
-                                }
+                                return (
+                                  <View
+                                    key={tagId}
+                                    style={{
+                                      paddingVertical: 3,
+                                      opacity: tag.available_on_app ? 1 : 0.3,
+                                    }}
+                                    pointerEvents={
+                                      tag.available_on_app ? "auto" : "none"
+                                    }
+                                  >
+                                    <GradiantRow
+                                      onChangeFn={(value) => {
+                                        updateMeal(value, tag, keyOrdered);
+                                      }}
+                                      icon={extrasIcons[tag.name]}
+                                      type={tag.type}
+                                      title={menuStore.translate(tag.name)}
+                                      price={tag.price}
+                                      minValue={tag.counter_min_value}
+                                      stepValue={tag.counter_step_value}
+                                      value={tag.value}
+                                      isMultipleChoice={tag.multiple_choice}
+                                    />
+                                  </View>
+                                );
                               }
                             )}
                           </View>
@@ -391,7 +395,6 @@ const MealScreen = ({ route }) => {
                     marginTop: 10,
                     alignItems: "center",
                     justifyContent: "space-between",
-                    
                   }}
                 >
                   <View
@@ -479,7 +482,7 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingTop: 5,
     backgroundColor: themeStyle.WHITE_COLOR,
-    paddingBottom: Platform.OS === 'ios' ? 0 : 10
+    paddingBottom: Platform.OS === "ios" ? 0 : 10,
   },
   titleContainer: {
     alignSelf: "center",

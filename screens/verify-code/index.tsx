@@ -144,7 +144,7 @@ const VerifyCodeScreen = ({ route }) => {
               if (cartStore.getProductsCount() > 0) {
                 navigation.navigate("cart");
               } else {
-                navigation.navigate("profile");
+                navigation.navigate("homeScreen");
               }
             });
           } else {

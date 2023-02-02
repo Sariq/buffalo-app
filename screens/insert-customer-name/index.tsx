@@ -51,7 +51,7 @@ const InsertCustomerNameScreen = () => {
             if (cartStore.getProductsCount() > 0 && prevRoute?.name !== "profile") {
               navigation.navigate("cart");
             } else {
-              navigation.navigate("profile");
+              navigation.navigate("homeScreen");
             }
           });
         })

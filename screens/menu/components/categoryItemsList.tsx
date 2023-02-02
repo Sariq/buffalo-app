@@ -35,12 +35,9 @@ const CategoryItemsList = ({ productsList }) => {
     <ScrollView ref={scrollRef}>
       <View style={styles.container}>
         {productsList.map((item) => {
-          if (item.out_of_stock) {
-            return null;
-          }
           return (
             <TouchableOpacity
-              style={styles.categoryItem}
+              style={[styles.categoryItem, {opacity: item.out_of_stock ? 0.4 : 1}]}
               delayPressIn={0}
               onPress={() => {
                 onItemSelect(item);
@@ -97,7 +94,6 @@ const styles = StyleSheet.create({
   categoryItem: {
     flexBasis: "48%",
     marginBottom: 15,
-
     height: 220,
     justifyContent: "center",
     alignItems: "center",

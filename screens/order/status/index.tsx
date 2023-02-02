@@ -107,7 +107,7 @@ const OrdersStatusScreen = ({ route }) => {
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <View>
             <Text style={styles.totalPriceText}>
-              {t(oOrder.payment_method)} | {t(oOrder.receipt_method)}
+              {t(oOrder.payment_method?.toLowerCase())} | {t(oOrder.receipt_method)}
             </Text>
           </View>
         </View>
@@ -318,10 +318,10 @@ const OrdersStatusScreen = ({ route }) => {
                   color: themeStyle.GRAY_700,
                 }}
               >
-                {getTextStatusByShippingMethod(
+                {t(getTextStatusByShippingMethod(
                   oOrder.receipt_method,
                   order.status.replace(/ /g, "")
-                )}
+                ))}
               </Text>
             </View>
             <View style={{ marginTop: 10 }}>

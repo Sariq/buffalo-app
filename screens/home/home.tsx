@@ -98,7 +98,7 @@ const HomeScreen = ({ navigation }) => {
               bgColor={themeStyle.PRIMARY_COLOR}
               text={t("new-order")}
               onClickFn={goToNewOrder}
-              fontSize={isActiveOrder ? 27 : 40}
+              fontSize={isActiveOrder ? 26 : 40}
               icon={"new_order_icon"}
               borderRadious={50}
               iconSize={isActiveOrder ? 20 : 30}
@@ -114,7 +114,7 @@ const HomeScreen = ({ navigation }) => {
                 bgColor={themeStyle.SUCCESS_COLOR}
                 text={t("current-orders")}
                 onClickFn={goToOrdersStatus}
-                fontSize={isActiveOrder ? 27 : 40}
+                fontSize={isActiveOrder ? 26 : 40}
                 borderRadious={50}
                 textPadding={0}
                 marginH={5}
