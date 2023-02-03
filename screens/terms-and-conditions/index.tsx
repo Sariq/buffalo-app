@@ -41,12 +41,14 @@ export default function TermsAndConditionsScreen() {
         <ScrollView
           style={{
             flexDirection: "column",
-            paddingHorizontal: 20,
             paddingTop: 20,
+
           }}
         >
           {temrsText.map((section) => (
-            <View>
+            <View style={{
+              marginHorizontal: 20,
+            }}>
               <Text style={styles.sectionTitle}>{section.title}</Text>
               <View>
                 {section.rows.map((row) => (
@@ -125,6 +127,7 @@ const styles = StyleSheet.create({
     borderWidth: 4,
   },
   sectionTitle: {
+    textAlign: "left",
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 10,

@@ -239,7 +239,6 @@ class CartStore {
 
   submitOrder = async (order: any): Promise<TOrderSubmitResponse | string> => {
     const cartData = await this.getCartData(order);
-    const currentHashKey = await AsyncStorage.getItem("@storage_orderHashKey");
       await AsyncStorage.setItem("@storage_orderHashKey", JSON.stringify(cartData.unique_hash));
       const orderBase64 = toBase64(cartData).toString();
       const body = orderBase64;

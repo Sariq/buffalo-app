@@ -214,6 +214,14 @@ const CartScreen = () => {
           : Location.Accuracy.Low,
     });
     setLocation(lastLocation);
+    cartStore
+    .isValidGeo(lastLocation.coords.latitude, lastLocation.coords.longitude)
+    .then((res) => {
+      if (res) {
+        setIsValidAddress(res.result);
+        setIsOpenInvalidAddressDialod(!res.result);
+      }
+    });
     let location = await Location.getCurrentPositionAsync({
       accuracy:
         Platform.OS === "android"
@@ -222,13 +230,13 @@ const CartScreen = () => {
     });
     setLocation(location);
     cartStore
-      .isValidGeo(location.coords.latitude, location.coords.longitude)
-      .then((res) => {
-        if (res) {
-          setIsValidAddress(res.result);
-          setIsOpenInvalidAddressDialod(!res.result);
-        }
-      });
+    .isValidGeo(lastLocation.coords.latitude, lastLocation.coords.longitude)
+    .then((res) => {
+      if (res) {
+        setIsValidAddress(res.result);
+        setIsOpenInvalidAddressDialod(!res.result);
+      }
+    });
   };
   useEffect(() => {
     if (shippingMethod === SHIPPING_METHODS.shipping) {
