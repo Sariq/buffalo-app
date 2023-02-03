@@ -27,6 +27,7 @@ const BarcodeScannerCMP = ({ onChange, isOpen }: TBacrcodeScanner) => {
     const getBarCodeScannerPermissions = async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
       if (status !== "granted") {
+        setHasPermission(false);
       } else {
         setHasPermission(true);
       }
@@ -53,7 +54,7 @@ const BarcodeScannerCMP = ({ onChange, isOpen }: TBacrcodeScanner) => {
     }
   };
 
-  if (hasPermission === null) {
+  if (hasPermission === false) {
     return (
       <BarcodeNoAccessDialog
         isOpen={true}

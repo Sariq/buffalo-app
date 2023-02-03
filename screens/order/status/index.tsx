@@ -107,7 +107,7 @@ const OrdersStatusScreen = ({ route }) => {
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <View>
             <Text style={styles.totalPriceText}>
-              {t(oOrder.payment_method?.toLowerCase())} | {t(oOrder.receipt_method)}
+              {t(oOrder.payment_method?.toLowerCase())} | {t(oOrder.receipt_method?.toLowerCase())}
             </Text>
           </View>
         </View>

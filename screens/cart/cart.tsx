@@ -111,6 +111,7 @@ const CartScreen = () => {
   const [showPaymentFailedDialog, setShowPaymentFailedDialog] = useState(false);
   const [paymentErrorMessage, setPaymentErrorMessage] = useState();
   const [isBarcodeOpen, setIsBarcodeOpen] = useState(false);
+  const [deliveryPrice, setDeliveryPrice] = useState(0);
   const [isOpenBarcodeSacnnerDialog, stIsOpenBarcodeSacnnerDialog] = useState(
     false
   );
@@ -246,7 +247,7 @@ const CartScreen = () => {
 
   useEffect(() => {
     let bcoinPrice = 0;
-    const shippingPrice = shippingMethod === SHIPPING_METHODS.shipping ? 15 : 0;
+    const shippingPrice = shippingMethod === SHIPPING_METHODS.shipping ? deliveryPrice : 0;
     if (isBcoinInCart()) {
       if (itemsPrice < userDetailsStore?.userDetails?.credit) {
         bcoinPrice = itemsPrice;
@@ -339,6 +340,7 @@ const CartScreen = () => {
   // };
   const isStoreSupport = (key: string) => {
     return storeDataStore.getStoreData().then((res) => {
+      setDeliveryPrice(res.delivery_price)
       return res[key];
     });
   };
@@ -383,7 +385,11 @@ const CartScreen = () => {
             if (shippingMethod === SHIPPING_METHODS.takAway) {
               setIsOpenShippingMethodDialog(true);
             } else {
-              submitCart();
+              if (shippingMethod === SHIPPING_METHODS.table) {
+                setIsOpenShippingMethodDialog(true);
+              } else {
+                submitCart();
+              }
             }
           }
         } else {
@@ -1411,7 +1417,7 @@ const CartScreen = () => {
                             color: themeStyle.GRAY_700,
                           }}
                         >
-                          ₪15
+                          ₪{deliveryPrice}
                         </Text>
                       </View>
                     </View>

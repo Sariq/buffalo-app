@@ -73,6 +73,8 @@ export default function DeliveryMethodDialog({
                 t("approve-delivery-method")}
               {type === SHIPPING_METHODS.takAway &&
                 t("approve-takeaway-method")}
+              {type === SHIPPING_METHODS.table &&
+                t("approve-table-method")}
             </Text>
           </Dialog.Content>
           <Dialog.Actions>

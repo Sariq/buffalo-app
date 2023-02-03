@@ -8,7 +8,6 @@ import themeStyle from "../../styles/theme.style";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StoreContext } from "../../stores";
-import { WebView } from "react-native-webview";
 import TremsDialog from "../../components/dialogs/terms";
 import { useTranslation } from "react-i18next";
 import Text from "../../components/controls/Text";
@@ -35,7 +34,7 @@ export default function TermsAndConditionsScreen() {
   return (
     <View>
       <View style={{ backgroundColor: themeStyle.WHITE_COLOR, height: "100%" }}>
-        <View style={{alignItems:"center", marginTop:20}}>
+        <View style={{alignItems:"center", marginTop:20, paddingBottom:8}}>
           <Text style={{fontSize:20,fontWeight:"bold"}}>תנאי שימוש / מדיניות פרטיות</Text>
           <Text style={{fontSize:20,fontWeight:"bold"}}>בשירותי אפליקציה בופלו</Text>
         </View>
@@ -133,5 +132,6 @@ const styles = StyleSheet.create({
   sectionRow: {
     fontSize: 14,
     marginBottom: 10,
+    textAlign: "left"
   },
 });
