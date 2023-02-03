@@ -13,6 +13,7 @@ class MenuStore {
   meals = null;
   dictionary = null;
   homeSlides = null;
+  imagesUrl = [];
 
   constructor() {
     makeAutoObservable(this);
@@ -47,6 +48,7 @@ class MenuStore {
               this.meals[key].extras = extras;
               this.mainMealTags(key, extras);
               this.meals[key].data = res.menu.find((product) => product.id.toString() === key)
+              this.imagesUrl.push(this.meals[key].data?.image_url)
             });
             resolve(true)
           })
