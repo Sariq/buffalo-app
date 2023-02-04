@@ -12,11 +12,11 @@ import {
   I18nManager,
   ImageBackground,
   Image,
-  Text,
   DeviceEventEmitter,
 } from "react-native";
 import RootNavigator from "./navigation";
 import NetInfo from "@react-native-community/netinfo";
+import Text from "./components/controls/Text";
 
 I18nManager.forceRTL(true);
 I18nManager.allowRTL(true);

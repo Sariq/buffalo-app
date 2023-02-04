@@ -7,12 +7,10 @@ import {
   View,
   StyleSheet,
   Linking,
-  AppState,
   Platform,
   Animated,
   LayoutAnimation,
   DeviceEventEmitter,
-  ActivityIndicator,
   ImageBackground,
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
@@ -28,7 +26,6 @@ import Text from "../../components/controls/Text";
 import Icon from "../../components/icon";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import BackButton from "../../components/back-button";
-import PaymentMethodDialog from "../../components/dialogs/delivery-method";
 import NewPaymentMethodDialog from "../../components/dialogs/new-credit-card";
 import {
   TOrderSubmitResponse,
@@ -106,7 +103,7 @@ const CartScreen = () => {
   const [bcoinUpdatePrice, setBcoinUpdatePrice] = React.useState(0);
 
   const [location, setLocation] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
+  const [region, setRegion] = useState(null);
   const [showStoreIsCloseDialog, setShowStoreIsCloseDialog] = useState(false);
   const [showPaymentFailedDialog, setShowPaymentFailedDialog] = useState(false);
   const [paymentErrorMessage, setPaymentErrorMessage] = useState();
@@ -137,12 +134,7 @@ const CartScreen = () => {
     isOpenInvalidAddressDialod,
     setIsOpenInvalidAddressDialod,
   ] = React.useState(false);
-  const [
-    locationPermissionStatus,
-    requestPermission,
-  ] = Location.useForegroundPermissions();
 
-  const appState = useRef(AppState.currentState);
 
   useEffect(() => {
     if (menuStore.categories["OTHER"]) {
@@ -167,95 +159,9 @@ const CartScreen = () => {
   }, []);
 
   useEffect(() => {
-    const subscription = AppState.addEventListener(
-      "change",
-      async (nextAppState) => {
-        if (
-          appState.current.match(/inactive|background/) &&
-          nextAppState === "active"
-        ) {
-          if (shippingMethod === SHIPPING_METHODS.shipping) {
-            const res = await Location.hasServicesEnabledAsync();
-            if (!res) {
-              setIsOpenLocationIsDisableDialog(false);
-              setIsOpenLocationIsDisableDialog(true);
-            } else {
-              askForLocation();
-            }
-          }
-          if (shippingMethod === SHIPPING_METHODS.table) {
-            setShippingMethod(SHIPPING_METHODS.takAway);
-          }
-        }
-
-        appState.current = nextAppState;
-      }
-    );
-
-    return () => {
-      subscription.remove();
-    };
-  }, [shippingMethod]);
-
-  useEffect(() => {
-    if (
-      locationPermissionStatus?.granted &&
-      shippingMethod === SHIPPING_METHODS.shipping
-    ) {
-      askForLocation();
-    }
-  }, [locationPermissionStatus]);
-
-  const askForLocation = async () => {
-    let lastLocation = await Location.getCurrentPositionAsync({
-      accuracy:
-        Platform.OS === "android"
-          ? Location.Accuracy.Low
-          : Location.Accuracy.Low,
-    });
-    setLocation(lastLocation);
-    cartStore
-    .isValidGeo(lastLocation.coords.latitude, lastLocation.coords.longitude)
-    .then((res) => {
-      if (res) {
-        setIsValidAddress(res.result);
-        setIsOpenInvalidAddressDialod(!res.result);
-      }
-    });
-    let location = await Location.getCurrentPositionAsync({
-      accuracy:
-        Platform.OS === "android"
-          ? Location.Accuracy.Highest
-          : Location.Accuracy.Highest,
-    });
-    setLocation(location);
-    cartStore
-    .isValidGeo(lastLocation.coords.latitude, lastLocation.coords.longitude)
-    .then((res) => {
-      if (res) {
-        setIsValidAddress(res.result);
-        setIsOpenInvalidAddressDialod(!res.result);
-      }
-    });
-  };
-  useEffect(() => {
-    if (shippingMethod === SHIPPING_METHODS.shipping) {
-      (async () => {
-        if (!location) {
-          const res = await Location.hasServicesEnabledAsync();
-          if (!res) {
-            setIsOpenLocationIsDisableDialog(true);
-          } else {
-            requestPermission();
-          }
-        }
-      })();
-    }
-  }, [shippingMethod]);
-
-  useEffect(() => {
     let bcoinPrice = 0;
-    const shippingPrice = shippingMethod === SHIPPING_METHODS.shipping ? deliveryPrice : 0;
+    const shippingPrice =
+      shippingMethod === SHIPPING_METHODS.shipping ? deliveryPrice : 0;
     if (isBcoinInCart()) {
       if (itemsPrice < userDetailsStore?.userDetails?.credit) {
         bcoinPrice = itemsPrice;
@@ -266,6 +172,12 @@ const CartScreen = () => {
     setBcoinUpdatePrice(bcoinPrice);
     setTotalPrice(shippingPrice + itemsPrice + bcoinPrice * -1);
   }, [shippingMethod, itemsPrice]);
+
+  useEffect(() => {
+    if (shippingMethod === SHIPPING_METHODS.shipping) {
+      askForLocation();
+    }
+  }, [shippingMethod]);
 
   useEffect(() => {
     if (paymentMthod === PAYMENT_METHODS.creditCard && !ccData) {
@@ -307,6 +219,41 @@ const CartScreen = () => {
     getCCData();
   }, []);
 
+  const [isloadingLocation, setIsloadingLocation] = useState(false);
+
+  const askForLocation = async (isValidation?: boolean) => {
+    // const res = await Location.hasServicesEnabledAsync();
+    if (location) {
+      return location;
+    } else {
+      isValidation && setIsloadingLocation(true);
+      const res = await Location.hasServicesEnabledAsync();
+      if(res){
+        let tempLocation = await Location.getCurrentPositionAsync({
+          accuracy:
+            Platform.OS === "android"
+              ? Location.Accuracy.Highest
+              : Location.Accuracy.Highest,
+              mayShowUserSettingsDialog: false
+        });
+        if(tempLocation){
+          setLocation(tempLocation);
+          setRegion({
+            latitude: tempLocation.coords.latitude,
+            latitudeDelta: 0.01,
+            longitude: tempLocation.coords.longitude,
+            longitudeDelta: 0.01,
+          }); 
+        }
+   
+        isValidation && setIsloadingLocation(false);
+        return tempLocation;
+      }else{
+        return null;
+      }
+    }
+  };
+
   const getProductIndexId = (product, index) => {
     if (product) {
       return product?.data.id.toString() + index;
@@ -338,17 +285,9 @@ const CartScreen = () => {
     }, 600);
   };
 
-  // const isStoreAvailable = () => {
-  //   return storeDataStore.getStoreData().then((res) => {
-  //     return {
-  //       isOpen: res.alwaysOpen || res.isOpen,
-  //       isBusy: false,
-  //     };
-  //   });
-  // };
   const isStoreSupport = (key: string) => {
     return storeDataStore.getStoreData().then((res) => {
-      setDeliveryPrice(res.delivery_price)
+      setDeliveryPrice(res.delivery_price);
       return res[key];
     });
   };
@@ -372,6 +311,28 @@ const CartScreen = () => {
     }
     return data;
   };
+
+  const validateAdress = async () => {
+    return new Promise(async (resolve)=>{
+      const addressLocation = await askForLocation(true);
+      if(addressLocation){
+        cartStore
+        .isValidGeo(addressLocation.coords.latitude, addressLocation.coords.longitude)
+        .then((res) => {
+          if (res) {
+            setIsValidAddress(res.result);
+            setIsOpenInvalidAddressDialod(!res.result);
+            resolve(res.result);
+          }
+        });
+      }else{
+        setIsOpenLocationIsDisableDialog(true);
+        resolve(false);
+      }
+
+    })
+
+  };
   const onSendCart = async () => {
     const isLoggedIn = authStore.isLoggedIn();
     if (isLoggedIn) {
@@ -379,7 +340,9 @@ const CartScreen = () => {
       if (!(data.ar || data.he)) {
         if (data.isOpen) {
           if (shippingMethod === SHIPPING_METHODS.shipping) {
-            if (isValidAddress) {
+            const isValid = await validateAdress();
+            console.log(isValid)
+            if (isValid) {
               if (!isShippingMethodAgrred) {
                 setIsOpenShippingMethodDialog(true);
                 return;
@@ -387,7 +350,7 @@ const CartScreen = () => {
                 submitCart();
               }
             } else {
-              setIsOpenInvalidAddressDialod(true);
+              //setIsOpenInvalidAddressDialod(true);
             }
           } else {
             if (shippingMethod === SHIPPING_METHODS.takAway) {
@@ -496,6 +459,7 @@ const CartScreen = () => {
       setIsOpenLocationIsDisableDialog(false);
       setShippingMethod(SHIPPING_METHODS.takAway);
     }
+    setIsloadingLocation(false);
   };
   const handleShippingMethoAnswer = (value: boolean) => {
     setIsOpenShippingMethodDialog(value);
@@ -526,15 +490,6 @@ const CartScreen = () => {
     getCCData();
   };
 
-  const isCartValid = () => {
-    if (shippingMethod === SHIPPING_METHODS.shipping) {
-      if (!location) {
-        return false;
-      }
-      return true;
-    }
-    return true;
-  };
 
   const replaceCreditCard = () => {
     setOpenNewCreditCardDialog(true);
@@ -1237,38 +1192,34 @@ const CartScreen = () => {
                   paddingHorizontal: 1,
                 }}
               >
-                {location ? (
+                {location && region ? (
+                  <View style={styles.mapViewContainer}>
+                    <MapView
+                      style={styles.mapContainer}
+                      initialRegion={{
+                        ...region,
+                      }}
+                    >
+                      {location && (
+                        <Marker
+                          coordinate={{
+                            latitude: location.coords.latitude,
+                            longitude: location.coords.longitude,
+                          }}
+                        />
+                      )}
+                    </MapView>
+                  </View>
+                ) : (
                   <MapView
-                    style={styles.mapContainer}
+                    style={styles.mapContainerDefault}
                     initialRegion={{
-                      latitude: location.coords.latitude,
+                      latitude: 32.233583,
                       latitudeDelta: 0.01,
-                      longitude: location.coords.longitude,
+                      longitude: 34.951661,
                       longitudeDelta: 0.01,
                     }}
-                  >
-                    <Marker
-                      coordinate={{
-                        latitude: location.coords.latitude,
-                        longitude: location.coords.longitude,
-                      }}
-                    />
-                  </MapView>
-                ) : (
-                  <View style={{ alignItems: "center", flexDirection: "row" }}>
-                    <View>
-                      <Text style={{ color: themeStyle.BROWN_700 }}>
-                        {t("loading-location")}
-                      </Text>
-                    </View>
-                    <View style={{ marginLeft: 5 }}>
-                      <ActivityIndicator
-                        animating={true}
-                        color={theme.GRAY_700}
-                        size={12}
-                      />
-                    </View>
-                  </View>
+                  ></MapView>
                 )}
               </View>
             )}
@@ -1499,9 +1450,9 @@ const CartScreen = () => {
                 bgColor={theme.SUCCESS_COLOR}
                 onClickFn={onSendCart}
                 disabled={
-                  !isCartValid() ||
                   isLoadingOrderSent ||
-                  isOpenShippingMethodDialog
+                  isOpenShippingMethodDialog ||
+                  isloadingLocation
                 }
                 text={t("send-order")}
                 fontSize={22}
@@ -1609,11 +1560,24 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 20,
   },
-
-  mapContainer: {
+  mapContainerDefault: {
     width: "90%",
     height: 200,
     borderRadius: 10,
+    minHeight: 200,
+  },
+  mapContainer: {
+    width: "100%",
+    height: 200,
+    borderRadius: 10,
+    minHeight: 200,
+  },
+  mapViewContainer: {
+    width: "90%",
+    height: 200,
+    borderRadius: 10,
+    minHeight: 200,
+    alignSelf: "center",
   },
   totalPrictContainer: {
     paddingHorizontal: 20,
