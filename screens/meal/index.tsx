@@ -51,6 +51,7 @@ const extrasIcons = {
   "רוטב בופלו": require("../../assets/menu/gradiant/buffalo-souce.png"),
   "רוטב נאגטס": require("../../assets/menu/gradiant/sweet-chilli.png"),
   "גבינת גאודה": require("../../assets/menu/gradiant/gaouda.png"),
+  "טבעות בצל": require("../../assets/menu/gradiant/onion-ring.png"),
 };
 const MealScreen = ({ route }) => {
   const { t } = useTranslation();

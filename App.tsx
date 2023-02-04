@@ -122,6 +122,7 @@ const App = () => {
         require('./assets/menu/gradiant/sweet-chilli.png'),
         require('./assets/menu/gradiant/tomatto.png'),
         require('./assets/menu/gradiant/truffle.png'),
+        require('./assets/menu/gradiant/onion-ring.png'),
       ]);
       const fetchMenu = menuStore.getMenu();
       const fetchHomeSlides = menuStore.getSlides();

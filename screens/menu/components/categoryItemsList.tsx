@@ -43,6 +43,7 @@ const CategoryItemsList = ({ productsList }) => {
                 onItemSelect(item);
               }}
               key={item.id}
+              disabled={item.out_of_stock}
             >
               <View style={[styles.iconContainer]}>
                 <Image
