@@ -581,7 +581,12 @@ const CartScreen = () => {
       setBarcodeSacnnedDialogText("scann-canceled");
       setShippingMethod(SHIPPING_METHODS.takAway);
     } else {
-      setBarcodeSacnnedDialogText("scanned-succefully");
+      if(answer != "buffalo"){
+        setBarcodeSacnnedDialogText("wrong-barcode");
+        setShippingMethod(SHIPPING_METHODS.takAway);
+      }else{
+        setBarcodeSacnnedDialogText("scanned-succefully");
+      }
     }
     stIsOpenBarcodeSacnnedDialog(true);
   };
