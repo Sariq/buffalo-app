@@ -116,8 +116,7 @@ const MenuScreen = () => {
                     icon={categoryListIcons[categoryListOrder[key]]}
                     size={38}
                     style={{
-                      color: themeStyle.GRAY_700
-                        
+                      color: themeStyle.GRAY_700,
                     }}
                   />
                 </View>
@@ -137,9 +136,25 @@ const MenuScreen = () => {
           ))}
         </ScrollView>
       </View>
-      <View style={styles.itemsListConainer}>
-        <CategoryItemsList productsList={selectedCategory} />
-      </View>
+      {Object.keys(categoryListOrder).map((key, index) => (
+        <View
+          style={[
+            styles.itemsListConainer,
+            {
+              height:
+                selectedCategoryKey === categoryListOrder[key] ? "100%" : 0,
+              paddingBottom:
+                selectedCategoryKey === categoryListOrder[key] ? 120 : 0,
+              marginTop:
+                selectedCategoryKey === categoryListOrder[key] ? 10 : 0,
+            },
+          ]}
+        >
+          <CategoryItemsList
+            productsList={categoryList[categoryListOrder[key]]}
+          />
+        </View>
+      ))}
     </View>
   );
 };
@@ -174,10 +189,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
-  itemsListConainer: {
-    paddingBottom: 120,
-    marginTop: 10,
-  },
+  itemsListConainer: {},
   background: {
     position: "absolute",
     left: 0,

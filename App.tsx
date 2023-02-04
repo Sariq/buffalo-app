@@ -2,6 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import { useState, useEffect, useCallback, useContext } from "react";
 import "./translations/i18n";
 import * as SplashScreen from "expo-splash-screen";
+import { Asset } from 'expo-asset';
 
 import * as Font from "expo-font";
 import Constants from "expo-constants";
@@ -68,6 +69,7 @@ const App = () => {
 
   const [assetsIsReady, setAssetsIsReady] = useState(false);
   const [appIsReady, setAppIsReady] = useState(false);
+  const [isExtraLoadFinished, setIsExtraLoadFinished] = useState(false);
   const [isFontReady, setIsFontReady] = useState(false);
   const [
     isOpenInternetConnectionDialog,
@@ -83,14 +85,14 @@ const App = () => {
 
   const cacheImages = (images) => {
     return new Promise((resolve) => {
-      const tempImages = images.map((image) => {
+      const tempImages = images.map(async (image) => {
         if (typeof image === "string") {
-          return Image.prefetch(image);
+          await Image.prefetch(image);
         } else {
-          //return Asset.fromModule(image).downloadAsync();
+          await Asset.fromModule(image).downloadAsync();
         }
       });
-      resolve(tempImages);
+      resolve(true);
     });
   };
 
@@ -99,7 +101,6 @@ const App = () => {
       // Pre-load fonts, make any API calls you need to do here
       await Font.loadAsync(customARFonts);
       setIsFontReady(true);
-      const imageAssets = await cacheImages(menuStore.imagesUrl);
       const imageAssets2 = cacheImages([
         require('./assets/menu/gradiant/baecon-buffalo.png'),
         require('./assets/menu/gradiant/baecon.png'),
@@ -125,6 +126,8 @@ const App = () => {
       const fetchMenu = menuStore.getMenu();
       const fetchHomeSlides = menuStore.getSlides();
       Promise.all([fetchMenu, fetchHomeSlides]).then(async (responses) => {
+        const imageAssets2 = await cacheImages(menuStore.imagesUrl);
+
         const tempHomeSlides = menuStore.homeSlides.map((slide)=>{
           return `${SITE_URL}${slide.file_url}`
         })
@@ -140,11 +143,18 @@ const App = () => {
             fetchOrders,
           ]).then((res) => {
             setAppIsReady(true);
+            setTimeout(()=>{
+              setIsExtraLoadFinished(true);
+            }, 400)
           });
+
         } else {
           const data = await AsyncStorage.getItem("@storage_terms_accepted");
           userDetailsStore.setIsAcceptedTerms(JSON.parse(data));
           setAppIsReady(true);
+          setTimeout(()=>{
+            setIsExtraLoadFinished(true);
+          }, 400)
         }
       });
       // Artificially delay for two seconds to simulate a slow loading
@@ -189,7 +199,7 @@ const App = () => {
     }
   }, [appIsReady]);
 
-  if (!appIsReady) {
+  const loadingPage = () => {
     const version = Constants.nativeAppVersion;
     return (
       <ImageBackground
@@ -275,7 +285,13 @@ const App = () => {
     );
   }
 
+  if (!appIsReady) {
+    return loadingPage()
+  }
+
   return (
+    <View style={{flex:1}}>
+      {!isExtraLoadFinished && loadingPage()}
     <StoreContext.Provider
       value={{
         cartStore: cartStore,
@@ -294,6 +310,8 @@ const App = () => {
       <GeneralServerErrorDialog />
       <InterntConnectionDialog isOpen={isOpenInternetConnectionDialog} />
     </StoreContext.Provider>
+    </View>
+
   );
 };
 export default observer(App);
