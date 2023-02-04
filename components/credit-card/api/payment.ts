@@ -7,17 +7,19 @@ type TPayload = {
     TransactionSum: number,
     ExtraData: string;
     HolderID: string;
+    CustomerEmail?: string;
 }
 export type TPaymentProps = {
     token: string;
     totalPrice: number;
     orderId: number;
     id: number;
+    email?:string;
 }
-const chargeCreditCard = ({ token, totalPrice, orderId, id }: TPaymentProps) => {
+const chargeCreditCard = ({ token, totalPrice, orderId, id, email }: TPaymentProps) => {
     const paymentCredentials = storeDataStore.paymentCredentials;
     
-    const body: TPayload = {
+    let body: TPayload = {
         TerminalNumber: paymentCredentials.credentials_terminal_number,
         Password: paymentCredentials.credentials_password,
         CardNumber: token,
@@ -25,7 +27,9 @@ const chargeCreditCard = ({ token, totalPrice, orderId, id }: TPaymentProps) => 
         ExtraData: orderId?.toString(),
         HolderID: id?.toString(),
     };
-
+    if(email){
+        body.CustomerEmail = email;
+    }
     return axios
         .post(
             'https://pci.zcredit.co.il/ZCreditWS/api/Transaction/CommitFullTransaction',

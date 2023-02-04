@@ -32,6 +32,7 @@ const CreditCard = ({ onSaveCard }) => {
   const [creditCardCVV, setCreditCardCVV] = useState();
   const [cardHolderID, setCardHolderID] = useState();
   const [ccType, setCCType] = useState();
+  const [email, setEmail] = useState();
   const [isLoading, setIsLoading] = useState(false);
 
   const [formStatus, setFormStatus] = useState({
@@ -86,6 +87,9 @@ const CreditCard = ({ onSaveCard }) => {
     setCardHolderID(value);
     setFormStatus({ ...formStatus, idIDValid: isValid });
   };
+  const onEmailChange = (value) => {
+    setEmail(value);
+  };
 
   const isFormValid = () => {
     return !(
@@ -109,7 +113,8 @@ const CreditCard = ({ onSaveCard }) => {
           ccToken: res.ccDetails.ccToken,
           last4Digits: res.ccDetails.last4Digits,
           id: cardHolderID,
-          ccType: ccType
+          ccType: ccType,
+          email:email
         };
         const ccDetailsString = JSON.stringify(ccData);
         await AsyncStorage.setItem("@storage_CCData", ccDetailsString);
@@ -186,6 +191,16 @@ const CreditCard = ({ onSaveCard }) => {
           {formStatus.idIDValid === false && (
             <Text style={{ color: themeStyle.ERROR_COLOR }}>{t('invalid-id-number')}</Text>
           )}
+        </View>
+        <View style={{ marginTop: 10, alignItems: "flex-start" }}>
+          <InputText
+            label={`${t("email")} - ${t("not-required")}`}
+            onChange={onEmailChange}
+            value={email}
+            variant="default"
+            onFocus={() => setkeyboardVerticalOffset(250)}
+            onBlur={() => setkeyboardVerticalOffset(0)}
+          />
         </View>
         <View style={{ marginTop: 20 }}>
           <Button

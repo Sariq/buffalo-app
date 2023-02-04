@@ -17,7 +17,9 @@ const HomeScreen = ({ navigation }) => {
   const [isAppReady, setIsAppReady] = useState(false);
   const [homeSlides, setHomeSlides] = useState();
   const [isActiveOrder, setIsActiveOrder] = useState(false);
-  let { userDetailsStore, menuStore, ordersStore, authStore } = useContext(StoreContext);
+  let { userDetailsStore, menuStore, ordersStore, authStore } = useContext(
+    StoreContext
+  );
 
   const displayTemrsAndConditions = async () => {
     if (!userDetailsStore.isAcceptedTerms) {
@@ -33,13 +35,14 @@ const HomeScreen = ({ navigation }) => {
     setHomeSlides(menuStore.homeSlides);
   }, []);
 
-
   const getOrders = () => {
-    ordersStore.getOrders();
+    if (authStore.isLoggedIn()) {
+      ordersStore.getOrders();
+    }
   };
 
   useEffect(() => {
-    if(authStore.isLoggedIn()){
+    if (authStore.isLoggedIn()) {
       getOrders();
       setTimeout(() => {
         getOrders();
@@ -51,11 +54,11 @@ const HomeScreen = ({ navigation }) => {
     }
   }, [authStore.userToken]);
 
-  useEffect(()=>{
-    if(ordersStore.ordersList){
+  useEffect(() => {
+    if (ordersStore.ordersList) {
       setIsActiveOrder(ordersStore.isActiveOrders());
     }
-  },[ordersStore.ordersList])
+  }, [ordersStore.ordersList]);
 
   const goToNewOrder = () => {
     navigation.navigate("menuScreen");

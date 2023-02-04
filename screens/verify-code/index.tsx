@@ -9,7 +9,7 @@ import {
 import Button from "../../components/controls/button/button";
 import themeStyle from "../../styles/theme.style";
 import { AUTH_API } from "../../consts/api";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useContext } from "react";
 import { StoreContext } from "../../stores";
 import base64 from "react-native-base64";
@@ -30,6 +30,7 @@ import {
   
 } from "react-native-confirmation-code-field";
 import { toBase64 } from "../../helpers/convert-base64";
+import React from "react";
 const CELL_COUNT = 4;
 const reg_arNumbers = /^[\u0660-\u0669]{4}$/;
 const arabicNumbers  = [/٠/g, /١/g, /٢/g, /٣/g, /٤/g, /٥/g, /٦/g, /٧/g, /٨/g, /٩/g];
@@ -43,8 +44,12 @@ const VerifyCodeScreen = ({ route }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isValid, setIsValid] = useState(true);
   const [isInvalidCodeRes, setIsInvalidCodeRes] = useState(false);
-  const [timer, setTimer] = useState(0);
-
+  const [timer, _setTimer] = useState(0);
+  const timerRef = React.useRef(timer);
+  const setTimer = data => {
+    timerRef.current = data;
+    _setTimer(data);
+  };
 
   const [verifyCode, setVerifyCode] = useState("");
   const ref = useBlurOnFulfill({ value: verifyCode, cellCount: CELL_COUNT });
@@ -52,24 +57,28 @@ const VerifyCodeScreen = ({ route }) => {
     value: verifyCode,
     setValue: setVerifyCode,
   });
-
+  
   const setTimertInterVal = async () => {
     let timerIntreval;
     clearInterval(timerIntreval);
-
     const verifyDataFinal = await AsyncStorage.getItem("@storage_verifyCode");
-    const verifyDataValueFinal = JSON.parse(verifyDataFinal);
+    if(verifyDataFinal){
+      const verifyDataValueFinal = JSON.parse(verifyDataFinal);
 
-    let interval = 1000;
-    let seconds = 30 * verifyDataValueFinal?.count;
-    timerIntreval = setInterval(function () {
-      seconds = seconds - 1;
-      if (seconds === 0) {
-        clearInterval(timerIntreval);
-      }
-      setTimer(seconds);
-    }, interval);
+      let interval = 1000;
+      let seconds = 30 * verifyDataValueFinal?.count;
+      timerIntreval = setInterval(function () {
+        seconds = seconds - 1;
+        if (seconds === 0) {
+          clearInterval(timerIntreval);
+        }
+        setTimer(seconds);
+      }, interval);
+    }
   };
+  useEffect(()=>{
+    setTimertInterVal();
+  },[])
 
   const resendMeTheCode = async () => {
     setIsInvalidCodeRes(false);
@@ -137,6 +146,7 @@ const VerifyCodeScreen = ({ route }) => {
             return;
           }
           await authStore.updateUserToken(res.token);
+          await AsyncStorage.removeItem("@storage_verifyCode");
           if (res.name) {
             DeviceEventEmitter.emit(`PREPARE_APP`);
             userDetailsStore.getUserDetails().then((res) => {

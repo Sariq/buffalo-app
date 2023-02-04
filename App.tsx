@@ -2,7 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import { useState, useEffect, useCallback, useContext } from "react";
 import "./translations/i18n";
 import * as SplashScreen from "expo-splash-screen";
-import { Asset } from 'expo-asset';
+import { Asset } from "expo-asset";
 
 import * as Font from "expo-font";
 import Constants from "expo-constants";
@@ -13,10 +13,10 @@ import {
   ImageBackground,
   Image,
   DeviceEventEmitter,
+  Text,
 } from "react-native";
 import RootNavigator from "./navigation";
 import NetInfo from "@react-native-community/netinfo";
-import Text from "./components/controls/Text";
 
 I18nManager.forceRTL(true);
 I18nManager.allowRTL(true);
@@ -31,6 +31,7 @@ import { StoreContext } from "./stores";
 import { ordersStore } from "./stores/orders";
 import InterntConnectionDialog from "./components/dialogs/internet-connection";
 import { SITE_URL } from "./consts/api";
+import themeStyle from "./styles/theme.style";
 // Keep the splash screen visible while we fetch resources
 //SplashScreen.preventAutoHideAsync();
 let customARFonts = {
@@ -102,36 +103,36 @@ const App = () => {
       await Font.loadAsync(customARFonts);
       setIsFontReady(true);
       const imageAssets2 = cacheImages([
-        require('./assets/menu/gradiant/baecon-buffalo.png'),
-        require('./assets/menu/gradiant/baecon.png'),
-        require('./assets/menu/gradiant/barbicu.png'),
-        require('./assets/menu/gradiant/buffalo-souce.png'),
-        require('./assets/menu/gradiant/cheese.png'),
-        require('./assets/menu/gradiant/crispy-chicken.png'),
-        require('./assets/menu/gradiant/egg.png'),
-        require('./assets/menu/gradiant/friedOnion.png'),
-        require('./assets/menu/gradiant/gaouda.png'),
-        require('./assets/menu/gradiant/jalapeno.png'),
-        require('./assets/menu/gradiant/ketchup.png'),
-        require('./assets/menu/gradiant/khs.png'),
-        require('./assets/menu/gradiant/mozerla.png'),
-        require('./assets/menu/gradiant/musterd.png'),
-        require('./assets/menu/gradiant/onion.png'),
-        require('./assets/menu/gradiant/pickels.png'),
-        require('./assets/menu/gradiant/sersachi.png'),
-        require('./assets/menu/gradiant/sweet-chilli.png'),
-        require('./assets/menu/gradiant/tomatto.png'),
-        require('./assets/menu/gradiant/truffle.png'),
-        require('./assets/menu/gradiant/onion-ring.png'),
+        require("./assets/menu/gradiant/baecon-buffalo.png"),
+        require("./assets/menu/gradiant/baecon.png"),
+        require("./assets/menu/gradiant/barbicu.png"),
+        require("./assets/menu/gradiant/buffalo-souce.png"),
+        require("./assets/menu/gradiant/cheese.png"),
+        require("./assets/menu/gradiant/crispy-chicken.png"),
+        require("./assets/menu/gradiant/egg.png"),
+        require("./assets/menu/gradiant/friedOnion.png"),
+        require("./assets/menu/gradiant/gaouda.png"),
+        require("./assets/menu/gradiant/jalapeno.png"),
+        require("./assets/menu/gradiant/ketchup.png"),
+        require("./assets/menu/gradiant/khs.png"),
+        require("./assets/menu/gradiant/mozerla.png"),
+        require("./assets/menu/gradiant/musterd.png"),
+        require("./assets/menu/gradiant/onion.png"),
+        require("./assets/menu/gradiant/pickels.png"),
+        require("./assets/menu/gradiant/sersachi.png"),
+        require("./assets/menu/gradiant/sweet-chilli.png"),
+        require("./assets/menu/gradiant/tomatto.png"),
+        require("./assets/menu/gradiant/truffle.png"),
+        require("./assets/menu/gradiant/onion-ring.png"),
       ]);
       const fetchMenu = menuStore.getMenu();
       const fetchHomeSlides = menuStore.getSlides();
       Promise.all([fetchMenu, fetchHomeSlides]).then(async (responses) => {
         const imageAssets2 = await cacheImages(menuStore.imagesUrl);
 
-        const tempHomeSlides = menuStore.homeSlides.map((slide)=>{
-          return `${SITE_URL}${slide.file_url}`
-        })
+        const tempHomeSlides = menuStore.homeSlides.map((slide) => {
+          return `${SITE_URL}${slide.file_url}`;
+        });
         const imageAssets = await cacheImages(tempHomeSlides);
         if (authStore.isLoggedIn()) {
           const fetchUserDetails = userDetailsStore.getUserDetails();
@@ -143,19 +144,19 @@ const App = () => {
             fetchUserDetails,
             fetchOrders,
           ]).then((res) => {
+            
             setAppIsReady(true);
-            setTimeout(()=>{
+            setTimeout(() => {
               setIsExtraLoadFinished(true);
-            }, 400)
+            }, 400);
           });
-
         } else {
           const data = await AsyncStorage.getItem("@storage_terms_accepted");
           userDetailsStore.setIsAcceptedTerms(JSON.parse(data));
           setAppIsReady(true);
-          setTimeout(()=>{
+          setTimeout(() => {
             setIsExtraLoadFinished(true);
-          }, 400)
+          }, 400);
         }
       });
       // Artificially delay for two seconds to simulate a slow loading
@@ -204,7 +205,7 @@ const App = () => {
     const version = Constants.nativeAppVersion;
     return (
       <ImageBackground
-        source={require("./assets/splash-screen-2.png")}
+        source={require("./assets/splash-screen-3.png")}
         resizeMode="stretch"
         style={{ height: "100%", backgroundColor: "#FFCB05" }}
       >
@@ -231,6 +232,7 @@ const App = () => {
               bottom: 10,
               marginBottom: 42,
               fontSize: 20,
+              color: themeStyle.BROWN_700,
             }}
           >
             <View
@@ -257,6 +259,7 @@ const App = () => {
               style={{
                 fontWeight: "bold",
                 fontSize: 15,
+                color: themeStyle.BROWN_700,
               }}
             >
               Sari Qashuw{" "}
@@ -265,6 +268,7 @@ const App = () => {
               style={{
                 fontWeight: "bold",
                 fontSize: 15,
+                color: themeStyle.BROWN_700,
               }}
             >
               | Sabri Qashuw
@@ -277,42 +281,43 @@ const App = () => {
               marginBottom: 0,
             }}
           >
-            <Text style={{ textAlign: "center" }}>{version}</Text>
+            <Text style={{ textAlign: "center", color: themeStyle.BROWN_700 }}>
+              {version}
+            </Text>
           </View>
         </View>
         <GeneralServerErrorDialog />
         <InterntConnectionDialog isOpen={isOpenInternetConnectionDialog} />
       </ImageBackground>
     );
-  }
+  };
 
   if (!appIsReady) {
-    return loadingPage()
+    return loadingPage();
   }
 
   return (
-    <View style={{flex:1}}>
+    <View style={{ flex: 1 }}>
       {!isExtraLoadFinished && loadingPage()}
-    <StoreContext.Provider
-      value={{
-        cartStore: cartStore,
-        authStore: authStore,
-        menuStore: menuStore,
-        languageStore: languageStore,
-        userDetailsStore: userDetailsStore,
-        storeDataStore: storeDataStore,
-        ordersStore: ordersStore,
-      }}
-    >
-      <View style={{ height: "100%" }}>
-        <RootNavigator />
-      </View>
-      <ExpiryDate />
-      <GeneralServerErrorDialog />
-      <InterntConnectionDialog isOpen={isOpenInternetConnectionDialog} />
-    </StoreContext.Provider>
+      <StoreContext.Provider
+        value={{
+          cartStore: cartStore,
+          authStore: authStore,
+          menuStore: menuStore,
+          languageStore: languageStore,
+          userDetailsStore: userDetailsStore,
+          storeDataStore: storeDataStore,
+          ordersStore: ordersStore,
+        }}
+      >
+        <View style={{ height: "100%" }}>
+          <RootNavigator />
+        </View>
+        <ExpiryDate />
+        <GeneralServerErrorDialog />
+        <InterntConnectionDialog isOpen={isOpenInternetConnectionDialog} />
+      </StoreContext.Provider>
     </View>
-
   );
 };
 export default observer(App);

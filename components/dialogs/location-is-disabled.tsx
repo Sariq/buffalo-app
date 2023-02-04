@@ -1,6 +1,4 @@
-import {
-  View,
-} from "react-native";
+import { View } from "react-native";
 import { Dialog, Portal, Provider } from "react-native-paper";
 import Text from "../controls/Text";
 
@@ -50,7 +48,6 @@ export default function LocationIsDisabledDialog({
           visible={visible}
           dismissable={false}
         >
-          <Dialog.Content>
           <Dialog.Title>
             <Icon
               icon="exclamation-mark"
@@ -58,6 +55,7 @@ export default function LocationIsDisabledDialog({
               style={{ color: theme.GRAY_700 }}
             />
           </Dialog.Title>
+          <Dialog.Content>
             <Text
               style={{
                 fontSize: 16,
@@ -65,7 +63,7 @@ export default function LocationIsDisabledDialog({
                 fontWeight: "bold",
               }}
             >
-              {t('location-is-disabled')}
+              {t("location-is-disabled")}
             </Text>
           </Dialog.Content>
           <Dialog.Actions>
@@ -79,7 +77,7 @@ export default function LocationIsDisabledDialog({
               <View style={{ flexBasis: "49%" }}>
                 <Button
                   onClickFn={() => hideDialog(true)}
-                  text={t('settings')}
+                  text={t("settings")}
                   bgColor={themeStyle.SUCCESS_COLOR}
                   textColor={themeStyle.WHITE_COLOR}
                   fontSize={16}
@@ -88,7 +86,7 @@ export default function LocationIsDisabledDialog({
               <View style={{ flexBasis: "49%" }}>
                 <Button
                   onClickFn={() => hideDialog(false)}
-                  text={t('no-thanks')}
+                  text={t("no-thanks")}
                   bgColor={themeStyle.GRAY_600}
                   textColor={themeStyle.WHITE_COLOR}
                   fontSize={16}

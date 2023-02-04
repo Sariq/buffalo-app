@@ -19,12 +19,14 @@ export const canceledStatuses = ["CANCELLED", "REJECTED"];
 
 const OrdersStatusScreen = ({ route }) => {
   const { t } = useTranslation();
-  const { menuStore, ordersStore } = useContext(StoreContext);
+  const { menuStore, ordersStore, authStore } = useContext(StoreContext);
   const [ordersList, setOrdersList] = useState([]);
   const [isLoading, setIsloading] = useState(false);
 
   const getOrders = () => {
-    ordersStore.getOrders();
+    if (authStore.isLoggedIn()) {
+      ordersStore.getOrders();
+    }
   };
 
   useEffect(() => {
@@ -107,7 +109,8 @@ const OrdersStatusScreen = ({ route }) => {
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <View>
             <Text style={styles.totalPriceText}>
-              {t(oOrder.payment_method?.toLowerCase())} | {t(oOrder.receipt_method?.toLowerCase())}
+              {t(oOrder.payment_method?.toLowerCase())} |{" "}
+              {t(oOrder.receipt_method?.toLowerCase())}
             </Text>
           </View>
         </View>
@@ -125,8 +128,18 @@ const OrdersStatusScreen = ({ route }) => {
 
   const renderOrderNote = (note: string) => {
     return note ? (
-      <View style={{ marginLeft: 10, alignItems: "flex-end", flexDirection: "row" }}>
-        <Text style={{ marginRight: 2, paddingBottom: 4, color: themeStyle.SUCCESS_COLOR}}>* {note}</Text>
+      <View
+        style={{ marginLeft: 10, alignItems: "flex-end", flexDirection: "row" }}
+      >
+        <Text
+          style={{
+            marginRight: 2,
+            paddingBottom: 4,
+            color: themeStyle.SUCCESS_COLOR,
+          }}
+        >
+          * {note}
+        </Text>
       </View>
     ) : null;
   };
@@ -136,16 +149,18 @@ const OrdersStatusScreen = ({ route }) => {
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Text style={{ marginRight: 2, paddingBottom: 4 }}>+</Text>
           {extra.value === false && (
-                <Text
-                  style={{
-                    fontFamily: `${getCurrentLang()}-SemiBold`,
-                    marginRight: 2,
-                  }}
-                >
-                  {t("without")}
-                </Text>
-              )}
-          <Text>{menuStore.translate(extra.name)} {extra.value}</Text>
+            <Text
+              style={{
+                fontFamily: `${getCurrentLang()}-SemiBold`,
+                marginRight: 2,
+              }}
+            >
+              {t("without")}
+            </Text>
+          )}
+          <Text>
+            {menuStore.translate(extra.name)} {extra.value}
+          </Text>
         </View>
       );
     });
@@ -161,12 +176,14 @@ const OrdersStatusScreen = ({ route }) => {
       }
       return (
         <View>
-                       {index !== 0 && <DashedLine
-                              dashLength={5}
-                              dashThickness={1}
-                              dashGap={5}
-                              dashColor={themeStyle.GRAY_300}
-                            />}
+          {index !== 0 && (
+            <DashedLine
+              dashLength={5}
+              dashThickness={1}
+              dashGap={5}
+              dashColor={themeStyle.GRAY_300}
+            />
+          )}
           <View
             style={{
               flexDirection: "row",
@@ -238,8 +255,7 @@ const OrdersStatusScreen = ({ route }) => {
                   }}
                 >
                   ₪
-                  {(item.item_id === 3027 ? item.price  : item.price) *
-                    item.qty}
+                  {(item.item_id === 3027 ? item.price : item.price) * item.qty}
                 </Text>
               </View>
             </View>
@@ -318,10 +334,12 @@ const OrdersStatusScreen = ({ route }) => {
                   color: themeStyle.GRAY_700,
                 }}
               >
-                {t(getTextStatusByShippingMethod(
-                  oOrder.receipt_method,
-                  order.status.replace(/ /g, "")
-                ))}
+                {t(
+                  getTextStatusByShippingMethod(
+                    oOrder.receipt_method,
+                    order.status.replace(/ /g, "")
+                  )
+                )}
               </Text>
             </View>
             <View style={{ marginTop: 10 }}>

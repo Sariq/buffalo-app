@@ -71,7 +71,10 @@ const CartScreen = () => {
     storeDataStore,
     userDetailsStore,
   } = useContext(StoreContext);
-
+  const [
+    locationPermissionStatus,
+    requestPermission,
+  ] = Location.useForegroundPermissions();
   const navigation = useNavigation();
 
   const [shippingMethod, setShippingMethod] = React.useState(
@@ -227,6 +230,7 @@ const CartScreen = () => {
       return location;
     } else {
       isValidation && setIsloadingLocation(true);
+      const permissionRes = requestPermission();
       const res = await Location.hasServicesEnabledAsync();
       if(res){
         let tempLocation = await Location.getCurrentPositionAsync({
@@ -341,7 +345,6 @@ const CartScreen = () => {
         if (data.isOpen) {
           if (shippingMethod === SHIPPING_METHODS.shipping) {
             const isValid = await validateAdress();
-            console.log(isValid)
             if (isValid) {
               if (!isShippingMethodAgrred) {
                 setIsOpenShippingMethodDialog(true);
@@ -409,6 +412,7 @@ const CartScreen = () => {
         id: ccData.id,
         totalPrice: totalPrice,
         orderId: orderData.order_id,
+        email: ccData?.email
       };
       chargeOrder(chargeData);
     } else {

@@ -203,7 +203,9 @@ const FooterTabs = () => {
   const { userDetailsStore, authStore } = useContext(StoreContext);
   const [bcoin, setBcoin] = useState();
   const getUserDetails = () => {
+    if(authStore.isLoggedIn()){
     userDetailsStore.getUserDetails();
+    }
   };
 
   useEffect(() => {
