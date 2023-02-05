@@ -52,6 +52,7 @@ import RecipetNotSupportedDialog from "../../components/dialogs/recipet-service/
 import StoreErrorMsgDialog from "../../components/dialogs/store-errot-msg";
 import DeliveryMethodDialog from "../../components/dialogs/delivery-method";
 import { SHIPPING_METHODS, bcoindId } from "../../consts/shared";
+const barcodeString = "https://onelink.to/zky772";
 
 const PAYMENT_METHODS = {
   creditCard: "CREDITCARD",
@@ -577,11 +578,12 @@ const CartScreen = () => {
 
   const handleBarcodeAnswer = (answer: string) => {
     setIsBarcodeOpen(false);
+    console.log(answer)
     if (answer === "canceled") {
       setBarcodeSacnnedDialogText("scann-canceled");
       setShippingMethod(SHIPPING_METHODS.takAway);
     } else {
-      if(answer != "buffalo"){
+      if(answer != barcodeString){
         setBarcodeSacnnedDialogText("wrong-barcode");
         setShippingMethod(SHIPPING_METHODS.takAway);
       }else{
