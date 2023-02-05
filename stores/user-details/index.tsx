@@ -40,7 +40,7 @@ class UserDetailsStore {
       const userDetailsTmp: TUserDetails = {
         name: res.name,
         phone: res.phone,
-        credit: res.credit,
+        credit: 25,
         creditMinimum: res.credit_minimum,
       }
       runInAction(() => {
