@@ -52,12 +52,14 @@ export default function RecipetNotSupportedDialog({
           visible={visible}
           dismissable={false}
         >
+          <Dialog.Title>
+            <Icon
+              icon="exclamation-mark"
+              size={50}
+              style={{ color: theme.GRAY_700 }}
+            />
+          </Dialog.Title>
           <Dialog.Content>
-            {icon && (
-              <View style={{ alignItems: "center", marginBottom: 10 }}>
-                <Icon icon={icon} size={90} style={{ color: theme.GRAY_700 }} />
-              </View>
-            )}
             <Text
               style={{
                 fontSize: 16,
