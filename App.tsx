@@ -14,6 +14,7 @@ import {
   Image,
   DeviceEventEmitter,
   Text,
+  Linking,
 } from "react-native";
 import RootNavigator from "./navigation";
 import NetInfo from "@react-native-community/netinfo";
@@ -30,8 +31,10 @@ import { observer } from "mobx-react";
 import { StoreContext } from "./stores";
 import { ordersStore } from "./stores/orders";
 import InterntConnectionDialog from "./components/dialogs/internet-connection";
+import UpdateVersion from "./components/dialogs/update-app-version";
 import { SITE_URL } from "./consts/api";
 import themeStyle from "./styles/theme.style";
+import { isLatestGreaterThanCurrent } from "./helpers/check-version";
 // Keep the splash screen visible while we fetch resources
 //SplashScreen.preventAutoHideAsync();
 let customARFonts = {
@@ -76,6 +79,10 @@ const App = () => {
     isOpenInternetConnectionDialog,
     setIsOpenInternetConnectionDialog,
   ] = useState(false);
+  const [
+    isOpenUpdateVersionDialog,
+    setIsOpenUpdateVersionDialog,
+  ] = useState(false);
 
   useEffect(() => {
     if (!I18nManager.isRTL) {
@@ -97,15 +104,45 @@ const App = () => {
     });
   };
 
-  const handleVersions = async (appVersion: string) => {
-    const currentVersionString = await AsyncStorage.getItem("@storage_version");
-    const currentVersion = JSON.parse(currentVersionString);
-    if(currentVersion && appVersion !== currentVersion){
-      console.log("PLEASE UPDATE")
+
+
+  const deleteCreditCardData = async (appversion: string) => {
+    const data = await AsyncStorage.getItem("@storage_CCData");
+    const ccDetails = JSON.parse(data);
+    if(ccDetails && !ccDetails?.cvv){
+      await AsyncStorage.removeItem("@storage_CCData");
     }
   }
+
+  const handleV02 = async (appversion: string) => {
+    if(appversion === '1.0.0' || appversion === '1.0.1' || appversion === '1.0.2'){
+      setIsOpenUpdateVersionDialog(true)
+      return true;
+    }
+    return false;
+  }
+
+  const handleVersions = async () => {
+    const appVersion = Constants.nativeAppVersion;
+    const currentVersion = await AsyncStorage.getItem("@storage_version");
+    deleteCreditCardData(appVersion);
+    const flag = await handleV02(appVersion);
+    if(flag){
+      return;
+    }
+    if(!currentVersion || isLatestGreaterThanCurrent(appVersion, currentVersion)){
+      await AsyncStorage.setItem("@storage_version", appVersion?.toString());
+      return;
+    }
+  }
+  
+  const handleUpdateVersionDialogAnswer = ()=>{
+    Linking.openURL("https://onelink.to/zky772")
+  }
+
   async function prepare() {
     try {
+      handleVersions()
       // Pre-load fonts, make any API calls you need to do here
       await Font.loadAsync(customARFonts);
       setIsFontReady(true);
@@ -323,6 +360,7 @@ const App = () => {
         <ExpiryDate />
         <GeneralServerErrorDialog />
         <InterntConnectionDialog isOpen={isOpenInternetConnectionDialog} />
+        <UpdateVersion isOpen={isOpenUpdateVersionDialog} handleAnswer={handleUpdateVersionDialogAnswer} />
       </StoreContext.Provider>
     </View>
   );

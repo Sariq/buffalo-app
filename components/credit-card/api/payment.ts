@@ -37,7 +37,7 @@ const chargeCreditCard = ({ token, totalPrice, orderId, id, email, cvv, phone,us
         PhoneNumber: phone,
         "ZCreditInvoiceReceipt": {
             "Type": "0",
-            "RecepientName": userName,
+            "RecepientName": `${userName} - ${phone}`,
             "RecepientCompanyID": "",
             "Address": "",
             "City": "",
@@ -50,7 +50,7 @@ const chargeCreditCard = ({ token, totalPrice, orderId, id, email, cvv, phone,us
             "EmailDocumentToReceipient": "",
             "ReturnDocumentInResponse": "",
             "Items": [{
-                "ItemDescription": "מנה",
+                "ItemDescription": `ארוחה - ${orderId?.toString()}`,
                 "ItemQuantity": "1",
                 "ItemPrice": totalPrice?.toString(),
                 "IsTaxFree": "false"
