@@ -97,6 +97,13 @@ const App = () => {
     });
   };
 
+  const handleVersions = async (appVersion: string) => {
+    const currentVersionString = await AsyncStorage.getItem("@storage_version");
+    const currentVersion = JSON.parse(currentVersionString);
+    if(currentVersion && appVersion !== currentVersion){
+      console.log("PLEASE UPDATE")
+    }
+  }
   async function prepare() {
     try {
       // Pre-load fonts, make any API calls you need to do here

@@ -20,11 +20,12 @@ export type TPaymentProps = {
     email?: string;
     cvv?: string;
     phone: string;
+    userName: string;
 
 }
-const chargeCreditCard = ({ token, totalPrice, orderId, id, email, cvv, phone }: TPaymentProps) => {
+const chargeCreditCard = ({ token, totalPrice, orderId, id, email, cvv, phone,userName }: TPaymentProps) => {
     const paymentCredentials = storeDataStore.paymentCredentials;
-    
+
     let body: TPayload = {
         TerminalNumber: paymentCredentials.credentials_terminal_number,
         Password: paymentCredentials.credentials_password,
@@ -36,7 +37,7 @@ const chargeCreditCard = ({ token, totalPrice, orderId, id, email, cvv, phone }:
         PhoneNumber: phone,
         "ZCreditInvoiceReceipt": {
             "Type": "0",
-            "RecepientName": "",
+            "RecepientName": userName,
             "RecepientCompanyID": "",
             "Address": "",
             "City": "",

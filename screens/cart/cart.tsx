@@ -415,7 +415,8 @@ const CartScreen = () => {
         orderId: orderData.order_id,
         email: ccData?.email,
         cvv: ccData?.cvv,
-        phone: userDetailsStore.userDetails.phone
+        phone: userDetailsStore?.userDetails?.phone,
+        userName: userDetailsStore?.userDetails?.name
       };
       chargeOrder(chargeData);
     } else {
