@@ -8,7 +8,7 @@ import {
   Platform,
 } from "react-native";
 import InputText from "../controls/input";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import theme from "../../styles/theme.style";
 import validateCard, {
   TValidateCardProps,
@@ -20,6 +20,7 @@ import isValidID from "../../helpers/validate-id-number";
 import Button from "../controls/button/button";
 import themeStyle from "../../styles/theme.style";
 import { useTranslation } from "react-i18next";
+import isValidEmail from "../../helpers/validate-email";
 
 export type TProps = {
   onSaveCard: () => void;
@@ -39,6 +40,7 @@ const CreditCard = ({ onSaveCard }) => {
     isNumberValid: undefined,
     isCVVValid: undefined,
     idIDValid: undefined,
+    isEmailValid: undefined,
   });
   const [isExpDateValid, setIsExpDateValid] = useState(undefined);
 
@@ -88,6 +90,12 @@ const CreditCard = ({ onSaveCard }) => {
     setFormStatus({ ...formStatus, idIDValid: isValid });
   };
   const onEmailChange = (value) => {
+    if(value){
+      const isValid: any = isValidEmail(value);
+      setFormStatus({ ...formStatus, isEmailValid: isValid });
+    }else{
+      setFormStatus({ ...formStatus, isEmailValid: true });
+    }
     setEmail(value);
   };
 
@@ -96,7 +104,8 @@ const CreditCard = ({ onSaveCard }) => {
       formStatus.idIDValid &&
       formStatus.isCVVValid &&
       isExpDateValid &&
-      formStatus.isNumberValid
+      formStatus.isNumberValid &&
+      formStatus.isEmailValid
     );
   };
 
@@ -202,6 +211,9 @@ const CreditCard = ({ onSaveCard }) => {
             onFocus={() => setkeyboardVerticalOffset(250)}
             onBlur={() => setkeyboardVerticalOffset(0)}
           />
+          {formStatus.isEmailValid === false && (
+            <Text style={{ color: themeStyle.ERROR_COLOR }}>{t('invalid-email')}</Text>
+          )}
         </View>
         <View style={{ marginTop: 20 }}>
           <Button
