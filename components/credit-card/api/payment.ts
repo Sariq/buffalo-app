@@ -8,15 +8,21 @@ type TPayload = {
     ExtraData: string;
     HolderID: string;
     CustomerEmail?: string;
+    CVV: string;
+    PhoneNumber: string;
+    ZCreditInvoiceReceipt?: any;
 }
 export type TPaymentProps = {
     token: string;
     totalPrice: number;
     orderId: number;
     id: number;
-    email?:string;
+    email?: string;
+    cvv?: string;
+    phone: string;
+
 }
-const chargeCreditCard = ({ token, totalPrice, orderId, id, email }: TPaymentProps) => {
+const chargeCreditCard = ({ token, totalPrice, orderId, id, email, cvv, phone }: TPaymentProps) => {
     const paymentCredentials = storeDataStore.paymentCredentials;
     
     let body: TPayload = {
@@ -26,8 +32,31 @@ const chargeCreditCard = ({ token, totalPrice, orderId, id, email }: TPaymentPro
         TransactionSum: totalPrice,
         ExtraData: orderId?.toString(),
         HolderID: id?.toString(),
+        CVV: cvv,
+        PhoneNumber: phone,
+        "ZCreditInvoiceReceipt": {
+            "Type": "0",
+            "RecepientName": "",
+            "RecepientCompanyID": "",
+            "Address": "",
+            "City": "",
+            "ZipCode": "",
+            "PhoneNum": phone,
+            "FaxNum": "",
+            "TaxRate": "17",
+            "Comment": "",
+            "ReceipientEmail": email,
+            "EmailDocumentToReceipient": "",
+            "ReturnDocumentInResponse": "",
+            "Items": [{
+                "ItemDescription": "מנה",
+                "ItemQuantity": "1",
+                "ItemPrice": totalPrice?.toString(),
+                "IsTaxFree": "false"
+            }]
+        }
     };
-    if(email){
+    if (email) {
         body.CustomerEmail = email;
     }
     return axios

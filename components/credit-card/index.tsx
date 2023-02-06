@@ -114,7 +114,8 @@ const CreditCard = ({ onSaveCard }) => {
           last4Digits: res.ccDetails.last4Digits,
           id: cardHolderID,
           ccType: ccType,
-          email:email
+          email: email,
+          cvv: creditCardCVV?.toString(),
         };
         const ccDetailsString = JSON.stringify(ccData);
         await AsyncStorage.setItem("@storage_CCData", ccDetailsString);
