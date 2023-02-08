@@ -47,7 +47,7 @@ const chargeCreditCard = ({ token, totalPrice, orderId, id, email, cvv, phone,us
             "TaxRate": "17",
             "Comment": "",
             "ReceipientEmail": email,
-            "EmailDocumentToReceipient": "",
+            "EmailDocumentToReceipient": true,
             "ReturnDocumentInResponse": "",
             "Items": [{
                 "ItemDescription": `ארוחה - ${orderId?.toString()}`,

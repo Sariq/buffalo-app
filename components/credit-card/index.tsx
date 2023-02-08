@@ -40,7 +40,7 @@ const CreditCard = ({ onSaveCard }) => {
     isNumberValid: undefined,
     isCVVValid: undefined,
     idIDValid: undefined,
-    isEmailValid: undefined,
+    isEmailValid: true,
   });
   const [isExpDateValid, setIsExpDateValid] = useState(undefined);
 
