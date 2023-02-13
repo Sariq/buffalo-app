@@ -1,4 +1,5 @@
-import { StyleSheet, Text, View, TextInput } from "react-native";
+import { StyleSheet, View, TextInput } from "react-native";
+import Text from "../Text";
 import { TextInput as TextInputPaper } from "react-native-paper";
 import themeStyle from "../../../styles/theme.style";
 import { getCurrentLang } from "../../../translations/i18n";

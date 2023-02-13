@@ -47,9 +47,9 @@ export default function NewPaymentMethodDialog({
             paddingVertical: 0,
             borderRadius: 10,
             top: 0,
-            position: "absolute",
             paddingHorizontal: 0,
             overflow: "hidden",
+            height: "95%"
           }}
           visible={visible}
           dismissable={false}
@@ -69,7 +69,11 @@ export default function NewPaymentMethodDialog({
                 backgroundColor: "white",
                 zIndex: 1,
                 paddingBottom: 5,
-                padding: 20,
+                paddingTop:10,
+                paddingHorizontal: 20,
+                position: "absolute",
+                width: "100%",
+                alignItems:"center"
               }}
             >
               <View style={{ alignItems: "flex-start" }}>
@@ -82,6 +86,7 @@ export default function NewPaymentMethodDialog({
                   <Text
                     style={{
                       fontSize: 25,
+                       padding:5,
                     }}
                   >
                     X
@@ -91,7 +96,7 @@ export default function NewPaymentMethodDialog({
             </View>
 
             <ScrollView keyboardShouldPersistTaps="handled">
-              <View style={{ paddingHorizontal: 20 }}>
+              <View style={{ paddingHorizontal: 20, marginTop: 30 }}>
                 <CreditCard onSaveCard={hideDialog} />
               </View>
             </ScrollView>

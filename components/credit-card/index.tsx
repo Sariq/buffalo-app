@@ -1,12 +1,12 @@
 import {
   View,
   StyleSheet,
-  Text,
   Keyboard,
   DeviceEventEmitter,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
+import Text from "../controls/Text";
 import InputText from "../controls/input";
 import { useState, useEffect } from "react";
 import theme from "../../styles/theme.style";
@@ -136,10 +136,15 @@ const CreditCard = ({ onSaveCard }) => {
     });
   };
   const [keyboardVerticalOffset, setkeyboardVerticalOffset] = useState(0);
+  const hanndlesetkeyboardVerticalOffset = (value: number)=>{
+    if(Platform.OS === "ios"){
+      setkeyboardVerticalOffset(value);
+    }
+  }
   return (
     <KeyboardAvoidingView
-      keyboardVerticalOffset={keyboardVerticalOffset}
-      behavior="position"
+    keyboardVerticalOffset={keyboardVerticalOffset}
+      behavior={Platform.OS === "ios" ? "position" : "padding"}
     >
       <View style={styles.container}>
         <View style={{ marginTop: 25, alignItems: "flex-start" }}>
@@ -195,8 +200,8 @@ const CreditCard = ({ onSaveCard }) => {
             value={cardHolderID}
             isError={formStatus.idIDValid === false}
             variant="default"
-            onFocus={() => setkeyboardVerticalOffset(150)}
-            onBlur={() => setkeyboardVerticalOffset(0)}
+            onFocus={() => hanndlesetkeyboardVerticalOffset(150)}
+            onBlur={() => hanndlesetkeyboardVerticalOffset(0)}
           />
           {formStatus.idIDValid === false && (
             <Text style={{ color: themeStyle.ERROR_COLOR }}>{t('invalid-id-number')}</Text>
@@ -208,14 +213,14 @@ const CreditCard = ({ onSaveCard }) => {
             onChange={onEmailChange}
             value={email}
             variant="default"
-            onFocus={() => setkeyboardVerticalOffset(250)}
-            onBlur={() => setkeyboardVerticalOffset(0)}
+            onFocus={() => hanndlesetkeyboardVerticalOffset(250)}
+            onBlur={() => hanndlesetkeyboardVerticalOffset(0)}
           />
           {formStatus.isEmailValid === false && (
             <Text style={{ color: themeStyle.ERROR_COLOR }}>{t('invalid-email')}</Text>
           )}
         </View>
-        <View style={{ marginTop: 20 }}>
+        <View style={{ marginTop: 40 }}>
           <Button
             bgColor={theme.SUCCESS_COLOR}
             onClickFn={onSaveCreditCard}
