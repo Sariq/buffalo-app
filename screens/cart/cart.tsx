@@ -78,9 +78,7 @@ const CartScreen = () => {
   ] = Location.useForegroundPermissions();
   const navigation = useNavigation();
 
-  const [shippingMethod, setShippingMethod] = React.useState(
-    SHIPPING_METHODS.takAway
-  );
+  const [shippingMethod, setShippingMethod] = React.useState();
   const [paymentMthod, setPaymentMthod] = React.useState(PAYMENT_METHODS.cash);
 
   const [isShippingMethodAgrred, setIsShippingMethodAgrred] = React.useState(
@@ -140,6 +138,7 @@ const CartScreen = () => {
   ] = React.useState(false);
 
   useEffect(() => {
+    handleTakeAwaySelect();
     if (menuStore.categories["OTHER"]) {
       const bcoinMeal = {
         data: menuStore.categories["OTHER"][0],
@@ -358,6 +357,10 @@ const CartScreen = () => {
             }
           } else {
             if (shippingMethod === SHIPPING_METHODS.takAway) {
+              const isSupported = await handleTakeAwaySelect();
+              if(!isSupported){
+                return;
+              }
               setIsOpenShippingMethodDialog(true);
             } else {
               if (shippingMethod === SHIPPING_METHODS.table) {
@@ -613,6 +616,19 @@ const CartScreen = () => {
       return;
     }
     setShippingMethod(SHIPPING_METHODS.shipping);
+  };
+
+  const handleTakeAwaySelect = async () => {
+    setShippingMethod(SHIPPING_METHODS.takAway);
+    const isSupported = await isStoreSupport("takeaway_support");
+    if (!isSupported) {
+      setRecipetSupportText({
+        text: "take-away-not-supported",
+        icon: "shipping_icon",
+      });
+      setIOpenRecipetNotSupportedDialog(true);
+    }
+    return isSupported;
   };
   const handleTableSelect = async () => {
     setIsBarcodeOpen(false);
@@ -1191,7 +1207,7 @@ const CartScreen = () => {
               </View>
               <View style={{ flexBasis: "32%" }}>
                 <Button
-                  onClickFn={() => setShippingMethod(SHIPPING_METHODS.takAway)}
+                  onClickFn={handleTakeAwaySelect}
                   text={t("take-away")}
                   bgColor={
                     shippingMethod === SHIPPING_METHODS.takAway

@@ -155,7 +155,7 @@ const App = () => {
       var end = moment(new Date());
       var now = moment(cartCreatedDateValue.date);
       var duration = moment.duration(end.diff(now));
-      if (duration.asMinutes() >= 1) {
+      if (duration.asMinutes() >= 30) {
         cartStore.resetCart();
       }
     }
