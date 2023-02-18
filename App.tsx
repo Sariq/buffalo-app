@@ -35,6 +35,7 @@ import UpdateVersion from "./components/dialogs/update-app-version";
 import { SITE_URL } from "./consts/api";
 import themeStyle from "./styles/theme.style";
 import { isLatestGreaterThanCurrent } from "./helpers/check-version";
+import moment from "moment";
 // Keep the splash screen visible while we fetch resources
 //SplashScreen.preventAutoHideAsync();
 let customARFonts = {
@@ -79,10 +80,9 @@ const App = () => {
     isOpenInternetConnectionDialog,
     setIsOpenInternetConnectionDialog,
   ] = useState(false);
-  const [
-    isOpenUpdateVersionDialog,
-    setIsOpenUpdateVersionDialog,
-  ] = useState(false);
+  const [isOpenUpdateVersionDialog, setIsOpenUpdateVersionDialog] = useState(
+    false
+  );
 
   useEffect(() => {
     if (!I18nManager.isRTL) {
@@ -104,45 +104,65 @@ const App = () => {
     });
   };
 
-
-
   const deleteCreditCardData = async (appversion: string) => {
     const data = await AsyncStorage.getItem("@storage_CCData");
     const ccDetails = JSON.parse(data);
-    if(ccDetails && !ccDetails?.cvv){
+    if (ccDetails && !ccDetails?.cvv) {
       await AsyncStorage.removeItem("@storage_CCData");
     }
-  }
+  };
 
   const handleV02 = async (appversion: string) => {
-    if(appversion === '1.0.0' || appversion === '1.0.1' || appversion === '1.0.2'){
-      setIsOpenUpdateVersionDialog(true)
+    if (
+      appversion === "1.0.0" ||
+      appversion === "1.0.1" ||
+      appversion === "1.0.2"
+    ) {
+      setIsOpenUpdateVersionDialog(true);
       return true;
     }
     return false;
-  }
+  };
 
   const handleVersions = async () => {
     const appVersion = Constants.nativeAppVersion;
     const currentVersion = await AsyncStorage.getItem("@storage_version");
     deleteCreditCardData(appVersion);
     const flag = await handleV02(appVersion);
-    if(flag){
+    if (flag) {
       return;
     }
-    if(!currentVersion || isLatestGreaterThanCurrent(appVersion, currentVersion)){
+    if (
+      !currentVersion ||
+      isLatestGreaterThanCurrent(appVersion, currentVersion)
+    ) {
       await AsyncStorage.setItem("@storage_version", appVersion?.toString());
       return;
     }
-  }
-  
-  const handleUpdateVersionDialogAnswer = ()=>{
-    Linking.openURL("https://onelink.to/zky772")
-  }
+  };
+
+  const handleUpdateVersionDialogAnswer = () => {
+    Linking.openURL("https://onelink.to/zky772");
+  };
+  const handleCartReset = async () => {
+    const cartCreatedDate = await AsyncStorage.getItem(
+      "@storage_cartCreatedDate"
+    );
+    const cartCreatedDateValue = JSON.parse(cartCreatedDate);
+    if (cartCreatedDateValue) {
+      var end = moment(new Date());
+      var now = moment(cartCreatedDateValue.date);
+      var duration = moment.duration(end.diff(now));
+      if (duration.asMinutes() >= 20) {
+        cartStore.resetCart();
+      }
+    }
+  };
 
   async function prepare() {
     try {
-      handleVersions()
+      handleVersions();
+      handleCartReset();
       // Pre-load fonts, make any API calls you need to do here
       await Font.loadAsync(customARFonts);
       setIsFontReady(true);
@@ -188,7 +208,6 @@ const App = () => {
             fetchUserDetails,
             fetchOrders,
           ]).then((res) => {
-            
             setAppIsReady(true);
             setTimeout(() => {
               setIsExtraLoadFinished(true);
@@ -360,7 +379,10 @@ const App = () => {
         <ExpiryDate />
         <GeneralServerErrorDialog />
         <InterntConnectionDialog isOpen={isOpenInternetConnectionDialog} />
-        <UpdateVersion isOpen={isOpenUpdateVersionDialog} handleAnswer={handleUpdateVersionDialogAnswer} />
+        <UpdateVersion
+          isOpen={isOpenUpdateVersionDialog}
+          handleAnswer={handleUpdateVersionDialogAnswer}
+        />
       </StoreContext.Provider>
     </View>
   );

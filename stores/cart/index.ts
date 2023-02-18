@@ -232,8 +232,9 @@ class CartStore {
     return cartData;
   }
 
-  resetCart = () => {
+  resetCart = async () => {
     this.cartItems = [];
+    await AsyncStorage.removeItem("@storage_cartCreatedDate");
     this.updateLocalStorage();
   }
 
