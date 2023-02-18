@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { useState, useEffect, useCallback, useContext } from "react";
+import { useState, useEffect, useCallback, useContext, useRef } from "react";
 import "./translations/i18n";
 import * as SplashScreen from "expo-splash-screen";
 import { Asset } from "expo-asset";
@@ -15,6 +15,7 @@ import {
   DeviceEventEmitter,
   Text,
   Linking,
+  AppState,
 } from "react-native";
 import RootNavigator from "./navigation";
 import NetInfo from "@react-native-community/netinfo";
@@ -71,6 +72,7 @@ const App = () => {
     storeDataStore,
     languageStore,
   } = useContext(StoreContext);
+  const appState = useRef(AppState.currentState);
 
   const [assetsIsReady, setAssetsIsReady] = useState(false);
   const [appIsReady, setAppIsReady] = useState(false);
@@ -153,16 +155,35 @@ const App = () => {
       var end = moment(new Date());
       var now = moment(cartCreatedDateValue.date);
       var duration = moment.duration(end.diff(now));
-      if (duration.asMinutes() >= 20) {
+      if (duration.asMinutes() >= 1) {
         cartStore.resetCart();
       }
     }
   };
 
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      if (
+        appState.current.match(/inactive|background/) &&
+        nextAppState === 'active'
+      ) {
+        //console.log('App has come to the foreground!');
+      }
+
+      appState.current = nextAppState;
+      if( appState.current === 'active'){
+        handleCartReset();
+      }
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
   async function prepare() {
     try {
       handleVersions();
-      handleCartReset();
       // Pre-load fonts, make any API calls you need to do here
       await Font.loadAsync(customARFonts);
       setIsFontReady(true);
