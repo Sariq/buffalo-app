@@ -37,13 +37,15 @@ const categoryListIcons = {
   SIDES: "box-icon",
   DRINK: "drinks_icon",
   SALADS: "salad",
+  ROLLS: "burrito",
 };
 const categoryListOrder = {
   1: "BURGERS",
   2: "CHICKEN",
-  3: "SIDES",
-  4: "SALADS",
-  5: "DRINK",
+  3: "ROLLS",
+  4: "SIDES",
+  5: "SALADS",
+  6: "DRINK",
 };
 
 const MenuScreen = () => {

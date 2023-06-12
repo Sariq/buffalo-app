@@ -56,7 +56,7 @@
     "react-hook-form": "^7.41.1",
     "react-i18next": "^12.1.1",
     "react-icomoon": "^2.5.4",
-    "react-native": "0.69.6",
+    "react-native": "0.69.9",
     "react-native-base64": "^0.2.1",
     "react-native-confirmation-code-field": "^7.3.1",
     "react-native-dashed-line": "^1.1.0",
