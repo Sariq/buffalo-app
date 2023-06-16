@@ -391,10 +391,12 @@ const CartScreen = () => {
           setPaymentErrorMessage(resCharge.ReturnMessage);
           setShowPaymentFailedDialog(true);
           setIsLoadingOrderSent(false);
+          removeCreditCard();
           return;
         }
         if (res.has_err) {
           setShowPaymentFailedDialog(true);
+          removeCreditCard();
           return;
         }
         postChargeOrderActions();
