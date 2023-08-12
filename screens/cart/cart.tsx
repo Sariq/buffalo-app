@@ -454,6 +454,7 @@ const CartScreen = () => {
         DeviceEventEmitter.emit(`OPEN_GENERAL_SERVER_ERROR_DIALOG`, {
           show: true,
         });
+        return;
       }
       postSubmitOrderActions(res);
     });
