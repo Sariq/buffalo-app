@@ -4,10 +4,14 @@ import { useTranslation } from "react-i18next";
 import Button from "../../components/controls/button/button";
 import Carousel from "react-native-reanimated-carousel";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  interpolate,
+  withTiming,
+} from "react-native-reanimated";
 
 /* styles */
 
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useCallback } from "react";
 import { StoreContext } from "../../stores";
 import themeStyle from "../../styles/theme.style";
 import { SITE_URL } from "../../consts/api";
@@ -82,19 +86,36 @@ const HomeScreen = ({ navigation }) => {
     navigation.navigate("menuScreen");
   }
 
+  const animationStyle: any = useCallback((value: number) => {
+    "worklet";
+
+    const zIndex = withTiming(interpolate(value, [-1, 0, 1], [10, 20, 30]));
+    // const scale = interpolate(value, [-1, 0, 1], [1.25, 1, 0.25]);
+    const opacity = withTiming(interpolate(value, [-0.75, 0, 1], [0, 1, 0]), {
+      duration: 0,
+    });
+
+    return {
+      // transform: [{ scale }],
+      zIndex,
+      opacity,
+    };
+  }, []);
+
   if (!isAppReady || !homeSlides) {
     return;
   }
   return (
     <View style={{ height: "100%" }}>
       <Carousel
-        loop
-        width={Dimensions.get("window").width}
-        height="100%"
-        autoPlay={true}
-        data={homeSlides}
-        scrollAnimationDuration={1500}
-        autoPlayInterval={3000}
+          loop={homeSlides.length == 1 ? false :true}
+          width={Dimensions.get("window").width}
+          height={"100%"}
+          autoPlay={homeSlides.length == 1 ? false :true}
+          data={homeSlides}
+          scrollAnimationDuration={3000}
+          autoPlayInterval={3000}
+          customAnimation={animationStyle}
         renderItem={({ index }) => (
           <ImageBackground
             source={{ uri: `${SITE_URL}${homeSlides[index].file_url}` }}
