@@ -86,8 +86,8 @@ const MenuScreen = () => {
         end={{ x: 0, y: 0.1 }}
         style={styles.background}
       />
-      <View style={{zIndex:10}}>
-      <CurrentStore/>
+      <View style={{ zIndex: 10, paddingTop:5 }}>
+        <CurrentStore />
       </View>
       <View style={styles.container}>
         <ScrollView
@@ -142,6 +142,11 @@ const MenuScreen = () => {
           ))}
         </ScrollView>
       </View>
+      <View style={{ flexDirection: "row", marginLeft: 20, marginTop: 20 }}>
+        <Text style={{ fontSize: 20, fontFamily: `${getCurrentLang()}-Bold` }}>
+          {t(`menu-category-title-${selectedCategoryKey}`)}
+        </Text>
+      </View>
       {Object.keys(categoryListOrder).map((key, index) => (
         <View
           style={[
@@ -150,7 +155,7 @@ const MenuScreen = () => {
               height:
                 selectedCategoryKey === categoryListOrder[key] ? "100%" : 0,
               paddingBottom:
-                selectedCategoryKey === categoryListOrder[key] ? 120 : 0,
+                selectedCategoryKey === categoryListOrder[key] ? 220 : 0,
               marginTop:
                 selectedCategoryKey === categoryListOrder[key] ? 10 : 0,
             },
