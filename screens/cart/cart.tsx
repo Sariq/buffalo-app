@@ -52,6 +52,7 @@ import RecipetNotSupportedDialog from "../../components/dialogs/recipet-service/
 import StoreErrorMsgDialog from "../../components/dialogs/store-errot-msg";
 import DeliveryMethodDialog from "../../components/dialogs/delivery-method";
 import { SHIPPING_METHODS, bcoindId } from "../../consts/shared";
+import CurrentStore from "../../components/current-store";
 const barcodeString = "https://onelink.to/zky772";
 
 const PAYMENT_METHODS = {
@@ -289,14 +290,14 @@ const CartScreen = () => {
   };
 
   const isStoreSupport = (key: string) => {
-    return storeDataStore.getStoreData().then((res) => {
+    return storeDataStore.getStoreData(storeDataStore.selectedStore).then((res) => {
       setDeliveryPrice(res.delivery_price);
       return res[key];
     });
   };
 
   const isStoreAvailable = () => {
-    return storeDataStore.getStoreData().then((res) => {
+    return storeDataStore.getStoreData(storeDataStore.selectedStore).then((res) => {
       return {
         ar: res["invalid_message_ar"],
         he: res["invalid_message_he"],
@@ -358,7 +359,7 @@ const CartScreen = () => {
           } else {
             if (shippingMethod === SHIPPING_METHODS.takAway) {
               const isSupported = await handleTakeAwaySelect();
-              if(!isSupported){
+              if (!isSupported) {
                 return;
               }
               setIsOpenShippingMethodDialog(true);
@@ -421,7 +422,7 @@ const CartScreen = () => {
         email: ccData?.email,
         cvv: ccData?.cvv,
         phone: userDetailsStore?.userDetails?.phone,
-        userName: userDetailsStore?.userDetails?.name
+        userName: userDetailsStore?.userDetails?.name,
       };
       chargeOrder(chargeData);
     } else {
@@ -743,7 +744,7 @@ const CartScreen = () => {
     >
       <ScrollView>
         <View style={{ ...styles.container }}>
-          <View style={{ paddingHorizontal: 20 }}>
+          <View style={{ paddingHorizontal: 20}}>
             <View style={styles.backContainer}>
               <View
                 style={{
@@ -757,6 +758,10 @@ const CartScreen = () => {
               >
                 <BackButton />
               </View>
+              <View style={{left:30}}>
+                <CurrentStore />
+              </View>
+
               <View>
                 <Text
                   style={{
@@ -1599,6 +1604,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    zIndex:20
   },
   togglleContainer: {
     borderRadius: 50,

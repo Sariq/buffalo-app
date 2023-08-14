@@ -22,6 +22,7 @@ import i18n from "../../translations/index-x";
 import { getCurrentLang } from "../../translations/i18n";
 import { useTranslation } from "react-i18next";
 import * as Haptics from "expo-haptics";
+import CurrentStore from "../../components/current-store";
 
 export function toBase64(input) {
   return Buffer.from(input, "utf-8").toString("base64");
@@ -50,7 +51,7 @@ const categoryListOrder = {
 
 const MenuScreen = () => {
   const { t } = useTranslation();
-  const { menuStore, languageStore } = useContext(StoreContext);
+  const { menuStore, languageStore, storeDataStore } = useContext(StoreContext);
 
   useEffect(() => {}, [languageStore]);
 
@@ -85,6 +86,9 @@ const MenuScreen = () => {
         end={{ x: 0, y: 0.1 }}
         style={styles.background}
       />
+      <View style={{zIndex:10}}>
+      <CurrentStore/>
+      </View>
       <View style={styles.container}>
         <ScrollView
           style={{ height: "100%", width: "100%" }}

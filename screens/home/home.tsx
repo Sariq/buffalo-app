@@ -3,6 +3,7 @@ import { observer } from "mobx-react";
 import { useTranslation } from "react-i18next";
 import Button from "../../components/controls/button/button";
 import Carousel from "react-native-reanimated-carousel";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 /* styles */
 
@@ -11,13 +12,15 @@ import { StoreContext } from "../../stores";
 import themeStyle from "../../styles/theme.style";
 import { SITE_URL } from "../../consts/api";
 import { getCurrentLang } from "../../translations/i18n";
+import PickStoreDialog from "../../components/dialogs/pick-store/pick-store";
 
 const HomeScreen = ({ navigation }) => {
   const { t } = useTranslation();
   const [isAppReady, setIsAppReady] = useState(false);
   const [homeSlides, setHomeSlides] = useState();
   const [isActiveOrder, setIsActiveOrder] = useState(false);
-  let { userDetailsStore, menuStore, ordersStore, authStore } = useContext(
+  const [isOpenPickStore, setIsOpenPickStore] = useState(false);
+  let { userDetailsStore, menuStore, ordersStore, authStore, storeDataStore } = useContext(
     StoreContext
   );
 
@@ -61,11 +64,24 @@ const HomeScreen = ({ navigation }) => {
   }, [ordersStore.ordersList]);
 
   const goToNewOrder = () => {
-    navigation.navigate("menuScreen");
+    if(!storeDataStore.selectedStore){
+      setIsOpenPickStore(true);
+    }else{
+      navigation.navigate("menuScreen");
+    }
   };
   const goToOrdersStatus = () => {
     navigation.navigate("orders-status");
   };
+
+  const handlePickStoreAnswer = async (value)=>{
+    setIsOpenPickStore(false);
+    console.log("value", value)
+    await AsyncStorage.setItem("@storage_selcted_store", value);
+    storeDataStore.setSelectedStore(value)
+    navigation.navigate("menuScreen");
+  }
+
   if (!isAppReady || !homeSlides) {
     return;
   }
@@ -87,7 +103,7 @@ const HomeScreen = ({ navigation }) => {
           />
         )}
       />
-      <View style={[styles.button, styles.bottomView]}>
+      {!isOpenPickStore && <View style={[styles.button, styles.bottomView]}>
         <View
           style={{
             width: "100%",
@@ -126,7 +142,11 @@ const HomeScreen = ({ navigation }) => {
             </View>
           )}
         </View>
-      </View>
+      </View>}
+      <PickStoreDialog
+        handleAnswer={handlePickStoreAnswer}
+        isOpen={isOpenPickStore}
+      />
     </View>
   );
 };

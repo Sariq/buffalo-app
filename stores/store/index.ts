@@ -6,14 +6,21 @@ import { fromBase64, toBase64 } from "../../helpers/convert-base64";
 class StoreDataStore {
   paymentCredentials = null;
   storeData = null;
+  selectedStore = null;
 
   constructor() {
     makeAutoObservable(this);
 
   }
 
-  getStoreDataFromServer = async () => {
-    const body = { datetime: new Date() };
+  setSelectedStore = (value) => {
+    this.selectedStore = value;
+  }
+
+  getStoreDataFromServer = async (storeId) => {
+    console.log("storeId",storeId)
+    const body = { datetime: new Date(), store_id: storeId };
+    console.log(toBase64(body))
     return axiosInstance
       .post(
         `${STORE_API.CONTROLLER}/${STORE_API.GET_STORE_API}`,
@@ -21,14 +28,15 @@ class StoreDataStore {
       )
       .then(function (response) {
         const res = JSON.parse(fromBase64(response.data));
+        console.log("STORE",res)
         return res;
       }).catch((error) => {
         console.log(error);
       })
   };
 
-  getStoreData = () => {
-    return this.getStoreDataFromServer().then((res) => {
+  getStoreData = (storeId) => {
+    return this.getStoreDataFromServer(storeId).then((res) => {
       runInAction(() => {
         this.storeData = res.stores[0];
         this.paymentCredentials = JSON.parse(fromBase64(res.stores[0].credentials));

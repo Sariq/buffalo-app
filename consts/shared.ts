@@ -4,3 +4,14 @@ export const SHIPPING_METHODS = {
     table: "TABLE",
   };
   export const bcoindId = 3027;
+
+  export const SOTRES_LIST = [
+    {
+      label: 'tira',
+      value: '1'
+    },
+    {
+      label: 'tibe',
+      value: '2'
+    }
+  ];

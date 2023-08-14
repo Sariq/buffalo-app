@@ -1,11 +1,11 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import { groupBy } from "lodash";
 import { MENU_API } from "../../consts/api";
-import { fromBase64 } from '../../helpers/convert-base64'
 import { axiosInstance } from "../../utils/http-interceptor";
 import i18n from "../../translations/index-x";
 import { setTranslations, getCurrentLang } from "../../translations/i18n";
 import { orderBy } from "lodash";
+import { fromBase64, toBase64 } from "../../helpers/convert-base64";
 
 class MenuStore {
   menu = null;
@@ -22,21 +22,21 @@ class MenuStore {
     const mealTags = groupBy(this.meals[mealId], (x) => x.tag);
     return mealTags;
   }
-  getMenuFromServer = () => {
-    const body = {};
+  getMenuFromServer = (storeId) => {
+    const body = {store_Id: storeId};
     return axiosInstance
       .post(
         `${MENU_API.CONTROLLER}/${MENU_API.GET_MENU_API}`,
-        body,
+        toBase64(body),
       )
       .then(function (response) {
         const res = JSON.parse(fromBase64(response.data));
         return res;
       });
   }
-  getMenu = () => {
+  getMenu = (storeId) => {
    return new Promise((resolve)=>{
-      this.getMenuFromServer().then((res) => {
+      this.getMenuFromServer(storeId).then((res) => {
         runInAction(() => {
   
           this.dictionary = res.dictionary;

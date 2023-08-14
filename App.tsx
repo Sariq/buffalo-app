@@ -210,8 +210,11 @@ const App = () => {
         require("./assets/menu/gradiant/truffle.png"),
         require("./assets/menu/gradiant/onion-ring.png"),
       ]);
-      const fetchMenu = menuStore.getMenu();
+      const selectedStore = await AsyncStorage.getItem("@storage_selcted_store");
+
+      const fetchMenu = menuStore.getMenu(selectedStore);
       const fetchHomeSlides = menuStore.getSlides();
+      storeDataStore.setSelectedStore(selectedStore)
       Promise.all([fetchMenu, fetchHomeSlides]).then(async (responses) => {
         const imageAssets2 = await cacheImages(menuStore.imagesUrl);
 
@@ -221,7 +224,7 @@ const App = () => {
         const imageAssets = await cacheImages(tempHomeSlides);
         if (authStore.isLoggedIn()) {
           const fetchUserDetails = userDetailsStore.getUserDetails();
-          const fetchStoreDataStore = storeDataStore.getStoreData();
+          const fetchStoreDataStore = storeDataStore.getStoreData(selectedStore);
           const fetchOrders = ordersStore.getOrders();
           userDetailsStore.setIsAcceptedTerms(true);
           Promise.all([
