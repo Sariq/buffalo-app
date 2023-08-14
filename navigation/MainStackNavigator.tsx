@@ -34,7 +34,7 @@ export const MainStackNavigator = () => {
       <Stack.Screen name="login" component={LoginScreen} />
       <Stack.Screen name="insert-customer-name" component={insertCustomerName} />
       <Stack.Screen name="verify-code" component={VerifyCodeScreen} initialParams={{ phoneNumber: null }} />
-      <Stack.Screen name="language" component={LanguageScreen} />
+      <Stack.Screen name="language" component={LanguageScreen} initialParams={{ isFromTerms: null }}/>
       <Stack.Screen name="order-history" component={OrderHistoryScreen} />
       <Stack.Screen 
         name="order-submitted"

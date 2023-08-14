@@ -8,13 +8,18 @@ import { useNavigation } from "@react-navigation/native";
 import { getCurrentLang } from "../../translations/i18n";
 import Text from "../../components/controls/Text";
 
-const LanguageScreen = () => {
+const LanguageScreen = ({ route }) => {
   const { languageStore } = useContext(StoreContext);
   const navigation = useNavigation();
+  const { isFromTerms } = route.params;
 
   const onChangeLanguage = (lng) => {
     languageStore.changeLang(lng);
-    navigation.goBack();
+    if(isFromTerms){
+      navigation.navigate("homeScreen");
+    }else{
+      navigation.goBack();
+    }
   };
   
   return (

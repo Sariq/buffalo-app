@@ -28,7 +28,7 @@ export default function TermsAndConditionsScreen() {
   const acceptTerms = async () => {
     await AsyncStorage.setItem("@storage_terms_accepted", JSON.stringify(true));
     userDetailsStore.setIsAcceptedTerms(true);
-    navigation.navigate("homeScreen");
+    navigation.navigate("language", {isFromTerms: true});
   };
 
   return (
