@@ -290,29 +290,29 @@ const CartScreen = () => {
   };
 
   const isStoreSupport = (key: string) => {
-    return storeDataStore.getStoreData(storeDataStore.selectedStore).then((res) => {
-      setDeliveryPrice(res.delivery_price);
-      return res[key];
-    });
+    return storeDataStore
+      .getStoreData(storeDataStore.selectedStore)
+      .then((res) => {
+        setDeliveryPrice(res.delivery_price);
+        return res[key];
+      });
   };
 
   const isStoreAvailable = () => {
-    return storeDataStore.getStoreData(storeDataStore.selectedStore).then((res) => {
-      return {
-        ar: res["invalid_message_ar"],
-        he: res["invalid_message_he"],
-        isOpen: res.alwaysOpen || res.isOpen,
-        isBusy: false,
-      };
-    });
+    return storeDataStore
+      .getStoreData(storeDataStore.selectedStore)
+      .then((res) => {
+        return {
+          ar: res["invalid_message_ar"],
+          he: res["invalid_message_he"],
+          isOpen: res.alwaysOpen || res.isOpen,
+          isBusy: false,
+        };
+      });
   };
 
   const isErrMessage = async () => {
     let data = await isStoreAvailable();
-    if (data.ar || data.he) {
-      setStoreErrorText(data[getCurrentLang()]);
-      setIsOpenStoreErrorMsgDialog(true);
-    }
     return data;
   };
 
@@ -342,8 +342,8 @@ const CartScreen = () => {
     const isLoggedIn = authStore.isLoggedIn();
     if (isLoggedIn) {
       const data = await isErrMessage();
-      if (!(data.ar || data.he)) {
-        if (data.isOpen) {
+      if (data.isOpen) {
+        if (!(data.ar || data.he)) {
           if (shippingMethod === SHIPPING_METHODS.shipping) {
             const isValid = await validateAdress();
             if (isValid) {
@@ -371,9 +371,15 @@ const CartScreen = () => {
               }
             }
           }
-        } else {
-          setShowStoreIsCloseDialog(true);
         }
+        else{
+          if (data.ar || data.he) {
+            setStoreErrorText(data[getCurrentLang()]);
+            setIsOpenStoreErrorMsgDialog(true);
+          }
+        }
+      } else {
+        setShowStoreIsCloseDialog(true);
       }
     } else {
       navigation.navigate("login");
@@ -744,7 +750,7 @@ const CartScreen = () => {
     >
       <ScrollView>
         <View style={{ ...styles.container }}>
-          <View style={{ paddingHorizontal: 20}}>
+          <View style={{ paddingHorizontal: 20 }}>
             <View style={styles.backContainer}>
               <View
                 style={{
@@ -758,7 +764,7 @@ const CartScreen = () => {
               >
                 <BackButton />
               </View>
-              <View style={{left:30}}>
+              <View style={{ left: 30 }}>
                 <CurrentStore />
               </View>
 
@@ -1604,7 +1610,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    zIndex:20
+    zIndex: 20,
   },
   togglleContainer: {
     borderRadius: 50,
