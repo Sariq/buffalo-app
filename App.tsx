@@ -212,7 +212,7 @@ const App = () => {
       ]);
       const selectedStore = await AsyncStorage.getItem("@storage_selcted_store");
 
-      const fetchMenu = menuStore.getMenu(selectedStore);
+      const fetchMenu = menuStore.getMenu(selectedStore || '1');
       const fetchHomeSlides = menuStore.getSlides();
       const fetchStoreDataStore = storeDataStore.getStoreData(selectedStore);
       

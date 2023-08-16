@@ -17,8 +17,6 @@ type TProps = {
   handleAnswer?: any;
 };
 
-const branchesList = [{ name: "tira", icons: [""] }];
-
 export default function PickStoreDialog({ isOpen, handleAnswer }: TProps) {
   const { t } = useTranslation();
   const [visible, setVisible] = useState(isOpen);
@@ -27,7 +25,7 @@ export default function PickStoreDialog({ isOpen, handleAnswer }: TProps) {
     setVisible(isOpen);
   }, [isOpen]);
 
-  const hideDialog = (value: boolean) => {
+  const hideDialog = (value: any) => {
     handleAnswer && handleAnswer(value);
     setVisible(false);
   };
@@ -79,7 +77,7 @@ export default function PickStoreDialog({ isOpen, handleAnswer }: TProps) {
                     paddingTop: 10,
                     
                   }}
-                  onPress={()=>handleAnswer('1')}
+                  onPress={()=>hideDialog('1')}
                 >
                   <View style={{ flexDirection: "row" }}>
                     <Text style={{ fontSize: 16 }}>{t("branch")}</Text>
@@ -119,7 +117,7 @@ export default function PickStoreDialog({ isOpen, handleAnswer }: TProps) {
                     paddingHorizontal: 25,
                     paddingTop: 10,
                   }}
-                  onPress={()=>handleAnswer('2')}
+                  onPress={()=>hideDialog('2')}
                 >
                   <View style={{ flexDirection: "row" }}>
                     <Text style={{ fontSize: 16 }}>{t("branch")}</Text>

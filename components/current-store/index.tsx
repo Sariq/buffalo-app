@@ -11,36 +11,71 @@ import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import StorePickedDialog from "../dialogs/store-picked/store-picked";
+import StoreIsCloseDialog from "../dialogs/store-is-close";
+import { getCurrentLang } from "../../translations/i18n";
+import StoreErrorMsgDialog from "../dialogs/store-errot-msg";
 
 export default function CurrentStore() {
   const { t } = useTranslation();
   const navigation = useNavigation();
 
   const [isOpenStorePicked, setIsOpenStorePicked] = useState(false);
-  let { storeDataStore,cartStore } = useContext(StoreContext);
-
+  let { storeDataStore, cartStore } = useContext(StoreContext);
+  const [showStoreIsCloseDialog, setShowStoreIsCloseDialog] = useState(false);
+  const [storeErrorText, setStoreErrorText] = useState("");
+  const [isOpenStoreErrorMsgDialog, setIsOpenStoreErrorMsgDialog] = useState(
+    false
+  );
   const [pickedStore, setPickedStore] = useState(storeDataStore.selectedStore);
 
+  const isStoreAvailable = () => {
+    return storeDataStore
+      .getStoreData(storeDataStore.selectedStore)
+      .then((res) => {
+        return {
+          ar: res["invalid_message_ar"],
+          he: res["invalid_message_he"],
+          isOpen: res.alwaysOpen || res.isOpen,
+          isBusy: false,
+        };
+      });
+  };
+
   const onChange = async (value) => {
-    console.log("storeDataStore.selectedStore", storeDataStore.selectedStore);
     if (storeDataStore.selectedStore != value) {
+      const storeStatus = await isStoreAvailable();
+      if (!storeStatus.isOpen) {
+        setShowStoreIsCloseDialog(true);
+      } else {
+        if (storeStatus.ar || storeStatus.he) {
+          setStoreErrorText(storeStatus[getCurrentLang()]);
+          setIsOpenStoreErrorMsgDialog(true);
+        }
+      }
+
       setPickedStore(value);
       setIsOpenStorePicked(true);
     }
   };
 
   const handleStorePickedAnswer = async (data) => {
-    console.log("DDDD", data);
     if (data.value) {
       cartStore.resetCart();
       await AsyncStorage.setItem("@storage_selcted_store", data.pickedStore);
       storeDataStore.setSelectedStore(data.pickedStore);
       navigation.navigate("homeScreen");
     } else {
-      console.log("cancel", storeDataStore.selectedStore);
       setPickedStore(storeDataStore.selectedStore);
     }
     setIsOpenStorePicked(false);
+  };
+
+  const handleStoreIsCloseAnswer = (value: boolean) => {
+    setShowStoreIsCloseDialog(false);
+  };
+
+  const handleStoreErrorMsgAnswer = () => {
+    setIsOpenStoreErrorMsgDialog(false);
   };
 
   return (
@@ -56,18 +91,27 @@ export default function CurrentStore() {
       />
       <View
         style={{
-          position:"absolute",
+          position: "absolute",
           zIndex: 10,
           alignSelf: "center",
           width: Dimensions.get("window").width,
           height: Dimensions.get("window").height - 300,
-          display: isOpenStorePicked ? 'flex': 'none'
+          display: isOpenStorePicked ? "flex" : "none",
         }}
       >
         <StorePickedDialog
           handleAnswer={handleStorePickedAnswer}
           isOpen={isOpenStorePicked}
           pickedStore={pickedStore}
+        />
+        <StoreIsCloseDialog
+          handleAnswer={handleStoreIsCloseAnswer}
+          isOpen={showStoreIsCloseDialog}
+        />
+        <StoreErrorMsgDialog
+          handleAnswer={handleStoreErrorMsgAnswer}
+          isOpen={isOpenStoreErrorMsgDialog}
+          text={storeErrorText}
         />
       </View>
     </View>
