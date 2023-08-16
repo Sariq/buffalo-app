@@ -37,7 +37,6 @@ const HomeScreen = ({ navigation }) => {
   );
 
   const displayTemrsAndConditions = async () => {
-    await AsyncStorage.removeItem("@storage_selcted_store");
     if (!userDetailsStore.isAcceptedTerms) {
       setTimeout(() => {
         navigation.navigate("terms-and-conditions");
