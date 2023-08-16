@@ -55,7 +55,8 @@ type TCart = {
   device_os: string,
   app_version: string,
   unique_hash?: string;
-  datetime: Date
+  datetime: Date,
+  store_id: string;
 }
 
 
@@ -215,7 +216,7 @@ class CartStore {
       payment_method: order.paymentMthod,
       receipt_method: order.shippingMethod,
       geo_positioning: order.geo_positioning,
-      items: produtsAdapter(order)
+      items: produtsAdapter(order),
     }
     const version = Constants.nativeAppVersion;
     const hashKey = await this.getHashKey(finalOrder);
@@ -228,6 +229,7 @@ class CartStore {
       app_version: version,
       unique_hash: hashKey,
       datetime: new Date(),
+      store_id: order.selectedStore
     }
     return cartData;
   }
@@ -286,11 +288,12 @@ class CartStore {
       });
   }
 
-  isValidGeo = (latitude: number, longitude: number) => {
+  isValidGeo = (latitude: number, longitude: number, storeId: string) => {
     const body = {
       latitude,
       longitude,
-      datetime: new Date()
+      datetime: new Date(),
+      store_id: storeId
     }
     return axiosInstance
       .post(

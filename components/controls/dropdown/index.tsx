@@ -34,6 +34,10 @@ const DropDown = ({
     onChangeFn(value);
   }, [value]);
 
+  useEffect(()=>{
+    setValue(defaultValue)
+  },[defaultValue])
+
   return (
     <View style={{ flexDirection: "row" }}>
       <DropDownPicker

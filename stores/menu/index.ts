@@ -1,6 +1,6 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import { groupBy } from "lodash";
-import { MENU_API } from "../../consts/api";
+import { MENU_API, STORE_API } from "../../consts/api";
 import { axiosInstance } from "../../utils/http-interceptor";
 import i18n from "../../translations/index-x";
 import { setTranslations, getCurrentLang } from "../../translations/i18n";
@@ -23,10 +23,10 @@ class MenuStore {
     return mealTags;
   }
   getMenuFromServer = (storeId) => {
-    const body = {store_Id: storeId};
+    const body = {"store_id": storeId};
     return axiosInstance
       .post(
-        `${MENU_API.CONTROLLER}/${MENU_API.GET_MENU_API}`,
+        `${STORE_API.CONTROLLER}/${MENU_API.GET_MENU_API}`,
         toBase64(body),
       )
       .then(function (response) {

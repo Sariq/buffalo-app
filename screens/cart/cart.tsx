@@ -139,6 +139,9 @@ const CartScreen = () => {
   ] = React.useState(false);
 
   useEffect(() => {
+    isStoreOpen().then((res)=>{
+      setShowStoreIsCloseDialog(!res)
+    })
     handleTakeAwaySelect();
     if (menuStore.categories["OTHER"]) {
       const bcoinMeal = {
@@ -289,6 +292,14 @@ const CartScreen = () => {
     }, 600);
   };
 
+  const isStoreOpen = async () => {
+    return storeDataStore
+      .getStoreData(storeDataStore.selectedStore)
+      .then((res) => {
+        return res.alwaysOpen || res.isOpen;
+      });
+  };
+
   const isStoreSupport = (key: string) => {
     return storeDataStore
       .getStoreData(storeDataStore.selectedStore)
@@ -323,7 +334,8 @@ const CartScreen = () => {
         cartStore
           .isValidGeo(
             addressLocation.coords.latitude,
-            addressLocation.coords.longitude
+            addressLocation.coords.longitude,
+            storeDataStore.selectedStore
           )
           .then((res) => {
             if (res) {
@@ -443,6 +455,7 @@ const CartScreen = () => {
       totalPrice,
       products: cartStore.cartItems,
       bcoinUpdatePrice,
+      selectedStore: storeDataStore.selectedStore
     };
 
     if (shippingMethod === SHIPPING_METHODS.shipping) {
@@ -750,7 +763,7 @@ const CartScreen = () => {
     >
       <ScrollView>
         <View style={{ ...styles.container }}>
-          <View style={{ paddingHorizontal: 20 }}>
+          <View style={{ paddingHorizontal: 20, zIndex:30 }}>
             <View style={styles.backContainer}>
               <View
                 style={{

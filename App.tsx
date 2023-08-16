@@ -214,8 +214,10 @@ const App = () => {
 
       const fetchMenu = menuStore.getMenu(selectedStore);
       const fetchHomeSlides = menuStore.getSlides();
+      const fetchStoreDataStore = storeDataStore.getStoreData(selectedStore);
+      
       storeDataStore.setSelectedStore(selectedStore)
-      Promise.all([fetchMenu, fetchHomeSlides]).then(async (responses) => {
+      Promise.all([fetchMenu, fetchHomeSlides, fetchStoreDataStore]).then(async (responses) => {
         const imageAssets2 = await cacheImages(menuStore.imagesUrl);
 
         const tempHomeSlides = menuStore.homeSlides.map((slide) => {
@@ -223,12 +225,12 @@ const App = () => {
         });
         const imageAssets = await cacheImages(tempHomeSlides);
         if (authStore.isLoggedIn()) {
+          storeDataStore.getPaymentCredentials(selectedStore);
+
           const fetchUserDetails = userDetailsStore.getUserDetails();
-          const fetchStoreDataStore = storeDataStore.getStoreData(selectedStore);
           const fetchOrders = ordersStore.getOrders();
           userDetailsStore.setIsAcceptedTerms(true);
           Promise.all([
-            fetchStoreDataStore,
             fetchUserDetails,
             fetchOrders,
           ]).then((res) => {

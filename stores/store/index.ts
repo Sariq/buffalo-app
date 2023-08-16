@@ -17,18 +17,16 @@ class StoreDataStore {
     this.selectedStore = value;
   }
 
-  getStoreDataFromServer = async (storeId) => {
-    console.log("storeId",storeId)
-    const body = { datetime: new Date(), store_id: storeId };
+  getStoreDataFromServer = async () => {
+    const body = { datetime: new Date() };
     console.log(toBase64(body))
     return axiosInstance
       .post(
-        `${STORE_API.CONTROLLER}/${STORE_API.GET_STORE_API}`,
+        `stores/getstoreslist`,
         toBase64(body),
       )
       .then(function (response) {
         const res = JSON.parse(fromBase64(response.data));
-        console.log("STORE",res)
         return res;
       }).catch((error) => {
         console.log(error);
@@ -36,12 +34,38 @@ class StoreDataStore {
   };
 
   getStoreData = (storeId) => {
-    return this.getStoreDataFromServer(storeId).then((res) => {
+    return this.getStoreDataFromServer().then((res) => {
       runInAction(() => {
-        this.storeData = res.stores[0];
-        this.paymentCredentials = JSON.parse(fromBase64(res.stores[0].credentials));
+        this.storeData = res.stores_list.find((store)=> store.id == storeId);
+
+        // this.paymentCredentials = JSON.parse(fromBase64(res.stores[0].credentials));
       })
-      return res.stores[0];
+      return res.stores_list.find((store)=> store.id == storeId);
+    })
+  };
+
+  getPaymentCredentialsFromServer = async (storeId) => {
+    const body = { datetime: new Date(), store_id: storeId };
+    console.log(toBase64(body))
+    return axiosInstance
+      .post(
+        `stores/getstorecreditcardterminalcredentials`,
+        toBase64(body),
+      )
+      .then(function (response) {
+        const res = JSON.parse(fromBase64(response.data));
+        return res;
+      }).catch((error) => {
+        console.log(error);
+      })
+  };
+
+  getPaymentCredentials = (storeId) => {
+    return this.getPaymentCredentialsFromServer(storeId).then((res) => {
+      runInAction(() => {
+        this.paymentCredentials = fromBase64(res.credentials);
+      })
+      return res;
     })
   };
 }

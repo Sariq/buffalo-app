@@ -11,8 +11,8 @@ export const AUTH_API = {
 };
 export const MENU_API = {
     CONTROLLER: "config",
-    GET_MENU_API : "GetRestaurantMenu",
-    //GET_MENU_API : "GetStoreMenu",
+    //GET_MENU_API : "GetRestaurantMenu",
+    GET_MENU_API : "getstoremenu",
     GET_SLIDER_API : "getAppSliderGallery",
 };
 export const ORDER_API = {
@@ -24,8 +24,8 @@ export const ORDER_API = {
     GET_ORDERS_API : "getorders",
 };
 export const STORE_API = {
-    CONTROLLER: "Stores",
-    GET_STORE_API : "getStores",
+    CONTROLLER: "stores",
+    GET_STORE_API : "getstoreslist",
 };
 
 export const UTILITIES_API = {
