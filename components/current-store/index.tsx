@@ -18,15 +18,19 @@ import StoreErrorMsgDialog from "../dialogs/store-errot-msg";
 export default function CurrentStore() {
   const { t } = useTranslation();
   const navigation = useNavigation();
-
+  let { storeDataStore, cartStore, menuStore, authStore } = useContext(StoreContext);
   const [isOpenStorePicked, setIsOpenStorePicked] = useState(false);
-  let { storeDataStore, cartStore } = useContext(StoreContext);
   const [showStoreIsCloseDialog, setShowStoreIsCloseDialog] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [storeErrorText, setStoreErrorText] = useState("");
   const [isOpenStoreErrorMsgDialog, setIsOpenStoreErrorMsgDialog] = useState(
     false
   );
   const [pickedStore, setPickedStore] = useState(storeDataStore.selectedStore);
+
+  const storesList = SOTRES_LIST.map((store)=>{
+    return {label: t(store.label), value: store.value}
+  });
 
   const isStoreAvailable = () => {
     return storeDataStore
@@ -60,14 +64,28 @@ export default function CurrentStore() {
 
   const handleStorePickedAnswer = async (data) => {
     if (data.value) {
-      cartStore.resetCart();
-      await AsyncStorage.setItem("@storage_selcted_store", data.pickedStore);
-      storeDataStore.setSelectedStore(data.pickedStore);
-      navigation.navigate("homeScreen");
+      setIsLoading(true);
+      const fetchMenuStore = menuStore.getMenu(data.pickedStore);
+      const fetchStoreData = storeDataStore.getStoreData(data.pickedStore);
+      Promise.all([
+        fetchMenuStore,
+        fetchStoreData,
+      ]).then(async (res) => {
+        if(authStore.isLoggedIn()){
+          await storeDataStore.getPaymentCredentials(data.pickedStore);
+        }
+          setIsLoading(false);
+          setIsOpenStorePicked(false);
+          cartStore.resetCart();
+          await AsyncStorage.setItem("@storage_selcted_store", data.pickedStore);
+          storeDataStore.setSelectedStore(data.pickedStore);
+          navigation.navigate("homeScreen");
+      });
+
     } else {
       setPickedStore(storeDataStore.selectedStore);
+      setIsOpenStorePicked(false);
     }
-    setIsOpenStorePicked(false);
   };
 
   const handleStoreIsCloseAnswer = (value: boolean) => {
@@ -81,7 +99,7 @@ export default function CurrentStore() {
   return (
     <View style={styles.container}>
       <DropDown
-        itemsList={SOTRES_LIST}
+        itemsList={storesList}
         defaultValue={pickedStore}
         onChangeFn={(e) => onChange(e)}
         placeholder={`${t("current-store")} ${
@@ -103,6 +121,7 @@ export default function CurrentStore() {
           handleAnswer={handleStorePickedAnswer}
           isOpen={isOpenStorePicked}
           pickedStore={pickedStore}
+          isLoading={isLoading}
         />
         <StoreIsCloseDialog
           handleAnswer={handleStoreIsCloseAnswer}

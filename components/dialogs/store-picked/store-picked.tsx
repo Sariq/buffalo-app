@@ -12,6 +12,7 @@ import Icon from "../../icon";
 
 type TProps = {
   isOpen: boolean;
+  isLoading: boolean;
   handleAnswer?: any;
   pickedStore?: any;
 
@@ -20,7 +21,8 @@ type TProps = {
 export default function StorePickedDialog({
   isOpen,
   handleAnswer,
-  pickedStore
+  pickedStore,
+  isLoading
 }: TProps) {
   const { t } = useTranslation();
   const [visible, setVisible] = useState(isOpen);
@@ -31,7 +33,6 @@ export default function StorePickedDialog({
 
   const hideDialog = (value: boolean) => {
     handleAnswer && handleAnswer({value,pickedStore});
-    setVisible(false);
   };
   return (
     <Provider>
@@ -84,6 +85,8 @@ export default function StorePickedDialog({
                   bgColor={themeStyle.SUCCESS_COLOR}
                   textColor={themeStyle.WHITE_COLOR}
                   fontSize={16}
+                  isLoading={isLoading}
+                  disabled={isLoading}
                 />
               </View>
               <View style={{ flexBasis: "49%" }}>
@@ -93,6 +96,7 @@ export default function StorePickedDialog({
                   bgColor={themeStyle.GRAY_600}
                   textColor={themeStyle.WHITE_COLOR}
                   fontSize={16}
+                  disabled={isLoading}
                 />
               </View>
             </View>

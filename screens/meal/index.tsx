@@ -25,6 +25,7 @@ import { getCurrentLang } from "../../translations/i18n";
 import { useTranslation } from "react-i18next";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Haptics from "expo-haptics";
+import CustomFastImage from "../../components/custom-fast-image";
 
 const extrasIcons = {
   משקל: require("../../assets/menu/gradiant/burgerSlice.png"),
@@ -238,10 +239,15 @@ const MealScreen = ({ route }) => {
                 </Text>
               </TouchableOpacity>
               <View style={{ width: 380, height: 240, padding: 10 }}>
-                <Image
-                  style={{ width: "100%", height: "100%" }}
+                        <CustomFastImage
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    borderTopLeftRadius: 20,
+                    borderTopRightRadius: 20,
+                  }}
                   source={{ uri: meal.data.image_url }}
-                  resizeMode="contain"
+                  cacheKey={`${meal.data.image_url.split(/[\\/]/).pop()}`}
                 />
               </View>
             </View>

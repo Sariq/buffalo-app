@@ -177,7 +177,7 @@ const CartScreen = () => {
     }
     setBcoinUpdatePrice(bcoinPrice);
     setTotalPrice(shippingPrice + itemsPrice + bcoinPrice * -1);
-  }, [shippingMethod, itemsPrice]);
+  }, [shippingMethod, itemsPrice, deliveryPrice]);
 
   useEffect(() => {
     if (shippingMethod === SHIPPING_METHODS.shipping) {
@@ -244,6 +244,18 @@ const CartScreen = () => {
           mayShowUserSettingsDialog: false,
         });
         if (tempLocation) {
+          cartStore
+          .isValidGeo(
+            tempLocation.coords.latitude,
+            tempLocation.coords.longitude,
+            storeDataStore.selectedStore
+          )
+          .then((res) => {
+            console.log(res)
+            if (res) {
+              setDeliveryPrice(res?.zone[0]?.price);
+            }
+          });
           setLocation(tempLocation);
           setRegion({
             latitude: tempLocation.coords.latitude,
@@ -304,7 +316,7 @@ const CartScreen = () => {
     return storeDataStore
       .getStoreData(storeDataStore.selectedStore)
       .then((res) => {
-        setDeliveryPrice(res.delivery_price);
+        // setDeliveryPrice(res.delivery_price);
         return res[key];
       });
   };
@@ -338,10 +350,13 @@ const CartScreen = () => {
             storeDataStore.selectedStore
           )
           .then((res) => {
+            console.log(res)
             if (res) {
-              setIsValidAddress(res.result);
-              setIsOpenInvalidAddressDialod(!res.result);
-              resolve(res.result);
+              setIsValidAddress(!!res.zone);
+              setIsOpenInvalidAddressDialod(!res.zone);
+              setDeliveryPrice(res.zone.price);
+
+              resolve(!!res.zone);
             }
           });
       } else {

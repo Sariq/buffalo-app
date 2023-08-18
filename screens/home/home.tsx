@@ -90,18 +90,29 @@ const HomeScreen = ({ navigation }) => {
     setIsOpenPickStore(false);
     await AsyncStorage.setItem("@storage_selcted_store", value);
     storeDataStore.setSelectedStore(value);
-    const storeStatus = await isStoreAvailable(value);
-    if (!storeStatus.isOpen) {
-      setShowStoreIsCloseDialog(true);
-      return;
-    } else {
-      if (storeStatus.ar || storeStatus.he) {
-        setStoreErrorText(storeStatus[getCurrentLang()]);
-        setIsOpenStoreErrorMsgDialog(true);
-        return;
+
+    const fetchMenuStore = menuStore.getMenu(value);
+    const fetchStoreData = storeDataStore.getStoreData(value);
+    Promise.all([
+      fetchMenuStore,
+      fetchStoreData,
+    ]).then(async (res) => {
+      if(authStore.isLoggedIn()){
+        await storeDataStore.getPaymentCredentials(value);
       }
-    }
-    navigation.navigate("menuScreen");
+      const storeStatus = await isStoreAvailable(value);
+      if (!storeStatus.isOpen) {
+        setShowStoreIsCloseDialog(true);
+        return;
+      } else {
+        if (storeStatus.ar || storeStatus.he) {
+          setStoreErrorText(storeStatus[getCurrentLang()]);
+          setIsOpenStoreErrorMsgDialog(true);
+          return;
+        }
+      }
+      navigation.navigate("menuScreen");
+    });
   };
 
   const animationStyle: any = useCallback((value: number) => {

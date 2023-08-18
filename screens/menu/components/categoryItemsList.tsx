@@ -10,6 +10,7 @@ import Text from "../../../components/controls/Text";
 import themeStyle from "../../../styles/theme.style";
 import { getCurrentLang } from "../../../translations/i18n";
 import * as Haptics from "expo-haptics";
+import CustomFastImage from "../../../components/custom-fast-image";
 
 const CategoryItemsList = ({ productsList }) => {
   const navigation = useNavigation();
@@ -37,7 +38,10 @@ const CategoryItemsList = ({ productsList }) => {
         {productsList.map((item) => {
           return (
             <TouchableOpacity
-              style={[styles.categoryItem, {opacity: item.out_of_stock ? 0.4 : 1}]}
+              style={[
+                styles.categoryItem,
+                { opacity: item.out_of_stock ? 0.4 : 1 },
+              ]}
               delayPressIn={0}
               onPress={() => {
                 onItemSelect(item);
@@ -46,10 +50,15 @@ const CategoryItemsList = ({ productsList }) => {
               disabled={item.out_of_stock}
             >
               <View style={[styles.iconContainer]}>
-                <Image
-                  style={{ width: "100%", height: "100%" }}
+                <CustomFastImage
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    borderTopLeftRadius: 20,
+                    borderTopRightRadius: 20,
+                  }}
                   source={{ uri: item.image_url }}
-                  resizeMode="contain"
+                  cacheKey={`${item.image_url.split(/[\\/]/).pop()}`}
                 />
               </View>
               <Text

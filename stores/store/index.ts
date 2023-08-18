@@ -19,7 +19,6 @@ class StoreDataStore {
 
   getStoreDataFromServer = async () => {
     const body = { datetime: new Date() };
-    console.log(toBase64(body))
     return axiosInstance
       .post(
         `stores/getstoreslist`,
@@ -46,7 +45,6 @@ class StoreDataStore {
 
   getPaymentCredentialsFromServer = async (storeId) => {
     const body = { datetime: new Date(), store_id: storeId };
-    console.log(toBase64(body))
     return axiosInstance
       .post(
         `stores/getstorecreditcardterminalcredentials`,

@@ -123,7 +123,7 @@ export default function PickStoreDialog({ isOpen, handleAnswer }: TProps) {
                     <Text style={{ fontSize: 16 }}>{t("branch")}</Text>
                   </View>
                   <View style={{ flexDirection: "row", padding: 0, top: -15 }}>
-                    <Text style={{ fontSize: 34 }}>{t("tira")}</Text>
+                    <Text style={{ fontSize: 34 }}>{t("tibe")}</Text>
                   </View>
                   <View
                     style={{
