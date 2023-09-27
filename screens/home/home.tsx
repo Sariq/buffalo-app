@@ -87,7 +87,6 @@ const HomeScreen = ({ navigation }) => {
   };
 
   const handlePickStoreAnswer = async (value) => {
-    setIsOpenPickStore(false);
     await AsyncStorage.setItem("@storage_selcted_store", value);
     storeDataStore.setSelectedStore(value);
 
@@ -97,9 +96,9 @@ const HomeScreen = ({ navigation }) => {
       fetchMenuStore,
       fetchStoreData,
     ]).then(async (res) => {
-      if(authStore.isLoggedIn()){
-        await storeDataStore.getPaymentCredentials(value);
-      }
+      // if(authStore.isLoggedIn()){
+      //   await storeDataStore.getPaymentCredentials(value);
+      // }
       const storeStatus = await isStoreAvailable(value);
       if (!storeStatus.isOpen) {
         setShowStoreIsCloseDialog(true);
@@ -111,6 +110,7 @@ const HomeScreen = ({ navigation }) => {
           return;
         }
       }
+      setIsOpenPickStore(false);
       navigation.navigate("menuScreen");
     });
   };

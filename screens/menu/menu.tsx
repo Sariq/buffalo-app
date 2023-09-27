@@ -53,7 +53,9 @@ const MenuScreen = () => {
   const { t } = useTranslation();
   const { menuStore, languageStore, storeDataStore } = useContext(StoreContext);
 
-  useEffect(() => {}, [languageStore]);
+  useEffect(() => {
+    getMenu();
+  }, [menuStore.categories]);
 
   const [categoryList, setCategoryList] = useState();
   const [selectedCategory, setSelectedCategory] = useState();

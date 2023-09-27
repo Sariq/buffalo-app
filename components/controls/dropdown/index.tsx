@@ -54,13 +54,14 @@ const DropDown = ({
         labelStyle={{
           textAlign: "left",
           color: themeStyle.WHITE_COLOR,
+          fontSize:16
         }}
         style={{
           flexDirection: "row",
           borderColor: themeStyle.SUCCESS_COLOR,
           backgroundColor: themeStyle.SUCCESS_COLOR,
-          borderRadius: 30,
-          minHeight:30,
+          borderRadius: 10,
+          minHeight:32,
         }}
         listItemLabelStyle={{
           textAlign: "left",

@@ -59,6 +59,10 @@ const PAYMENT_METHODS = {
   creditCard: "CREDITCARD",
   cash: "CASH",
 };
+const PAYMENT_CREDINTALS_KEYS= {
+  1: "@storage_CCData",
+  2: "@storage_CCData_2",
+ };
 type TShippingMethod = {
   shipping: string;
   takAway: string;
@@ -137,6 +141,25 @@ const CartScreen = () => {
     isOpenInvalidAddressDialod,
     setIsOpenInvalidAddressDialod,
   ] = React.useState(false);
+
+  const setPaymentCredintales = async () => {
+    const selectedStore = await AsyncStorage.getItem("@storage_selcted_store");
+    const paymentCredintalsData = await storeDataStore.getPaymentCredentials(selectedStore);
+    let currentPaymentCredintalsKey = null;
+    if(paymentCredintalsData.credentials){
+      currentPaymentCredintalsKey = PAYMENT_CREDINTALS_KEYS[selectedStore]
+      storeDataStore.setPaymentCredentialsKey(currentPaymentCredintalsKey)
+    }else{
+      await storeDataStore.getPaymentCredentials(1);
+      currentPaymentCredintalsKey = PAYMENT_CREDINTALS_KEYS[1];
+      storeDataStore.setPaymentCredentialsKey(currentPaymentCredintalsKey)
+    }
+    const data = await AsyncStorage.getItem(currentPaymentCredintalsKey);
+    setCCData(JSON.parse(data));
+  }
+  useEffect(() => {
+    setPaymentCredintales();
+  }, []);
 
   useEffect(() => {
     isStoreOpen().then((res)=>{
@@ -217,13 +240,13 @@ const CartScreen = () => {
 
   const getCCData = async () => {
     //await AsyncStorage.setItem("@storage_CCData","");
-    const data = await AsyncStorage.getItem("@storage_CCData");
+    const data = await AsyncStorage.getItem(storeDataStore.paymentCredentialsKey);
     setCCData(JSON.parse(data));
   };
 
-  useEffect(() => {
-    getCCData();
-  }, []);
+  // useEffect(() => {
+  //   getCCData();
+  // }, []);
 
   const [isloadingLocation, setIsloadingLocation] = useState(false);
 
@@ -251,7 +274,6 @@ const CartScreen = () => {
             storeDataStore.selectedStore
           )
           .then((res) => {
-            console.log(res)
             if (res) {
               setDeliveryPrice(res?.zone[0]?.price);
             }
@@ -350,7 +372,6 @@ const CartScreen = () => {
             storeDataStore.selectedStore
           )
           .then((res) => {
-            console.log(res)
             if (res) {
               setIsValidAddress(!!res.zone);
               setIsOpenInvalidAddressDialod(!res.zone);
@@ -698,7 +719,7 @@ const CartScreen = () => {
   };
 
   const removeCreditCard = async () => {
-    await AsyncStorage.removeItem("@storage_CCData");
+    await AsyncStorage.removeItem(storeDataStore.paymentCredentialsKey);
     setCCData(null);
     setPaymentMthod(PAYMENT_METHODS.cash);
   };

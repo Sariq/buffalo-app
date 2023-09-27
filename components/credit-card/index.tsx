@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import Text from "../controls/Text";
 import InputText from "../controls/input";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import theme from "../../styles/theme.style";
 import validateCard, {
   TValidateCardProps,
@@ -21,13 +21,16 @@ import Button from "../controls/button/button";
 import themeStyle from "../../styles/theme.style";
 import { useTranslation } from "react-i18next";
 import isValidEmail from "../../helpers/validate-email";
+import { StoreContext } from "../../stores";
 
 export type TProps = {
   onSaveCard: () => void;
 };
 const CreditCard = ({ onSaveCard }) => {
   const { t } = useTranslation();
-
+  const {
+    storeDataStore,
+  } = useContext(StoreContext);
   const [creditCardNumber, setCreditCardNumber] = useState();
   const [creditCardExpDate, setCreditCardExpDate] = useState();
   const [creditCardCVV, setCreditCardCVV] = useState();
@@ -127,7 +130,7 @@ const CreditCard = ({ onSaveCard }) => {
           cvv: creditCardCVV?.toString(),
         };
         const ccDetailsString = JSON.stringify(ccData);
-        await AsyncStorage.setItem("@storage_CCData", ccDetailsString);
+        await AsyncStorage.setItem(storeDataStore.paymentCredentialsKey, ccDetailsString);
         setIsLoading(false);
         onSaveCard();
       } else {

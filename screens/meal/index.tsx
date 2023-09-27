@@ -334,7 +334,7 @@ const MealScreen = ({ route }) => {
                                     ...isOneChoiceTagStyle(
                                       meal.extras[keyOrdered]
                                     ),
-                                    maxWidth: "80%",
+                                    maxWidth: "100%",
                                     alignSelf: "center",
                                   }
                                 : {},
@@ -456,7 +456,7 @@ const MealScreen = ({ route }) => {
             marginRight: 95,
           }}
         >
-          <View style={{ paddingRight: 10 }}>
+          <View style={{ paddingRight: 10, minWidth:60 }}>
             <Text
               style={{ fontSize: 20, fontWeight: "bold", color: "#442213" }}
             >

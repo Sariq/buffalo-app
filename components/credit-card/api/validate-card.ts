@@ -35,7 +35,6 @@ const validateCard = ({ cardNumber, expDate }: TValidateCardProps) => {
     CardNumber: cardNumber,
     ExpDate_MMYY: expDate,
   };
-
   return axios
     .post(
       'https://pci.zcredit.co.il/ZCreditWS/api/Transaction/ValidateCard',

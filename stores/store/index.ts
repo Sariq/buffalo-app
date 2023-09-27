@@ -5,6 +5,7 @@ import { fromBase64, toBase64 } from "../../helpers/convert-base64";
 
 class StoreDataStore {
   paymentCredentials = null;
+  paymentCredentialsKey = null;
   storeData = null;
   selectedStore = null;
 
@@ -15,6 +16,9 @@ class StoreDataStore {
 
   setSelectedStore = (value) => {
     this.selectedStore = value;
+  }
+  setPaymentCredentialsKey = (value) => {
+    this.paymentCredentialsKey = value;
   }
 
   getStoreDataFromServer = async () => {
@@ -36,8 +40,6 @@ class StoreDataStore {
     return this.getStoreDataFromServer().then((res) => {
       runInAction(() => {
         this.storeData = res.stores_list.find((store)=> store.id == storeId);
-
-        // this.paymentCredentials = JSON.parse(fromBase64(res.stores[0].credentials));
       })
       return res.stores_list.find((store)=> store.id == storeId);
     })
@@ -61,7 +63,9 @@ class StoreDataStore {
   getPaymentCredentials = (storeId) => {
     return this.getPaymentCredentialsFromServer(storeId).then((res) => {
       runInAction(() => {
-        this.paymentCredentials = fromBase64(res.credentials);
+        if(res.credentials){
+          this.paymentCredentials = JSON.parse(fromBase64(res.credentials));
+        }
       })
       return res;
     })

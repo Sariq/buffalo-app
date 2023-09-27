@@ -1,5 +1,10 @@
 import { View } from "react-native";
-import { Dialog, Portal, Provider } from "react-native-paper";
+import {
+  ActivityIndicator,
+  Dialog,
+  Portal,
+  Provider,
+} from "react-native-paper";
 import Text from "../../controls/Text";
 
 /* styles */
@@ -20,6 +25,7 @@ type TProps = {
 export default function PickStoreDialog({ isOpen, handleAnswer }: TProps) {
   const { t } = useTranslation();
   const [visible, setVisible] = useState(isOpen);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setVisible(isOpen);
@@ -27,7 +33,7 @@ export default function PickStoreDialog({ isOpen, handleAnswer }: TProps) {
 
   const hideDialog = (value: any) => {
     handleAnswer && handleAnswer(value);
-    setVisible(false);
+    setIsLoading(true)
   };
   return (
     <Provider>
@@ -50,14 +56,17 @@ export default function PickStoreDialog({ isOpen, handleAnswer }: TProps) {
           dismissable={false}
         >
           <Dialog.Title style={{ paddingTop: 10 }}>
-            <Text
+          {!isLoading && <Text
               style={{ fontSize: 38, fontFamily: `${getCurrentLang()}-Bold` }}
             >
               {t("pick-store")}
-            </Text>
+            </Text>}
           </Dialog.Title>
           <Dialog.Content style={{}}>
-            <View
+            {isLoading && <View style={{height:100}}>
+              <ActivityIndicator animating={true} color={theme.PRIMARY_COLOR} size={40} />
+            </View>}
+            {!isLoading && <View
               style={{
                 flexDirection: "row",
                 width: "100%",
@@ -67,7 +76,7 @@ export default function PickStoreDialog({ isOpen, handleAnswer }: TProps) {
                 style={{
                   backgroundColor: themeStyle.WHITE_COLOR,
                   borderRadius: 10,
-                  height: "90%",
+                  height: "95%",
                   flexBasis: "50%",
                 }}
               >
@@ -75,9 +84,8 @@ export default function PickStoreDialog({ isOpen, handleAnswer }: TProps) {
                   style={{
                     paddingHorizontal: 25,
                     paddingTop: 10,
-                    
                   }}
-                  onPress={()=>hideDialog('1')}
+                  onPress={() => hideDialog("1")}
                 >
                   <View style={{ flexDirection: "row" }}>
                     <Text style={{ fontSize: 16 }}>{t("branch")}</Text>
@@ -85,7 +93,7 @@ export default function PickStoreDialog({ isOpen, handleAnswer }: TProps) {
                   <View style={{ flexDirection: "row", padding: 0, top: -15 }}>
                     <Text style={{ fontSize: 34 }}>{t("tira")}</Text>
                   </View>
-                  <View style={{ flexDirection: "row", top: -20 }}>
+                  <View style={{ flexDirection: "row", top: -15 }}>
                     <Icon
                       icon="shipping_icon"
                       size={30}
@@ -108,7 +116,7 @@ export default function PickStoreDialog({ isOpen, handleAnswer }: TProps) {
                 style={{
                   backgroundColor: themeStyle.WHITE_COLOR,
                   borderRadius: 10,
-                  height: "90%",
+                  height: "95%",
                   flexBasis: "50%",
                 }}
               >
@@ -117,7 +125,7 @@ export default function PickStoreDialog({ isOpen, handleAnswer }: TProps) {
                     paddingHorizontal: 25,
                     paddingTop: 10,
                   }}
-                  onPress={()=>hideDialog('2')}
+                  onPress={() => hideDialog("2")}
                 >
                   <View style={{ flexDirection: "row" }}>
                     <Text style={{ fontSize: 16 }}>{t("branch")}</Text>
@@ -128,7 +136,7 @@ export default function PickStoreDialog({ isOpen, handleAnswer }: TProps) {
                   <View
                     style={{
                       flexDirection: "row",
-                      top: -20,
+                      top: -15,
                       justifyContent: "center",
                     }}
                   >
@@ -143,7 +151,7 @@ export default function PickStoreDialog({ isOpen, handleAnswer }: TProps) {
                   </View>
                 </TouchableOpacity>
               </View>
-            </View>
+            </View>}
           </Dialog.Content>
         </Dialog>
       </Portal>

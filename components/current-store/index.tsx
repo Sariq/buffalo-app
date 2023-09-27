@@ -7,7 +7,7 @@ import * as Haptics from "expo-haptics";
 import DropDown from "../controls/dropdown";
 import { SOTRES_LIST } from "../../consts/shared";
 import { StoreContext } from "../../stores";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import StorePickedDialog from "../dialogs/store-picked/store-picked";
@@ -27,6 +27,10 @@ export default function CurrentStore() {
     false
   );
   const [pickedStore, setPickedStore] = useState(storeDataStore.selectedStore);
+  
+  useEffect(()=>{
+    setPickedStore(storeDataStore.selectedStore)
+  },[storeDataStore.selectedStore]);
 
   const storesList = SOTRES_LIST.map((store)=>{
     return {label: t(store.label), value: store.value}
@@ -71,14 +75,15 @@ export default function CurrentStore() {
         fetchMenuStore,
         fetchStoreData,
       ]).then(async (res) => {
-        if(authStore.isLoggedIn()){
-          await storeDataStore.getPaymentCredentials(data.pickedStore);
-        }
+        // if(authStore.isLoggedIn()){
+        //   await storeDataStore.getPaymentCredentials(data.pickedStore);
+        // }
           setIsLoading(false);
           setIsOpenStorePicked(false);
           cartStore.resetCart();
           await AsyncStorage.setItem("@storage_selcted_store", data.pickedStore);
           storeDataStore.setSelectedStore(data.pickedStore);
+          // menuStore.getMenu(data.pickedStore)
           navigation.navigate("homeScreen");
       });
 
