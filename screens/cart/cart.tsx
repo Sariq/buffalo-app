@@ -274,7 +274,7 @@ const CartScreen = () => {
             storeDataStore.selectedStore
           )
           .then((res) => {
-            if (res) {
+            if (res?.result) {
               setDeliveryPrice(res?.zone[0]?.price);
             }
           });
@@ -375,7 +375,7 @@ const CartScreen = () => {
             if (res) {
               setIsValidAddress(!!res.zone);
               setIsOpenInvalidAddressDialod(!res.zone);
-              setDeliveryPrice(res.zone.price);
+              setDeliveryPrice(res?.zone[0]?.price);
 
               resolve(!!res.zone);
             }
