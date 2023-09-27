@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
   container: {
     alignSelf: "center",
     zIndex: 1,
-    maxWidth: 150,
+    maxWidth: 120,
   },
   button: {
     backgroundColor: theme.PRIMARY_COLOR,
