@@ -5,6 +5,7 @@ import Button from "../../components/controls/button/button";
 import Carousel from "react-native-reanimated-carousel";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { interpolate, withTiming } from "react-native-reanimated";
+import { orderBy } from "lodash";
 
 /* styles */
 
@@ -47,8 +48,14 @@ const HomeScreen = ({ navigation }) => {
 
   useEffect(() => {
     displayTemrsAndConditions();
-    setHomeSlides(menuStore.homeSlides);
   }, []);
+
+  useEffect(() => {
+    if(menuStore?.homeSlides){
+      const tmpSliders:any = orderBy(menuStore.homeSlides, ["tag"], ["asc"])
+      setHomeSlides(tmpSliders);
+    }
+  }, [menuStore.homeSlides]);
 
   const getOrders = () => {
     if (authStore.isLoggedIn()) {
