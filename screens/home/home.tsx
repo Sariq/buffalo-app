@@ -107,6 +107,7 @@ const HomeScreen = ({ navigation }) => {
       //   await storeDataStore.getPaymentCredentials(value);
       // }
       const storeStatus = await isStoreAvailable(value);
+      setIsOpenPickStore(false);
       if (!storeStatus.isOpen) {
         setShowStoreIsCloseDialog(true);
         return;
@@ -117,7 +118,6 @@ const HomeScreen = ({ navigation }) => {
           return;
         }
       }
-      setIsOpenPickStore(false);
       navigation.navigate("menuScreen");
     });
   };
