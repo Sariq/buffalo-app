@@ -29,7 +29,7 @@ export const MainStackNavigator = () => {
       <Stack.Screen name="terms-and-conditions" component={TermsAndConditionsScreen} />
       <Stack.Screen name="orders-status" component={OrdersStatusScreen} />
       <Stack.Screen name="becoin" component={BcoinScreen} />
-      <Stack.Screen name="cart" component={CartScreen} />
+      <Stack.Screen name="cart" component={CartScreen} initialParams={{ shouldUpdate: null }}/>
       <Stack.Screen name="profile" component={ProfileScreen} />
       <Stack.Screen name="login" component={LoginScreen} />
       <Stack.Screen name="insert-customer-name" component={insertCustomerName} />

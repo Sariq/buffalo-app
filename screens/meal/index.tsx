@@ -90,7 +90,7 @@ const MealScreen = ({ route }) => {
 
   const onUpdateCartProduct = () => {
     cartStore.updateCartProduct(index, meal);
-    navigation.goBack();
+    navigation.navigate("cart",{shouldUpdate: meal});
   };
 
   const onClose = () => {
@@ -107,8 +107,8 @@ const MealScreen = ({ route }) => {
           case "COUNTER":
             extraPrice =
               value > tagItem.value
-                ? extraPrice + tagItem.price * meal.others.count
-                : extraPrice - tagItem.price * meal.others.count;
+                ? extraPrice + tagItem.price
+                : extraPrice - tagItem.price;
             break;
           case "CHOICE":
             if (!tag.multiple_choice) {
@@ -121,8 +121,8 @@ const MealScreen = ({ route }) => {
               }
             } else {
               extraPrice = value
-                ? extraPrice + tagItem.price * meal.others.count
-                : extraPrice - tagItem.price * meal.others.count;
+                ? extraPrice + tagItem.price
+                : extraPrice - tagItem.price;
             }
             break;
           default:
@@ -239,7 +239,7 @@ const MealScreen = ({ route }) => {
                 </Text>
               </TouchableOpacity>
               <View style={{ width: 380, height: 240, padding: 10 }}>
-                        <CustomFastImage
+                <CustomFastImage
                   style={{
                     width: "100%",
                     height: "100%",
@@ -456,7 +456,7 @@ const MealScreen = ({ route }) => {
             marginRight: 95,
           }}
         >
-          <View style={{ paddingRight: 10, minWidth:60 }}>
+          <View style={{ paddingRight: 10, minWidth: 60 }}>
             <Text
               style={{ fontSize: 20, fontWeight: "bold", color: "#442213" }}
             >

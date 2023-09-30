@@ -68,8 +68,10 @@ type TShippingMethod = {
   takAway: string;
 };
 
-const CartScreen = () => {
+const CartScreen = ({ route }) => {
   const { t } = useTranslation();
+  const { shouldUpdate } = route.params;
+
   const {
     cartStore,
     authStore,
@@ -222,7 +224,7 @@ const CartScreen = () => {
       }
     });
     setItemsPrice(tmpOrderPrice);
-  }, [cartStore.cartItems]);
+  }, [cartStore.cartItems, shouldUpdate]);
 
   const getCCData = async () => {
     //await AsyncStorage.setItem("@storage_CCData","");

@@ -14,6 +14,7 @@ import StorePickedDialog from "../dialogs/store-picked/store-picked";
 import StoreIsCloseDialog from "../dialogs/store-is-close";
 import { getCurrentLang } from "../../translations/i18n";
 import StoreErrorMsgDialog from "../dialogs/store-errot-msg";
+import LoaderDialog from "../dialogs/loader";
 
 export default function CurrentStore() {
   const { t } = useTranslation();
@@ -22,6 +23,7 @@ export default function CurrentStore() {
   const [isOpenStorePicked, setIsOpenStorePicked] = useState(false);
   const [showStoreIsCloseDialog, setShowStoreIsCloseDialog] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoaderOpen, setIsLoaderOpen] = useState(false);
   const [storeErrorText, setStoreErrorText] = useState("");
   const [isOpenStoreErrorMsgDialog, setIsOpenStoreErrorMsgDialog] = useState(
     false
@@ -51,6 +53,7 @@ export default function CurrentStore() {
 
   const onChange = async (value) => {
     if (storeDataStore.selectedStore != value) {
+      setIsLoaderOpen(true)
       const storeStatus = await isStoreAvailable();
       if (!storeStatus.isOpen) {
         setShowStoreIsCloseDialog(true);
@@ -60,7 +63,7 @@ export default function CurrentStore() {
           setIsOpenStoreErrorMsgDialog(true);
         }
       }
-
+      setIsLoaderOpen(false);
       setPickedStore(value);
       setIsOpenStorePicked(true);
     }
@@ -119,7 +122,7 @@ export default function CurrentStore() {
           alignSelf: "center",
           width: Dimensions.get("window").width,
           height: Dimensions.get("window").height - 300,
-          display: isOpenStorePicked ? "flex" : "none",
+          display: isOpenStorePicked || isLoaderOpen || showStoreIsCloseDialog || storeErrorText  ? "flex" : "none",
         }}
       >
         <StorePickedDialog
@@ -127,6 +130,11 @@ export default function CurrentStore() {
           isOpen={isOpenStorePicked}
           pickedStore={pickedStore}
           isLoading={isLoading}
+        />
+        <LoaderDialog
+          handleAnswer={handleStorePickedAnswer}
+          isOpen={isLoaderOpen}
+    
         />
         <StoreIsCloseDialog
           handleAnswer={handleStoreIsCloseAnswer}
