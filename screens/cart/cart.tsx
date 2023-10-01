@@ -788,10 +788,10 @@ const CartScreen = ({ route }) => {
     >
       <ScrollView>
         <View style={{ ...styles.container }}>
-        <View style={{ zIndex: 30 }}>
-                <CurrentStore />
-              </View>
-          <View style={{ paddingHorizontal: 20, }}>
+          <View style={{ zIndex: 30 }}>
+            <CurrentStore />
+          </View>
+          <View style={{ paddingHorizontal: 20 }}>
             <View style={styles.backContainer}>
               <View
                 style={{
@@ -805,7 +805,6 @@ const CartScreen = ({ route }) => {
               >
                 <BackButton />
               </View>
-          
 
               <View>
                 <Text

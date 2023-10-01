@@ -133,11 +133,17 @@ const HomeScreen = () => {
         const storeStatus = await isStoreAvailable(data.pickedStore);
         storeDataStore.onDisableAreas({ header: false, footer: false });
         if (!storeStatus.isOpen) {
+          setPickedStore(null);
+          setIsLoading(false)
+          setIsOpenStorePicked(false);
           setShowStoreIsCloseDialog(true);
           return;
         } else {
           if (storeStatus.ar || storeStatus.he) {
             setStoreErrorText(storeStatus[getCurrentLang()]);
+            setPickedStore(null);
+            setIsLoading(false)
+            setIsOpenStorePicked(false);
             setIsOpenStoreErrorMsgDialog(true);
             return;
           }
