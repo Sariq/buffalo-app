@@ -8,6 +8,10 @@ class StoreDataStore {
   paymentCredentialsKey = null;
   storeData = null;
   selectedStore = null;
+  disabledAreas = {
+    header: false,
+    footer: false,
+  }
 
   constructor() {
     makeAutoObservable(this);
@@ -70,6 +74,13 @@ class StoreDataStore {
       return res;
     })
   };
+
+   onDisableAreas = (data:any) =>{
+    this.disabledAreas = {
+      ...this.disabledAreas,
+      ...data
+    }
+  }
 }
 
 export const storeDataStore = new StoreDataStore();

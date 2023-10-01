@@ -15,6 +15,7 @@ type TProps = {
   isLoading: boolean;
   handleAnswer?: any;
   pickedStore?: any;
+  text: string
 
 };
 
@@ -22,7 +23,8 @@ export default function StorePickedDialog({
   isOpen,
   handleAnswer,
   pickedStore,
-  isLoading
+  isLoading,
+  text
 }: TProps) {
   const { t } = useTranslation();
   const [visible, setVisible] = useState(isOpen);
@@ -60,6 +62,7 @@ export default function StorePickedDialog({
             />
           </Dialog.Title>
           <Dialog.Content>
+            <View>
             <Text
               style={{
                 fontSize: 20,
@@ -67,8 +70,21 @@ export default function StorePickedDialog({
                 fontWeight: "bold",
               }}
             >
-              {t('store-picked-title')}
+              {t(text)}
             </Text>
+            </View>
+            <View style={{marginTop:20}}>
+            <Text
+              style={{
+                fontSize: 30,
+                textAlign: "center",
+                fontWeight: "bold",
+              }}
+            >
+              {t(pickedStore == 1 ? 'tira': 'tibe')}
+            </Text>
+            </View>
+       
           </Dialog.Content>
           <Dialog.Actions>
           <View

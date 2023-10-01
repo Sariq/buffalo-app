@@ -10,7 +10,7 @@ const general_errors_codes = ["-400", "-6", "-7", "-10", "-11", "-401"];
 const TOKEN_NOT_VALID = -12;
 export const axiosInstance = axios.create({
   baseURL: BASE_URL + "/",
-  timeout:1000
+  timeout:5000
 });
 
 axiosInstance.interceptors.request.use(

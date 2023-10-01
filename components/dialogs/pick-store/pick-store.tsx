@@ -29,6 +29,7 @@ export default function PickStoreDialog({ isOpen, handleAnswer }: TProps) {
 
   useEffect(() => {
     setVisible(isOpen);
+    setIsLoading(false)
   }, [isOpen]);
 
   const hideDialog = (value: any) => {
@@ -76,8 +77,10 @@ export default function PickStoreDialog({ isOpen, handleAnswer }: TProps) {
                 style={{
                   backgroundColor: themeStyle.WHITE_COLOR,
                   borderRadius: 10,
-                  height: "95%",
+                  height: "100%",
                   flexBasis: "50%",
+                  alignItems:'center'
+
                 }}
               >
                 <TouchableOpacity
@@ -90,10 +93,10 @@ export default function PickStoreDialog({ isOpen, handleAnswer }: TProps) {
                   <View style={{ flexDirection: "row" }}>
                     <Text style={{ fontSize: 16 }}>{t("branch")}</Text>
                   </View>
-                  <View style={{ flexDirection: "row", padding: 0, top: -15 }}>
+                  <View style={{ flexDirection: "row", padding: 0, top: -10 }}>
                     <Text style={{ fontSize: 34 }}>{t("tira")}</Text>
                   </View>
-                  <View style={{ flexDirection: "row", top: -15 }}>
+                  <View style={{ flexDirection: "row", top: -10 }}>
                     <Icon
                       icon="shipping_icon"
                       size={30}
@@ -116,8 +119,10 @@ export default function PickStoreDialog({ isOpen, handleAnswer }: TProps) {
                 style={{
                   backgroundColor: themeStyle.WHITE_COLOR,
                   borderRadius: 10,
-                  height: "95%",
+                  height: "100%",
                   flexBasis: "50%",
+                  alignItems:'center'
+
                 }}
               >
                 <TouchableOpacity
@@ -130,14 +135,15 @@ export default function PickStoreDialog({ isOpen, handleAnswer }: TProps) {
                   <View style={{ flexDirection: "row" }}>
                     <Text style={{ fontSize: 16 }}>{t("branch")}</Text>
                   </View>
-                  <View style={{ flexDirection: "row", padding: 0, top: -15 }}>
+                  <View style={{ flexDirection: "row", padding: 0, top: -10 }}>
                     <Text style={{ fontSize: 34 }}>{t("tibe")}</Text>
                   </View>
                   <View
                     style={{
                       flexDirection: "row",
-                      top: -15,
-                      justifyContent: "center",
+                      top: -10,
+                      justifyContent: "space-evenly",
+                      alignItems:'center',
                     }}
                   >
                     <Icon
@@ -145,7 +151,7 @@ export default function PickStoreDialog({ isOpen, handleAnswer }: TProps) {
                       size={30}
                       style={{ color: themeStyle.GRAY_700 }}
                     />
-                    <View style={{ marginHorizontal: 10 }}>
+                    <View style={{}}>
                       <Icon icon="takeaway-icon" size={30} />
                     </View>
                   </View>

@@ -1,4 +1,10 @@
-import { View, StyleSheet, ImageBackground, Dimensions } from "react-native";
+import {
+  View,
+  StyleSheet,
+  ImageBackground,
+  Dimensions,
+  DeviceEventEmitter,
+} from "react-native";
 import { observer } from "mobx-react";
 import { useTranslation } from "react-i18next";
 import Button from "../../components/controls/button/button";
@@ -17,25 +23,32 @@ import { getCurrentLang } from "../../translations/i18n";
 import PickStoreDialog from "../../components/dialogs/pick-store/pick-store";
 import StoreIsCloseDialog from "../../components/dialogs/store-is-close";
 import StoreErrorMsgDialog from "../../components/dialogs/store-errot-msg";
+import {
+  useNavigation,
+  useNavigationState,
+  useRoute,
+} from "@react-navigation/native";
+import PickedStoreDialog from "../../components/dialogs/picked-store/picked-store";
+import StorePickedDialog from "../../components/dialogs/store-picked/store-picked";
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = () => {
   const { t } = useTranslation();
-  let {
-    userDetailsStore,
-    menuStore,
-    ordersStore,
-    authStore,
-    storeDataStore,
-  } = useContext(StoreContext);
+  const navigation = useNavigation();
+
+  let { userDetailsStore, menuStore, ordersStore, authStore, storeDataStore } =
+    useContext(StoreContext);
   const [isAppReady, setIsAppReady] = useState(false);
   const [homeSlides, setHomeSlides] = useState();
   const [isActiveOrder, setIsActiveOrder] = useState(false);
   const [isOpenPickStore, setIsOpenPickStore] = useState(false);
+  const [isOpenStorePicked, setIsOpenStorePicked] = useState(false);
   const [showStoreIsCloseDialog, setShowStoreIsCloseDialog] = useState(false);
+  const [isPageActive, setIsPageActive] = useState(false);
   const [storeErrorText, setStoreErrorText] = useState("");
-  const [isOpenStoreErrorMsgDialog, setIsOpenStoreErrorMsgDialog] = useState(
-    false
-  );
+  const [isOpenStoreErrorMsgDialog, setIsOpenStoreErrorMsgDialog] =
+    useState(false);
+  const [pickedStore, setPickedStore] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const displayTemrsAndConditions = async () => {
     if (!userDetailsStore.isAcceptedTerms) {
@@ -48,11 +61,12 @@ const HomeScreen = ({ navigation }) => {
 
   useEffect(() => {
     displayTemrsAndConditions();
+    setIsPageActive(true);
   }, []);
 
   useEffect(() => {
-    if(menuStore?.homeSlides){
-      const tmpSliders:any = orderBy(menuStore.homeSlides, ["tag"], ["asc"])
+    if (menuStore?.homeSlides) {
+      const tmpSliders: any = orderBy(menuStore.homeSlides, ["tag"], ["asc"]);
       setHomeSlides(tmpSliders);
     }
   }, [menuStore.homeSlides]);
@@ -82,44 +96,72 @@ const HomeScreen = ({ navigation }) => {
     }
   }, [ordersStore.ordersList]);
 
+  useEffect(() => {
+    const GoToNewOrderListener = DeviceEventEmitter.addListener(
+      `GO_TO_NEW_ORDER`,
+      () => {
+        goToNewOrder();
+      }
+    );
+    return () => {
+      GoToNewOrderListener.remove();
+    };
+  }, [isPageActive]);
+
   const goToNewOrder = () => {
     if (!storeDataStore.selectedStore) {
+      storeDataStore.setSelectedStore(null);
       setIsOpenPickStore(true);
-    } else {
-      navigation.navigate("menuScreen");
+      storeDataStore.onDisableAreas({ header: true, footer: true });
     }
   };
   const goToOrdersStatus = () => {
     navigation.navigate("orders-status");
   };
 
-  const handlePickStoreAnswer = async (value) => {
-    await AsyncStorage.setItem("@storage_selcted_store", value);
-    storeDataStore.setSelectedStore(value);
-
-    const fetchMenuStore = menuStore.getMenu(value);
-    const fetchStoreData = storeDataStore.getStoreData(value);
-    Promise.all([
-      fetchMenuStore,
-      fetchStoreData,
-    ]).then(async (res) => {
-      // if(authStore.isLoggedIn()){
-      //   await storeDataStore.getPaymentCredentials(value);
-      // }
-      const storeStatus = await isStoreAvailable(value);
-      setIsOpenPickStore(false);
-      if (!storeStatus.isOpen) {
-        setShowStoreIsCloseDialog(true);
-        return;
-      } else {
-        if (storeStatus.ar || storeStatus.he) {
-          setStoreErrorText(storeStatus[getCurrentLang()]);
-          setIsOpenStoreErrorMsgDialog(true);
+  const handleStorePickedAnswer = async (data) => {
+    console.log(data)
+    if (data.value) {
+      setIsLoading(true)
+      storeDataStore.setSelectedStore(data.pickedStore);
+      const fetchMenuStore = menuStore.getMenu(data.pickedStore);
+      const fetchStoreData = storeDataStore.getStoreData(data.pickedStore);
+      Promise.all([fetchMenuStore, fetchStoreData]).then(async (res) => {
+        // if(authStore.isLoggedIn()){
+        //   await storeDataStore.getPaymentCredentials(value);
+        // }
+        const storeStatus = await isStoreAvailable(data.pickedStore);
+        storeDataStore.onDisableAreas({ header: false, footer: false });
+        if (!storeStatus.isOpen) {
+          setShowStoreIsCloseDialog(true);
           return;
+        } else {
+          if (storeStatus.ar || storeStatus.he) {
+            setStoreErrorText(storeStatus[getCurrentLang()]);
+            setIsOpenStoreErrorMsgDialog(true);
+            return;
+          }
         }
-      }
-      navigation.navigate("menuScreen");
-    });
+        setPickedStore(null);
+        setIsLoading(false)
+        setIsOpenStorePicked(false);
+        navigation.navigate("menuScreen");
+      });
+    }else{
+      setPickedStore(null);
+      setIsOpenStorePicked(false);
+    }
+  };
+
+  const handlePickedStoreOpen = async (value) => {
+    setPickedStore(value);
+    setIsOpenStorePicked(true);
+  };
+
+  const handlePickStoreAnswer = async (value) => {
+    // await AsyncStorage.setItem("@storage_selcted_store", value);
+    setIsOpenPickStore(false);
+    handlePickedStoreOpen(value);
   };
 
   const animationStyle: any = useCallback((value: number) => {
@@ -223,6 +265,13 @@ const HomeScreen = ({ navigation }) => {
           </View>
         </View>
       )}
+      <StorePickedDialog
+        handleAnswer={handleStorePickedAnswer}
+        isOpen={isOpenStorePicked}
+        pickedStore={pickedStore}
+        isLoading={isLoading}
+        text="home-store-picked-title"
+      />
       <PickStoreDialog
         handleAnswer={handlePickStoreAnswer}
         isOpen={isOpenPickStore}

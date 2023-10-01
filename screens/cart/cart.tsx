@@ -129,7 +129,7 @@ const CartScreen = ({ route }) => {
     React.useState(false);
 
   const setPaymentCredintales = async () => {
-    const selectedStore = await AsyncStorage.getItem("@storage_selcted_store");
+    const selectedStore = storeDataStore.selectedStore;
     const paymentCredintalsData = await storeDataStore.getPaymentCredentials(
       selectedStore
     );
@@ -788,7 +788,10 @@ const CartScreen = ({ route }) => {
     >
       <ScrollView>
         <View style={{ ...styles.container }}>
-          <View style={{ paddingHorizontal: 20, zIndex: 30 }}>
+        <View style={{ zIndex: 30 }}>
+                <CurrentStore />
+              </View>
+          <View style={{ paddingHorizontal: 20, }}>
             <View style={styles.backContainer}>
               <View
                 style={{
@@ -802,9 +805,7 @@ const CartScreen = ({ route }) => {
               >
                 <BackButton />
               </View>
-              <View style={{ left: 30 }}>
-                <CurrentStore />
-              </View>
+          
 
               <View>
                 <Text

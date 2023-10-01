@@ -29,7 +29,7 @@ export default function CurrentStore() {
     false
   );
   const [pickedStore, setPickedStore] = useState(storeDataStore.selectedStore);
-  
+  //, icon: ()=> <Icon icon="home_icon" size={30} style={{ color: theme.GRAY_700 }}/>
   useEffect(()=>{
     setPickedStore(storeDataStore.selectedStore)
   },[storeDataStore.selectedStore]);
@@ -55,6 +55,7 @@ export default function CurrentStore() {
     if (storeDataStore.selectedStore != value) {
       setIsLoaderOpen(true)
       const storeStatus = await isStoreAvailable();
+      setIsLoaderOpen(false);
       if (!storeStatus.isOpen) {
         setShowStoreIsCloseDialog(true);
       } else {
@@ -63,7 +64,6 @@ export default function CurrentStore() {
           setIsOpenStoreErrorMsgDialog(true);
         }
       }
-      setIsLoaderOpen(false);
       setPickedStore(value);
       setIsOpenStorePicked(true);
     }
@@ -84,10 +84,10 @@ export default function CurrentStore() {
           setIsLoading(false);
           setIsOpenStorePicked(false);
           cartStore.resetCart();
-          await AsyncStorage.setItem("@storage_selcted_store", data.pickedStore);
+          // await AsyncStorage.setItem("@storage_selcted_store", data.pickedStore);
           storeDataStore.setSelectedStore(data.pickedStore);
           // menuStore.getMenu(data.pickedStore)
-          navigation.navigate("homeScreen");
+          navigation.navigate("menuScreen");
       });
 
     } else {
@@ -130,6 +130,7 @@ export default function CurrentStore() {
           isOpen={isOpenStorePicked}
           pickedStore={pickedStore}
           isLoading={isLoading}
+          text='store-picked-title'
         />
         <LoaderDialog
           handleAnswer={handleStorePickedAnswer}
@@ -153,7 +154,7 @@ const styles = StyleSheet.create({
   container: {
     alignSelf: "center",
     zIndex: 1,
-    maxWidth: 100,
+    
   },
   button: {
     backgroundColor: theme.PRIMARY_COLOR,

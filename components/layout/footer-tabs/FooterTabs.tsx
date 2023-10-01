@@ -1,5 +1,5 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { StyleSheet } from "react-native";
+import { DeviceEventEmitter, StyleSheet } from "react-native";
 import { Text, View, TouchableOpacity } from "react-native";
 import * as Linking from "expo-linking";
 
@@ -21,6 +21,7 @@ import { getCurrentLang } from "../../../translations/i18n";
 import themeStyle from "../../../styles/theme.style";
 import { StoreContext } from "../../../stores";
 import { observer } from "mobx-react";
+import { useRoute } from "@react-navigation/native";
 
 const routes = [
   {
@@ -59,11 +60,11 @@ const routes = [
     component: ContactUs,
   },
 ];
-
-function MyTabBar({ state, descriptors, navigation, bcoin }) {
+const MyTabBar = ({ state, descriptors, navigation, bcoin, disabledAreas }) => {
+// function MyTabBar({ state, descriptors, navigation, bcoin }) {
   const { t } = useTranslation();
   const [selectedRoute, setSelectedRoute] = useState(routes[0]);
-  const { authStore } = useContext(StoreContext);
+  const { authStore,storeDataStore } = useContext(StoreContext);
 
   const onTabSelect = (name) => {
     const currentRout = routes.find((route) => route.name === name);
@@ -107,6 +108,17 @@ function MyTabBar({ state, descriptors, navigation, bcoin }) {
               return;
             }
           }
+          if (route.name === "menuScreen") {
+            if(!storeDataStore.selectedStore){
+              storeDataStore.onDisableAreas({header: true, footer: true})
+              DeviceEventEmitter.emit(`GO_TO_NEW_ORDER`, {
+              });
+            }
+            return;
+          }
+          if (route.name === "homeScreen") {
+            storeDataStore.setSelectedStore(null);
+          }
           onTabSelect(route.name);
           const event = navigation.emit({
             type: "tabPress",
@@ -125,19 +137,20 @@ function MyTabBar({ state, descriptors, navigation, bcoin }) {
           });
         };
 
+
         return (
           <TouchableOpacity
             accessibilityRole="button"
             accessibilityLabel={options.tabBarAccessibilityLabel}
             testID={options.tabBarTestID}
-            onPress={onPress}
-            onLongPress={onLongPress}
+            onPress={disabledAreas?.footer ? null :onPress}
+            disabled={disabledAreas?.footer}
             style={[
               styles.container,
               { flex: 1, alignItems: "center", marginTop: isBcoin ? -40 : 0 },
             ]}
           >
-            <View style={styles.container}>
+            <View style={styles.container} pointerEvents={disabledAreas?.footer ? "none" : "auto"}>
               <View
                 style={{
                   justifyContent: "center",
@@ -196,12 +209,14 @@ function MyTabBar({ state, descriptors, navigation, bcoin }) {
     </View>
   );
 }
+observer(MyTabBar);
 
 const Tab = createBottomTabNavigator();
 
 const FooterTabs = () => {
-  const { userDetailsStore, authStore } = useContext(StoreContext);
+  const { userDetailsStore, authStore,storeDataStore } = useContext(StoreContext);
   const [bcoin, setBcoin] = useState();
+  const [disabledAreas, setDisabledAreas] = useState();
   const getUserDetails = () => {
     if(authStore.isLoggedIn()){
     userDetailsStore.getUserDetails();
@@ -226,12 +241,17 @@ const FooterTabs = () => {
     setBcoin(userDetailsStore.userDetails?.credit)
   },[userDetailsStore.userDetails])
 
+  useEffect(()=>{
+    setDisabledAreas(storeDataStore.disabledAreas)
+  },[storeDataStore.disabledAreas])
+
   return (
-    <Tab.Navigator
+    
+ <Tab.Navigator
       screenOptions={{
         headerShown: false,
       }}
-      tabBar={(props) => <MyTabBar {...props} bcoin={bcoin} />}
+      tabBar={(props) => <MyTabBar {...props} bcoin={bcoin} disabledAreas={disabledAreas}/>}
     >
       {routes.map((route, index) => (
         <Tab.Screen
@@ -239,9 +259,12 @@ const FooterTabs = () => {
           component={route.component}
           initialParams={{ title: route.title }}
           key={index}
+          
         />
       ))}
     </Tab.Navigator>
+   
+   
   );
 }
 

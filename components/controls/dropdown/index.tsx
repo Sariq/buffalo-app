@@ -2,6 +2,7 @@ import DropDownPicker from "react-native-dropdown-picker";
 import { useEffect, useState } from "react";
 import { View } from "react-native";
 import themeStyle from "../../../styles/theme.style";
+import { getCurrentLang } from "../../../translations/i18n";
 
 export type TProps = {
   itemsList: any;
@@ -48,29 +49,37 @@ const DropDown = ({
         setValue={onSetValue}
         setItems={setItems}
         placeholderStyle={{
-          textAlign: "left",
+          textAlign: "center",
           color: themeStyle.WHITE_COLOR,
         }}
         labelStyle={{
-          textAlign: "left",
+          textAlign: "center",
           color: themeStyle.WHITE_COLOR,
-          fontSize:16
+          fontSize:20,
+          fontFamily: `${getCurrentLang()}-SemiBold`
         }}
         style={{
           flexDirection: "row",
           borderColor: themeStyle.SUCCESS_COLOR,
           backgroundColor: themeStyle.SUCCESS_COLOR,
-          borderRadius: 10,
-          minHeight:32,
+          borderRadius: 0,
+          minHeight:36,
         }}
         listItemLabelStyle={{
-          textAlign: "left",
-          color: themeStyle.TEXT_PRIMARY_COLOR,
+          textAlign: "center",
+          color: themeStyle.GRAY_700,
+          fontSize:18,
+          maxWidth:"93%",
+          fontFamily: `${getCurrentLang()}-SemiBold`,
+
+   
         }}
         dropDownContainerStyle={{
           borderColor: themeStyle.PRIMARY_COLOR,
           backgroundColor: "rgba(254, 254, 254, 1)",
           maxHeight: "auto",
+
+      
         }}
         itemSeparatorStyle={{ backgroundColor: themeStyle.PRIMARY_COLOR }}
         arrowIconStyle={{
@@ -81,6 +90,7 @@ const DropDown = ({
         placeholder={placeholder}
         itemSeparator
         modalAnimationType={"slide"}
+
         // containerStyle={{}}
         // childrenContainerStyle={{
         //   justifyContent: 'flex-end',

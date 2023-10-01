@@ -17,7 +17,7 @@ const hideCartScreens = ["terms-and-conditions"];
 const Header = () => {
   const navigation = useNavigation();
   const routeState = useNavigationState((state) => state);
-  const { cartStore, authStore } = useContext(StoreContext);
+  const { cartStore, authStore,storeDataStore } = useContext(StoreContext);
   const [cartItemsLenght, setCartItemsLength] = useState();
   const [bgColor, setBgColor] = useState(themeStyle.PRIMARY_COLOR);
 
@@ -100,6 +100,7 @@ const Header = () => {
     if(navigation?.getCurrentRoute()?.name === "terms-and-conditions"){
       return;
     }
+    storeDataStore.setSelectedStore(null);
     navigation.navigate("homeScreen");
   };
 
@@ -118,7 +119,7 @@ const Header = () => {
   }
 
   return (
-    <View style={{ ...styles.container, backgroundColor: bgColor }}>
+    <View  pointerEvents={storeDataStore.disabledAreas.header ? "none" : "auto"} style={{ ...styles.container, backgroundColor: bgColor }}>
       <View
         style={{
           ...styles.headerItem,
