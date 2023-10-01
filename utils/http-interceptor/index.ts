@@ -10,6 +10,7 @@ const general_errors_codes = ["-400", "-6", "-7", "-10", "-11", "-401"];
 const TOKEN_NOT_VALID = -12;
 export const axiosInstance = axios.create({
   baseURL: BASE_URL + "/",
+  timeout:1000
 });
 
 axiosInstance.interceptors.request.use(
@@ -56,6 +57,12 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   function (error) {
+    if(error?.message.includes('timeout')){
+      DeviceEventEmitter.emit(`OPEN_INTERNET_CONNECTION_DIALOG`, {
+        show: true,
+        isSignOut: false,
+      });
+    }
     return Promise.reject(error);
   }
 );
