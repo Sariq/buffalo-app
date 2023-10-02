@@ -35,7 +35,7 @@ const HomeScreen = () => {
   const { t } = useTranslation();
   const navigation = useNavigation();
 
-  let { userDetailsStore, menuStore, ordersStore, authStore, storeDataStore } =
+  let { userDetailsStore, menuStore, ordersStore, authStore, storeDataStore, cartStore } =
     useContext(StoreContext);
   const [isAppReady, setIsAppReady] = useState(false);
   const [homeSlides, setHomeSlides] = useState();
@@ -108,11 +108,14 @@ const HomeScreen = () => {
     };
   }, [isPageActive]);
 
-  const goToNewOrder = () => {
+  const goToNewOrder = async () => {
     if (!storeDataStore.selectedStore) {
       storeDataStore.setSelectedStore(null);
+      await AsyncStorage.setItem("@storage_selcted_store_v2", '');
       setIsOpenPickStore(true);
       storeDataStore.onDisableAreas({ header: true, footer: true });
+    }else{
+      navigation.navigate("menuScreen");
     }
   };
   const goToOrdersStatus = () => {
@@ -120,10 +123,10 @@ const HomeScreen = () => {
   };
 
   const handleStorePickedAnswer = async (data) => {
-    console.log(data)
     if (data.value) {
       setIsLoading(true)
       storeDataStore.setSelectedStore(data.pickedStore);
+      await AsyncStorage.setItem("@storage_selcted_store_v2", data.pickedStore);
       const fetchMenuStore = menuStore.getMenu(data.pickedStore);
       const fetchStoreData = storeDataStore.getStoreData(data.pickedStore);
       Promise.all([fetchMenuStore, fetchStoreData]).then(async (res) => {
@@ -133,13 +136,16 @@ const HomeScreen = () => {
         const storeStatus = await isStoreAvailable(data.pickedStore);
         storeDataStore.onDisableAreas({ header: false, footer: false });
         if (!storeStatus.isOpen) {
+          cartStore.resetCart();
           setPickedStore(null);
           setIsLoading(false)
           setIsOpenStorePicked(false);
           setShowStoreIsCloseDialog(true);
+
           return;
         } else {
           if (storeStatus.ar || storeStatus.he) {
+            cartStore.resetCart();
             setStoreErrorText(storeStatus[getCurrentLang()]);
             setPickedStore(null);
             setIsLoading(false)
@@ -148,12 +154,14 @@ const HomeScreen = () => {
             return;
           }
         }
+        cartStore.resetCart();
         setPickedStore(null);
         setIsLoading(false)
         setIsOpenStorePicked(false);
         navigation.navigate("menuScreen");
       });
     }else{
+      storeDataStore.onDisableAreas({ header: false, footer: false });
       setPickedStore(null);
       setIsOpenStorePicked(false);
     }
@@ -229,7 +237,7 @@ const HomeScreen = () => {
           />
         )}
       />
-      {!isOpenPickStore && (
+      {(!isOpenPickStore && !isOpenStorePicked) && (
         <View style={[styles.button, styles.bottomView]}>
           <View
             style={{

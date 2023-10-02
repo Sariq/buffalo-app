@@ -67,6 +67,8 @@ const DropDown = ({
           color: themeStyle.WHITE_COLOR,
           fontSize: 26,
           fontFamily: `${getCurrentLang()}-SemiBold`,
+          opacity:0
+
         }}
         style={{
           flexDirection: "row",
@@ -74,6 +76,7 @@ const DropDown = ({
           backgroundColor: themeStyle.SUCCESS_COLOR,
           borderRadius: 0,
           minHeight: 36,
+          opacity:0
         }}
         listItemLabelStyle={{
           textAlign: "center",
@@ -89,7 +92,7 @@ const DropDown = ({
         }}
         itemSeparatorStyle={{ backgroundColor: themeStyle.PRIMARY_COLOR }}
         arrowIconStyle={{
-          tintColor: themeStyle.PRIMARY_COLOR,
+          opacity:0
         }}
         ListModeType={"FLAT"}
         dropDownDirection={dropDownDirection}
@@ -104,7 +107,6 @@ const DropDown = ({
                 paddingVertical: 10,
                 flexDirection: "row",
                 justifyContent: "center",
-                marginLeft: -30,
               }}
               onPress={()=>handleAnswer(itemProps.value)}
             >

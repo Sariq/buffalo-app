@@ -45,7 +45,7 @@ import i18n from "../../translations/i18n";
       RNRestart.Restart();
 
     };
-    console.log(t("ok"))
+
     return (
         <Provider>
         <Portal>

@@ -210,7 +210,13 @@ const App = () => {
         require("./assets/menu/gradiant/truffle.png"),
         require("./assets/menu/gradiant/onion-ring.png"),
       ]);
-      // await AsyncStorage.setItem("@storage_selcted_store",'')
+      // await AsyncStorage.setItem("@storage_selcted_store_v2",'')
+      let fetchStoreDataStore = null;
+      if(cartStore.getProductsCount() > 0){
+        const selectedStore = await AsyncStorage.getItem("@storage_selcted_store_v2");
+        fetchStoreDataStore = storeDataStore.getStoreData(selectedStore);
+        storeDataStore.setSelectedStore(selectedStore)
+      }
       //const selectedStore = await AsyncStorage.getItem("@storage_selcted_store");
 
       const fetchTranslations = menuStore.getTranslations('1');
@@ -219,7 +225,7 @@ const App = () => {
       // const fetchStoreDataStore = storeDataStore.getStoreData(selectedStore);
       
       //storeDataStore.setSelectedStore(selectedStore)
-      Promise.all([fetchTranslations,fetchMenu, fetchHomeSlides]).then(async (responses) => {
+      Promise.all([fetchTranslations,fetchMenu, fetchHomeSlides, fetchStoreDataStore]).then(async (responses) => {
         const imageAssets2 = await cacheImages(menuStore.imagesUrl);
 
         const tempHomeSlides = menuStore.homeSlides.map((slide) => {

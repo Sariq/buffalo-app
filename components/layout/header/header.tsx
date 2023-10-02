@@ -8,6 +8,7 @@ import theme from "../../../styles/theme.style";
 import Icon from "../../icon";
 import { StoreContext } from "../../../stores";
 import * as Haptics from 'expo-haptics';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const yellowBgScreens = ["homeScreen", "terms-and-conditions"];
 const hideProfile = ["terms-and-conditions"]
@@ -96,11 +97,15 @@ const Header = () => {
     }
   };
 
-  const onLogoClick = () => {
+  const onLogoClick = async () => {
     if(navigation?.getCurrentRoute()?.name === "terms-and-conditions"){
       return;
     }
-    storeDataStore.setSelectedStore(null);
+    if(cartStore.getProductsCount() == 0){
+      storeDataStore.setSelectedStore(null);
+      await AsyncStorage.setItem("@storage_selcted_store_v2", '');
+
+    }
     navigation.navigate("homeScreen");
   };
 

@@ -311,7 +311,14 @@ const CartScreen = ({ route }) => {
     });
 
     setTimeout(() => {
-      cartStore.removeProduct(getProductIndexId(product, index));
+      const cartLength = cartStore.removeProduct(getProductIndexId(product, index));
+      if(cartLength == 0){
+        setTimeout(async () => {
+        storeDataStore.setSelectedStore(null);
+        await AsyncStorage.setItem("@storage_selcted_store_v2", '');
+
+      }, 200);
+      }
       setIsAnimating(false);
     }, 600);
   };
@@ -448,9 +455,11 @@ const CartScreen = ({ route }) => {
     });
   };
 
-  const postChargeOrderActions = () => {
+  const postChargeOrderActions = async () => {
     setIsLoadingOrderSent(false);
     cartStore.resetCart();
+    storeDataStore.setSelectedStore(null);
+    await AsyncStorage.setItem("@storage_selcted_store_v2", '');
     navigation.navigate("order-submitted", { shippingMethod });
   };
   const postSubmitOrderActions = (orderData: TOrderSubmitResponse) => {

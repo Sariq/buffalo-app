@@ -157,6 +157,7 @@ class CartStore {
       (item, index) => item.data.id.toString() + index !== productId
     );
     this.updateLocalStorage();
+    return this.cartItems?.length;
   };
 
   updateCartProduct = (index, product) => {

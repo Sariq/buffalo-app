@@ -22,6 +22,7 @@ import themeStyle from "../../../styles/theme.style";
 import { StoreContext } from "../../../stores";
 import { observer } from "mobx-react";
 import { useRoute } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const routes = [
   {
@@ -64,7 +65,7 @@ const MyTabBar = ({ state, descriptors, navigation, bcoin, disabledAreas }) => {
 // function MyTabBar({ state, descriptors, navigation, bcoin }) {
   const { t } = useTranslation();
   const [selectedRoute, setSelectedRoute] = useState(routes[0]);
-  const { authStore,storeDataStore } = useContext(StoreContext);
+  const { authStore,storeDataStore, cartStore } = useContext(StoreContext);
 
   const onTabSelect = (name) => {
     const currentRout = routes.find((route) => route.name === name);
@@ -93,7 +94,7 @@ const MyTabBar = ({ state, descriptors, navigation, bcoin, disabledAreas }) => {
         const currentRout = routes.find((route) => route.name === label);
         const isBcoin = currentRout.name === "BCOINSScreen";
 
-        const onPress = () => {
+        const onPress = async () => {
           if (route.name === "contactUsScreen") {
             Linking.openURL("tel:0509333657");
             return;
@@ -113,11 +114,14 @@ const MyTabBar = ({ state, descriptors, navigation, bcoin, disabledAreas }) => {
               storeDataStore.onDisableAreas({header: true, footer: true})
               DeviceEventEmitter.emit(`GO_TO_NEW_ORDER`, {
               });
+              return;
             }
-            return;
           }
           if (route.name === "homeScreen") {
-            storeDataStore.setSelectedStore(null);
+            if(cartStore.getProductsCount() == 0){
+              storeDataStore.setSelectedStore(null);
+              await AsyncStorage.setItem("@storage_selcted_store_v2", '');
+            }
           }
           onTabSelect(route.name);
           const event = navigation.emit({

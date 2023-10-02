@@ -15,27 +15,29 @@ import StoreIsCloseDialog from "../dialogs/store-is-close";
 import { getCurrentLang } from "../../translations/i18n";
 import StoreErrorMsgDialog from "../dialogs/store-errot-msg";
 import LoaderDialog from "../dialogs/loader";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default function CurrentStore() {
   const { t } = useTranslation();
   const navigation = useNavigation();
-  let { storeDataStore, cartStore, menuStore, authStore } = useContext(StoreContext);
+  let { storeDataStore, cartStore, menuStore, authStore } =
+    useContext(StoreContext);
   const [isOpenStorePicked, setIsOpenStorePicked] = useState(false);
   const [showStoreIsCloseDialog, setShowStoreIsCloseDialog] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoaderOpen, setIsLoaderOpen] = useState(false);
+  const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const [storeErrorText, setStoreErrorText] = useState("");
-  const [isOpenStoreErrorMsgDialog, setIsOpenStoreErrorMsgDialog] = useState(
-    false
-  );
+  const [isOpenStoreErrorMsgDialog, setIsOpenStoreErrorMsgDialog] =
+    useState(false);
   const [pickedStore, setPickedStore] = useState(storeDataStore.selectedStore);
   //, icon: ()=> <Icon icon="home_icon" size={30} style={{ color: theme.GRAY_700 }}/>
-  useEffect(()=>{
-    setPickedStore(storeDataStore.selectedStore)
-  },[storeDataStore.selectedStore]);
+  useEffect(() => {
+    setPickedStore(storeDataStore.selectedStore);
+  }, [storeDataStore.selectedStore]);
 
-  const storesList = SOTRES_LIST.map((store)=>{
-    return {label: t(store.label), value: store.value}
+  const storesList = SOTRES_LIST.map((store) => {
+    return { label: t(store.label), value: store.value };
   });
 
   const isStoreAvailable = () => {
@@ -45,7 +47,7 @@ export default function CurrentStore() {
         return {
           ar: res["invalid_message_ar"],
           he: res["invalid_message_he"],
-          isOpen: res.alwaysOpen || res.isOpen,
+          isOpen: res?.alwaysOpen || res?.isOpen,
           isBusy: false,
         };
       });
@@ -53,7 +55,7 @@ export default function CurrentStore() {
 
   const onChange = async (value) => {
     if (storeDataStore.selectedStore != value) {
-      setIsLoaderOpen(true)
+      setIsLoaderOpen(true);
       const storeStatus = await isStoreAvailable();
       setIsLoaderOpen(false);
       if (!storeStatus.isOpen) {
@@ -74,22 +76,19 @@ export default function CurrentStore() {
       setIsLoading(true);
       const fetchMenuStore = menuStore.getMenu(data.pickedStore);
       const fetchStoreData = storeDataStore.getStoreData(data.pickedStore);
-      Promise.all([
-        fetchMenuStore,
-        fetchStoreData,
-      ]).then(async (res) => {
+      Promise.all([fetchMenuStore, fetchStoreData]).then(async (res) => {
         // if(authStore.isLoggedIn()){
         //   await storeDataStore.getPaymentCredentials(data.pickedStore);
         // }
-          setIsLoading(false);
-          setIsOpenStorePicked(false);
-          cartStore.resetCart();
-          // await AsyncStorage.setItem("@storage_selcted_store", data.pickedStore);
-          storeDataStore.setSelectedStore(data.pickedStore);
-          // menuStore.getMenu(data.pickedStore)
-          navigation.navigate("menuScreen");
+        setIsLoading(false);
+        setIsOpenStorePicked(false);
+        cartStore.resetCart();
+        // await AsyncStorage.setItem("@storage_selcted_store", data.pickedStore);
+        storeDataStore.setSelectedStore(data.pickedStore);
+        await AsyncStorage.setItem("@storage_selcted_store_v2", data.pickedStore);
+        // menuStore.getMenu(data.pickedStore)
+        navigation.navigate("menuScreen");
       });
-
     } else {
       setPickedStore(storeDataStore.selectedStore);
       setIsOpenStorePicked(false);
@@ -104,8 +103,47 @@ export default function CurrentStore() {
     setIsOpenStoreErrorMsgDialog(false);
   };
 
+  const handleDropDownToggle = (value) => {
+    setIsDropDownOpen(value);
+  };
+
   return (
     <View style={styles.container}>
+      <TouchableOpacity>
+        <View
+          pointerEvents="none"
+          style={{
+            backgroundColor: theme.SUCCESS_COLOR,
+            position: "absolute",
+            zIndex: 20,
+            width: "100%",
+            minHeight: 42,
+            height: 42,
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection:"row"
+          }}
+        >
+
+          <Text
+            style={{
+              textAlign: "center",
+              color: theme.WHITE_COLOR,
+              fontSize: 26,
+              fontFamily: `${getCurrentLang()}-SemiBold`,
+              marginRight:10
+            }}
+          >
+            {t("current-store")} {storeDataStore.selectedStore == "1" ? t("tira") : t("tibe")}
+          </Text>
+          <View style={{transform: [{ rotate: isDropDownOpen?  '180deg':'0deg'}]}}>
+          <Icon icon="arrow-down" size={20} color={"#000000"} />
+
+          </View>
+
+        </View>
+      </TouchableOpacity>
+
       <DropDown
         itemsList={storesList}
         defaultValue={pickedStore}
@@ -114,7 +152,10 @@ export default function CurrentStore() {
           storeDataStore.selectedStore == "1" ? t("tire") : t("tibe")
         }`}
         dropDownDirection={"BOTTOM"}
+        onToggle={handleDropDownToggle}
+      
       />
+
       <View
         style={{
           position: "absolute",
@@ -122,7 +163,13 @@ export default function CurrentStore() {
           alignSelf: "center",
           width: Dimensions.get("window").width,
           height: Dimensions.get("window").height - 300,
-          display: isOpenStorePicked || isLoaderOpen || showStoreIsCloseDialog || storeErrorText  ? "flex" : "none",
+          display:
+            isOpenStorePicked ||
+            isLoaderOpen ||
+            showStoreIsCloseDialog ||
+            storeErrorText
+              ? "flex"
+              : "none",
         }}
       >
         <StorePickedDialog
@@ -130,12 +177,11 @@ export default function CurrentStore() {
           isOpen={isOpenStorePicked}
           pickedStore={pickedStore}
           isLoading={isLoading}
-          text='store-picked-title'
+          text="store-picked-title"
         />
         <LoaderDialog
           handleAnswer={handleStorePickedAnswer}
           isOpen={isLoaderOpen}
-    
         />
         <StoreIsCloseDialog
           handleAnswer={handleStoreIsCloseAnswer}
@@ -154,7 +200,6 @@ const styles = StyleSheet.create({
   container: {
     alignSelf: "center",
     zIndex: 1,
-    
   },
   button: {
     backgroundColor: theme.PRIMARY_COLOR,
