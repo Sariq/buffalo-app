@@ -224,7 +224,6 @@ const App = () => {
       const fetchMenu = menuStore.getMenu('1');
       const fetchHomeSlides = menuStore.getSlides();
       // const fetchStoreDataStore = storeDataStore.getStoreData(selectedStore);
-      
       //storeDataStore.setSelectedStore(selectedStore)
       Promise.all([fetchTranslations,fetchMenu, fetchHomeSlides, fetchStoreDataStore]).then(async (responses) => {
         const imageAssets2 = await cacheImages(menuStore.imagesUrl);

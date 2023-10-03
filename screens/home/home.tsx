@@ -30,13 +30,20 @@ import {
 } from "@react-navigation/native";
 import PickedStoreDialog from "../../components/dialogs/picked-store/picked-store";
 import StorePickedDialog from "../../components/dialogs/store-picked/store-picked";
+import CustomFastImage from "../../components/custom-fast-image";
 
 const HomeScreen = () => {
   const { t } = useTranslation();
   const navigation = useNavigation();
 
-  let { userDetailsStore, menuStore, ordersStore, authStore, storeDataStore, cartStore } =
-    useContext(StoreContext);
+  let {
+    userDetailsStore,
+    menuStore,
+    ordersStore,
+    authStore,
+    storeDataStore,
+    cartStore,
+  } = useContext(StoreContext);
   const [isAppReady, setIsAppReady] = useState(false);
   const [homeSlides, setHomeSlides] = useState();
   const [isActiveOrder, setIsActiveOrder] = useState(false);
@@ -111,10 +118,10 @@ const HomeScreen = () => {
   const goToNewOrder = async () => {
     if (!storeDataStore.selectedStore) {
       storeDataStore.setSelectedStore(null);
-      await AsyncStorage.setItem("@storage_selcted_store_v2", '');
+      await AsyncStorage.setItem("@storage_selcted_store_v2", "");
       setIsOpenPickStore(true);
       storeDataStore.onDisableAreas({ header: true, footer: true });
-    }else{
+    } else {
       navigation.navigate("menuScreen");
     }
   };
@@ -124,7 +131,7 @@ const HomeScreen = () => {
 
   const handleStorePickedAnswer = async (data) => {
     if (data.value) {
-      setIsLoading(true)
+      setIsLoading(true);
       storeDataStore.setSelectedStore(data.pickedStore);
       await AsyncStorage.setItem("@storage_selcted_store_v2", data.pickedStore);
       const fetchMenuStore = menuStore.getMenu(data.pickedStore);
@@ -138,7 +145,7 @@ const HomeScreen = () => {
         if (!storeStatus.isOpen) {
           cartStore.resetCart();
           setPickedStore(null);
-          setIsLoading(false)
+          setIsLoading(false);
           setIsOpenStorePicked(false);
           setShowStoreIsCloseDialog(true);
 
@@ -148,7 +155,7 @@ const HomeScreen = () => {
             cartStore.resetCart();
             setStoreErrorText(storeStatus[getCurrentLang()]);
             setPickedStore(null);
-            setIsLoading(false)
+            setIsLoading(false);
             setIsOpenStorePicked(false);
             setIsOpenStoreErrorMsgDialog(true);
             return;
@@ -156,11 +163,11 @@ const HomeScreen = () => {
         }
         cartStore.resetCart();
         setPickedStore(null);
-        setIsLoading(false)
+        setIsLoading(false);
         setIsOpenStorePicked(false);
         navigation.navigate("menuScreen");
       });
-    }else{
+    } else {
       storeDataStore.onDisableAreas({ header: false, footer: false });
       setPickedStore(null);
       setIsOpenStorePicked(false);
@@ -230,14 +237,20 @@ const HomeScreen = () => {
         autoPlayInterval={3000}
         customAnimation={animationStyle}
         renderItem={({ index }) => (
-          <ImageBackground
+          <CustomFastImage
+            style={{
+              width: "100%",
+              height: "100%",
+            }}
             source={{ uri: `${SITE_URL}${homeSlides[index].file_url}` }}
+            cacheKey={`${`${SITE_URL}${homeSlides[index].file_url}`
+              .split(/[\\/]/)
+              .pop()}`}
             resizeMode="stretch"
-            style={styles.image}
           />
         )}
       />
-      {(!isOpenPickStore && !isOpenStorePicked) && (
+      {!isOpenPickStore && !isOpenStorePicked && (
         <View style={[styles.button, styles.bottomView]}>
           <View
             style={{

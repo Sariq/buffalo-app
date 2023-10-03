@@ -46,6 +46,7 @@ const CustomFastImage = (props) => {
     source: { uri },
     cacheKey,
     style,
+    resizeMode = 'contain'
   } = props;
   const isMounted = useRef(true);
   const [imgUri, setUri] = useState("");
@@ -80,7 +81,7 @@ const CustomFastImage = (props) => {
   return (
     <>
       {imgUri ? (
-        <Image source={{ uri: imgUri }} style={style} resizeMode="contain" />
+        <Image source={{ uri: imgUri }} style={style} resizeMode={resizeMode} />
       ) : (
         <View
           style={{ ...style, alignItems: "center", justifyContent: "center" }}
