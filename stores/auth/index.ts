@@ -43,7 +43,7 @@ class AuthStore {
     return axiosInstance
       .post(
         `${AUTH_API.CONTROLLER}/${AUTH_API.LOGOUT_API}`,
-        body,
+        toBase64(body),
       )
       .then(function (response) {
         const res = JSON.parse(fromBase64(response.data));
@@ -55,7 +55,7 @@ class AuthStore {
     return axiosInstance
       .post(
         `${AUTH_API.CONTROLLER}/${AUTH_API.DELETE_ACOOUNT_API}`,
-        body,
+        toBase64(body),
       )
       .then(function (response) {
         const res = JSON.parse(fromBase64(response.data));
