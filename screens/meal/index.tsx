@@ -136,7 +136,10 @@ const MealScreen = ({ route }) => {
       }
       return tagItem;
     });
-    if (extraPrice !== 0) {
+    const currentTag = currentExtraType.find(
+      (tagItem) => tagItem.value === true
+    );
+    if (currentTag?.id) {
       meal.extras[type] = extrasType;
       setMeal({
         ...meal,

@@ -10,7 +10,7 @@ const general_errors_codes = ["-400", "-6", "-7", "-10", "-11", "-401"];
 const TOKEN_NOT_VALID = -12;
 export const axiosInstance = axios.create({
   baseURL: BASE_URL + "/",
-  timeout:5000
+  timeout:30000
 });
 
 axiosInstance.interceptors.request.use(
@@ -31,6 +31,18 @@ axiosInstance.interceptors.request.use(
     return config;
   },
   function (error) {
+    if(error?.message?.includes('Network Error')){
+      DeviceEventEmitter.emit(`OPEN_INTERNET_CONNECTION_DIALOG`, {
+        show: true,
+        isSignOut: false,
+      });
+    }
+    if(error?.message?.includes('timeout')){
+      DeviceEventEmitter.emit(`OPEN_GENERAL_SERVER_ERROR_DIALOG`, {
+        show: true,
+        isSignOut: false,
+      });
+    }
     // Do something with request error
     return Promise.reject(error);
   }
@@ -57,8 +69,14 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   function (error) {
-    if(error?.message.includes('timeout')){
+    if(error?.message?.includes('Network Error')){
       DeviceEventEmitter.emit(`OPEN_INTERNET_CONNECTION_DIALOG`, {
+        show: true,
+        isSignOut: false,
+      });
+    }
+    if(error?.message?.includes('timeout') || error?.message?.includes('Network Error')){
+      DeviceEventEmitter.emit(`OPEN_GENERAL_SERVER_ERROR_DIALOG`, {
         show: true,
         isSignOut: false,
       });

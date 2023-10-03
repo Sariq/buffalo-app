@@ -37,6 +37,7 @@ import { SITE_URL } from "./consts/api";
 import themeStyle from "./styles/theme.style";
 import { isLatestGreaterThanCurrent } from "./helpers/check-version";
 import moment from "moment";
+import axios from "axios";
 // Keep the splash screen visible while we fetch resources
 //SplashScreen.preventAutoHideAsync();
 let customARFonts = {
@@ -265,6 +266,25 @@ const App = () => {
       setAssetsIsReady(true);
     }
   }
+
+const checkInternetConnection = () => {
+  axios.get('https://google.com', {
+    timeout: 30000, 
+    headers: {
+      'X-RapidAPI-Key': 'your-rapid-api-key',
+      'X-RapidAPI-Host': 'jokes-by-api-ninjas.p.rapidapi.com'
+    }
+  })
+  .then(response => {
+  })
+  .catch(error => {
+    if (error.code === 'ECONNABORTED') {
+      setIsOpenInternetConnectionDialog(true);
+    }
+  });
+}
+
+
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener((state) => {
       setIsOpenInternetConnectionDialog(!state.isConnected);
@@ -272,9 +292,14 @@ const App = () => {
         prepare();
       }
     });
+    checkInternetConnection();
+    const interval = setInterval(() => {
+      checkInternetConnection();
+    }, 15 * 1000);
     prepare();
     return () => {
       unsubscribe();
+      clearInterval(interval);
     };
   }, []);
   useEffect(() => {
