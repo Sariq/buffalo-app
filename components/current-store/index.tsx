@@ -117,12 +117,12 @@ export default function CurrentStore() {
             position: "absolute",
             zIndex: 20,
             width: "100%",
-            minHeight: 42,
-            height: 42,
+            minHeight: 48,
+            height: 48,
             alignItems: "center",
             justifyContent: "center",
-            flexDirection:"row"
-          }}
+            flexDirection:"row",
+           }}
         >
 
           <Text

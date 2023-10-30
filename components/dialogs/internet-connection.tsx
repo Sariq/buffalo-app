@@ -79,7 +79,7 @@ import i18n from "../../translations/i18n";
                   fontWeight: "bold",
                 }}
               >
-                {i18n.exists('no-internet-connection') ? t("no-internet-connection") : "لا يوجد اتصال بالإنترنت ، اتصل بالإنترنت وحاول مرة أخرى"}
+                {i18n?.exists('no-internet-connection') ? t("no-internet-connection") : "لا يوجد اتصال بالإنترنت ، اتصل بالإنترنت وحاول مرة أخرى"}
               </Text>
             </Dialog.Content>
             <Dialog.Actions>
