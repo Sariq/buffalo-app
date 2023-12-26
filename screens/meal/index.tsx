@@ -347,6 +347,9 @@ const MealScreen = ({ route }) => {
                             {Object.keys(meal.extras[keyOrdered]).map(
                               (tagId) => {
                                 const tag = meal.extras[keyOrdered][tagId];
+                                if(!tag.available_on_app){
+                                  return
+                                }
                                 return (
                                   <View
                                     key={tagId}

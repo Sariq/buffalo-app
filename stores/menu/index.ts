@@ -138,9 +138,7 @@ class MenuStore {
     const sortedExtrasType = orderBy(extrasType, ["constant_order_priority"], ["asc"]);
     this.meals[key].extras[type] = sortedExtrasType;
     this.meals[key].extras["orderList"]= this.meals[key].extras["orderList"] || {};
-    if(this.meals[key].extras[type][0].available_on_app){
-      this.meals[key].extras["orderList"][type] = this.meals[key].extras[type][0].order_priority;
-    }
+    this.meals[key].extras["orderList"][type] = this.meals[key].extras[type][0].order_priority;
     this.meals[key] = { ...this.meals[key], extras: this.meals[key].extras };
   };
 
