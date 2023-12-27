@@ -294,7 +294,7 @@ const checkInternetConnection = () => {
     checkInternetConnection();
     const interval = setInterval(() => {
       checkInternetConnection();
-    }, 15 * 1000);
+    }, 30 * 1000);
     prepare();
     return () => {
       unsubscribe();

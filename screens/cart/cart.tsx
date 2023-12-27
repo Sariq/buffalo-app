@@ -246,14 +246,14 @@ const CartScreen = ({ route }) => {
       return location;
     } else {
       isValidation && setIsloadingLocation(true);
-      const permissionRes = requestPermission();
+      const permissionRes = await requestPermission();
       const res = await Location.hasServicesEnabledAsync();
       if (res) {
         let tempLocation = await Location.getCurrentPositionAsync({
           accuracy:
             Platform.OS === "android"
-              ? Location.Accuracy.Highest
-              : Location.Accuracy.Highest,
+              ? Location.Accuracy.Balanced
+              : Location.Accuracy.Balanced,
           mayShowUserSettingsDialog: false,
         });
         if (tempLocation) {
