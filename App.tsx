@@ -145,7 +145,9 @@ const App = () => {
   };
 
   const handleUpdateVersionDialogAnswer = () => {
-    Linking.openURL("https://onelink.to/zky772");
+    Linking.openURL(
+      "https://sari-apps-lcibm.ondigitalocean.app/api/store/download-app"
+    );
   };
   const handleCartReset = async () => {
     const cartCreatedDate = await AsyncStorage.getItem(
@@ -231,6 +233,16 @@ const App = () => {
         const tempHomeSlides = menuStore.homeSlides.map((slide) => {
           return `${SITE_URL}${slide.file_url}`;
         });
+        setTimeout(async () => {
+          const isShouldUpdateVersion =
+          await storeDataStore.isUpdateAppVersion();
+        if (isShouldUpdateVersion) {
+          setIsOpenUpdateVersionDialog(true);
+          return;
+        }
+        }, 1000);
+    
+
         const imageAssets = await cacheImages(tempHomeSlides);
         if (authStore.isLoggedIn()) {
           // storeDataStore.getPaymentCredentials(selectedStore);

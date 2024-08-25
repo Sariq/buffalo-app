@@ -1,5 +1,8 @@
 export const SITE_URL = "https://api.buffaloburger.co.il/";
 export const BASE_URL = "https://api.buffaloburger.co.il/api";
+export const SARI_BASE_URL = "https://sari-apps-lcibm.ondigitalocean.app/api";
+// export const SARI_BASE_URL = "http://10.0.0.6:1111/api";
+
 export const AUTH_API = {
     CONTROLLER: "Authenticator",
     AUTHINTICATE_API : "Authenticate",
@@ -26,6 +29,7 @@ export const ORDER_API = {
 export const STORE_API = {
     CONTROLLER: "stores",
     GET_STORE_API : "getstoreslist",
+    IS_UPDATE_VERSION_STORE_API : "store/is-should-update",
 };
 
 export const UTILITIES_API = {

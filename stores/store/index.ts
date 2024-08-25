@@ -1,5 +1,5 @@
 import { makeAutoObservable, runInAction } from "mobx";
-import { axiosInstance } from "../../utils/http-interceptor";
+import { axiosInstance, axiosInstanceSari } from "../../utils/http-interceptor";
 import { STORE_API } from "../../consts/api";
 import { fromBase64, toBase64 } from "../../helpers/convert-base64";
 
@@ -81,6 +81,23 @@ class StoreDataStore {
       ...data
     }
   }
+
+  isUpdateAppVersionFromServer = async () => {
+    return axiosInstanceSari
+      .get(`${STORE_API.IS_UPDATE_VERSION_STORE_API}`)
+      .then(function (response) {
+        const res = response;
+        return res;
+      }).catch((error) => {
+        console.log(error);
+      })
+  };
+
+  isUpdateAppVersion = () => {
+    return this.isUpdateAppVersionFromServer().then((res:any) => {
+      return res
+    })
+  };
 }
 
 export const storeDataStore = new StoreDataStore();

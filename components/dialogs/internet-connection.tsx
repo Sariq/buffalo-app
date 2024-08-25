@@ -24,7 +24,7 @@ import i18n from "../../translations/i18n";
     isOpen,
     handleAnswer,
   }: TProps) {
-    const { t } = useTranslation();
+    // const { t } = useTranslation();
     const [visible, setVisible] = useState(isOpen);
   
     useEffect(() => {
@@ -79,7 +79,7 @@ import i18n from "../../translations/i18n";
                   fontWeight: "bold",
                 }}
               >
-                {i18n?.exists('no-internet-connection') ? t("no-internet-connection") : "لا يوجد اتصال بالإنترنت ، اتصل بالإنترنت وحاول مرة أخرى"}
+                {i18n?.exists('no-internet-connection') ? i18n.t("no-internet-connection") : "لا يوجد اتصال بالإنترنت ، اتصل بالإنترنت وحاول مرة أخرى"}
               </Text>
             </Dialog.Content>
             <Dialog.Actions>
@@ -92,7 +92,7 @@ import i18n from "../../translations/i18n";
               >
                 <Button
                   onClickFn={() => hideDialog(true)}
-                  text={i18n.exists('ok') ? t("ok") : "حسنناً"}
+                  text={i18n.exists('ok') ? i18n.t("ok") : "حسنناً"}
                   bgColor={themeStyle.SUCCESS_COLOR}
                   textColor={themeStyle.WHITE_COLOR}
                   fontSize={16}
