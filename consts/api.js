@@ -21,6 +21,7 @@ export const MENU_API = {
 export const ORDER_API = {
     CONTROLLER: "order",
     SUBMIT_ORDER_API : "submit",
+    SUBMIT_ORDER_API_SARI : "create",
     GET_STATUS_API: "GetStatus",
     UPDATE_CCPAYMENT_API: "UpdateCCPayment",
     IS_VALID_GEO_API: "IsValidGeo",

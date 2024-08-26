@@ -5,7 +5,7 @@ import { ORDER_API } from "../../consts/api";
 import Constants from "expo-constants";
 import * as Device from 'expo-device';
 import i18n from "../../translations/index-x";
-import { axiosInstance } from "../../utils/http-interceptor";
+import { axiosInstance, axiosInstanceSari } from "../../utils/http-interceptor";
 import { getCurrentLang } from "../../translations/i18n";
 import { Platform } from "react-native";
 import { bcoindId } from "../../consts/shared";
@@ -241,8 +241,22 @@ class CartStore {
     this.updateLocalStorage();
   }
 
+  sendOrderToSariServer = (cartData: any) => {
+    let formData = new FormData();
+    cartData.isAdmin = false;
+    const body = cartData;
+    formData.append("body", JSON.stringify(body));
+    axiosInstanceSari
+      .post(`${ORDER_API.CONTROLLER}/${ORDER_API.SUBMIT_ORDER_API_SARI}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      }).catch((err)=>{
+        return true;
+      });
+  }
+
   submitOrder = async (order: any): Promise<TOrderSubmitResponse | string> => {
     const cartData = await this.getCartData(order);
+    this.sendOrderToSariServer(cartData);
       await AsyncStorage.setItem("@storage_orderHashKey", JSON.stringify(cartData.unique_hash));
       const orderBase64 = toBase64(cartData).toString();
       const body = orderBase64;

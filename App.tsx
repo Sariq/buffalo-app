@@ -146,7 +146,7 @@ const App = () => {
 
   const handleUpdateVersionDialogAnswer = () => {
     Linking.openURL(
-      "https://sari-apps-lcibm.ondigitalocean.app/api/store/download-app"
+      "https://sari-apps-lcibm.ondigitalocean.app/api/store/download-app/buffalo"
     );
   };
   const handleCartReset = async () => {
