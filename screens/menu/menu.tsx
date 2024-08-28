@@ -76,35 +76,30 @@ const MenuScreen = () => {
     const categories = menuStore.categories;
     setCategoryList(categories);
     setSelectedCategory(categories["BURGERS"]);
+    setSelectedCategoryKey("BURGERS");
   };
 
   useEffect(() => {
     getMenu();
     setTimeout(() => {
       tasteScorll();
-
     }, 1000);
   }, []);
 
   const anim = useRef(new Animated.Value(10));
-  const tasteScorll = ()=> {
+  const tasteScorll = () => {
     Animated.timing(anim.current, {
-      toValue:300,
+      toValue: 300,
       duration: 600,
       useNativeDriver: true,
-
-    }).start(()=>{
+    }).start(() => {
       Animated.timing(anim.current, {
         toValue: 0,
         duration: 600,
         useNativeDriver: true,
-  
-      }).start(()=>{
-      });
-   
+      }).start(() => {});
     });
-};
-
+  };
 
   if (!categoryList || !selectedCategory) {
     return null;
@@ -117,7 +112,7 @@ const MenuScreen = () => {
         end={{ x: 0, y: 0.1 }}
         style={styles.background}
       />
-      <View style={{ zIndex: 10, paddingTop:5 }}>
+      <View style={{ zIndex: 10, paddingTop: 5 }}>
         <CurrentStore />
       </View>
       <View style={styles.container}>
@@ -126,55 +121,60 @@ const MenuScreen = () => {
           horizontal={true}
           showsHorizontalScrollIndicator={false}
         >
-        <Animated.View style={{flexDirection:'row', transform:[{translateX: anim.current}]}}>
-
-          {Object.keys(categoryListOrder).map((key, index) => { 
-            return ((categoryList[categoryListOrder[key]] && categoryList[categoryListOrder[key]].length == 0) ? null :
-            <View style={{ width: 85, height: 96, flexBasis: 90 }}>
-              <TouchableOpacity
-                style={[styles.categoryItem]}
-                onPress={() => {
-                  onCategorySelect(
-                    categoryList[categoryListOrder[key]],
-                    categoryListOrder[key]
-                  );
-                }}
-              >
-                <View
-                  style={[
-                    styles.iconContainer,
-
-                    {
-                      backgroundColor:
-                        categoryListOrder[key] === selectedCategoryKey
-                          ? themeStyle.PRIMARY_COLOR
-                          : themeStyle.WHITE_COLOR,
-                    },
-                  ]}
-                >
-                  <Icon
-                    icon={categoryListIcons[categoryListOrder[key]]}
-                    size={categoryListOrder[key] == 'SPECIAL' ? 50 : 38}
-                    style={{
-                      color: themeStyle.GRAY_700,
+          <Animated.View
+            style={{
+              flexDirection: "row",
+              transform: [{ translateX: anim.current }],
+            }}
+          >
+            {Object.keys(categoryListOrder).map((key, index) => {
+              return categoryList[categoryListOrder[key]] &&
+                categoryList[categoryListOrder[key]].length > 0 ? (
+                <View style={{ width: 85, height: 96, flexBasis: 90 }}>
+                  <TouchableOpacity
+                    style={[styles.categoryItem]}
+                    onPress={() => {
+                      onCategorySelect(
+                        categoryList[categoryListOrder[key]],
+                        categoryListOrder[key]
+                      );
                     }}
-                  />
+                  >
+                    <View
+                      style={[
+                        styles.iconContainer,
+
+                        {
+                          backgroundColor:
+                            categoryListOrder[key] === selectedCategoryKey
+                              ? themeStyle.PRIMARY_COLOR
+                              : themeStyle.WHITE_COLOR,
+                        },
+                      ]}
+                    >
+                      <Icon
+                        icon={categoryListIcons[categoryListOrder[key]]}
+                        size={categoryListOrder[key] == "SPECIAL" ? 50 : 38}
+                        style={{
+                          color: themeStyle.GRAY_700,
+                        }}
+                      />
+                    </View>
+                    <Text
+                      style={[
+                        {
+                          marginTop: 10,
+                          color: themeStyle.GRAY_700,
+                          fontFamily: `${getCurrentLang()}-SemiBold`,
+                        },
+                      ]}
+                    >
+                      {t(categoryListOrder[key])}
+                    </Text>
+                  </TouchableOpacity>
                 </View>
-                <Text
-                  style={[
-                    {
-                      marginTop: 10,
-                      color: themeStyle.GRAY_700,
-                      fontFamily: `${getCurrentLang()}-SemiBold`,
-                    },
-                  ]}
-                >
-                  {t(categoryListOrder[key])}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          )}
-          )}
+              ) : null;
+            })}
           </Animated.View>
         </ScrollView>
       </View>
@@ -183,25 +183,28 @@ const MenuScreen = () => {
           {t(`menu-category-title-${selectedCategoryKey}`)}
         </Text>
       </View>
-      {Object.keys(categoryListOrder).map((key, index) => (
-        <View
-          style={[
-            styles.itemsListConainer,
-            {
-              height:
-                selectedCategoryKey === categoryListOrder[key] ? "100%" : 0,
-              paddingBottom:
-                selectedCategoryKey === categoryListOrder[key] ? 220 : 0,
-              marginTop:
-                selectedCategoryKey === categoryListOrder[key] ? 10 : 0,
-            },
-          ]}
-        >
-          <CategoryItemsList
-            productsList={categoryList[categoryListOrder[key]]}
-          />
-        </View>
-      ))}
+      {Object.keys(categoryListOrder).map((key, index) => {
+        return categoryList[categoryListOrder[key]] &&
+          categoryList[categoryListOrder[key]].length == 0 ? null : (
+          <View
+            style={[
+              styles.itemsListConainer,
+              {
+                height:
+                  selectedCategoryKey === categoryListOrder[key] ? "100%" : 0,
+                paddingBottom:
+                  selectedCategoryKey === categoryListOrder[key] ? 220 : 0,
+                marginTop:
+                  selectedCategoryKey === categoryListOrder[key] ? 10 : 0,
+              },
+            ]}
+          >
+            <CategoryItemsList
+              productsList={categoryList[categoryListOrder[key]]}
+            />
+          </View>
+        );
+      })}
     </View>
   );
 };

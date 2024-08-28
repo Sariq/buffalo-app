@@ -35,7 +35,7 @@ const CategoryItemsList = ({ productsList }) => {
   return (
     <ScrollView ref={scrollRef}>
       <View style={styles.container}>
-        {productsList.map((item) => {
+        {productsList?.map((item) => {
           return (
             <TouchableOpacity
               style={[
