@@ -4,10 +4,11 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  Animated,
 } from "react-native";
 import Text from "../../components/controls/Text";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { observer } from "mobx-react";
 import { useContext } from "react";
 import { StoreContext } from "../../stores";
@@ -39,14 +40,18 @@ const categoryListIcons = {
   DRINK: "drinks_icon",
   SALADS: "salad",
   ROLLS: "burrito",
+  SANDWICH: "sandwich",
+  SPECIAL: "special",
 };
 const categoryListOrder = {
   1: "BURGERS",
-  2: "CHICKEN",
-  3: "ROLLS",
-  4: "SIDES",
-  5: "SALADS",
-  6: "DRINK",
+  2: "SPECIAL",
+  3: "CHICKEN",
+  4: "ROLLS",
+  5: "SANDWICH",
+  6: "SIDES",
+  7: "SALADS",
+  8: "DRINK",
 };
 
 const MenuScreen = () => {
@@ -75,7 +80,31 @@ const MenuScreen = () => {
 
   useEffect(() => {
     getMenu();
+    setTimeout(() => {
+      tasteScorll();
+
+    }, 1000);
   }, []);
+
+  const anim = useRef(new Animated.Value(10));
+  const tasteScorll = ()=> {
+    Animated.timing(anim.current, {
+      toValue:300,
+      duration: 600,
+      useNativeDriver: true,
+
+    }).start(()=>{
+      Animated.timing(anim.current, {
+        toValue: 0,
+        duration: 600,
+        useNativeDriver: true,
+  
+      }).start(()=>{
+      });
+   
+    });
+};
+
 
   if (!categoryList || !selectedCategory) {
     return null;
@@ -97,7 +126,10 @@ const MenuScreen = () => {
           horizontal={true}
           showsHorizontalScrollIndicator={false}
         >
-          {Object.keys(categoryListOrder).map((key, index) => (
+        <Animated.View style={{flexDirection:'row', transform:[{translateX: anim.current}]}}>
+
+          {Object.keys(categoryListOrder).map((key, index) => { 
+            return ((categoryList[categoryListOrder[key]] && categoryList[categoryListOrder[key]].length == 0) ? null :
             <View style={{ width: 85, height: 96, flexBasis: 90 }}>
               <TouchableOpacity
                 style={[styles.categoryItem]}
@@ -122,7 +154,7 @@ const MenuScreen = () => {
                 >
                   <Icon
                     icon={categoryListIcons[categoryListOrder[key]]}
-                    size={38}
+                    size={categoryListOrder[key] == 'SPECIAL' ? 50 : 38}
                     style={{
                       color: themeStyle.GRAY_700,
                     }}
@@ -141,7 +173,9 @@ const MenuScreen = () => {
                 </Text>
               </TouchableOpacity>
             </View>
-          ))}
+          )}
+          )}
+          </Animated.View>
         </ScrollView>
       </View>
       <View style={{ flexDirection: "row", marginLeft: 20, marginTop: 20 }}>
