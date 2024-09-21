@@ -3,7 +3,7 @@
     
     "name": "Buffalo",
     "slug": "Buffalo",
-    "version": "1.0.19",
+    "version": "1.0.20",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -32,12 +32,12 @@
       "**/*"
     ],
     "ios": {
-      "buildNumber": "1.0.19",
+      "buildNumber": "1.0.20",
       "supportsTablet": true,
       "bundleIdentifier": "com.sariq.buffalo"
     },
     "android": {
-      "versionCode": 26,
+      "versionCode": 27,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon-buffalo-3.png",
         "backgroundColor": "#FFFFFF"

@@ -2,7 +2,7 @@ import axios from "axios";
 import { BASE_URL, SARI_BASE_URL} from "../../consts/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { fromBase64, toBase64 } from "../../helpers/convert-base64";
-import { DeviceEventEmitter } from "react-native";
+import { AppState, DeviceEventEmitter } from "react-native";
 import { isEmpty, isObject } from "lodash";
 import Constants from "expo-constants";
 
@@ -32,6 +32,14 @@ axiosInstance.interceptors.request.use(
       config.headers["Authorization"] = "Bearer " + token;
     }
     config.headers["Content-Type"] = "application/json";
+
+    const appState = AppState.currentState;
+    if (appState !== 'active') {
+      // Cancel the request if the app is in the foreground
+      const source = axios.CancelToken.source();
+      config.cancelToken = source.token;
+      source.cancel('Request canceled because the app is in the foreground.');
+    }
     return config;
   },
   function (error) {

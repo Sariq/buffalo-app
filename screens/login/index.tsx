@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
 import InputText from "../../components/controls/input";
 import Button from "../../components/controls/button/button";
 import themeStyle from "../../styles/theme.style";
@@ -61,7 +61,7 @@ const LoginScreen = () => {
 
       const body = {
         phone: convertedValue,
-        device_type: Device.osName || "IOS",
+        device_type: Platform.OS === "android" ? "Android" : "iOS",
         language: languageStore.selectedLang === "ar" ? 0 : 1,
         datetime: new Date(),
       };
