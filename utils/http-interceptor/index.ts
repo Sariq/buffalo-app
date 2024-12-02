@@ -32,14 +32,6 @@ axiosInstance.interceptors.request.use(
       config.headers["Authorization"] = "Bearer " + token;
     }
     config.headers["Content-Type"] = "application/json";
-
-    const appState = AppState.currentState;
-    if (appState !== 'active') {
-      // Cancel the request if the app is in the foreground
-      const source = axios.CancelToken.source();
-      config.cancelToken = source.token;
-      source.cancel('Request canceled because the app is in the foreground.');
-    }
     return config;
   },
   function (error) {
