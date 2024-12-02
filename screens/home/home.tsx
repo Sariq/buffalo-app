@@ -140,7 +140,7 @@ const HomeScreen = () => {
         // if(authStore.isLoggedIn()){
         //   await storeDataStore.getPaymentCredentials(value);
         // }
-        const storeStatus = await isStoreAvailable(data.pickedStore);
+        const storeStatus = isStoreAvailable(res);
         storeDataStore.onDisableAreas({ header: false, footer: false });
         if (!storeStatus.isOpen) {
           cartStore.resetCart();
@@ -201,15 +201,13 @@ const HomeScreen = () => {
     };
   }, []);
 
-  const isStoreAvailable = (selectedStore) => {
-    return storeDataStore.getStoreData(selectedStore).then((res) => {
+  const isStoreAvailable = (res) => {
       return {
         ar: res["invalid_message_ar"],
         he: res["invalid_message_he"],
         isOpen: res.alwaysOpen || res.isOpen,
         isBusy: false,
       };
-    });
   };
 
   const handleStoreIsCloseAnswer = (value: boolean) => {
