@@ -46,24 +46,21 @@ class MenuStore {
               this.mainMealTags(key, extras);
               this.meals[key].data = res.menu.find((product) => product.id.toString() === key)
               this.imagesUrl.push(this.meals[key].data?.image_url)
-              resolve(true)
-
+              resolve(res)
             });
         });
       })
     })
   };
 
-  getTranslations = (storeId) => {
+  getTranslations = (res) => {
     return new Promise((resolve)=>{
-      this.getMenuFromServer(storeId).then((res) => {
         runInAction(() => {
           this.dictionary = res.dictionary;
           setTranslations(this.dictionary).then(()=>{
             resolve(true)
           })
         });
-      })
     })
   }
 

@@ -223,20 +223,13 @@ const FooterTabs = () => {
   const [disabledAreas, setDisabledAreas] = useState();
   const getUserDetails = () => {
     if(authStore.isLoggedIn()){
-    userDetailsStore.getUserDetails();
+      userDetailsStore.getUserDetails();
     }
   };
 
   useEffect(() => {
     if(authStore.isLoggedIn()){
       getUserDetails();
-      setTimeout(() => {
-        getUserDetails();
-      }, 15 * 1000);
-      const interval = setInterval(() => {
-        getUserDetails();
-      }, 30 * 1000);
-      return () => clearInterval(interval);
     }
   }, [authStore.userToken]);
 

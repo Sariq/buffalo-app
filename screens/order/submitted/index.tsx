@@ -13,13 +13,9 @@ import Text from "../../../components/controls/Text";
 
 const OrderSubmittedScreen = ({ route }) => {
   const { t } = useTranslation();
-  const { ordersStore } = useContext(StoreContext);
   const { shippingMethod } = route.params;
   const navigation = useNavigation();
 
-  useEffect(() => {
-    ordersStore.getOrders();
-  }, []);
 
   const goToOrderStatus = () => {
     navigation.navigate("orders-status");

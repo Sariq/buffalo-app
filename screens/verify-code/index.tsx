@@ -148,15 +148,12 @@ const VerifyCodeScreen = ({ route }) => {
           await authStore.updateUserToken(res.token);
           await AsyncStorage.removeItem("@storage_verifyCode");
           if (res.name) {
-            DeviceEventEmitter.emit(`PREPARE_APP`);
-            userDetailsStore.getUserDetails().then((res) => {
               setIsLoading(false);
               if (cartStore.getProductsCount() > 0) {
                 navigation.navigate("cart");
               } else {
                 navigation.navigate("homeScreen");
               }
-            });
           } else {
             navigation.navigate("insert-customer-name");
           }

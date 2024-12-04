@@ -222,12 +222,12 @@ const App = () => {
       }
       //const selectedStore = await AsyncStorage.getItem("@storage_selcted_store");
 
-      const fetchTranslations = menuStore.getTranslations('1');
       const fetchMenu = menuStore.getMenu('1');
       const fetchHomeSlides = menuStore.getSlides();
       // const fetchStoreDataStore = storeDataStore.getStoreData(selectedStore);
       //storeDataStore.setSelectedStore(selectedStore)
-      Promise.all([fetchTranslations,fetchMenu, fetchHomeSlides, fetchStoreDataStore]).then(async (responses) => {
+      Promise.all([fetchMenu, fetchHomeSlides, fetchStoreDataStore]).then(async (responses) => {
+        await menuStore.getTranslations(responses[0]);
         const imageAssets2 = await cacheImages(menuStore.imagesUrl);
 
         const tempHomeSlides = menuStore.homeSlides.map((slide) => {
@@ -248,11 +248,9 @@ const App = () => {
           // storeDataStore.getPaymentCredentials(selectedStore);
 
           const fetchUserDetails = userDetailsStore.getUserDetails();
-          const fetchOrders = ordersStore.getOrders();
           userDetailsStore.setIsAcceptedTerms(true);
           Promise.all([
             fetchUserDetails,
-            fetchOrders,
           ]).then((res) => {
             setAppIsReady(true);
             setTimeout(() => {
