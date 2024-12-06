@@ -19,6 +19,8 @@ import {
 } from "react-native";
 import RootNavigator from "./navigation";
 import NetInfo from "@react-native-community/netinfo";
+import LottieView from "lottie-react-native";
+const appLoaderAnimation = require("./assets/lottie/loader-animation.json");
 
 I18nManager.forceRTL(true);
 I18nManager.allowRTL(true);
@@ -356,7 +358,24 @@ const checkInternetConnection = () => {
               flexDirection: "row",
             }}
           ></View>
-
+          <View
+            style={{
+              position: "absolute",
+              alignSelf: "center",
+              top: "50%",
+              zIndex: 10,
+            }}
+          >
+            <LottieView
+              source={appLoaderAnimation}
+              autoPlay
+              style={{
+                width: "100%",
+                height: 200,
+              }}
+              loop={true}
+            />
+          </View>
           <Text
             style={{
               position: "absolute",
