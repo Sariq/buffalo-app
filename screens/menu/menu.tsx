@@ -112,9 +112,9 @@ const MenuScreen = () => {
         end={{ x: 0, y: 0.1 }}
         style={styles.background}
       />
-      <View style={{ zIndex: 10, paddingTop: 5 }}>
+      {/* <View style={{ zIndex: 10, paddingTop: 5 }}>
         <CurrentStore />
-      </View>
+      </View> */}
       <View style={styles.container}>
         <ScrollView
           style={{ height: "100%", width: "100%" }}

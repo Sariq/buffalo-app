@@ -7,7 +7,7 @@ class StoreDataStore {
   paymentCredentials = null;
   paymentCredentialsKey = null;
   storeData = null;
-  selectedStore = null;
+  selectedStore = "1";
   disabledAreas = {
     header: false,
     footer: false,

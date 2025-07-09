@@ -41,8 +41,6 @@ export default function TermsAndConditionsScreen() {
         <ScrollView
           style={{
             flexDirection: "column",
-            paddingTop: 20,
-
           }}
         >
           {temrsText.map((section) => (

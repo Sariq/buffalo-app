@@ -117,8 +117,8 @@ const HomeScreen = () => {
 
   const goToNewOrder = async () => {
     if (!storeDataStore.selectedStore) {
-      storeDataStore.setSelectedStore(null);
-      await AsyncStorage.setItem("@storage_selcted_store_v2", "");
+      // storeDataStore.setSelectedStore(null);
+      // await AsyncStorage.setItem("@storage_selcted_store_v2", "");
       setIsOpenPickStore(true);
       storeDataStore.onDisableAreas({ header: true, footer: true });
     } else {

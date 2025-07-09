@@ -101,11 +101,11 @@ const Header = () => {
     if(navigation?.getCurrentRoute()?.name === "terms-and-conditions"){
       return;
     }
-    if(cartStore.getProductsCount() == 0){
-      storeDataStore.setSelectedStore(null);
-      await AsyncStorage.setItem("@storage_selcted_store_v2", '');
+    // if(cartStore.getProductsCount() == 0){
+    //   storeDataStore.setSelectedStore(null);
+    //   await AsyncStorage.setItem("@storage_selcted_store_v2", '');
 
-    }
+    // }
     navigation.navigate("homeScreen");
   };
 

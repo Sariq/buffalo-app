@@ -311,14 +311,14 @@ const CartScreen = ({ route }) => {
     });
 
     setTimeout(() => {
-      const cartLength = cartStore.removeProduct(getProductIndexId(product, index));
-      if(cartLength == 0){
-        setTimeout(async () => {
-        storeDataStore.setSelectedStore(null);
-        await AsyncStorage.setItem("@storage_selcted_store_v2", '');
+      cartStore.removeProduct(getProductIndexId(product, index));
+      // if(cartLength == 0){
+      //   setTimeout(async () => {
+      //   storeDataStore.setSelectedStore(null);
+      //   await AsyncStorage.setItem("@storage_selcted_store_v2", '');
 
-      }, 200);
-      }
+      // }, 200);
+      // }
       setIsAnimating(false);
     }, 600);
   };
@@ -458,8 +458,8 @@ const CartScreen = ({ route }) => {
   const postChargeOrderActions = async () => {
     setIsLoadingOrderSent(false);
     cartStore.resetCart();
-    storeDataStore.setSelectedStore(null);
-    await AsyncStorage.setItem("@storage_selcted_store_v2", '');
+    // storeDataStore.setSelectedStore(null);
+    // await AsyncStorage.setItem("@storage_selcted_store_v2", '');
     navigation.navigate("order-submitted", { shippingMethod });
   };
   const postSubmitOrderActions = (orderData: TOrderSubmitResponse) => {
@@ -797,9 +797,9 @@ const CartScreen = ({ route }) => {
     >
       <ScrollView>
         <View style={{ ...styles.container }}>
-          <View style={{ zIndex: 30 }}>
+          {/* <View style={{ zIndex: 30 }}>
             <CurrentStore />
-          </View>
+          </View> */}
           <View style={{ paddingHorizontal: 20 }}>
             <View style={styles.backContainer}>
               <View

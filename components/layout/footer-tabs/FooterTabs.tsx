@@ -117,12 +117,12 @@ const MyTabBar = ({ state, descriptors, navigation, bcoin, disabledAreas }) => {
               return;
             }
           }
-          if (route.name === "homeScreen") {
-            if(cartStore.getProductsCount() == 0){
-              storeDataStore.setSelectedStore(null);
-              await AsyncStorage.setItem("@storage_selcted_store_v2", '');
-            }
-          }
+          // if (route.name === "homeScreen") {
+          //   if(cartStore.getProductsCount() == 0){
+          //     storeDataStore.setSelectedStore(null);
+          //     await AsyncStorage.setItem("@storage_selcted_store_v2", '');
+          //   }
+          // }
           onTabSelect(route.name);
           const event = navigation.emit({
             type: "tabPress",
