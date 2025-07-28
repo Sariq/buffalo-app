@@ -7,8 +7,10 @@ import * as Haptics from "expo-haptics";
 
 export type TProps = {
   goTo?: string;
+  isClose?: boolean;
+  onClose?: () => void;
 }
-export default function BackButton({goTo}: TProps) {
+export default function BackButton({goTo, isClose, onClose}: TProps) {
   const navigation = useNavigation();
 
   const onBtnClick = () => {
@@ -16,6 +18,11 @@ export default function BackButton({goTo}: TProps) {
     const routes = navigation.getState()?.routes;
     const currentRoute = routes[routes.length - 1]; // -2 because -1 is the current route
     const prevRoute = routes[routes.length - 2]; // -2 because -1 is the current route
+    
+    if(isClose){
+      onClose?.();
+      return;
+    }
     if ((currentRoute.name === "cart" || currentRoute.name === "profile") && (prevRoute.name === "verify-code" || prevRoute.name === "insert-customer-name")) {
       navigation.navigate("homeScreen");
       return;

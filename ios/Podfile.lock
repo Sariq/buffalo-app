@@ -6,7 +6,7 @@ PODS:
     - ExpoModulesCore
   - EXApplication (4.2.2):
     - ExpoModulesCore
-  - EXBarCodeScanner (11.4.0):
+  - EXBarCodeScanner (11.5.0):
     - EXImageLoader
     - ExpoModulesCore
     - ZXingObjC/OneD
@@ -367,6 +367,8 @@ PODS:
     - RCTTypeSafety
     - React
     - ReactCommon/turbomodule/core
+  - react-native-webview (11.23.0):
+    - React-Core
   - React-perflogger (0.69.9)
   - React-RCTActionSheet (0.69.9):
     - React-Core/RCTActionSheetHeaders (= 0.69.9)
@@ -468,10 +470,10 @@ PODS:
     - React-RCTText
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNScreens (3.22.0):
+  - RNScreens (3.15.0):
     - React-Core
     - React-RCTImage
-  - RNSVG (12.5.1):
+  - RNSVG (12.3.0):
     - React-Core
   - UMAppLoader (3.1.0)
   - Yoga (1.14.0)
@@ -535,6 +537,7 @@ DEPENDENCIES:
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-restart (from `../node_modules/react-native-restart`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - react-native-webview (from `../node_modules/react-native-webview`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -669,6 +672,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-restart"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-webview:
+    :path: "../node_modules/react-native-webview"
   React-perflogger:
     :path: "../node_modules/react-native/ReactCommon/reactperflogger"
   React-RCTActionSheet:
@@ -718,7 +723,7 @@ SPEC CHECKSUMS:
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   EASClient: a2581835cf9b97d0defd5d630fc6eb1bf77045e7
   EXApplication: e418d737a036e788510f2c4ad6c10a7d54d18586
-  EXBarCodeScanner: 8e13bad5d197b4b9a58d16af41f8690875a5f736
+  EXBarCodeScanner: 471255a1c4985d629ec5f53938ad15bf0fc68db6
   EXConstants: 7c44785d41d8e959d527d23d29444277a4d1ee73
   EXDevice: 7647ca9b1fd8b269dfd896a7643d659343358054
   EXFileSystem: 927e0a8885aa9c49e50fc38eaba2c2389f2f1019
@@ -768,6 +773,7 @@ SPEC CHECKSUMS:
   react-native-netinfo: 129bd99f607a2dc5bb096168f3e5c150fd1f1c95
   react-native-restart: 45c8dca02491980f2958595333cbccd6877cb57e
   react-native-safe-area-context: 6c12e3859b6f27b25de4fee8201cfb858432d8de
+  react-native-webview: e771bc375f789ebfa02a26939a57dbc6fa897336
   React-perflogger: f6f4b3c63629ead2e8a5a22eaedd06368c31617a
   React-RCTActionSheet: 5e95058e99c53313d778d96b7f37697ce3a9418e
   React-RCTAnimation: c4f86d756d8398c674f61d00075993a368d83480
@@ -785,8 +791,8 @@ SPEC CHECKSUMS:
   RNDateTimePicker: 30e6733efc179d1e49d6008ea5fce42cdc9aeeca
   RNGestureHandler: bad495418bcbd3ab47017a38d93d290ebd406f50
   RNReanimated: 2cf7451318bb9cc430abeec8d67693f9cf4e039c
-  RNScreens: 68fd1060f57dd1023880bf4c05d74784b5392789
-  RNSVG: d7d7bc8229af3842c9cfc3a723c815a52cdd1105
+  RNScreens: 4a1af06327774490d97342c00aee0c2bafb497b7
+  RNSVG: 302bfc9905bd8122f08966dc2ce2d07b7b52b9f8
   UMAppLoader: 6185e8c45922f187002b85afae097961c4781df4
   Yoga: 7a4d48cfb35dfa542151e615fa73c1a0d88caf21
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb

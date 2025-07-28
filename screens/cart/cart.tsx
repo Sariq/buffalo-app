@@ -26,16 +26,18 @@ import Text from "../../components/controls/Text";
 import Icon from "../../components/icon";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import BackButton from "../../components/back-button";
-import NewPaymentMethodDialog from "../../components/dialogs/new-credit-card";
+import NewCreditCard from "../../components/credit-card/new-credit-card";
 import {
   TOrderSubmitResponse,
   TUpdateCCPaymentRequest,
 } from "../../stores/cart";
-import { TCCDetails } from "../../components/credit-card/api/validate-card";
+import { TCreditCard } from "../../components/credit-card/api/credit-card-controller";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import chargeCreditCard, {
-  TPaymentProps,
-} from "../../components/credit-card/api/payment";
+import {
+  getCreditCards,
+  isCustomerHasSavedCreditCard,
+  deleteCreditCard,
+} from "../../components/credit-card/api/credit-card-controller";
 import Button from "../../components/controls/button/button";
 import LocationIsDisabledDialog from "../../components/dialogs/location-is-disabled";
 import { getCurrentLang } from "../../translations/i18n";
@@ -96,7 +98,7 @@ const CartScreen = ({ route }) => {
   const [isOpenNewCreditCardDialog, setOpenNewCreditCardDialog] =
     React.useState(false);
 
-  const [ccData, setCCData] = React.useState<TCCDetails | undefined>();
+  const [ccData, setCCData] = React.useState<TCreditCard | undefined>();
 
   const [itemsPrice, setItemsPrice] = React.useState(0);
   const [totalPrice, setTotalPrice] = React.useState(0);
@@ -128,25 +130,21 @@ const CartScreen = ({ route }) => {
   const [isOpenInvalidAddressDialod, setIsOpenInvalidAddressDialod] =
     React.useState(false);
 
-  const setPaymentCredintales = async () => {
-    const selectedStore = storeDataStore.selectedStore;
-    const paymentCredintalsData = await storeDataStore.getPaymentCredentials(
-      selectedStore
-    );
-    let currentPaymentCredintalsKey = null;
-    if (paymentCredintalsData.credentials) {
-      currentPaymentCredintalsKey = PAYMENT_CREDINTALS_KEYS[selectedStore];
-      storeDataStore.setPaymentCredentialsKey(currentPaymentCredintalsKey);
-    } else {
-      await storeDataStore.getPaymentCredentials(1);
-      currentPaymentCredintalsKey = PAYMENT_CREDINTALS_KEYS[1];
-      storeDataStore.setPaymentCredentialsKey(currentPaymentCredintalsKey);
+  const loadSavedCreditCard = async () => {
+    try {
+      const hasCardsResponse = await isCustomerHasSavedCreditCard();
+      if (!hasCardsResponse.has_err && hasCardsResponse.result) {
+        const cardsResponse = await getCreditCards();
+        if (!cardsResponse.has_err && cardsResponse.cards.length > 0) {
+          setCCData(cardsResponse.cards[0]); // Use the first saved card
+        }
+      }
+    } catch (error) {
+      console.error("Error loading saved credit card:", error);
     }
-    const data = await AsyncStorage.getItem(currentPaymentCredintalsKey);
-    setCCData(JSON.parse(data));
   };
   useEffect(() => {
-    setPaymentCredintales();
+    loadSavedCreditCard();
   }, []);
 
   useEffect(() => {
@@ -336,7 +334,7 @@ const CartScreen = ({ route }) => {
       .getStoreData(storeDataStore.selectedStore)
       .then((res) => {
         // setDeliveryPrice(res.delivery_price);
-        return res[key];
+        return true;
       });
   };
 
@@ -430,56 +428,12 @@ const CartScreen = ({ route }) => {
     }
   };
 
-  const chargeOrder = (chargeData: TPaymentProps) => {
-    chargeCreditCard(chargeData).then((resCharge) => {
-      const updateCCData: TUpdateCCPaymentRequest = {
-        order_id: chargeData.orderId,
-        creditcard_ReferenceNumber: resCharge.ReferenceNumber,
-        datetime: new Date(),
-      };
-      cartStore.UpdateCCPayment(updateCCData).then((res) => {
-        if (resCharge.HasError) {
-          setPaymentErrorMessage(resCharge.ReturnMessage);
-          setShowPaymentFailedDialog(true);
-          setIsLoadingOrderSent(false);
-          removeCreditCard();
-          return;
-        }
-        if (res.has_err) {
-          setShowPaymentFailedDialog(true);
-          removeCreditCard();
-          return;
-        }
-        postChargeOrderActions();
-      });
-    });
-  };
-
-  const postChargeOrderActions = async () => {
+  const postSubmitOrderActions = (orderData: TOrderSubmitResponse) => {
+    // For credit card payments, the payment is handled by the payment page
+    // The order is already submitted, so we just need to complete the flow
     setIsLoadingOrderSent(false);
     cartStore.resetCart();
-    // storeDataStore.setSelectedStore(null);
-    // await AsyncStorage.setItem("@storage_selcted_store_v2", '');
     navigation.navigate("order-submitted", { shippingMethod });
-  };
-  const postSubmitOrderActions = (orderData: TOrderSubmitResponse) => {
-    if (paymentMthod === PAYMENT_METHODS.creditCard) {
-      // TODO handle credit card
-
-      const chargeData: TPaymentProps = {
-        token: ccData.ccToken,
-        id: ccData.id,
-        totalPrice: totalPrice,
-        orderId: orderData.order_id,
-        email: ccData?.email,
-        cvv: ccData?.cvv,
-        phone: userDetailsStore?.userDetails?.phone,
-        userName: userDetailsStore?.userDetails?.name,
-      };
-      chargeOrder(chargeData);
-    } else {
-      postChargeOrderActions();
-    }
   };
   const submitCart = () => {
     setIsLoadingOrderSent(true);
@@ -547,15 +501,6 @@ const CartScreen = ({ route }) => {
     setShowPaymentFailedDialog(false);
     setIsLoadingOrderSent(false);
     setIsOpenShippingMethodDialog(false);
-  };
-  const handleNewPMAnswer = (value: any) => {
-    if (value === "close") {
-      setPaymentMthod(PAYMENT_METHODS.cash);
-      setOpenNewCreditCardDialog(false);
-      return;
-    }
-    setOpenNewCreditCardDialog(false);
-    getCCData();
   };
 
   const replaceCreditCard = () => {
@@ -717,9 +662,15 @@ const CartScreen = ({ route }) => {
   };
 
   const removeCreditCard = async () => {
-    await AsyncStorage.removeItem(storeDataStore.paymentCredentialsKey);
-    setCCData(null);
-    setPaymentMthod(PAYMENT_METHODS.cash);
+    if (ccData?.id) {
+      try {
+        await deleteCreditCard(ccData.id);
+        setCCData(null);
+        setPaymentMthod(PAYMENT_METHODS.cash);
+      } catch (error) {
+        console.error("Error removing credit card:", error);
+      }
+    }
   };
 
   let extrasArray = [];
@@ -790,7 +741,6 @@ const CartScreen = ({ route }) => {
     // american-express
     // visa
   };
-
   return (
     <View
       style={{ position: "relative", backgroundColor: "white", height: "100%" }}
@@ -1391,21 +1341,21 @@ const CartScreen = ({ route }) => {
             </View>
 
             {paymentMthod === PAYMENT_METHODS.creditCard &&
-              ccData?.last4Digits && (
+              ccData?.cardMask && (
                 <View
                   style={{
                     flexDirection: "row",
-                    marginTop: 5,
+                    marginTop:15,
                     marginHorizontal: 25,
                     alignItems: "center",
                     justifyContent: "space-between",
 
                     backgroundColor: "#F5F5F5",
                     borderRadius: 15,
-                    paddingHorizontal: 10,
+                    padding: 10,
                   }}
                 >
-                  <View
+                  {/* <View
                     style={{
                       alignItems: "center",
                       flexDirection: "row",
@@ -1420,20 +1370,26 @@ const CartScreen = ({ route }) => {
                     >
                       <Icon icon="delete" size={20} />
                     </TouchableOpacity>
-                  </View>
-                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  </View> */}
+                    <TouchableOpacity onPress={replaceCreditCard} style={{ flexDirection: "row", alignItems: "center", }}>
+                    <Icon icon="circle-down-arrow" size={20} style={{ marginRight: 10, color: themeStyle.BROWN_700 }} />
+                    <Text style={{ fontSize: 17, color: themeStyle.BROWN_700, fontFamily: "Rubik-Light" }}>
+                      {t('replace-card')}
+                    </Text>
+                    </TouchableOpacity>
+                  <View style={{ flexDirection: "row", alignItems: "center"}}>
                     <Text
                       style={{
                         fontSize: 17,
                         color: themeStyle.BROWN_700,
                         fontFamily: "Rubik-Light",
                       }}
-                    >{`****_****_****_${ccData?.last4Digits}`}</Text>
-                    <Icon
+                    >{`${ccData?.cardMask}`}</Text>
+                    {/* <Icon
                       icon={ccData?.ccType}
                       size={50}
                       style={{ color: theme.GRAY_700, marginLeft: 5 }}
-                    />
+                    /> */}
                   </View>
                 </View>
               )}
@@ -1617,9 +1573,13 @@ const CartScreen = ({ route }) => {
         isOpen={isOpenBarcodeSacnnedDialog}
         text={barcodeSacnnedDialogText}
       />
-      <NewPaymentMethodDialog
-        handleAnswer={handleNewPMAnswer}
+      <NewCreditCard
         isOpen={isOpenNewCreditCardDialog}
+        onClose={() => setOpenNewCreditCardDialog(false)}
+        onCardSaved={() => {
+          setOpenNewCreditCardDialog(false);
+          loadSavedCreditCard();
+        }}
       />
       <DeliveryMethodDialog
         handleAnswer={handleShippingMethoAnswer}

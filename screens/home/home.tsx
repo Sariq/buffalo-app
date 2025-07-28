@@ -8,7 +8,7 @@ import {
 import { observer } from "mobx-react";
 import { useTranslation } from "react-i18next";
 import Button from "../../components/controls/button/button";
-import Carousel from "react-native-reanimated-carousel";
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { interpolate, withTiming } from "react-native-reanimated";
 import { orderBy } from "lodash";
@@ -225,28 +225,16 @@ const HomeScreen = () => {
   }
   return (
     <View style={{ height: "100%" }}>
-      <Carousel
-        loop={homeSlides.length == 1 ? false : true}
-        width={Dimensions.get("window").width}
-        height={"100%"}
-        autoPlay={homeSlides.length == 1 ? false : true}
-        data={homeSlides}
-        scrollAnimationDuration={3000}
-        autoPlayInterval={3000}
-        customAnimation={animationStyle}
-        renderItem={({ index }) => (
-          <CustomFastImage
-            style={{
-              width: "100%",
-              height: "100%",
-            }}
-            source={{ uri: `${SITE_URL}${homeSlides[index].file_url}` }}
-            cacheKey={`${`${SITE_URL}${homeSlides[index].file_url}`
-              .split(/[\\/]/)
-              .pop()}`}
-            resizeMode="stretch"
-          />
-        )}
+      <CustomFastImage
+        style={{
+          width: "100%",
+          height: "100%",
+        }}
+        source={{ uri: `${SITE_URL}${homeSlides[0]?.file_url}` }}
+        cacheKey={`${`${SITE_URL}${homeSlides[0]?.file_url}`
+          .split(/[\\/]/)
+          .pop()}`}
+        resizeMode="stretch"
       />
       {!isOpenPickStore && !isOpenStorePicked && (
         <View style={[styles.button, styles.bottomView]}>
